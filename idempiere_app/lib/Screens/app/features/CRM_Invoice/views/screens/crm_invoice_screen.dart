@@ -495,123 +495,19 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: [
+             return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("INVOICES: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getInvoices();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
                                   visible: controller.searchFilterValue.value ==
@@ -673,31 +569,24 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                             ),
                                             tooltip: 'Edit Invoice'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
-                                              /* Get.to(const EditLead(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .Status
-                                                    ?.id ??
-                                                "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                              Get.to(
+                                                  () => const CRMEditInvoice(),
+                                                  arguments: {
+                                                    "paymentTermId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .cPaymentTermID
+                                                        ?.id,
+                                                    "paymentRuleId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "description": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .description,
+                                                  });
                                             },
                                           ),
                                         ),
@@ -788,6 +677,85 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      tooltip: 'print Document',
+                                                      onPressed: () async {
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        controller
+                                                            .getDocument(index);
+                                                        /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.print),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'print POS',
+                                                      onPressed: () async {
+                                                        controller
+                                                            .printTicket(index);
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                        /* controller
+                                                        .printTicket(index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.receipt),
+                                                    ),
+                                                    IconButton(
+                                                        tooltip:
+                                                            'print POS invoice',
+                                                        onPressed: () async {
+                                                          controller
+                                                              .getBusinessPartner(
+                                                                  index);
+                                                          /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                          /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                          /* controller
+                                                        .printTicket(index); */
+                                                        },
+                                                        icon: const Icon(Icons
+                                                            .receipt_long)),
+                                                  ]),
                                             ],
                                           ),
                                         ],
@@ -802,123 +770,19 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
               ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: [
+             return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("INVOICES: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getInvoices();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
                                   visible: controller.searchFilterValue.value ==
@@ -980,31 +844,24 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                             ),
                                             tooltip: 'Edit Invoice'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
-                                              /* Get.to(const EditLead(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .Status
-                                                    ?.id ??
-                                                "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                              Get.to(
+                                                  () => const CRMEditInvoice(),
+                                                  arguments: {
+                                                    "paymentTermId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .cPaymentTermID
+                                                        ?.id,
+                                                    "paymentRuleId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "description": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .description,
+                                                  });
                                             },
                                           ),
                                         ),
@@ -1095,6 +952,85 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      tooltip: 'print Document',
+                                                      onPressed: () async {
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        controller
+                                                            .getDocument(index);
+                                                        /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.print),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'print POS',
+                                                      onPressed: () async {
+                                                        controller
+                                                            .printTicket(index);
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                        /* controller
+                                                        .printTicket(index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.receipt),
+                                                    ),
+                                                    IconButton(
+                                                        tooltip:
+                                                            'print POS invoice',
+                                                        onPressed: () async {
+                                                          controller
+                                                              .getBusinessPartner(
+                                                                  index);
+                                                          /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                          /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                          /* controller
+                                                        .printTicket(index); */
+                                                        },
+                                                        icon: const Icon(Icons
+                                                            .receipt_long)),
+                                                  ]),
                                             ],
                                           ),
                                         ],

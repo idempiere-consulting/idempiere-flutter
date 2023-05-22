@@ -500,13 +500,13 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
           tabletBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
+              //_buildProfile(data: controller.getProfil()),
+              //const SizedBox(height: kSpacing),
+              /* Row(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 15),
@@ -514,7 +514,7 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         ? Text("TASK: ".tr + controller.trx.rowcount.toString())
                         : Text("TASK: ".tr)),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -525,7 +525,7 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -538,7 +538,8 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                       ),
                     ),
                   ),
-                  Container(
+
+                  /* Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
                       () => TextButton(
@@ -549,17 +550,43 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         child: Text(controller.value.value),
                       ),
                     ),
-                  ),
+                  ), */
                 ],
-              ),
-              const SizedBox(height: kSpacing),
+              ), */
+
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount > 1) {
+                        controller.pagesCount.value -= 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_previous),
+                  ),
+                  Obx(() => Text(
+                      "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount < controller.pagesTot.value) {
+                        controller.pagesCount.value += 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_next),
+                  )
+                ],
+              ), */
+              //const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller._trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -585,34 +612,57 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                     ),
                                     tooltip: 'Edit Task'.tr,
                                     onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.windowrecords![index].id,
-                                        "name": controller.trx
-                                                .windowrecords![index].name ??
+                                      Get.to(const EditCRMTask(), arguments: {
+                                        "id":
+                                            controller._trx.records![index].id,
+                                        "name": controller
+                                                ._trx.records![index].name ??
                                             "",
-                                        "leadStatus": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .leadStatus
+                                        "description": controller
+                                            ._trx.records![index].description,
+                                        "typeId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoType
                                                 ?.id ??
-                                            "",
+                                            'S',
+                                        "startDate": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartDate,
+                                        "startTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartTime!
+                                            .substring(0, 5),
+                                        "endTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledEndTime!
+                                            .substring(0, 5),
+                                        "statusId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoStatus
+                                                ?.id ??
+                                            'NY',
+                                        "user": controller._trx.records![index]
+                                            .aDUserID?.identifier,
+                                        "bpId": controller._trx.records![index]
+                                            .cBPartnerID?.id,
                                         "bpName": controller
-                                            .trx.windowrecords![index].bPName,
-                                        "Tel": controller.trx
-                                                .windowrecords![index].phone ??
-                                            "",
-                                        "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
-                                            "",
-                                        "salesRep": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
+                                            ._trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "projectId": controller._trx
+                                            .records![index].cProjectID?.id,
+                                        "projectName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cProjectID
+                                            ?.identifier,
+                                      });
                                     },
                                   ),
                                 ),
@@ -624,16 +674,52 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                 ),
                                 // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .jPToDoStatus!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(controller.trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${controller.trx.records![index].jPToDoScheduledStartTime == null ? "" : controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${controller.trx.records![index].jPToDoScheduledEndTime == null ? "" : controller.trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -646,101 +732,926 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
-                                    children: const [
-                                      /*  Row(
-                                        children: [
-                                          const Text(
-                                            "Business Partner: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .bPName ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
+                                    children: [
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .cProjectID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
                                             ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              //log("info button pressed");
-                                              if (controller
+                                            Expanded(
+                                              child: Text(controller
                                                       .trx
-                                                      .windowrecords![index]
-                                                      .phone ==
-                                                  null) {
-                                                log("info button pressed");
-                                              } else {
-                                                controller.makePhoneCall(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
+                                                      .records![index]
+                                                      .cProjectID
+                                                      ?.identifier ??
+                                                  ""),
                                             ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              if (controller
-                                                      .trx
-                                                      .windowrecords![index]
-                                                      .eMail ==
-                                                  null) {
-                                                log("mail button pressed");
-                                              } else {
-                                                controller.writeMailTo(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].aDUserID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUserID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);return Column(children: [
+              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              _buildHeader2(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
+              const SizedBox(height: kSpacing / 2),
+              const Divider(),
+              //_buildProfile(data: controller.getProfil()),
+              //const SizedBox(height: kSpacing),
+              /* Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("TASK: ".tr + controller.trx.rowcount.toString())
+                        : Text("TASK: ".tr)),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ), */
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getTasks();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ), */
+
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount > 1) {
+                        controller.pagesCount.value -= 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_previous),
+                  ),
+                  Obx(() => Text(
+                      "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount < controller.pagesTot.value) {
+                        controller.pagesCount.value += 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_next),
+                  )
+                ],
+              ), */
+              //const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller._trx.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Task'.tr,
+                                    onPressed: () {
+                                      Get.to(const EditCRMTask(), arguments: {
+                                        "id":
+                                            controller._trx.records![index].id,
+                                        "name": controller
+                                                ._trx.records![index].name ??
+                                            "",
+                                        "description": controller
+                                            ._trx.records![index].description,
+                                        "typeId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoType
+                                                ?.id ??
+                                            'S',
+                                        "startDate": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartDate,
+                                        "startTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartTime!
+                                            .substring(0, 5),
+                                        "endTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledEndTime!
+                                            .substring(0, 5),
+                                        "statusId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoStatus
+                                                ?.id ??
+                                            'NY',
+                                        "user": controller._trx.records![index]
+                                            .aDUserID?.identifier,
+                                        "bpId": controller._trx.records![index]
+                                            .cBPartnerID?.id,
+                                        "bpName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "projectId": controller._trx
+                                            .records![index].cProjectID?.id,
+                                        "projectName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cProjectID
+                                            ?.identifier,
+                                      });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""),
-                                        ],
-                                      ), */
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(controller.trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${controller.trx.records![index].jPToDoScheduledStartTime == null ? "" : controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${controller.trx.records![index].jPToDoScheduledEndTime == null ? "" : controller.trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .cProjectID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cProjectID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].aDUserID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUserID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);return Column(children: [
+              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              _buildHeader2(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
+              const SizedBox(height: kSpacing / 2),
+              const Divider(),
+              //_buildProfile(data: controller.getProfil()),
+              //const SizedBox(height: kSpacing),
+              /* Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("TASK: ".tr + controller.trx.rowcount.toString())
+                        : Text("TASK: ".tr)),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ), */
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getTasks();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ), */
+
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount > 1) {
+                        controller.pagesCount.value -= 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_previous),
+                  ),
+                  Obx(() => Text(
+                      "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount < controller.pagesTot.value) {
+                        controller.pagesCount.value += 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_next),
+                  )
+                ],
+              ), */
+              //const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller._trx.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Task'.tr,
+                                    onPressed: () {
+                                      Get.to(const EditCRMTask(), arguments: {
+                                        "id":
+                                            controller._trx.records![index].id,
+                                        "name": controller
+                                                ._trx.records![index].name ??
+                                            "",
+                                        "description": controller
+                                            ._trx.records![index].description,
+                                        "typeId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoType
+                                                ?.id ??
+                                            'S',
+                                        "startDate": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartDate,
+                                        "startTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartTime!
+                                            .substring(0, 5),
+                                        "endTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledEndTime!
+                                            .substring(0, 5),
+                                        "statusId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoStatus
+                                                ?.id ??
+                                            'NY',
+                                        "user": controller._trx.records![index]
+                                            .aDUserID?.identifier,
+                                        "bpId": controller._trx.records![index]
+                                            .cBPartnerID?.id,
+                                        "bpName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "projectId": controller._trx
+                                            .records![index].cProjectID?.id,
+                                        "projectName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cProjectID
+                                            ?.identifier,
+                                      });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(controller.trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${controller.trx.records![index].jPToDoScheduledStartTime == null ? "" : controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${controller.trx.records![index].jPToDoScheduledEndTime == null ? "" : controller.trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .cProjectID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cProjectID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].aDUserID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUserID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
+              ),
+            ]);return Column(children: [
+              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+              _buildHeader2(
+                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
+              const SizedBox(height: kSpacing / 2),
+              const Divider(),
+              //_buildProfile(data: controller.getProfil()),
+              //const SizedBox(height: kSpacing),
+              /* Row(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(left: 15),
+                    child: Obx(() => controller.dataAvailable
+                        ? Text("TASK: ".tr + controller.trx.rowcount.toString())
+                        : Text("TASK: ".tr)),
+                  ),
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 40),
+                    child: IconButton(
+                      onPressed: () {
+                        Get.to(const CreateLead());
+                      },
+                      icon: const Icon(
+                        Icons.person_add,
+                        color: Colors.lightBlue,
+                      ),
+                    ),
+                  ), */
+                  Container(
+                    margin: const EdgeInsets.only(left: 20),
+                    child: IconButton(
+                      onPressed: () {
+                        controller.getTasks();
+                      },
+                      icon: const Icon(
+                        Icons.refresh,
+                        color: Colors.yellow,
+                      ),
+                    ),
+                  ),
+
+                  /* Container(
+                    margin: const EdgeInsets.only(left: 30),
+                    child: Obx(
+                      () => TextButton(
+                        onPressed: () {
+                          controller.changeFilter();
+                          //print("hello");
+                        },
+                        child: Text(controller.value.value),
+                      ),
+                    ),
+                  ), */
+                ],
+              ), */
+
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount > 1) {
+                        controller.pagesCount.value -= 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_previous),
+                  ),
+                  Obx(() => Text(
+                      "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount < controller.pagesTot.value) {
+                        controller.pagesCount.value += 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_next),
+                  )
+                ],
+              ), */
+              //const SizedBox(height: kSpacing),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller._trx.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Task'.tr,
+                                    onPressed: () {
+                                      Get.to(const EditCRMTask(), arguments: {
+                                        "id":
+                                            controller._trx.records![index].id,
+                                        "name": controller
+                                                ._trx.records![index].name ??
+                                            "",
+                                        "description": controller
+                                            ._trx.records![index].description,
+                                        "typeId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoType
+                                                ?.id ??
+                                            'S',
+                                        "startDate": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartDate,
+                                        "startTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartTime!
+                                            .substring(0, 5),
+                                        "endTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledEndTime!
+                                            .substring(0, 5),
+                                        "statusId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoStatus
+                                                ?.id ??
+                                            'NY',
+                                        "user": controller._trx.records![index]
+                                            .aDUserID?.identifier,
+                                        "bpId": controller._trx.records![index]
+                                            .cBPartnerID?.id,
+                                        "bpName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "projectId": controller._trx
+                                            .records![index].cProjectID?.id,
+                                        "projectName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cProjectID
+                                            ?.identifier,
+                                      });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(controller.trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${controller.trx.records![index].jPToDoScheduledStartTime == null ? "" : controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${controller.trx.records![index].jPToDoScheduledEndTime == null ? "" : controller.trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .cProjectID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cProjectID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].aDUserID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUserID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],
@@ -756,13 +1667,13 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
           desktopBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
+              //_buildProfile(data: controller.getProfil()),
+              //const SizedBox(height: kSpacing),
+              /* Row(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 15),
@@ -770,7 +1681,7 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         ? Text("TASK: ".tr + controller.trx.rowcount.toString())
                         : Text("TASK: ".tr)),
                   ),
-                  Container(
+                  /* Container(
                     margin: const EdgeInsets.only(left: 40),
                     child: IconButton(
                       onPressed: () {
@@ -781,7 +1692,7 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         color: Colors.lightBlue,
                       ),
                     ),
-                  ),
+                  ), */
                   Container(
                     margin: const EdgeInsets.only(left: 20),
                     child: IconButton(
@@ -794,7 +1705,8 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                       ),
                     ),
                   ),
-                  Container(
+
+                  /* Container(
                     margin: const EdgeInsets.only(left: 30),
                     child: Obx(
                       () => TextButton(
@@ -805,17 +1717,43 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                         child: Text(controller.value.value),
                       ),
                     ),
-                  ),
+                  ), */
                 ],
-              ),
-              const SizedBox(height: kSpacing),
+              ), */
+
+              /* Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount > 1) {
+                        controller.pagesCount.value -= 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_previous),
+                  ),
+                  Obx(() => Text(
+                      "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                  IconButton(
+                    onPressed: () {
+                      if (controller.pagesCount < controller.pagesTot.value) {
+                        controller.pagesCount.value += 1;
+                        controller.getTasks();
+                      }
+                    },
+                    icon: const Icon(Icons.skip_next),
+                  )
+                ],
+              ), */
+              //const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller._trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Card(
                             elevation: 8.0,
@@ -841,34 +1779,57 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                     ),
                                     tooltip: 'Edit Task'.tr,
                                     onPressed: () {
-                                      //log("info button pressed");
-                                      /* Get.to(const EditLead(), arguments: {
-                                        "id": controller
-                                            .trx.windowrecords![index].id,
-                                        "name": controller.trx
-                                                .windowrecords![index].name ??
+                                      Get.to(const EditCRMTask(), arguments: {
+                                        "id":
+                                            controller._trx.records![index].id,
+                                        "name": controller
+                                                ._trx.records![index].name ??
                                             "",
-                                        "leadStatus": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .leadStatus
+                                        "description": controller
+                                            ._trx.records![index].description,
+                                        "typeId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoType
                                                 ?.id ??
-                                            "",
+                                            'S',
+                                        "startDate": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartDate,
+                                        "startTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledStartTime!
+                                            .substring(0, 5),
+                                        "endTime": controller
+                                            ._trx
+                                            .records![index]
+                                            .jPToDoScheduledEndTime!
+                                            .substring(0, 5),
+                                        "statusId": controller
+                                                ._trx
+                                                .records![index]
+                                                .jPToDoStatus
+                                                ?.id ??
+                                            'NY',
+                                        "user": controller._trx.records![index]
+                                            .aDUserID?.identifier,
+                                        "bpId": controller._trx.records![index]
+                                            .cBPartnerID?.id,
                                         "bpName": controller
-                                            .trx.windowrecords![index].bPName,
-                                        "Tel": controller.trx
-                                                .windowrecords![index].phone ??
-                                            "",
-                                        "eMail": controller.trx
-                                                .windowrecords![index].eMail ??
-                                            "",
-                                        "salesRep": controller
-                                                .trx
-                                                .windowrecords![index]
-                                                .salesRepID
-                                                ?.identifier ??
-                                            ""
-                                      }); */
+                                            ._trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                        "projectId": controller._trx
+                                            .records![index].cProjectID?.id,
+                                        "projectName": controller
+                                            ._trx
+                                            .records![index]
+                                            .cProjectID
+                                            ?.identifier,
+                                      });
                                     },
                                   ),
                                 ),
@@ -880,16 +1841,52 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                 ),
                                 // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                subtitle: Row(
-                                  children: <Widget>[
-                                    const Icon(Icons.linear_scale,
-                                        color: Colors.yellowAccent),
-                                    Text(
-                                      controller.trx.records![index]
-                                              .jPToDoStatus!.identifier ??
-                                          "??",
-                                      style:
-                                          const TextStyle(color: Colors.white),
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(controller.trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${controller.trx.records![index].jPToDoScheduledStartTime == null ? "" : controller.trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${controller.trx.records![index].jPToDoScheduledEndTime == null ? "" : controller.trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            controller.trx.records![index]
+                                                    .cBPartnerID?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -902,101 +1899,53 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
-                                    children: const [
-                                      /*  Row(
-                                        children: [
-                                          const Text(
-                                            "Business Partner: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .bPName ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.call,
-                                              color: Colors.green,
+                                    children: [
+                                      Visibility(
+                                        visible: controller.trx.records![index]
+                                                .cProjectID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
                                             ),
-                                            tooltip: 'Call',
-                                            onPressed: () {
-                                              //log("info button pressed");
-                                              if (controller
+                                            Expanded(
+                                              child: Text(controller
                                                       .trx
-                                                      .windowrecords![index]
-                                                      .phone ==
-                                                  null) {
-                                                log("info button pressed");
-                                              } else {
-                                                controller.makePhoneCall(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .phone ??
-                                              ""),
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          IconButton(
-                                            icon: const Icon(
-                                              Icons.mail,
-                                              color: Colors.white,
+                                                      .records![index]
+                                                      .cProjectID
+                                                      ?.identifier ??
+                                                  ""),
                                             ),
-                                            tooltip: 'EMail',
-                                            onPressed: () {
-                                              if (controller
-                                                      .trx
-                                                      .windowrecords![index]
-                                                      .eMail ==
-                                                  null) {
-                                                log("mail button pressed");
-                                              } else {
-                                                controller.writeMailTo(
-                                                    controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail
-                                                        .toString());
-                                              }
-                                            },
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .eMail ??
-                                              ""),
-                                        ],
+                                          ],
+                                        ),
                                       ),
-                                      Row(
-                                        children: [
-                                          const Text(
-                                            "Agente: ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          Text(controller
-                                                  .trx
-                                                  .windowrecords![index]
-                                                  .salesRepID
-                                                  ?.identifier ??
-                                              ""),
-                                        ],
-                                      ), */
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].aDUserID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUserID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ],

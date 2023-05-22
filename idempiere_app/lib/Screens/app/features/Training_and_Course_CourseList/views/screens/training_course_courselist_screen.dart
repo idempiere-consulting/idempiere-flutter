@@ -352,54 +352,17 @@ class TrainingCourseCourseListScreen
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr + "${controller.trx.rowcount}")
-                          : Text("COURSES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          //Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getCourseSurveys();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -443,18 +406,40 @@ class TrainingCourseCourseListScreen
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.handshake,
                                               color: Colors.white),
-                                        ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.calendar_month,
+                                              color: Colors.white),
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .dateStart ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -484,6 +469,23 @@ class TrainingCourseCourseListScreen
                                             ),
                                           ],
                                         ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Teacher".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUser2ID
+                                                      ?.identifier ??
+                                                  "??"),
+                                            ),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
@@ -499,54 +501,17 @@ class TrainingCourseCourseListScreen
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("COURSES: ".tr + "${controller.trx.rowcount}")
-                          : Text("COURSES: ".tr)),
-                      margin: const EdgeInsets.only(left: 15),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          //Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getCourseSurveys();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -590,18 +555,40 @@ class TrainingCourseCourseListScreen
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.handshake,
                                               color: Colors.white),
-                                        ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.calendar_month,
+                                              color: Colors.white),
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .dateStart ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -628,6 +615,23 @@ class TrainingCourseCourseListScreen
                                                       .records![index]
                                                       .description ??
                                                   ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Teacher".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .aDUser2ID
+                                                      ?.identifier ??
+                                                  "??"),
                                             ),
                                           ],
                                         ),

@@ -96,7 +96,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
           ]);
         },
         tabletBuilder: (context, constraints) {
-          return Column(children: [
+           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -112,7 +112,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
             ), */
-            /* const SizedBox(height: kSpacing * 2),
+            /* /* const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
               headerAxis: Axis.vertical,
@@ -124,13 +124,13 @@ class EmployeeScreen extends GetView<EmployeeController> {
               data: controller.getActiveProject(),
               crossAxisCount: 6,
               crossAxisCellCount: 6,
-            ), */
+            ), */ */
             const SizedBox(height: kSpacing),
             _buildRecentMessages(data: controller.getChatting()),
           ]);
         },
         desktopBuilder: (context, constraints) {
-          return Column(children: [
+           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -146,7 +146,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
               padding: const EdgeInsets.symmetric(horizontal: kSpacing),
               child: GetPremiumCard(onPressed: () {}),
             ), */
-            /* const SizedBox(height: kSpacing * 2),
+            /* /* const SizedBox(height: kSpacing * 2),
             _buildTaskOverview(
               data: controller.getAllTask(),
               headerAxis: Axis.vertical,
@@ -158,7 +158,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
               data: controller.getActiveProject(),
               crossAxisCount: 6,
               crossAxisCellCount: 6,
-            ), */
+            ), */ */
             const SizedBox(height: kSpacing),
             _buildRecentMessages(data: controller.getChatting()),
           ]);

@@ -517,19 +517,215 @@ class _EditAnomalyListState extends State<EditAnomalyList> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return Column(
-              children: const [
-                SizedBox(
+           return Column(
+              children: [
+                const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: anomalyTypeFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Anomaly Type'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: resourceFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Resource'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Managed by the Customer'.tr),
+                  value: manByCustomer,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      manByCustomer = value!;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is Charged'.tr),
+                    value: isCharged,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isCharged = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is being Replaced Now'.tr),
+                    value: isReplacedNow,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isReplacedNow = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: noteFieldController,
+                    minLines: 2,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Closed'.tr),
+                  value: isClosed,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isClosed = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: anomalyTypeFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Anomaly Type'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: resourceFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Resource'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Managed by the Customer'.tr),
+                  value: manByCustomer,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      manByCustomer = value!;
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is Charged'.tr),
+                    value: isCharged,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isCharged = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: manByCustomer != true,
+                  child: CheckboxListTile(
+                    contentPadding: const EdgeInsets.only(left: 30),
+                    title: Text('Is being Replaced Now'.tr),
+                    value: isReplacedNow,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isReplacedNow = value!;
+                        //GetStorage().write('checkboxLogin', checkboxState);
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: noteFieldController,
+                    minLines: 2,
+                    maxLines: 2,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Closed'.tr),
+                  value: isClosed,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isClosed = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );

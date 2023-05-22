@@ -676,13 +676,339 @@ class _CRMEditContractState extends State<CRMEditContract> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: docNoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllBPs(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<BPRecords>(
+                                direction: AxisDirection.up,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        businessPartnerId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: bpFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Business Partner'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    //isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  bpFieldController.text = suggestion.name!;
+                                  businessPartnerId = suggestion.id!;
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
                     controller: nameFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
+                      prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Valid Date from'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['dateFrom'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateFrom = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Valid Date to'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['dateTo'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateTo = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Frequency Next Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['frequencyNextDate'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        frequencyNextDate = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllContractFrequencyTypes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Document Type'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Frequency Type".tr),
+                                  isExpanded: true,
+                                  value: frequencyTypeId == "0"
+                                      ? null
+                                      : frequencyTypeId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      frequencyTypeId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentTerms(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Term'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Term".tr),
+                                  isExpanded: true,
+                                  value: paymentTermId == "0"
+                                      ? null
+                                      : paymentTermId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentTermId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentRules(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: paymentRuleId == "0"
+                                      ? null
+                                      : paymentRuleId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentRuleId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value,
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
               ],
@@ -697,13 +1023,339 @@ class _CRMEditContractState extends State<CRMEditContract> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: docNoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllBPs(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<BPRecords>(
+                                direction: AxisDirection.up,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        businessPartnerId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: bpFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Business Partner'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    //isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  bpFieldController.text = suggestion.name!;
+                                  businessPartnerId = suggestion.id!;
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
                     controller: nameFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
+                      prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Name'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Valid Date from'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['dateFrom'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateFrom = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Valid Date to'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['dateTo'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateTo = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Frequency Next Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['frequencyNextDate'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        frequencyNextDate = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllContractFrequencyTypes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Document Type'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Frequency Type".tr),
+                                  isExpanded: true,
+                                  value: frequencyTypeId == "0"
+                                      ? null
+                                      : frequencyTypeId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      frequencyTypeId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentTerms(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Term'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Term".tr),
+                                  isExpanded: true,
+                                  value: paymentTermId == "0"
+                                      ? null
+                                      : paymentTermId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentTermId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentRules(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: paymentRuleId == "0"
+                                      ? null
+                                      : paymentRuleId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentRuleId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value,
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
               ],

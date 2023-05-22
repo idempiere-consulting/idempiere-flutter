@@ -492,60 +492,10 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Shipment: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getShipments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -576,6 +526,13 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                     onPressed: () {
                                       Get.toNamed('/ShipmentLine', arguments: {
                                         "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
                                       });
                                     },
                                   ),
@@ -603,6 +560,31 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                       .records![index]
                                                       .privateNote ??
                                                   "",
+                                              "movementDate": controller.trx
+                                                  .records![index].movementDate,
+                                              "description": controller.trx
+                                                  .records![index].description,
+                                              "docTypeName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "movementTypeID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmMovementTypeID
+                                                  ?.id,
+                                              "shipDate": controller
+                                                  .trx.records![index].shipDate,
+                                              "deliveryViaRule": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .deliveryViaRule
+                                                  ?.id,
+                                              "externalAspect": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .externalAspect,
                                             });
                                       },
                                     ),
@@ -669,6 +651,116 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   ""),
                                             ),
                                           ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Causale: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litmMovementTypeID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              tooltip: 'print Document',
+                                              onPressed: () async {
+                                                /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                controller.getDocument(index);
+                                                /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                              },
+                                              icon: const Icon(Icons.print),
+                                            ),
+                                            IconButton(
+                                                tooltip: 'print POS invoice',
+                                                onPressed: () async {
+                                                  controller.getBusinessPartner(
+                                                      index);
+                                                },
+                                                icon: const Icon(
+                                                    Icons.receipt_long)),
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id ==
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Reopen'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to reopen the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .reopenProcess(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Reopen".tr),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id !=
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Complete'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to complete the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .completeShipment(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Complete".tr),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -685,60 +777,10 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Shipment: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getShipments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -769,6 +811,13 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                     onPressed: () {
                                       Get.toNamed('/ShipmentLine', arguments: {
                                         "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
                                       });
                                     },
                                   ),
@@ -796,6 +845,31 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                       .records![index]
                                                       .privateNote ??
                                                   "",
+                                              "movementDate": controller.trx
+                                                  .records![index].movementDate,
+                                              "description": controller.trx
+                                                  .records![index].description,
+                                              "docTypeName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "movementTypeID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmMovementTypeID
+                                                  ?.id,
+                                              "shipDate": controller
+                                                  .trx.records![index].shipDate,
+                                              "deliveryViaRule": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .deliveryViaRule
+                                                  ?.id,
+                                              "externalAspect": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .externalAspect,
                                             });
                                       },
                                     ),
@@ -862,6 +936,116 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   ""),
                                             ),
                                           ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Causale: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litmMovementTypeID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              tooltip: 'print Document',
+                                              onPressed: () async {
+                                                /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                controller.getDocument(index);
+                                                /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                              },
+                                              icon: const Icon(Icons.print),
+                                            ),
+                                            IconButton(
+                                                tooltip: 'print POS invoice',
+                                                onPressed: () async {
+                                                  controller.getBusinessPartner(
+                                                      index);
+                                                },
+                                                icon: const Icon(
+                                                    Icons.receipt_long)),
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id ==
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Reopen'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to reopen the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .reopenProcess(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Reopen".tr),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id !=
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Complete'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to complete the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .completeShipment(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Complete".tr),
+                                          ),
                                         ),
                                       ],
                                     ),

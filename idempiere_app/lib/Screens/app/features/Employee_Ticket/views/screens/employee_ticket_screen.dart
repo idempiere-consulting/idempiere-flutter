@@ -490,11 +490,11 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
+                /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing),
                 Row(
                   children: [
@@ -544,7 +544,7 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                const SizedBox(height: kSpacing), */
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -561,6 +561,26 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  trailing: Icon(
+                                    controller._trx.records![index].taskStatus
+                                                ?.id ==
+                                            "9"
+                                        ? Icons.check
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Icons.cancel_outlined
+                                            : Icons.timelapse,
+                                    color: controller._trx.records![index]
+                                                .taskStatus?.id ==
+                                            "9"
+                                        ? kNotifColor
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Colors.red
+                                            : Colors.yellow,
+                                  ),
                                   tilePadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   leading: Container(
@@ -571,39 +591,59 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.chat,
-                                        color: Colors.green,
+                                        color: controller._trx.records![index]
+                                                    .rRequestTypeID?.id ==
+                                                controller.genericTicketId
+                                            ? Colors.green
+                                            : Colors.grey,
                                       ),
-                                      tooltip: 'Edit Ticket'.tr,
+                                      tooltip: 'Open Ticket Chat'.tr,
                                       onPressed: () {
-                                        Get.to(const TicketInternalChat(),
-                                            arguments: {
-                                              "ticketid": controller
-                                                  .trx.records![index].id
-                                            });
+                                        if (controller._trx.records![index]
+                                                .rRequestTypeID?.id ==
+                                            controller.genericTicketId) {
+                                          Get.to(const TicketInternalChat(),
+                                              arguments: {
+                                                "ticketid": controller
+                                                    .trx.records![index].id
+                                              });
+                                        }
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index]
-                                            .rRequestTypeID?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          "${controller.trx.records![index].documentNo}_${controller.trx.records![index].rRequestTypeID?.identifier ?? "???"}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
                                   subtitle: Column(children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.description),
+                                        const Icon(
+                                          Icons.event,
+                                          color: Colors.white,
+                                        ),
                                         Expanded(
                                           child: Text(
-                                            controller.trx.records![index]
-                                                    .summary ??
-                                                "??",
+                                            DateTime.tryParse(controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .startDate ??
+                                                        "") ==
+                                                    null
+                                                ? ""
+                                                : "${DateTime.parse(controller._trx.records![index].startDate!).day}/${DateTime.parse(controller._trx.records![index].startDate!).month}/${DateTime.parse(controller._trx.records![index].startDate!).year} ${DateTime.parse(controller._trx.records![index].startDate!).hour}:${DateTime.parse(controller._trx.records![index].startDate!).minute}",
                                             maxLines: 1,
                                             style: const TextStyle(
                                                 color: Colors.white),
@@ -643,7 +683,7 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "${"Summary".tr}: ",
+                                              "${"Note".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -674,14 +714,59 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                           ],
                                         ),
                                         Row(
+                                          children: [
+                                            Text(
+                                              "${"Assigned To".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Answer".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].help ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.check),
+                                              icon: const Icon(Icons.delete),
                                               onPressed: () {
-                                                controller
-                                                    .checkcloseTicket(index);
+                                                Get.defaultDialog(
+                                                    title: "Delete Ticket",
+                                                    middleText:
+                                                        "Are you sure you want to delete the Ticket?",
+                                                    //contentPadding: const EdgeInsets.all(2.0),
+                                                    barrierDismissible: true,
+                                                    textCancel: "Cancel",
+                                                    textConfirm: "Confirm",
+                                                    onConfirm: () {
+                                                      Get.back();
+                                                      controller.deleteTicket(
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .id!);
+                                                    });
                                               },
                                             ),
                                             IconButton(
@@ -709,11 +794,11 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
+                /* _buildProfile(data: controller.getProfil()),
                 const SizedBox(height: kSpacing),
                 Row(
                   children: [
@@ -763,7 +848,7 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+                const SizedBox(height: kSpacing), */
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -780,6 +865,26 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  trailing: Icon(
+                                    controller._trx.records![index].taskStatus
+                                                ?.id ==
+                                            "9"
+                                        ? Icons.check
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Icons.cancel_outlined
+                                            : Icons.timelapse,
+                                    color: controller._trx.records![index]
+                                                .taskStatus?.id ==
+                                            "9"
+                                        ? kNotifColor
+                                        : controller._trx.records![index]
+                                                    .taskStatus?.id ==
+                                                "9"
+                                            ? Colors.red
+                                            : Colors.yellow,
+                                  ),
                                   tilePadding: const EdgeInsets.symmetric(
                                       horizontal: 20.0, vertical: 10.0),
                                   leading: Container(
@@ -790,39 +895,59 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.chat,
-                                        color: Colors.green,
+                                        color: controller._trx.records![index]
+                                                    .rRequestTypeID?.id ==
+                                                controller.genericTicketId
+                                            ? Colors.green
+                                            : Colors.grey,
                                       ),
-                                      tooltip: 'Edit Ticket'.tr,
+                                      tooltip: 'Open Ticket Chat'.tr,
                                       onPressed: () {
-                                        Get.to(const TicketInternalChat(),
-                                            arguments: {
-                                              "ticketid": controller
-                                                  .trx.records![index].id
-                                            });
+                                        if (controller._trx.records![index]
+                                                .rRequestTypeID?.id ==
+                                            controller.genericTicketId) {
+                                          Get.to(const TicketInternalChat(),
+                                              arguments: {
+                                                "ticketid": controller
+                                                    .trx.records![index].id
+                                              });
+                                        }
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index]
-                                            .rRequestTypeID?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          "${controller.trx.records![index].documentNo}_${controller.trx.records![index].rRequestTypeID?.identifier ?? "???"}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
                                   subtitle: Column(children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.description),
+                                        const Icon(
+                                          Icons.event,
+                                          color: Colors.white,
+                                        ),
                                         Expanded(
                                           child: Text(
-                                            controller.trx.records![index]
-                                                    .summary ??
-                                                "??",
+                                            DateTime.tryParse(controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .startDate ??
+                                                        "") ==
+                                                    null
+                                                ? ""
+                                                : "${DateTime.parse(controller._trx.records![index].startDate!).day}/${DateTime.parse(controller._trx.records![index].startDate!).month}/${DateTime.parse(controller._trx.records![index].startDate!).year} ${DateTime.parse(controller._trx.records![index].startDate!).hour}:${DateTime.parse(controller._trx.records![index].startDate!).minute}",
                                             maxLines: 1,
                                             style: const TextStyle(
                                                 color: Colors.white),
@@ -862,7 +987,7 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "${"Summary".tr}: ",
+                                              "${"Note".tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -893,14 +1018,59 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                                           ],
                                         ),
                                         Row(
+                                          children: [
+                                            Text(
+                                              "${"Assigned To".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Answer".tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller.trx
+                                                      .records![index].help ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
                                             IconButton(
-                                              icon: const Icon(Icons.check),
+                                              icon: const Icon(Icons.delete),
                                               onPressed: () {
-                                                controller
-                                                    .checkcloseTicket(index);
+                                                Get.defaultDialog(
+                                                    title: "Delete Ticket",
+                                                    middleText:
+                                                        "Are you sure you want to delete the Ticket?",
+                                                    //contentPadding: const EdgeInsets.all(2.0),
+                                                    barrierDismissible: true,
+                                                    textCancel: "Cancel",
+                                                    textConfirm: "Confirm",
+                                                    onConfirm: () {
+                                                      Get.back();
+                                                      controller.deleteTicket(
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .id!);
+                                                    });
                                               },
                                             ),
                                             IconButton(

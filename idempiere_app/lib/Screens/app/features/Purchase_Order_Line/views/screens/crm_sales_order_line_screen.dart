@@ -356,9 +356,9 @@ class CRMPurchaseOrderLineScreen
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Sales Order Line'.tr,
+                                      tooltip: 'Edit Purchase Order Line'.tr,
                                       onPressed: () {
-                                        Get.to(const EditSalesOrderLine(),
+                                        Get.to(const EditPurchaseOrderLine(),
                                             arguments: {
                                               "ID": controller
                                                   .trx.records![index].id,
@@ -550,9 +550,9 @@ class CRMPurchaseOrderLineScreen
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Sales Order Line'.tr,
+                                      tooltip: 'Edit Purchase Order Line'.tr,
                                       onPressed: () {
-                                        Get.to(const EditSalesOrderLine(),
+                                        Get.to(const EditPurchaseOrderLine(),
                                             arguments: {
                                               "ID": controller
                                                   .trx.records![index].id,

@@ -573,6 +573,63 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Project".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
+                        snapshot.hasData && flagProject
+                            ? Autocomplete<PJRecords>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<PJRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (PJRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  projectId = selection.id!;
+                                  nameFieldController.text =
+                                      "${selection.value}_${selection.name}";
+                                  setState(() {});
+                                  getProjectBP();
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -587,7 +644,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Date'.tr,
+                    dateLabelText: 'Start Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -626,6 +683,39 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       setState(() {
                         timeStart = val;
                       });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'End Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateEnd = val.substring(0, 10);
+                      });
+                      //print(date);
                     },
                     validator: (val) {
                       //print(val);
@@ -728,6 +818,63 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Project".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
+                        snapshot.hasData && flagProject
+                            ? Autocomplete<PJRecords>(
+                                initialValue: initialValue,
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<PJRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((PJRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (PJRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  projectId = selection.id!;
+                                  nameFieldController.text =
+                                      "${selection.value}_${selection.name}";
+                                  setState(() {});
+                                  getProjectBP();
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   padding: const EdgeInsets.all(10),
                   width: size.width,
@@ -742,7 +889,7 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                     initialValue: '',
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
-                    dateLabelText: 'Date'.tr,
+                    dateLabelText: 'Start Date'.tr,
                     icon: const Icon(Icons.event),
                     onChanged: (val) {
                       //print(DateTime.parse(val));
@@ -781,6 +928,39 @@ class _CreateCalendarEventState extends State<CreateCalendarEvent> {
                       setState(() {
                         timeStart = val;
                       });
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    type: DateTimePickerType.date,
+                    initialValue: '',
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'End Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateEnd = val.substring(0, 10);
+                      });
+                      //print(date);
                     },
                     validator: (val) {
                       //print(val);

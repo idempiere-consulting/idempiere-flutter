@@ -687,128 +687,10 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("SALES ORDERS: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          //controller.getSalesOrders();
-                          Get.toNamed('/SalesOrderContractCreation');
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          //controller.getSalesOrders();
-                          Get.toNamed('/SalesOrderCreation');
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getSalesOrders();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -1114,11 +996,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                   ),
                                                   Visibility(
                                                     visible: controller
-                                                            .trx
-                                                            .records![index]
-                                                            .docStatus
-                                                            ?.id !=
-                                                        'CO',
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            'CO' &&
+                                                        int.parse(
+                                                                    controller
+                                                                        .list[8],
+                                                                    radix: 16)
+                                                                .toRadixString(2)
+                                                                .padLeft(8, "0")
+                                                                .toString()[7] ==
+                                                            "1",
                                                     child: ElevatedButton(
                                                       style: ButtonStyle(
                                                         backgroundColor:
@@ -1215,122 +1105,17 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("SALES ORDERS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("SALES ORDERS: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          //controller.getSalesOrders();
-                          Get.toNamed('/SalesOrderCreation');
-                        },
-                        icon: const Icon(
-                          Icons.add,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getSalesOrders();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
-
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
                                   visible: controller.searchFilterValue.value ==
@@ -1474,6 +1259,23 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         .records![index]
                                                         .cBPartnerID
                                                         ?.id,
+                                                    "bPartnerName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.identifier,
+                                                    "isPaid": controller.trx
+                                                        .records![index].isPaid,
+                                                    "pRuleId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "amt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .totalLines
+                                                        .toString(),
                                                   });
                                             },
                                           ),
@@ -1528,6 +1330,20 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
+                                                  IconButton(
+                                                    tooltip: 'Editor HTML',
+                                                    onPressed: () async {
+                                                      controller
+                                                          .getContractArticles(
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id!);
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.html),
+                                                  ),
                                                   IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
@@ -1598,11 +1414,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                   ),
                                                   Visibility(
                                                     visible: controller
-                                                            .trx
-                                                            .records![index]
-                                                            .docStatus
-                                                            ?.id !=
-                                                        'CO',
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            'CO' &&
+                                                        int.parse(
+                                                                    controller
+                                                                        .list[8],
+                                                                    radix: 16)
+                                                                .toRadixString(2)
+                                                                .padLeft(8, "0")
+                                                                .toString()[7] ==
+                                                            "1",
                                                     child: ElevatedButton(
                                                       style: ButtonStyle(
                                                         backgroundColor:
@@ -1612,28 +1436,34 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       ),
                                                       onPressed: () async {
                                                         Get.defaultDialog(
-                                                          title:
-                                                              'Complete Action',
-                                                          content: const Text(
-                                                              "Are you sure you want to complete the record?"),
+                                                          title: 'Complete'.tr,
+                                                          content: Text(
+                                                              "Are you sure you want to complete the record?"
+                                                                  .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
-                                                            final ip =
+                                                            /*  final ip =
                                                                 GetStorage()
                                                                     .read('ip');
                                                             String
                                                                 authorization =
-                                                                'Bearer ${GetStorage().read('token')}';
+                                                                'Bearer ' +
+                                                                    GetStorage()
+                                                                        .read(
+                                                                            'token');
                                                             final msg =
                                                                 jsonEncode({
                                                               "DocAction": "CO",
                                                             });
+                                                            print(msg);
                                                             final protocol =
                                                                 GetStorage().read(
                                                                     'protocol');
                                                             var url = Uri.parse(
-                                                                '$protocol://$ip/api/v1/models/c_order/${controller.trx.records![index].id}');
-
+                                                                '$protocol://' +
+                                                                    ip +
+                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
+                                                            print(url);
                                                             var response =
                                                                 await http.put(
                                                               url,
@@ -1649,11 +1479,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             if (response
                                                                     .statusCode ==
                                                                 200) {
-                                                              //print("done!");
                                                               completeOrder(
                                                                   index);
                                                             } else {
-                                                              //print(response.body);
+                                                              print(response
+                                                                  .body);
                                                               Get.snackbar(
                                                                 "Error!".tr,
                                                                 "Record not completed"
@@ -1665,7 +1495,9 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .red,
                                                                 ),
                                                               );
-                                                            }
+                                                            } */
+                                                            completeOrder(
+                                                                index);
                                                           },
                                                         );
                                                       },

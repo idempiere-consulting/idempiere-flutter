@@ -87,7 +87,7 @@ class _AttachmentListState extends State<AttachmentList> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return Column(
+           return Column(
               children: const [
                 SizedBox(
                   height: 10,

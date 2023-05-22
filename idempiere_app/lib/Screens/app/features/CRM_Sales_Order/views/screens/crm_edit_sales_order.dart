@@ -525,118 +525,14 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Document Type'.tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllDocType(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<DTRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownDocType,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownDocType = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.id.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Business Partner Location'.tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getBPLocations(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPLRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownBPLocation,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownBPLocation = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.id.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-              ],
-            );
-          },
-          desktopBuilder: (context, constraints) {
-            return Column(
-              children: [
-                const SizedBox(
-                  height: 10,
-                ),
-                Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: docNoFieldController,
+                    readOnly: true,
+                    controller: businessPartnerFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
-                      labelText: 'DocumentNo'.tr,
+                      labelText: 'Business Partner'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -735,6 +631,284 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                             : const Center(
                                 child: CircularProgressIndicator(),
                               ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Payment Rule".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: pRuleAvailable
+                      ? DropdownButton(
+                          value: paymentRuleId,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            paymentRuleId = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: pRules.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              value: list.value,
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                            );
+                          }).toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Paid'.tr),
+                  value: isPaid,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isPaid = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: amountFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Net Amount'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+          desktopBuilder: (context, constraints) {
+            return Column(
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: docNoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'DocumentNo'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: businessPartnerFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Document Type'.tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllDocType(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<DTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownDocType,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownDocType = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Business Partner Location'.tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getBPLocations(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPLRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownBPLocation,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownBPLocation = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.id.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(top: 30),
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Payment Rule".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: pRuleAvailable
+                      ? DropdownButton(
+                          value: paymentRuleId,
+                          elevation: 16,
+                          onChanged: (String? newValue) {
+                            paymentRuleId = newValue!;
+
+                            //print(dropdownValue);
+                          },
+                          items: pRules.records!.map((list) {
+                            return DropdownMenuItem<String>(
+                              value: list.value,
+                              child: Text(
+                                list.name.toString(),
+                              ),
+                            );
+                          }).toList(),
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Paid'.tr),
+                  value: isPaid,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isPaid = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    controller: amountFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Net Amount'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ],

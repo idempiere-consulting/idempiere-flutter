@@ -657,7 +657,109 @@ class _EditCRMTaskState extends State<EditCRMTask> {
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllBPs(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<BPRecords>(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    minLines: 1,
+                                    maxLines: 4,
+                                    controller: businessPartnerFieldController,
+                                    //autofocus: true,
+                                    /* style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic), */
+                                    decoration: const InputDecoration(
+                                      prefixIcon:
+                                          Icon(Icons.handshake_outlined),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Business Partner',
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    businessPartnerId = suggestion.id!;
+                                    businessPartnerFieldController.text =
+                                        suggestion.name;
+                                    //productName = selection.name;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllProjects(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<PJRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<PJRecords>(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    minLines: 1,
+                                    maxLines: 4,
+                                    controller: projectFieldController,
+                                    //autofocus: true,
+                                    /* style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic), */
+                                    decoration: InputDecoration(
+                                      prefixIcon:
+                                          const Icon(Icons.handshake_outlined),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'Project'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    projectId = suggestion.id!;
+                                    projectFieldController.text =
+                                        suggestion.name;
+                                    //productName = selection.name;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
                     child: TextField(
+                      minLines: 1,
+                      maxLines: 4,
                       controller: nameFieldController,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_outlined),
@@ -670,6 +772,8 @@ class _EditCRMTaskState extends State<EditCRMTask> {
                   Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      minLines: 1,
+                      maxLines: 4,
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -772,6 +876,51 @@ class _EditCRMTaskState extends State<EditCRMTask> {
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSalesRep(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<Records>(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    minLines: 1,
+                                    maxLines: 4,
+                                    controller: userFieldController,
+                                    decoration: InputDecoration(
+                                      prefixIcon:
+                                          const Icon(Icons.person_outline),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'User'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    userValue = suggestion.name!;
+                                    userFieldController.text = suggestion.name;
+                                    //productName = selection.name;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(
@@ -814,7 +963,109 @@ class _EditCRMTaskState extends State<EditCRMTask> {
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllBPs(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<BPRecords>(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    minLines: 1,
+                                    maxLines: 4,
+                                    controller: businessPartnerFieldController,
+                                    //autofocus: true,
+                                    /* style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic), */
+                                    decoration: const InputDecoration(
+                                      prefixIcon:
+                                          Icon(Icons.handshake_outlined),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Business Partner',
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    businessPartnerId = suggestion.id!;
+                                    businessPartnerFieldController.text =
+                                        suggestion.name;
+                                    //productName = selection.name;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllProjects(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<PJRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<PJRecords>(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    minLines: 1,
+                                    maxLines: 4,
+                                    controller: projectFieldController,
+                                    //autofocus: true,
+                                    /* style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic), */
+                                    decoration: InputDecoration(
+                                      prefixIcon:
+                                          const Icon(Icons.handshake_outlined),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'Project'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    projectId = suggestion.id!;
+                                    projectFieldController.text =
+                                        suggestion.name;
+                                    //productName = selection.name;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
                     child: TextField(
+                      minLines: 1,
+                      maxLines: 4,
                       controller: nameFieldController,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_outlined),
@@ -827,6 +1078,8 @@ class _EditCRMTaskState extends State<EditCRMTask> {
                   Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
+                      minLines: 1,
+                      maxLines: 4,
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -929,6 +1182,51 @@ class _EditCRMTaskState extends State<EditCRMTask> {
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSalesRep(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<Records>(
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    minLines: 1,
+                                    maxLines: 4,
+                                    controller: userFieldController,
+                                    decoration: InputDecoration(
+                                      prefixIcon:
+                                          const Icon(Icons.person_outline),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'User'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    userValue = suggestion.name!;
+                                    userFieldController.text = suggestion.name;
+                                    //productName = selection.name;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(

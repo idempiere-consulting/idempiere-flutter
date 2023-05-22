@@ -431,7 +431,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
           tabletBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing),
-              Row(
+              /* Row(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 30),
@@ -446,7 +446,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                     ),
                   ),
                 ],
-              ),
+              ), */
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -454,11 +454,11 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller.trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(
                             () => Visibility(
-                              visible: true,
+                              visible: controller.dataAvailable,
                               child: Card(
                                 elevation: 8.0,
                                 margin: const EdgeInsets.symmetric(
@@ -480,11 +480,45 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                       child: IconButton(
                                         icon: const Icon(
                                           Icons.edit,
-                                          color: Colors.green,
+                                          color: Colors.grey,
                                         ),
                                         tooltip: 'Edit Lead',
                                         onPressed: () {
                                           //log("info button pressed");
+                                          Get.to(const EditAnomalyList(),
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "index": index,
+                                                "fault": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .lITNCFaultTypeID
+                                                    ?.identifier,
+                                                "resource": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mPMaintainResourceID
+                                                    ?.identifier,
+                                                "manByCustomer": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .lITIsManagedByCustomer,
+                                                "invoiced": controller.trx
+                                                    .records![index].isInvoiced,
+                                                "replaced": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .lITIsReplaced,
+                                                "note": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description,
+                                                "closed": controller.trx
+                                                    .records![index].isClosed,
+                                                "offlineid": controller.trx
+                                                    .records![index].offlineId,
+                                              });
                                         },
                                       ),
                                     ),
@@ -504,7 +538,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                     subtitle: Row(
                                       children: <Widget>[
                                         const Icon(Icons.warning,
-                                            color: Colors.red),
+                                            color: Colors.white),
                                         Text(
                                           controller
                                                   .trx
@@ -541,19 +575,38 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    ""),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
                                               ],
                                             ),
                                           ),
                                           Row(
                                             children: [
                                               Text(
-                                                "Date".tr,
+                                                "Note: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Date : ".tr,
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -564,6 +617,142 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                                       .dateDoc ??
                                                   ""),
                                             ],
+                                          ),
+                                          /* ButtonBar(
+                                            alignment: MainAxisAlignment.center,
+                                            overflowDirection:
+                                                VerticalDirection.down,
+                                            overflowButtonSpacing: 5,
+                                            children: [
+                                              ElevatedButton(
+                                                child:
+                                                    Text("Show Attachments".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.to(const AttachmentList(),
+                                                      arguments: {
+                                                        "id": controller._trx
+                                                            .records![index].id
+                                                      });
+                                                },
+                                              ),
+                                            ],
+                                          ), */
+                                          Obx(
+                                            () => controller
+                                                    ._attachmentsAvailable.value
+                                                ? ListView.builder(
+                                                    primary: false,
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    shrinkWrap: true,
+                                                    itemCount: controller.att
+                                                        .attachments!.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index2) {
+                                                      return Visibility(
+                                                        visible: controller
+                                                                .att
+                                                                .attachments![
+                                                                    index2]
+                                                                .id ==
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                        child: Card(
+                                                          elevation: 8.0,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10.0,
+                                                                  vertical:
+                                                                      6.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            64,
+                                                                            75,
+                                                                            96,
+                                                                            .9)),
+                                                            child: ListTile(
+                                                              onTap: () {
+                                                                /* Get.to(
+                                                                    const AnomalyImage(),
+                                                                    arguments: {
+                                                                      "base64": controller
+                                                                          .att
+                                                                          .attachments![
+                                                                              index2]
+                                                                          .value
+                                                                    }); */
+                                                                controller.getAttachmentData(
+                                                                    controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .id!,
+                                                                    controller
+                                                                        .att
+                                                                        .attachments![
+                                                                            index2]
+                                                                        .name!);
+                                                              },
+                                                              trailing:
+                                                                  IconButton(
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons
+                                                                      .cancel_outlined,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                                onPressed: () {
+                                                                  controller.deleteAttachment(
+                                                                      index2,
+                                                                      controller
+                                                                          .trx
+                                                                          .records![
+                                                                              index]
+                                                                          .id!,
+                                                                      controller
+                                                                          .att
+                                                                          .attachments![
+                                                                              index2]
+                                                                          .name!);
+                                                                },
+                                                              ),
+                                                              title: Text(
+                                                                controller
+                                                                        .att
+                                                                        .attachments![
+                                                                            index]
+                                                                        .name ??
+                                                                    "",
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  )
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator()),
                                           ),
                                         ],
                                       ),
@@ -582,7 +771,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
           desktopBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing),
-              Row(
+              /* Row(
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 30),
@@ -597,7 +786,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                     ),
                   ),
                 ],
-              ),
+              ), */
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -605,11 +794,11 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
-                        itemCount: controller.trx.rowcount,
+                        itemCount: controller.trx.records!.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(
                             () => Visibility(
-                              visible: true,
+                              visible: controller.dataAvailable,
                               child: Card(
                                 elevation: 8.0,
                                 margin: const EdgeInsets.symmetric(
@@ -631,11 +820,45 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                       child: IconButton(
                                         icon: const Icon(
                                           Icons.edit,
-                                          color: Colors.green,
+                                          color: Colors.grey,
                                         ),
                                         tooltip: 'Edit Lead',
                                         onPressed: () {
                                           //log("info button pressed");
+                                          Get.to(const EditAnomalyList(),
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "index": index,
+                                                "fault": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .lITNCFaultTypeID
+                                                    ?.identifier,
+                                                "resource": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mPMaintainResourceID
+                                                    ?.identifier,
+                                                "manByCustomer": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .lITIsManagedByCustomer,
+                                                "invoiced": controller.trx
+                                                    .records![index].isInvoiced,
+                                                "replaced": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .lITIsReplaced,
+                                                "note": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description,
+                                                "closed": controller.trx
+                                                    .records![index].isClosed,
+                                                "offlineid": controller.trx
+                                                    .records![index].offlineId,
+                                              });
                                         },
                                       ),
                                     ),
@@ -655,7 +878,7 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                     subtitle: Row(
                                       children: <Widget>[
                                         const Icon(Icons.warning,
-                                            color: Colors.red),
+                                            color: Colors.white),
                                         Text(
                                           controller
                                                   .trx
@@ -692,19 +915,38 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    ""),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
                                               ],
                                             ),
                                           ),
                                           Row(
                                             children: [
                                               Text(
-                                                "Date".tr,
+                                                "Note: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Date : ".tr,
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -715,6 +957,142 @@ class AnomalyListScreen extends GetView<AnomalyListController> {
                                                       .dateDoc ??
                                                   ""),
                                             ],
+                                          ),
+                                          /* ButtonBar(
+                                            alignment: MainAxisAlignment.center,
+                                            overflowDirection:
+                                                VerticalDirection.down,
+                                            overflowButtonSpacing: 5,
+                                            children: [
+                                              ElevatedButton(
+                                                child:
+                                                    Text("Show Attachments".tr),
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  Get.to(const AttachmentList(),
+                                                      arguments: {
+                                                        "id": controller._trx
+                                                            .records![index].id
+                                                      });
+                                                },
+                                              ),
+                                            ],
+                                          ), */
+                                          Obx(
+                                            () => controller
+                                                    ._attachmentsAvailable.value
+                                                ? ListView.builder(
+                                                    primary: false,
+                                                    scrollDirection:
+                                                        Axis.vertical,
+                                                    shrinkWrap: true,
+                                                    itemCount: controller.att
+                                                        .attachments!.length,
+                                                    itemBuilder:
+                                                        (BuildContext context,
+                                                            int index2) {
+                                                      return Visibility(
+                                                        visible: controller
+                                                                .att
+                                                                .attachments![
+                                                                    index2]
+                                                                .id ==
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                        child: Card(
+                                                          elevation: 8.0,
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10.0,
+                                                                  vertical:
+                                                                      6.0),
+                                                          child: Container(
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                    color: Color
+                                                                        .fromRGBO(
+                                                                            64,
+                                                                            75,
+                                                                            96,
+                                                                            .9)),
+                                                            child: ListTile(
+                                                              onTap: () {
+                                                                /* Get.to(
+                                                                    const AnomalyImage(),
+                                                                    arguments: {
+                                                                      "base64": controller
+                                                                          .att
+                                                                          .attachments![
+                                                                              index2]
+                                                                          .value
+                                                                    }); */
+                                                                controller.getAttachmentData(
+                                                                    controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .id!,
+                                                                    controller
+                                                                        .att
+                                                                        .attachments![
+                                                                            index2]
+                                                                        .name!);
+                                                              },
+                                                              trailing:
+                                                                  IconButton(
+                                                                icon:
+                                                                    const Icon(
+                                                                  Icons
+                                                                      .cancel_outlined,
+                                                                  color: Colors
+                                                                      .red,
+                                                                ),
+                                                                onPressed: () {
+                                                                  controller.deleteAttachment(
+                                                                      index2,
+                                                                      controller
+                                                                          .trx
+                                                                          .records![
+                                                                              index]
+                                                                          .id!,
+                                                                      controller
+                                                                          .att
+                                                                          .attachments![
+                                                                              index2]
+                                                                          .name!);
+                                                                },
+                                                              ),
+                                                              title: Text(
+                                                                controller
+                                                                        .att
+                                                                        .attachments![
+                                                                            index]
+                                                                        .name ??
+                                                                    "",
+                                                                style: const TextStyle(
+                                                                    color: Colors
+                                                                        .white,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      );
+                                                    },
+                                                  )
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator()),
                                           ),
                                         ],
                                       ),

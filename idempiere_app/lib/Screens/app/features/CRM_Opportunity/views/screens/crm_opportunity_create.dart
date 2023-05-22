@@ -641,125 +641,46 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   height: 10,
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Business Partner".tr,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllBPs(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                //initialValue: bPName,
-                                displayStringForOption:
-                                    _displayBPStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return ("${option.value}_${option.name}")
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
+                            ? TypeAheadField<BPRecords>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: bPartnerFieldController,
+                                  //autofocus: true,
+                                  /* style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic), */
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.handshake_outlined),
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Business Partner',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
                                 },
-                                onSelected: (BPRecords selection) {
-                                  bPId = selection.id!;
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
                                 },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: amtFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'OpportunityAmt'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                        signed: true, decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Product".tr,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllProducts(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<PRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<PRecords>(
-                                //initialValue: productName,
-                                displayStringForOption:
-                                    _displayProductStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<PRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((PRecords option) {
-                                    return ("${option.value}_${option.name}")
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (PRecords selection) {
-                                  setState(() {
-                                    productId = selection.id!;
-                                    //productName = selection.name;
-                                  });
-                                  //print(productId);
-
-                                  //print(salesrepValue);
+                                onSuggestionSelected: (suggestion) {
+                                  bPId = suggestion.id!;
+                                  bPartnerFieldController.text =
+                                      suggestion.name;
+                                  //productName = selection.name;
                                 },
                               )
                             : const Center(
@@ -772,65 +693,191 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   child: TextField(
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.message),
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 4,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                    minLines: 1,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<PRecords>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: productFieldController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.shopping_bag),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Product'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      ("${element.value}_${element.name}")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                    subtitle: Text(suggestion.value ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  productId = suggestion.id!;
+                                  productFieldController.text = suggestion.name;
+                                  //productName = selection.name;
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: probabilityFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.percent),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Probability'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: amtFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.payment),
+                      border: const OutlineInputBorder(),
+                      labelText: 'OpportunityAmt'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue: TextEditingValue(
-                                    text: GetStorage().read('user')),
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
-                                  }
-                                  return snapshot.data!.where((Records option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
+                            ? TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: salesRepFieldController,
+                                  decoration: InputDecoration(
+                                    prefixIcon:
+                                        const Icon(Icons.person_outline),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'SalesRep'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
                                 },
-                                onSelected: (Records selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  salesrepValue = suggestion.name!;
+                                  salesRepFieldController.text =
+                                      suggestion.name;
+                                  //productName = selection.name;
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllCampaigns(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<CRecords>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: campaignFieldController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.abc),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Campaign'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  campaignId = suggestion.id!;
+                                  campaignFieldController.text =
+                                      suggestion.name;
+                                  //productName = selection.name;
                                 },
                               )
                             : const Center(
@@ -896,131 +943,46 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   height: 10,
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Business Partner".tr,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllBPs(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<BPRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<BPRecords>(
-                                //initialValue: bPName,
-                                displayStringForOption:
-                                    _displayBPStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<BPRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((BPRecords option) {
-                                    return ("${option.value}_${option.name}")
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
+                            ? TypeAheadField<BPRecords>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: bPartnerFieldController,
+                                  //autofocus: true,
+                                  /* style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic), */
+                                  decoration: const InputDecoration(
+                                    prefixIcon: Icon(Icons.handshake_outlined),
+                                    border: OutlineInputBorder(),
+                                    labelText: 'Business Partner',
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
                                 },
-                                onSelected: (BPRecords selection) {
-                                  setState(() {
-                                    bPId = selection.id!;
-                                    //productName = selection.name;
-                                  });
-                                  //print(bPId);
-
-                                  //print(salesrepValue);
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
                                 },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: amtFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.person_outlined),
-                      border: const OutlineInputBorder(),
-                      labelText: 'OpportunityAmt'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                        signed: true, decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Product".tr,
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllProducts(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<PRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? Autocomplete<PRecords>(
-                                //initialValue: productName,
-                                displayStringForOption:
-                                    _displayProductStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<PRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((PRecords option) {
-                                    return ("${option.value}_${option.name}")
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (PRecords selection) {
-                                  setState(() {
-                                    productId = selection.id!;
-                                    //productName = selection.name;
-                                  });
-                                  //print(productId);
-
-                                  //print(salesrepValue);
+                                onSuggestionSelected: (suggestion) {
+                                  bPId = suggestion.id!;
+                                  bPartnerFieldController.text =
+                                      suggestion.name;
+                                  //productName = selection.name;
                                 },
                               )
                             : const Center(
@@ -1033,65 +995,191 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                   child: TextField(
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.message),
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 4,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                    minLines: 1,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<PRecords>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: productFieldController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.shopping_bag),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Product'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      ("${element.value}_${element.name}")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                    subtitle: Text(suggestion.value ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  productId = suggestion.id!;
+                                  productFieldController.text = suggestion.name;
+                                  //productName = selection.name;
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: probabilityFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.percent),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Probability'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    keyboardType:
+                        const TextInputType.numberWithOptions(decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: amtFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.payment),
+                      border: const OutlineInputBorder(),
+                      labelText: 'OpportunityAmt'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue: TextEditingValue(
-                                    text: GetStorage().read('user')),
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
-                                  }
-                                  return snapshot.data!.where((Records option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
+                            ? TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: salesRepFieldController,
+                                  decoration: InputDecoration(
+                                    prefixIcon:
+                                        const Icon(Icons.person_outline),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'SalesRep'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
                                 },
-                                onSelected: (Records selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
-                                  });
-
-                                  //print(salesrepValue);
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  salesrepValue = suggestion.name!;
+                                  salesRepFieldController.text =
+                                      suggestion.name;
+                                  //productName = selection.name;
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllCampaigns(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<CRecords>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  minLines: 1,
+                                  maxLines: 4,
+                                  controller: campaignFieldController,
+                                  decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.abc),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Campaign'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  campaignId = suggestion.id!;
+                                  campaignFieldController.text =
+                                      suggestion.name;
+                                  //productName = selection.name;
                                 },
                               )
                             : const Center(

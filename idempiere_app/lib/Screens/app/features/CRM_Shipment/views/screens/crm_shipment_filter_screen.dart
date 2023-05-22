@@ -298,13 +298,291 @@ class _CRMFilterShipmentState extends State<CRMFilterShipment> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      child: FutureBuilder(
+                        future: getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<BPRecords>(
+                                    direction: AxisDirection.up,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            businessPartnerId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: bpSearchFieldController,
+                                      //autofocus: true,
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .copyWith(
+                                              fontStyle: FontStyle.italic),
+                                      decoration: InputDecoration(
+                                        labelText: 'Business Partner'.tr,
+                                        //filled: true,
+                                        border: const OutlineInputBorder(
+                                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                            ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        //hintText: "search..",
+                                        isDense: true,
+                                        //fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      bpSearchFieldController.text =
+                                          suggestion.name!;
+                                      businessPartnerId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: TextField(
+                        // maxLength: 10,
+                        keyboardType: TextInputType.datetime,
+                        controller: dateStartFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Date From'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: 'DD/MM/YYYY',
+                          counterText: '',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                          LengthLimitingTextInputFormatter(10),
+                          _DateFormatterCustom(),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: TextField(
+                        // maxLength: 10,
+                        keyboardType: TextInputType.datetime,
+                        controller: dateEndFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Date To'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: 'DD/MM/YYYY',
+                          counterText: '',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                          LengthLimitingTextInputFormatter(10),
+                          _DateFormatterCustom(),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: docNoFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'DocumentNo'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10, right: 10),
+                      child: FutureBuilder(
+                        future: getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<BPRecords>(
+                                    direction: AxisDirection.up,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            businessPartnerId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: bpSearchFieldController,
+                                      //autofocus: true,
+                                      style: DefaultTextStyle.of(context)
+                                          .style
+                                          .copyWith(
+                                              fontStyle: FontStyle.italic),
+                                      decoration: InputDecoration(
+                                        labelText: 'Business Partner'.tr,
+                                        //filled: true,
+                                        border: const OutlineInputBorder(
+                                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                            ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        //hintText: "search..",
+                                        isDense: true,
+                                        //fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      bpSearchFieldController.text =
+                                          suggestion.name!;
+                                      businessPartnerId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: TextField(
+                        // maxLength: 10,
+                        keyboardType: TextInputType.datetime,
+                        controller: dateStartFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Date From'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: 'DD/MM/YYYY',
+                          counterText: '',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                          LengthLimitingTextInputFormatter(10),
+                          _DateFormatterCustom(),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: TextField(
+                        // maxLength: 10,
+                        keyboardType: TextInputType.datetime,
+                        controller: dateEndFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(EvaIcons.calendarOutline),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Date To'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                          hintText: 'DD/MM/YYYY',
+                          counterText: '',
+                        ),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                          LengthLimitingTextInputFormatter(10),
+                          _DateFormatterCustom(),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: docNoFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'DocumentNo'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
         ),

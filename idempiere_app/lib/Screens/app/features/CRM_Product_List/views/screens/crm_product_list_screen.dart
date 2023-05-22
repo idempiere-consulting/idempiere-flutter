@@ -222,89 +222,26 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
                 //_buildProfile(data: controller.getProfil()),
                 //const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Product List: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getProductLists();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].value!
-                                      .toLowerCase()) {
-                                Get.to(const ProductListDetail(), arguments: {
-                                  "id": controller.trx.records![i].id,
-                                });
-                              }
-                            }
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Product Value'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
+
                 Obx(
                   () => controller.dataAvailable
-                      ? SizedBox(
-                          height: size.height,
-                          width: double.infinity,
-                          child: MasonryGridView.count(
-                            shrinkWrap: true,
-                            itemCount: controller.trx.records?.length ?? 0,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            itemBuilder: (context, index) {
-                              return buildImageCard(index);
-                            },
-                          ))
+                      ? MasonryGridView.count(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records?.length ?? 0,
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          itemBuilder: (context, index) {
+                            return buildImageCard(index);
+                          },
+                        )
                       : const Center(child: CircularProgressIndicator()),
                 ),
               ]);
@@ -312,89 +249,26 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
                 //_buildProfile(data: controller.getProfil()),
                 //const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Product List: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getProductLists();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].value!
-                                      .toLowerCase()) {
-                                Get.to(const ProductListDetail(), arguments: {
-                                  "id": controller.trx.records![i].id,
-                                });
-                              }
-                            }
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Product Value'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 10),
+
                 Obx(
                   () => controller.dataAvailable
-                      ? SizedBox(
-                          height: size.height,
-                          width: double.infinity,
-                          child: MasonryGridView.count(
-                            shrinkWrap: true,
-                            itemCount: controller.trx.records?.length ?? 0,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            itemBuilder: (context, index) {
-                              return buildImageCard(index);
-                            },
-                          ))
+                      ? MasonryGridView.count(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records?.length ?? 0,
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          itemBuilder: (context, index) {
+                            return buildImageCard(index);
+                          },
+                        )
                       : const Center(child: CircularProgressIndicator()),
                 ),
               ]);

@@ -168,13 +168,141 @@ class _CRMFilterPriceListState extends State<CRMFilterPriceList> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: valueFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Value'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: descriptionFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Description'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: valueFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Value'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: descriptionFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Description'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
         ),

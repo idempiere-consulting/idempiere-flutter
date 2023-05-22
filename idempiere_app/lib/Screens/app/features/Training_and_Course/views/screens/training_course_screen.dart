@@ -120,7 +120,7 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-                const SizedBox(height: kSpacing * 2),
+                //const SizedBox(height: kSpacing * 2),
                 /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
@@ -133,8 +133,8 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
                 ), */
-                const SizedBox(height: kSpacing),
-                _buildRecentMessages(data: controller.getChatting()),
+                /* const SizedBox(height: kSpacing),
+                _buildRecentMessages(data: controller.getChatting()), */
               ]);
             },
             desktopBuilder: (context, constraints) {
@@ -154,7 +154,7 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
                 padding: const EdgeInsets.symmetric(horizontal: kSpacing),
                 child: GetPremiumCard(onPressed: () {}),
               ), */
-                const SizedBox(height: kSpacing * 2),
+                //const SizedBox(height: kSpacing * 2),
                 /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
@@ -167,8 +167,8 @@ class TrainingCourseScreen extends GetView<TrainingCourseController> {
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
                 ), */
-                const SizedBox(height: kSpacing),
-                _buildRecentMessages(data: controller.getChatting()),
+                /* const SizedBox(height: kSpacing),
+                _buildRecentMessages(data: controller.getChatting()), */
               ]);
             },
           ),

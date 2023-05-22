@@ -325,180 +325,204 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                //_buildProfile(data: controller.getProfil()),
-                //const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Product List: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getPriceList();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].value!
-                                      .toLowerCase()) {
-                                Get.to(const ProductListDetail(), arguments: {
-                                  "id": controller.trx.records![i].id,
-                                });
-                              }
-                            }
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Product Value'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 10),
                 Obx(
-                  () => controller.dataAvailable
-                      ? SizedBox(
-                          height: size.height,
-                          width: double.infinity,
-                          child: MasonryGridView.count(
-                            shrinkWrap: true,
-                            itemCount: controller.trx.records?.length ?? 0,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            itemBuilder: (context, index) {
-                              return buildImageCard(index);
-                            },
-                          ))
-                      : const Center(child: CircularProgressIndicator()),
+                  () => Visibility(
+                    visible: controller._isListShown.value == false,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value == false,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId.value =
+                                          selection.id!;
+                                      controller.priceListId.value =
+                                          selection.mPriceListID!.id!;
+                                      controller._isListShown.value = true;
+                                      controller.getPriceList();
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value,
+                    child: Obx(
+                      () => controller.dataAvailable
+                          ? SizedBox(
+                              height: size.height,
+                              width: double.infinity,
+                              child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index);
+                                },
+                              ))
+                          : const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
                 ),
               ]);
             },
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                //_buildProfile(data: controller.getProfil()),
-                //const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Product List: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Product List: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getPriceList();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            for (var i = 0; i < controller.trx.rowcount!; i++) {
-                              if (value.toString().toLowerCase() ==
-                                  controller.trx.records![i].value!
-                                      .toLowerCase()) {
-                                Get.to(const ProductListDetail(), arguments: {
-                                  "id": controller.trx.records![i].id,
-                                });
-                              }
-                            }
-                          },
-                          decoration: InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Product Value'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 10),
                 Obx(
-                  () => controller.dataAvailable
-                      ? SizedBox(
-                          height: size.height,
-                          width: double.infinity,
-                          child: MasonryGridView.count(
-                            shrinkWrap: true,
-                            itemCount: controller.trx.records?.length ?? 0,
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 8,
-                            crossAxisSpacing: 8,
-                            itemBuilder: (context, index) {
-                              return buildImageCard(index);
-                            },
-                          ))
-                      : const Center(child: CircularProgressIndicator()),
+                  () => Visibility(
+                    visible: controller._isListShown.value == false,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value == false,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId.value =
+                                          selection.id!;
+                                      controller.priceListId.value =
+                                          selection.mPriceListID!.id!;
+                                      controller._isListShown.value = true;
+                                      controller.getPriceList();
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller._isListShown.value,
+                    child: Obx(
+                      () => controller.dataAvailable
+                          ? SizedBox(
+                              height: size.height,
+                              width: double.infinity,
+                              child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller.trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index);
+                                },
+                              ))
+                          : const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
                 ),
               ]);
             },

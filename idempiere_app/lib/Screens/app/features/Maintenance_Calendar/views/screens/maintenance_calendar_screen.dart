@@ -876,35 +876,44 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                   builder: (BuildContext ctx,
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
-                          ? Autocomplete<Records>(
-                              initialValue: TextEditingValue(
-                                  text: GetStorage().read('user') ?? ""),
-                              displayStringForOption: _displayStringForOption,
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<Records>.empty();
-                                }
-                                return snapshot.data!.where((Records option) {
-                                  return option.name!
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(
-                                          textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              onSelected: (Records selection) {
-                                //debugPrint(
-                                //'You just selected ${_displayStringForOption(selection)}');
-                                setState(() {
-                                  flag = false;
-                                  adUserId = selection.id!;
-                                  //flag = true;
-                                });
-                                getAllEvents();
+                          ? Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: Autocomplete<Records>(
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user') ?? ""),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = selection.id!;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
 
-                                //print(salesrepValue);
-                              },
+                                  //print(salesrepValue);
+                                },
+                              ),
                             )
                           : Visibility(
                               visible: int.parse(list[0], radix: 16)
@@ -1041,16 +1050,17 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                         tooltip: 'Edit Event'.tr,
                         onPressed: () {
-                          Get.off(const EditCalendarEvent(), arguments: {
-                            "id": event.id,
-                            "name": event.title,
-                            "description": event.description,
-                            "typeId": event.typeId,
-                            "startDate": event.scheduledStartDate,
-                            "startTime": event.scheduledStartTime,
-                            "endTime": event.scheduledEndTime,
-                            "statusId": event.statusId,
-                          });
+                          Get.off(const EditWorkOrderCalendarEvent(),
+                              arguments: {
+                                "id": event.id,
+                                "name": event.title,
+                                "description": event.description,
+                                "typeId": event.typeId,
+                                "startDate": event.scheduledStartDate,
+                                "startTime": event.scheduledStartTime,
+                                "endTime": event.scheduledEndTime,
+                                "statusId": event.statusId,
+                              });
                         },
                       ),
                     ),
@@ -1104,6 +1114,29 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
+                        ),
+                        Visibility(
+                          visible: event.workOrderId != 0,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                    onPressed: () {
+                                      //print(event.workOrderId);
+
+                                      Get.offNamed('/MaintenanceMptask',
+                                          arguments: {
+                                            'notificationId': event.workOrderId
+                                          });
+                                    },
+                                    child: Text(
+                                      event.workOrderName,
+                                      style:
+                                          const TextStyle(color: kNotifColor),
+                                    )),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),
@@ -1226,35 +1259,44 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                   builder: (BuildContext ctx,
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
-                          ? Autocomplete<Records>(
-                              initialValue: TextEditingValue(
-                                  text: GetStorage().read('user') ?? ""),
-                              displayStringForOption: _displayStringForOption,
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<Records>.empty();
-                                }
-                                return snapshot.data!.where((Records option) {
-                                  return option.name!
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(
-                                          textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              onSelected: (Records selection) {
-                                //debugPrint(
-                                //'You just selected ${_displayStringForOption(selection)}');
-                                setState(() {
-                                  flag = false;
-                                  adUserId = selection.id!;
-                                  //flag = true;
-                                });
-                                getAllEvents();
+                          ? Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: Autocomplete<Records>(
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user') ?? ""),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = selection.id!;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
 
-                                //print(salesrepValue);
-                              },
+                                  //print(salesrepValue);
+                                },
+                              ),
                             )
                           : Visibility(
                               visible: int.parse(list[0], radix: 16)
@@ -1391,16 +1433,17 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                         ),
                         tooltip: 'Edit Event'.tr,
                         onPressed: () {
-                          Get.off(const EditCalendarEvent(), arguments: {
-                            "id": event.id,
-                            "name": event.title,
-                            "description": event.description,
-                            "typeId": event.typeId,
-                            "startDate": event.scheduledStartDate,
-                            "startTime": event.scheduledStartTime,
-                            "endTime": event.scheduledEndTime,
-                            "statusId": event.statusId,
-                          });
+                          Get.off(const EditWorkOrderCalendarEvent(),
+                              arguments: {
+                                "id": event.id,
+                                "name": event.title,
+                                "description": event.description,
+                                "typeId": event.typeId,
+                                "startDate": event.scheduledStartDate,
+                                "startTime": event.scheduledStartTime,
+                                "endTime": event.scheduledEndTime,
+                                "statusId": event.statusId,
+                              });
                         },
                       ),
                     ),
@@ -1454,6 +1497,29 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                               style: const TextStyle(color: Colors.white),
                             ),
                           ],
+                        ),
+                        Visibility(
+                          visible: event.workOrderId != 0,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                    onPressed: () {
+                                      //print(event.workOrderId);
+
+                                      Get.offNamed('/MaintenanceMptask',
+                                          arguments: {
+                                            'notificationId': event.workOrderId
+                                          });
+                                    },
+                                    child: Text(
+                                      event.workOrderName,
+                                      style:
+                                          const TextStyle(color: kNotifColor),
+                                    )),
+                              )
+                            ],
+                          ),
                         ),
                       ],
                     ),

@@ -319,7 +319,7 @@ class _CRMEditHTMLSalesOrderState extends State<CRMEditHTMLSalesOrder> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 HtmlEditor(
                   controller: controller,
                   htmlEditorOptions: HtmlEditorOptions(
@@ -498,7 +498,7 @@ class _CRMEditHTMLSalesOrderState extends State<CRMEditHTMLSalesOrder> {
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: <Widget>[
                 HtmlEditor(
                   controller: controller,
                   htmlEditorOptions: HtmlEditorOptions(

@@ -799,10 +799,1394 @@ class CRMSalesOrderCreationScreen
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  child: Obx(
+                    () => StepProgressIndicator(
+                      roundedEdges: const Radius.circular(10),
+                      totalSteps: 4,
+                      currentStep: controller.filterCount.value + 1,
+                      size: 36,
+                      onTap: (index) {
+                        return () {
+                          if (kDebugMode) {
+                            print('$index pressed');
+                          }
+                        };
+                      },
+                      selectedColor: kNotifColor,
+                      unselectedColor: Colors.grey,
+                      customStep: (index, color, _) => color == kNotifColor
+                          ? index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                          : index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId =
+                                          selection.id!;
+                                      controller.getPaymentTerms();
+                                      controller.getLocationFromBP();
+                                      controller.getSalesOrderDefaultValues();
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Document Type".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.docTypeFlag.value
+                          ? DropdownButton(
+                              value: controller.dropdownValue.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.dropdownValue.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.dropDownList.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.dataAvailable &&
+                        controller.filterCount.value == 1,
+                    child: controller.dataAvailable
+                        ? SizedBox(
+                            //margin: const EdgeInsets.only(top: 10),
+                            height: size.height,
+                            width: double.infinity,
+                            child: MasonryGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: controller.trx.records?.length ?? 0,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              itemBuilder: (BuildContext context, index) =>
+                                  buildImageCard(index),
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 2,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller
+                                                  .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ ${controller.productList[index].cost}",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+                Obx(() => Visibility(
+                      visible: controller.filterCount.value == 2,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text(
+                                  "Total",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "€ ${controller.total.value}",
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    )),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Location".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.bpLocationAvailable.value
+                          ? DropdownButton(
+                              value: controller.bpLocationId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.bpLocationId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.bpLocation.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Payment Term".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.pTermAvailable.value
+                          ? DropdownButton(
+                              value: controller.paymentTermId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.paymentTermId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.pTerms.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Payment Rule".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.pRuleAvailable.value
+                          ? DropdownButton(
+                              value: controller.paymentRuleId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.paymentRuleId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.pRules.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.value,
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: TextButton(
+                        onPressed: () {
+                          Get.defaultDialog(
+                              title: "Create Order".tr,
+                              content: Text(
+                                  "Are you sure you want to create the Order?"
+                                      .tr),
+                              buttonColor: kNotifColor,
+                              textConfirm: "Create".tr,
+                              textCancel: "Cancel".tr,
+                              onConfirm: () {
+                                controller.createSalesOrder();
+                              });
+                        },
+                        child: Text('Confirm Order'.tr),
+                      ),
+                    ),
+                  ),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  child: Obx(
+                    () => StepProgressIndicator(
+                      roundedEdges: const Radius.circular(10),
+                      totalSteps: 4,
+                      currentStep: controller.filterCount.value + 1,
+                      size: 36,
+                      onTap: (index) {
+                        return () {
+                          if (kDebugMode) {
+                            print('$index pressed');
+                          }
+                        };
+                      },
+                      selectedColor: kNotifColor,
+                      unselectedColor: Colors.grey,
+                      customStep: (index, color, _) => color == kNotifColor
+                          ? index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                          : index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.shopping_cart,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId =
+                                          selection.id!;
+                                      controller.getPaymentTerms();
+                                      controller.getLocationFromBP();
+                                      controller.getSalesOrderDefaultValues();
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Document Type".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.docTypeFlag.value
+                          ? DropdownButton(
+                              value: controller.dropdownValue.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.dropdownValue.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.dropDownList.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.dataAvailable &&
+                        controller.filterCount.value == 1,
+                    child: controller.dataAvailable
+                        ? SizedBox(
+                            //margin: const EdgeInsets.only(top: 10),
+                            height: size.height,
+                            width: double.infinity,
+                            child: MasonryGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: controller.trx.records?.length ?? 0,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              itemBuilder: (BuildContext context, index) =>
+                                  buildImageCard(index),
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 2,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller
+                                                  .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ ${controller.productList[index].cost}",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+                Obx(() => Visibility(
+                      visible: controller.filterCount.value == 2,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text(
+                                  "Total",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "€ ${controller.total.value}",
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    )),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Location".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.bpLocationAvailable.value
+                          ? DropdownButton(
+                              value: controller.bpLocationId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.bpLocationId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.bpLocation.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Payment Term".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.pTermAvailable.value
+                          ? DropdownButton(
+                              value: controller.paymentTermId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.paymentTermId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.pTerms.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 30),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Payment Rule".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      width: size.width,
+                      /* decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey, 
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ), */
+                      margin: const EdgeInsets.all(10),
+                      child: controller.pRuleAvailable.value
+                          ? DropdownButton(
+                              value: controller.paymentRuleId.value,
+                              elevation: 16,
+                              onChanged: (String? newValue) {
+                                controller.paymentRuleId.value = newValue!;
+
+                                //print(dropdownValue);
+                              },
+                              items: controller.pRules.records!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.value,
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 20),
+                      child: TextButton(
+                        onPressed: () {
+                          Get.defaultDialog(
+                              title: "Create Order".tr,
+                              content: Text(
+                                  "Are you sure you want to create the Order?"
+                                      .tr),
+                              buttonColor: kNotifColor,
+                              textConfirm: "Create".tr,
+                              textCancel: "Cancel".tr,
+                              onConfirm: () {
+                                controller.createSalesOrder();
+                              });
+                        },
+                        child: Text('Confirm Order'.tr),
+                      ),
+                    ),
+                  ),
+                ),
+              ]);
             },
           ),
         ),

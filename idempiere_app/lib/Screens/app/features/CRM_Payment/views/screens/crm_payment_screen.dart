@@ -429,67 +429,17 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("RECEIPTS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("RECEIPTS: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getPayments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -550,7 +500,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].documentNo ??
+                                    controller.trx.records![index].cBPartnerID
+                                            ?.identifier ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -560,8 +511,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
+                                      const Icon(Icons.event,
+                                          color: Colors.white),
                                       Text(
                                         controller
                                                 .trx.records![index].dateAcct ??
@@ -600,33 +551,21 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.account_balance,
-                                                color: Colors.green,
+                                                color: Colors.white,
                                               ),
                                               tooltip: 'Bank'.tr,
                                               onPressed: () {
                                                 //log("info button pressed");
                                               },
                                             ),
-                                            Text(controller
-                                                    .trx
-                                                    .records![index]
-                                                    .cBankAccountID
-                                                    ?.identifier ??
-                                                "??"),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                                icon: const Icon(
-                                                  Icons.mail,
-                                                  color: Colors.white,
-                                                ),
-                                                tooltip: 'Business Partner',
-                                                onPressed: () {}),
-                                            Text(controller.trx.records![index]
-                                                    .cBPartnerID?.identifier ??
-                                                "??"),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBankAccountID
+                                                      ?.identifier ??
+                                                  "??"),
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -643,21 +582,67 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 '${controller.trx.records![index].payAmt}'),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Invoice: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              controller.trx.records![index]
-                                                      .cInvoiceID?.identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ],
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cInvoiceID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Invoice: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed('/Invoice',
+                                                        arguments: {
+                                                          "notificationId":
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cInvoiceID
+                                                                  ?.id,
+                                                        });
+                                                  },
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cInvoiceID
+                                                            ?.identifier ??
+                                                        "",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Description".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                controller.trx.records![index]
+                                                        .description ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -674,67 +659,17 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("RECEIPTS: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("RECEIPTS: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getPayments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -795,7 +730,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                     ),
                                   ),
                                   title: Text(
-                                    controller.trx.records![index].documentNo ??
+                                    controller.trx.records![index].cBPartnerID
+                                            ?.identifier ??
                                         "???",
                                     style: const TextStyle(
                                         color: Colors.white,
@@ -805,8 +741,8 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
+                                      const Icon(Icons.event,
+                                          color: Colors.white),
                                       Text(
                                         controller
                                                 .trx.records![index].dateAcct ??
@@ -845,33 +781,21 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                             IconButton(
                                               icon: const Icon(
                                                 Icons.account_balance,
-                                                color: Colors.green,
+                                                color: Colors.white,
                                               ),
                                               tooltip: 'Bank'.tr,
                                               onPressed: () {
                                                 //log("info button pressed");
                                               },
                                             ),
-                                            Text(controller
-                                                    .trx
-                                                    .records![index]
-                                                    .cBankAccountID
-                                                    ?.identifier ??
-                                                "??"),
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            IconButton(
-                                                icon: const Icon(
-                                                  Icons.mail,
-                                                  color: Colors.white,
-                                                ),
-                                                tooltip: 'Business Partner',
-                                                onPressed: () {}),
-                                            Text(controller.trx.records![index]
-                                                    .cBPartnerID?.identifier ??
-                                                "??"),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBankAccountID
+                                                      ?.identifier ??
+                                                  "??"),
+                                            ),
                                           ],
                                         ),
                                         Row(
@@ -888,21 +812,67 @@ class CRMPaymentScreen extends GetView<CRMPaymentController> {
                                                 '${controller.trx.records![index].payAmt}'),
                                           ],
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Invoice: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                              controller.trx.records![index]
-                                                      .cInvoiceID?.identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
-                                          ],
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cInvoiceID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Invoice: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed('/Invoice',
+                                                        arguments: {
+                                                          "notificationId":
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cInvoiceID
+                                                                  ?.id,
+                                                        });
+                                                  },
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cInvoiceID
+                                                            ?.identifier ??
+                                                        "",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ))
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .description !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Description".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                controller.trx.records![index]
+                                                        .description ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ],
                                     ),

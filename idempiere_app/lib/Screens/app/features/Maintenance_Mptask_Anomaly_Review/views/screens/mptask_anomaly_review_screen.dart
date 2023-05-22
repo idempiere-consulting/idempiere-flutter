@@ -277,7 +277,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(
                             () => Visibility(
-                              visible: true,
+                              visible: controller.dataAvailable,
                               child: Card(
                                 elevation: 8.0,
                                 margin: const EdgeInsets.symmetric(
@@ -299,7 +299,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                       child: IconButton(
                                         icon: const Icon(
                                           Icons.edit,
-                                          color: Colors.green,
+                                          color: Colors.grey,
                                         ),
                                         tooltip: 'Edit Lead',
                                         onPressed: () {
@@ -323,7 +323,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                     subtitle: Row(
                                       children: <Widget>[
                                         const Icon(Icons.warning,
-                                            color: Colors.red),
+                                            color: Colors.white),
                                         Text(
                                           controller
                                                   .trx
@@ -355,24 +355,43 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  "${"Replacement"}: ".tr,
+                                                  "Replacement: ".tr,
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    ""),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
                                               ],
                                             ),
                                           ),
                                           Row(
                                             children: [
                                               Text(
-                                                "Date".tr,
+                                                "Note: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Date : ".tr,
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -428,7 +447,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                         itemBuilder: (BuildContext context, int index) {
                           return Obx(
                             () => Visibility(
-                              visible: true,
+                              visible: controller.dataAvailable,
                               child: Card(
                                 elevation: 8.0,
                                 margin: const EdgeInsets.symmetric(
@@ -450,7 +469,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                       child: IconButton(
                                         icon: const Icon(
                                           Icons.edit,
-                                          color: Colors.green,
+                                          color: Colors.grey,
                                         ),
                                         tooltip: 'Edit Lead',
                                         onPressed: () {
@@ -474,7 +493,7 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                     subtitle: Row(
                                       children: <Widget>[
                                         const Icon(Icons.warning,
-                                            color: Colors.red),
+                                            color: Colors.white),
                                         Text(
                                           controller
                                                   .trx
@@ -511,19 +530,38 @@ class AnomalyReviewScreen extends GetView<AnomalyReviewController> {
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    ""),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
                                               ],
                                             ),
                                           ),
                                           Row(
                                             children: [
                                               Text(
-                                                "Date".tr,
+                                                "Note: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "Date : ".tr,
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),

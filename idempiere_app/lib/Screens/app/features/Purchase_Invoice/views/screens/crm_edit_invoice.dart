@@ -313,12 +313,256 @@ class _PurchaseEditInvoiceState extends State<PurchaseEditInvoice> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [],
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentTerms(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Term'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Term".tr),
+                                  isExpanded: true,
+                                  value: paymentTermId == "0"
+                                      ? null
+                                      : paymentTermId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentTermId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentRules(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: paymentRuleId == "0"
+                                      ? null
+                                      : paymentRuleId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentRuleId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value,
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+              ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [],
+              children: [
+                const SizedBox(
+                  height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentTerms(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Term'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Term".tr),
+                                  isExpanded: true,
+                                  value: paymentTermId == "0"
+                                      ? null
+                                      : paymentTermId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentTermId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getPaymentRules(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: paymentRuleId == "0"
+                                      ? null
+                                      : paymentRuleId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentRuleId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value,
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+              ],
             );
           },
         ),

@@ -481,9 +481,18 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.toNamed('/ShipmentLine', arguments: {
-                                        "id": controller.trx.records![index].id,
-                                      });
+                                      Get.toNamed('/MaintenanceShipmentLine',
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "docNo": controller
+                                                .trx.records![index].documentNo,
+                                            "bPartner": controller
+                                                .trx
+                                                .records![index]
+                                                .cBPartnerID
+                                                ?.identifier,
+                                          });
                                     },
                                   ),
                                   leading: Container(
@@ -576,6 +585,116 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                   ""),
                                             ),
                                           ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Causale: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litmMovementTypeID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              tooltip: 'print Document',
+                                              onPressed: () async {
+                                                /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                controller.getDocument(index);
+                                                /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                              },
+                                              icon: const Icon(Icons.print),
+                                            ),
+                                            IconButton(
+                                                tooltip: 'print POS invoice',
+                                                onPressed: () async {
+                                                  controller.getBusinessPartner(
+                                                      index);
+                                                },
+                                                icon: const Icon(
+                                                    Icons.receipt_long)),
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id ==
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Reopen'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to reopen the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .reopenProcess(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Reopen".tr),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id !=
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Complete'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to complete the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .completeShipment(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Complete".tr),
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -674,9 +793,18 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.toNamed('/ShipmentLine', arguments: {
-                                        "id": controller.trx.records![index].id,
-                                      });
+                                      Get.toNamed('/MaintenanceShipmentLine',
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "docNo": controller
+                                                .trx.records![index].documentNo,
+                                            "bPartner": controller
+                                                .trx
+                                                .records![index]
+                                                .cBPartnerID
+                                                ?.identifier,
+                                          });
                                     },
                                   ),
                                   leading: Container(
@@ -769,6 +897,116 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                   ""),
                                             ),
                                           ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Causale: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .litmMovementTypeID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              tooltip: 'print Document',
+                                              onPressed: () async {
+                                                /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                controller.getDocument(index);
+                                                /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                              },
+                                              icon: const Icon(Icons.print),
+                                            ),
+                                            IconButton(
+                                                tooltip: 'print POS invoice',
+                                                onPressed: () async {
+                                                  controller.getBusinessPartner(
+                                                      index);
+                                                },
+                                                icon: const Icon(
+                                                    Icons.receipt_long)),
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id ==
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Reopen'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to reopen the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .reopenProcess(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Reopen".tr),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .docStatus
+                                                  ?.id !=
+                                              'CO',
+                                          child: ElevatedButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Complete'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to complete the record?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  controller
+                                                      .completeShipment(index);
+                                                },
+                                              );
+                                            },
+                                            child: Text("Complete".tr),
+                                          ),
                                         ),
                                       ],
                                     ),

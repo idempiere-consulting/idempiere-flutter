@@ -1445,6 +1445,8 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     controller: nameFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
@@ -1457,11 +1459,27 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1491,39 +1509,414 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: urlFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.link),
+                      border: OutlineInputBorder(),
+                      labelText: 'Website',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
-                                displayStringForOption: _displayStringForOption,
+                            ? TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  //autofocus: true,
+                                  controller: salesRepFieldController,
+                                  decoration: InputDecoration(
+                                    labelText: 'SalesRep'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    //isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    salesrepValue = suggestion.name!;
+                                    salesRepFieldController.text =
+                                        suggestion.name!;
+                                  });
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  //padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllSectors(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<JRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Sector'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text("Select a Sector".tr),
+                                  value: sectorValue == "" ? null : sectorValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sectorValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSizes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Lead Size'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text("Select a Size".tr),
+                                  value: sizeDropdownValue == ""
+                                      ? null
+                                      : sizeDropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sizeDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllCampaigns(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Campaign'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Campaign".tr),
+                                  value: campaignDropdownValue == ""
+                                      ? null
+                                      : campaignDropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      campaignDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSources(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Lead Source'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text('Select a Lead Source'.tr),
+                                  value: sourceDropdownValue == ""
+                                      ? null
+                                      : sourceDropdownValue,
+                                  //icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sourceDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadStatuses(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'LeadStatus'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  value: dropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: bpNameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'BP Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: bPartnerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.handshake_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Business Partner',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: addressFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.location_on),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Address'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        createAddress = !createAddress;
+                      });
+                      //openAddressCreation();
+                    },
+                    child: createAddress
+                        ? Text('Close Address Creation'.tr)
+                        : Text('Open Address Creation'.tr)),
+                Visibility(
+                  visible: createAddress,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextField(
+                          minLines: 1,
+                          maxLines: 5,
+                          controller: address1FieldController,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.edit_road),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Street'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 40),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Country".tr,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      countriesDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<CtrRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayCountryStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<CtrRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return countries.records!
+                                      .where((CtrRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -1531,69 +1924,151 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (CtrRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    countryId = selection.id!;
+                                    regionId = 0;
+                                    cityId = 0;
+                                    citiesDataAvailable = false;
                                   });
+                                  getAllRegions();
 
                                   //print(salesrepValue);
                                 },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
                               ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "LeadStatus".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllLeadStatuses(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<LSRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                      Visibility(
+                        visible: regionsDataAvailable,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Region".tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      regionsDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<RegRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayRegionStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<RegRecords>.empty();
+                                  }
+                                  return regions.records!
+                                      .where((RegRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
                                   });
-                                  //print(dropdownValue);
                                 },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.value.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
+                                onSelected: (RegRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    regionId = selection.id!;
+                                    cityId = 0;
+                                    region = selection.name ?? "";
+                                  });
+                                  getAllCities();
+                                  //getAllRegions();
+
+                                  //print(salesrepValue);
+                                },
                               ),
+                            )
+                          : const SizedBox(),
+                      Visibility(
+                        visible: citiesDataAvailable,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "City".tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      citiesDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<CitRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayCityStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<CitRecords>.empty();
+                                  }
+                                  return cities.records!
+                                      .where((CitRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (CitRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    cityId = selection.id!;
+                                    postalCode = selection.postal ?? "";
+                                    city = selection.name ?? "";
+                                  });
+                                  //getAllCities();
+                                  //getAllRegions();
+
+                                  //print(salesrepValue);
+                                },
+                              ),
+                            )
+                          : const SizedBox(),
+                      Visibility(
+                          visible:
+                              countryId != 0 && regionId != 0 && cityId != 0,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                createNewAddress();
+                              },
+                              child: Text('Create Address'.tr))),
+                    ],
                   ),
+                ),
+                const SizedBox(
+                  height: 100,
                 ),
               ],
             );
@@ -1607,6 +2082,8 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     controller: nameFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
@@ -1619,11 +2096,27 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1653,39 +2146,414 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "SalesRep".tr,
-                      style: const TextStyle(fontSize: 12),
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: urlFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.link),
+                      border: OutlineInputBorder(),
+                      labelText: 'Website',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
                             AsyncSnapshot<List<Records>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
-                                initialValue:
-                                    TextEditingValue(text: args["salesRep"]),
-                                displayStringForOption: _displayStringForOption,
+                            ? TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  //autofocus: true,
+                                  controller: salesRepFieldController,
+                                  decoration: InputDecoration(
+                                    labelText: 'SalesRep'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    //isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    salesrepValue = suggestion.name!;
+                                    salesRepFieldController.text =
+                                        suggestion.name!;
+                                  });
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  //padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllSectors(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<JRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Sector'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text("Select a Sector".tr),
+                                  value: sectorValue == "" ? null : sectorValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sectorValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSizes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Lead Size'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text("Select a Size".tr),
+                                  value: sizeDropdownValue == ""
+                                      ? null
+                                      : sizeDropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sizeDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllCampaigns(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Campaign'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Campaign".tr),
+                                  value: campaignDropdownValue == ""
+                                      ? null
+                                      : campaignDropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      campaignDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadSources(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Lead Source'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  hint: Text('Select a Lead Source'.tr),
+                                  value: sourceDropdownValue == ""
+                                      ? null
+                                      : sourceDropdownValue,
+                                  //icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      sourceDropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  width: size.width,
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllLeadStatuses(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<LSRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'LeadStatus'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  //isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  underline: const SizedBox(),
+                                  isDense: true,
+                                  value: dropdownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: bpNameFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'BP Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: bPartnerFieldController,
+                    decoration: const InputDecoration(
+                      prefixIcon: Icon(Icons.handshake_outlined),
+                      border: OutlineInputBorder(),
+                      labelText: 'Business Partner',
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: addressFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.location_on),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Address'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                const Divider(),
+                TextButton(
+                    onPressed: () {
+                      setState(() {
+                        createAddress = !createAddress;
+                      });
+                      //openAddressCreation();
+                    },
+                    child: createAddress
+                        ? Text('Close Address Creation'.tr)
+                        : Text('Open Address Creation'.tr)),
+                Visibility(
+                  visible: createAddress,
+                  child: Column(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextField(
+                          minLines: 1,
+                          maxLines: 5,
+                          controller: address1FieldController,
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.edit_road),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Street'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.only(left: 40),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text(
+                            "Country".tr,
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ),
+                      countriesDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<CtrRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayCountryStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<CtrRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return countries.records!
+                                      .where((CtrRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -1693,69 +2561,151 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (CtrRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
-                                    salesrepValue =
-                                        _displayStringForOption(selection);
+                                    countryId = selection.id!;
+                                    regionId = 0;
+                                    cityId = 0;
+                                    citiesDataAvailable = false;
                                   });
+                                  getAllRegions();
 
                                   //print(salesrepValue);
                                 },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
                               ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "LeadStatus".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllLeadStatuses(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<LSRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                      Visibility(
+                        visible: regionsDataAvailable,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "Region".tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      regionsDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<RegRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayRegionStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<RegRecords>.empty();
+                                  }
+                                  return regions.records!
+                                      .where((RegRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
                                   });
-                                  //print(dropdownValue);
                                 },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.value.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
+                                onSelected: (RegRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    regionId = selection.id!;
+                                    cityId = 0;
+                                    region = selection.name ?? "";
+                                  });
+                                  getAllCities();
+                                  //getAllRegions();
+
+                                  //print(salesrepValue);
+                                },
                               ),
+                            )
+                          : const SizedBox(),
+                      Visibility(
+                        visible: citiesDataAvailable,
+                        child: Container(
+                          padding: const EdgeInsets.only(left: 40),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "City".tr,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                          ),
+                        ),
+                      ),
+                      citiesDataAvailable
+                          ? Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              margin: const EdgeInsets.all(10),
+                              child: Autocomplete<CitRecords>(
+                                //initialValue: TextEditingValue(text: args["salesRep"]),
+                                displayStringForOption:
+                                    _displayCityStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<CitRecords>.empty();
+                                  }
+                                  return cities.records!
+                                      .where((CitRecords option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (CitRecords selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    cityId = selection.id!;
+                                    postalCode = selection.postal ?? "";
+                                    city = selection.name ?? "";
+                                  });
+                                  //getAllCities();
+                                  //getAllRegions();
+
+                                  //print(salesrepValue);
+                                },
+                              ),
+                            )
+                          : const SizedBox(),
+                      Visibility(
+                          visible:
+                              countryId != 0 && regionId != 0 && cityId != 0,
+                          child: ElevatedButton(
+                              onPressed: () {
+                                createNewAddress();
+                              },
+                              child: Text('Create Address'.tr))),
+                    ],
                   ),
+                ),
+                const SizedBox(
+                  height: 100,
                 ),
               ],
             );

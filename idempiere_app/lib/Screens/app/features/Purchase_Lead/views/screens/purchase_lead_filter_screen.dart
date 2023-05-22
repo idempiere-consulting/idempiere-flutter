@@ -685,13 +685,715 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'SalesRep Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding:
+                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                  children: [
+                    RadioListTile(
+                      value: 0,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("All".tr),
+                      //subtitle: Text("Radio 1 Subtitle"),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+
+                      //selected: true,
+                    ),
+                    RadioListTile(
+                      value: 1,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("Mine Only".tr),
+                      subtitle: Text(GetStorage().read('user')),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      //activeColor: Colors.red,
+                      activeColor: Theme.of(context).primaryColor,
+
+                      selected: false,
+                    )
+                  ],
+                ),
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: mailFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Mail'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: phoneFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Phone'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllLeadStatuses(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<LSRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Lead Status'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Lead Status".tr),
+                                      isExpanded: true,
+                                      value: statusId == "" ? null : statusId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          statusId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.value.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllSectors(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<JRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Sector'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Sector".tr),
+                                      isExpanded: true,
+                                      value: sectorId == "" ? null : sectorId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sectorId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllLeadSizes(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Lead Size'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Lead Size".tr),
+                                      isExpanded: true,
+                                      value: sizeId == "" ? null : sizeId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sizeId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllCampaigns(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Campaign'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Campaign".tr),
+                                      isExpanded: true,
+                                      value:
+                                          campaignId == "" ? null : campaignId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          campaignId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllLeadSources(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<LSRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Lead Source'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Lead Source".tr),
+                                      isExpanded: true,
+                                      value: sourceId == "" ? null : sourceId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sourceId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.value.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'SalesRep Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding:
+                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                  children: [
+                    RadioListTile(
+                      value: 0,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("All".tr),
+                      //subtitle: Text("Radio 1 Subtitle"),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+
+                      //selected: true,
+                    ),
+                    RadioListTile(
+                      value: 1,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("Mine Only".tr),
+                      subtitle: Text(GetStorage().read('user')),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      //activeColor: Colors.red,
+                      activeColor: Theme.of(context).primaryColor,
+
+                      selected: false,
+                    )
+                  ],
+                ),
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: mailFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Mail'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: phoneFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Phone'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllLeadStatuses(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<LSRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Lead Status'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Lead Status".tr),
+                                      isExpanded: true,
+                                      value: statusId == "" ? null : statusId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          statusId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.value.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllSectors(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<JRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Sector'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Sector".tr),
+                                      isExpanded: true,
+                                      value: sectorId == "" ? null : sectorId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sectorId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllLeadSizes(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Lead Size'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Lead Size".tr),
+                                      isExpanded: true,
+                                      value: sizeId == "" ? null : sizeId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sizeId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllCampaigns(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Campaign'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Campaign".tr),
+                                      isExpanded: true,
+                                      value:
+                                          campaignId == "" ? null : campaignId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          campaignId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllLeadSources(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<LSRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'Lead Source'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a Lead Source".tr),
+                                      isExpanded: true,
+                                      value: sourceId == "" ? null : sourceId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          sourceId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.value.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
         ),

@@ -1149,22 +1149,22 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   visible: ticketTypeValue == "HRP",
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
+                    // padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
                       locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.calendar_month),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Date'.tr,
-                      icon: const Icon(Icons.event),
+                      //dateLabelText: 'Date'.tr,
+                      //icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
                         //print(val);
@@ -1186,20 +1186,22 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   visible: ticketTypeValue == "HRP",
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
+                    //padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.access_time),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Start Time'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                       type: DateTimePickerType.time,
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time'.tr,
+                      timeLabelText: ''.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -1219,15 +1221,15 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   visible: ticketTypeValue == "HRP",
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.access_time),
+                        border: const OutlineInputBorder(),
+                        labelText: 'End Time'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                       type: DateTimePickerType.time,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1261,6 +1263,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1281,6 +1284,21 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP" || ticketTypeValue == "HRH",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: noteFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.badge),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Note'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),
@@ -1455,6 +1473,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1482,21 +1501,22 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   visible: ticketTypeValue == "HRP",
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
+                    // padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.calendar_month),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      dateLabelText: 'Date'.tr,
-                      icon: const Icon(Icons.event),
+                      //dateLabelText: 'Date'.tr,
+                      //icon: const Icon(Icons.event),
                       onChanged: (val) {
                         //print(DateTime.parse(val));
                         //print(val);
@@ -1518,20 +1538,22 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   visible: ticketTypeValue == "HRP",
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
+                    //padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
+
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.access_time),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Start Time'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                       type: DateTimePickerType.time,
                       initialValue: '',
                       firstDate: DateTime(2000),
                       lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time'.tr,
+                      timeLabelText: ''.tr,
                       icon: const Icon(Icons.access_time),
                       onChanged: (val) {
                         setState(() {
@@ -1551,15 +1573,15 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                   visible: ticketTypeValue == "HRP",
                   child: Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.access_time),
+                        border: const OutlineInputBorder(),
+                        labelText: 'End Time'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                       type: DateTimePickerType.time,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1593,6 +1615,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       borderRadius: BorderRadius.circular(5),
                     ),
                     child: DateTimePicker(
+                      locale: Locale('language'.tr, 'LANGUAGE'.tr),
                       type: DateTimePickerType.date,
                       initialValue: '',
                       firstDate: DateTime(2000),
@@ -1613,6 +1636,21 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
                       },
                       // ignore: avoid_print
                       onSaved: (val) => print(val),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: ticketTypeValue == "HRP" || ticketTypeValue == "HRH",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: noteFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.badge),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Note'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
                     ),
                   ),
                 ),

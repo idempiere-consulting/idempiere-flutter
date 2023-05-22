@@ -589,15 +589,35 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: dateFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.event),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Date'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.all(10),
+                  //width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
                     ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: dateFieldController.text,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateFieldController.text = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
                   ),
                 ),
                 Container(
@@ -617,7 +637,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     readOnly: true,
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 3,
                     controller: notePlantFieldController,
                     decoration: InputDecoration(
@@ -632,7 +652,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //readOnly: true,
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 3,
                     controller: noteWOFieldController,
                     decoration: InputDecoration(
@@ -641,6 +661,74 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       labelText: 'Note Work Order'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    minLines: 1,
+                    maxLines: 1,
+                    controller: paidAmtFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Paid Amt'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Payment Rule".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllPaymentRule(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
@@ -683,6 +771,19 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Send Work Order'.tr),
+                  value: sendWorkOrder,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      sendWorkOrder = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );
@@ -721,15 +822,35 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    controller: dateFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.event),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Date'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.all(10),
+                  //width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
                     ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: DateTimePicker(
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: dateFieldController.text,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    dateLabelText: 'Date'.tr,
+                    icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      setState(() {
+                        dateFieldController.text = val.substring(0, 10);
+                      });
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
                   ),
                 ),
                 Container(
@@ -749,7 +870,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     readOnly: true,
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 3,
                     controller: notePlantFieldController,
                     decoration: InputDecoration(
@@ -764,7 +885,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //readOnly: true,
-                    minLines: 3,
+                    minLines: 1,
                     maxLines: 3,
                     controller: noteWOFieldController,
                     decoration: InputDecoration(
@@ -773,6 +894,74 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       labelText: 'Note Work Order'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //readOnly: true,
+                    minLines: 1,
+                    maxLines: 1,
+                    controller: paidAmtFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Paid Amt'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Payment Rule".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  width: size.width,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllPaymentRule(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? DropdownButton(
+                                value: dropdownValue,
+                                elevation: 16,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    dropdownValue = newValue!;
+                                  });
+                                  //print(dropdownValue);
+                                },
+                                items: snapshot.data!.map((list) {
+                                  return DropdownMenuItem<String>(
+                                    value: list.value.toString(),
+                                    child: Text(
+                                      list.name.toString(),
+                                    ),
+                                  );
+                                }).toList(),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
@@ -815,6 +1004,19 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Send Work Order'.tr),
+                  value: sendWorkOrder,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      sendWorkOrder = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
                 ),
               ],
             );

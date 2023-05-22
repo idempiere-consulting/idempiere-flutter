@@ -509,10 +509,640 @@ class CRMContractScreen extends GetView<CRMContractController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader2(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                /* _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing), */
+
+                //const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(
+                              () => Visibility(
+                                visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller
+                                            .trx.records![index].documentNo
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                        : controller.dropdownValue.value == "2"
+                                            ? controller.trx.records![index]
+                                                .cBPartnerID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      trailing: IconButton(
+                                        icon: const Icon(
+                                          Icons.article,
+                                          color: Colors.green,
+                                        ),
+                                        onPressed: () {
+                                          Get.toNamed('/ContractLine',
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "bPartner": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier,
+                                                "bPartnerId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id,
+                                                "docNo": controller.trx
+                                                    .records![index].documentNo,
+                                              });
+                                        },
+                                      ),
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.grey,
+                                          ),
+                                          tooltip: 'Edit Contract'.tr,
+                                          onPressed: () {
+                                            //log("info button pressed");
+                                            Get.to(const CRMEditContract(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "name": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      "",
+                                                  "docNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .documentNo ??
+                                                      "",
+                                                  "businessPartnerId":
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.id ??
+                                                          0,
+                                                  "businessPartnerName":
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.identifier ??
+                                                          "",
+                                                  "description": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description,
+                                                  "dateFrom": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validfromdate,
+                                                  "dateTo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validtodate,
+                                                  "frequencyTypeId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .frequencyType
+                                                          ?.id ??
+                                                      "0",
+                                                  "paymentTermId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cPaymentTermID
+                                                      ?.id,
+                                                  "paymentRuleId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.id,
+                                                  "frequencyNextDate":
+                                                      controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .frequencyNextDate,
+                                                });
+                                          },
+                                        ),
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index]
+                                                .documentNo ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Column(
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(MaterialSymbols.topic,
+                                                  color: Colors.white),
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cDocTypeTargetID
+                                                          ?.identifier ??
+                                                      "??",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(Icons.handshake,
+                                                  color: Colors.white),
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID!
+                                                          .identifier ??
+                                                      "??",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Name".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Description".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Validity Date from".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validfromdate!
+                                                      .substring(0, 10)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Validity Date to".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validtodate!
+                                                      .substring(0, 10)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Frequency".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .frequencyType
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: const []);
+             return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader2(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                /* _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing), */
+
+                //const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(
+                              () => Visibility(
+                                visible: controller.searchFilterValue.value ==
+                                        ""
+                                    ? true
+                                    : controller.dropdownValue.value == "1"
+                                        ? controller
+                                            .trx.records![index].documentNo
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(controller
+                                                .searchFilterValue.value
+                                                .toLowerCase())
+                                        : controller.dropdownValue.value == "2"
+                                            ? controller.trx.records![index]
+                                                .cBPartnerID!.identifier
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(controller
+                                                    .searchFilterValue.value
+                                                    .toLowerCase())
+                                            : true,
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      trailing: IconButton(
+                                        icon: const Icon(
+                                          Icons.article,
+                                          color: Colors.green,
+                                        ),
+                                        onPressed: () {
+                                          Get.toNamed('/ContractLine',
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "bPartner": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier,
+                                                "bPartnerId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id,
+                                                "docNo": controller.trx
+                                                    .records![index].documentNo,
+                                              });
+                                        },
+                                      ),
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
+                                      leading: Container(
+                                        padding:
+                                            const EdgeInsets.only(right: 12.0),
+                                        decoration: const BoxDecoration(
+                                            border: Border(
+                                                right: BorderSide(
+                                                    width: 1.0,
+                                                    color: Colors.white24))),
+                                        child: IconButton(
+                                          icon: const Icon(
+                                            Icons.edit,
+                                            color: Colors.grey,
+                                          ),
+                                          tooltip: 'Edit Contract'.tr,
+                                          onPressed: () {
+                                            //log("info button pressed");
+                                            Get.to(const CRMEditContract(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "name": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      "",
+                                                  "docNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .documentNo ??
+                                                      "",
+                                                  "businessPartnerId":
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.id ??
+                                                          0,
+                                                  "businessPartnerName":
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.identifier ??
+                                                          "",
+                                                  "description": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .description,
+                                                  "dateFrom": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validfromdate,
+                                                  "dateTo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validtodate,
+                                                  "frequencyTypeId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .frequencyType
+                                                          ?.id ??
+                                                      "0",
+                                                  "paymentTermId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cPaymentTermID
+                                                      ?.id,
+                                                  "paymentRuleId": controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.id,
+                                                  "frequencyNextDate":
+                                                      controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .frequencyNextDate,
+                                                });
+                                          },
+                                        ),
+                                      ),
+                                      title: Text(
+                                        controller.trx.records![index]
+                                                .documentNo ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Column(
+                                        children: [
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(MaterialSymbols.topic,
+                                                  color: Colors.white),
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cDocTypeTargetID
+                                                          ?.identifier ??
+                                                      "??",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: <Widget>[
+                                              const Icon(Icons.handshake,
+                                                  color: Colors.white),
+                                              Expanded(
+                                                child: Text(
+                                                  controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID!
+                                                          .identifier ??
+                                                      "??",
+                                                  style: const TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                      /* trailing: const Icon(
+                                        Icons.keyboard_arrow_right,
+                                        color: Colors.white,
+                                        size: 30.0,
+                                      ), */
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Name".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Description".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .name ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Validity Date from".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validfromdate!
+                                                      .substring(0, 10)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Validity Date to".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .validtodate!
+                                                      .substring(0, 10)),
+                                                ),
+                                              ],
+                                            ),
+                                            Row(
+                                              children: [
+                                                Text(
+                                                  "${"Frequency".tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(controller
+                                                          .trx
+                                                          .records![index]
+                                                          .frequencyType
+                                                          ?.identifier ??
+                                                      ""),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
           ),
         ),

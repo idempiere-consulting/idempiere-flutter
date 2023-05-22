@@ -416,7 +416,7 @@ class _EditTrainingCoursePresenceState
             );
           },
           tabletBuilder: (context, constraints) {
-            return Column(
+           return Column(
               children: [
                 const SizedBox(
                   height: 10,
@@ -578,7 +578,7 @@ class _EditTrainingCoursePresenceState
             );
           },
           desktopBuilder: (context, constraints) {
-            return Column(
+           return Column(
               children: [
                 const SizedBox(
                   height: 10,

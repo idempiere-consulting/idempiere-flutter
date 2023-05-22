@@ -154,7 +154,7 @@ class _CreateInvoiceLineState extends State<CreateInvoiceLine> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return Column(
+           return Column(
               children: [
                 const SizedBox(
                   height: 10,

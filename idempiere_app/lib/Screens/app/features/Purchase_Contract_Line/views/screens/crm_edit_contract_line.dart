@@ -291,7 +291,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(Icons.scale),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -308,7 +308,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(EvaIcons.pricetagsOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -367,7 +367,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(Icons.scale),
                       border: const OutlineInputBorder(),
                       labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
@@ -384,7 +384,7 @@ class _EditSalesOrderLineState extends State<EditSalesOrderLine> {
                       FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
                     ],
                     decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.text_fields_rounded),
+                      prefixIcon: const Icon(EvaIcons.pricetagsOutline),
                       border: const OutlineInputBorder(),
                       labelText: 'Price'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,

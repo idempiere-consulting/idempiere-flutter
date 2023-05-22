@@ -1245,7 +1245,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                       margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text(
-                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                              "${"WORK ORDER".tr}: ${controller.trx.records!.length}")
                           : Text("${"WORK ORDER".tr}: ")),
                     ),
                     /* Container(
@@ -1290,6 +1290,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
+                          key: const PageStorageKey('workorder'),
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -1303,6 +1304,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  key: PageStorageKey('workorderrow$index'),
                                   trailing: IconButton(
                                     onPressed: () {
                                       GetStorage().write(
@@ -1324,15 +1326,94 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      Get.toNamed('/MaintenanceMpResource',
-                                          arguments: {
-                                            "docN": controller
-                                                .trx.records![index].documentNo,
-                                          });
+                                      if (controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              'Special Order'.tr ||
+                                          controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              "Special Order with Material"
+                                                  .tr ||
+                                          controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              'Shipment Order'.tr) {
+                                        Get.toNamed('/MaintenanceMptaskLine',
+                                            arguments: {
+                                              "isSpecialOrder": true,
+                                              "bPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                              "docType": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "id": controller.trx
+                                                  .records![index].mPOTID!.id,
+                                              "note": controller
+                                                  .trx.records![index].note,
+                                              "manualNote": controller.trx
+                                                  .records![index].manualNote,
+                                              "request": controller.trx
+                                                  .records![index].description,
+                                              "index": index,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .dateWorkStart,
+                                              "org": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .aDOrgID
+                                                  ?.identifier,
+                                              "hasAttachment": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .attachment ??
+                                                  "false"
+                                            });
+                                      } else {
+                                        Get.toNamed('/MaintenanceMpResource',
+                                            arguments: {
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                            });
+                                      }
                                     },
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
+                                    icon: Icon(
+                                      controller.trx.records![index].docStatus
+                                                  ?.id !=
+                                              "CO"
+                                          ? Icons.view_list
+                                          : controller.trx.records![index]
+                                                          .docStatus?.id ==
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .cOrderID ==
+                                                      null
+                                              ? Icons.view_list
+                                              : Icons.check_box,
+                                      color: controller.trx.records![index]
+                                                      .docStatus?.id ==
+                                                  "CO" &&
+                                              /* controller.trx.records![index]
+                                                      .cOrderID !=
+                                                  null && */
+                                              controller.trx.records![index]
+                                                      .cInvoiceID ==
+                                                  null
+                                          ? Colors.green
+                                          : controller.trx.records![index]
+                                                          .docStatus?.id ==
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .cInvoiceID !=
+                                                      null
+                                              ? Colors.blue
+                                              : Colors.yellow,
                                     ),
                                   ),
                                   tilePadding: const EdgeInsets.symmetric(
@@ -1347,15 +1428,29 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.edit,
+                                        color: Colors.green,
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
+                                        var index2 = 0;
+                                        var count = 0;
+                                        for (var element
+                                            in controller._trx2.records!) {
+                                          count++;
+                                          if (element.id ==
+                                              controller
+                                                  .trx.records![index].id) {
+                                            index2 = count;
+                                          }
+                                        }
                                         //log("info button pressed");
+                                        /* print(controller.trx.records![index]
+                                            .jpToDoStartDate); */
                                         Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
-                                              "index": index,
+                                              "index": index2,
                                               "docNo": controller.trx
                                                   .records![index].documentNo,
                                               "businessPartner": controller
@@ -1366,8 +1461,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               "date": controller
                                                   .trx
                                                   .records![index]
-                                                  .jpToDoStartDate
-                                                  ?.substring(0, 10),
+                                                  .jpToDoStartDate,
                                               "timeStart": controller
                                                   .trx
                                                   .records![index]
@@ -1392,6 +1486,28 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       .ref2name,
                                               "team": controller
                                                   .trx.records![index].team,
+                                              "jpId": controller.trx
+                                                  .records![index].jPToDoID?.id,
+                                              "paidAmt": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .paidAmt !=
+                                                          0 &&
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .paidAmt !=
+                                                          null
+                                                  ? controller.trx
+                                                      .records![index].paidAmt
+                                                  : 0,
+                                              "paymentRuleId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .paymentRule
+                                                  ?.id,
+                                              "IsPrinted": controller
+                                                  .trx.records![index].isPrinted
                                             });
                                       },
                                     ),
@@ -1406,20 +1522,87 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.handshake,
-                                        color: Colors.yellow,
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.handshake,
+                                            color: controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order'.tr ||
+                                                    controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order with Material'
+                                                            .tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Shipment Order'.tr
+                                                ? Colors.orange
+                                                : Colors.yellow,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].name !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            /* const Text(
+                                                "BPartner: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ), */
+                                            const Icon(Icons.location_city,
+                                                color: Colors.white),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].name}",
+                                                  style: const TextStyle(
+                                                      color: Colors.white)),
+                                            ),
+                                          ],
                                         ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                          Icon(Icons.location_pin,
+                                              color: Colors.red.shade700),
+                                          Expanded(
+                                            child: Text(
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -1436,7 +1619,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             Text(
-                                              'N° Work Order'.tr,
+                                              'N° Work Order: '.tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1465,13 +1648,13 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(1, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(1, 5) : "N/A"}")
                                           ],
                                         ),
                                         Row(
                                           children: [
                                             Text(
-                                              "${'N° Maintenance'.tr}: ",
+                                              "${'Contract Type'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1479,10 +1662,46 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child: Text(controller
                                                       .trx
                                                       .records![index]
-                                                      .documentNo2 ??
+                                                      .contracttypename ??
                                                   ""),
                                             )
                                           ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .records![index]
+                                                  .mPMaintainID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"N° Maintenance".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed(
+                                                      '/MaintenanceMpContracts',
+                                                      arguments: {
+                                                        'notificationId':
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .mPMaintainID
+                                                                ?.id,
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller._trx.records![index].documentNo2}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -1542,6 +1761,24 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
                                           ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx.records![index].name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Location Note'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].name}"
+                                                      .tr),
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
                                           visible: controller.trx
@@ -1659,20 +1896,399 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             )
                                           ],
                                         ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Payment Rule".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.identifier ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Paid Amt".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                  .trx.records![index].paidAmt
+                                                  .toString()),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                controller.trx.records![index]
+                                                                .isPaid !=
+                                                            true ||
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .isPaid ==
+                                                            null
+                                                    ? 'Not Paid'.tr
+                                                    : 'Paid'.tr,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .isPaid !=
+                                                                true ||
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .isPaid ==
+                                                                null
+                                                        ? Colors.yellow
+                                                        : kNotifColor),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cOrderID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Sales Order".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/SalesOrder',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cOrderID
+                                                                ?.id
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller.trx.records![index].cOrderID?.identifier}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cInvoiceID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Invoice".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/Invoice',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cInvoiceID
+                                                                ?.id
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller._trx.records![index].cInvoiceID?.identifier}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {
+                                                    GetStorage().write(
+                                                        'selectedWorkOrderId',
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPOTID!
+                                                            .id);
+
+                                                    GetStorage().write(
+                                                        'selectedTaskDocNo',
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPMaintainID
+                                                            ?.id);
+                                                    GetStorage().write(
+                                                        'selectedTaskBP',
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "");
+                                                    Get.toNamed(
+                                                        '/MaintenanceMpResourceBarcode',
+                                                        arguments: {
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .manage_search_outlined)),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    Get.to(
+                                                        const MaintenanceMptaskInfo(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPMaintainID
+                                                              ?.id,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.info_outline)),
+                                              IconButton(
+                                                tooltip: "Sign".tr,
+                                                onPressed: () {
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .litSignImageID ==
+                                                      null) {
+                                                    Get.to(
+                                                        const SignatureWorkOrderScreen(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.id,
+                                                        });
+                                                  } else {
+                                                    Get.defaultDialog(
+                                                      title:
+                                                          'Record already Signed'
+                                                              .tr,
+                                                      content: Text(
+                                                          "Are you sure you want Sign again?"
+                                                              .tr),
+                                                      onCancel: () {},
+                                                      onConfirm: () async {
+                                                        Get.to(
+                                                            const SignatureWorkOrderScreen(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .mPOTID
+                                                                  ?.id,
+                                                            });
+                                                      },
+                                                    );
+                                                  }
+                                                },
+                                                icon: Icon(
+                                                  EvaIcons.edit2Outline,
+                                                  color: controller
+                                                              .trx
+                                                              .records![index]
+                                                              .litSignImageID !=
+                                                          null
+                                                      ? kNotifColor
+                                                      : Colors.yellow,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                tooltip: "Print".tr,
+                                                onPressed: () {
+                                                  controller.getDocument(index);
+                                                },
+                                                icon: const Icon(
+                                                    EvaIcons.printer),
+                                              ),
+                                              Visibility(
+                                                visible: controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier !=
+                                                        'Special Order'.tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order with Material'
+                                                            .tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Shipment Order'.tr,
+                                                child: IconButton(
+                                                  tooltip: "Tasks".tr,
+                                                  onPressed: () {
+                                                    Get.toNamed(
+                                                        '/MaintenanceMptaskLine',
+                                                        arguments: {
+                                                          "isSpecialOrder":
+                                                              false,
+                                                          "bPartner": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.identifier,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                          "docType": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier,
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID!
+                                                              .id,
+                                                          "note": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .note,
+                                                          "manualNote":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manualNote,
+                                                          "request": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .description,
+                                                          "index": index,
+                                                          "date": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .dateWorkStart,
+                                                          "org": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .aDOrgID
+                                                              ?.identifier,
+                                                          "hasAttachment":
+                                                              controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .attachment ??
+                                                                  "false"
+                                                        });
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .document_scanner_outlined),
+                                                ),
+                                              ),
+                                            ]),
                                         ButtonBar(
                                           alignment: MainAxisAlignment.center,
                                           overflowDirection:
                                               VerticalDirection.down,
                                           overflowButtonSpacing: 5,
                                           children: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.green),
+                                            Visibility(
+                                              visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .jpToDoStatus
+                                                      ?.id !=
+                                                  'CO',
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  var isConnected =
+                                                      await checkConnection();
+
+                                                  if (isConnected) {
+                                                    //print('si.');
+                                                    controller
+                                                        .completeToDo(index);
+                                                  }
+                                                },
+                                                child: Text("Complete".tr),
                                               ),
-                                              onPressed: () async {},
-                                              child: Text("Complete".tr),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .jpToDoStatus
+                                                          ?.id ==
+                                                      'CO' &&
+                                                  controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .docStatus
+                                                          ?.id ==
+                                                      'CO',
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  var isConnected =
+                                                      await checkConnection();
+
+                                                  if (isConnected) {
+                                                    //print('si.');
+                                                    controller
+                                                        .reOpenToDo(index);
+                                                  }
+                                                },
+                                                child: Text("Reopen".tr),
+                                              ),
                                             ),
                                             ElevatedButton(
                                               style: ButtonStyle(
@@ -1687,7 +2303,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       "id": controller
                                                           .trx
                                                           .records![index]
-                                                          .mPMaintainTaskID
+                                                          .mPOTID
                                                           ?.id,
                                                       "record-id": controller
                                                               .trx
@@ -1706,13 +2322,31 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child:
                                                   Text("Anomalies Review".tr),
                                             ),
-                                            Visibility(
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                controller
+                                                    .createSalesOrderFromWorkOrder(
+                                                        index);
+                                              },
+                                              child: Text(
+                                                  "Create Sales Order from Work Order"
+                                                      .tr
+                                                      .tr),
+                                            ),
+                                            /* Visibility(
                                               visible: controller
                                                       .trx
                                                       .records![index]
                                                       .cOrderID !=
                                                   null,
                                               child: ElevatedButton(
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -1729,10 +2363,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                                 ?.id
                                                       });
                                                 },
-                                                child:
-                                                    Text("Sales Order Zoom".tr),
                                               ),
-                                            ),
+                                            ), */
                                           ],
                                         ),
                                       ],
@@ -1762,7 +2394,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                       margin: const EdgeInsets.only(left: 15),
                       child: Obx(() => controller.dataAvailable
                           ? Text(
-                              "${"WORK ORDER".tr}: ${controller.trx.rowcount}")
+                              "${"WORK ORDER".tr}: ${controller.trx.records!.length}")
                           : Text("${"WORK ORDER".tr}: ")),
                     ),
                     /* Container(
@@ -1807,6 +2439,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
+                          key: const PageStorageKey('workorder'),
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
@@ -1820,6 +2453,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ExpansionTile(
+                                  key: PageStorageKey('workorderrow$index'),
                                   trailing: IconButton(
                                     onPressed: () {
                                       GetStorage().write(
@@ -1841,15 +2475,94 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      Get.toNamed('/MaintenanceMpResource',
-                                          arguments: {
-                                            "docN": controller
-                                                .trx.records![index].documentNo,
-                                          });
+                                      if (controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              'Special Order'.tr ||
+                                          controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              "Special Order with Material"
+                                                  .tr ||
+                                          controller.trx.records![index]
+                                                  .cDocTypeID?.identifier ==
+                                              'Shipment Order'.tr) {
+                                        Get.toNamed('/MaintenanceMptaskLine',
+                                            arguments: {
+                                              "isSpecialOrder": true,
+                                              "bPartner": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.identifier,
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                              "docType": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "id": controller.trx
+                                                  .records![index].mPOTID!.id,
+                                              "note": controller
+                                                  .trx.records![index].note,
+                                              "manualNote": controller.trx
+                                                  .records![index].manualNote,
+                                              "request": controller.trx
+                                                  .records![index].description,
+                                              "index": index,
+                                              "date": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .dateWorkStart,
+                                              "org": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .aDOrgID
+                                                  ?.identifier,
+                                              "hasAttachment": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .attachment ??
+                                                  "false"
+                                            });
+                                      } else {
+                                        Get.toNamed('/MaintenanceMpResource',
+                                            arguments: {
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                            });
+                                      }
                                     },
-                                    icon: const Icon(
-                                      Icons.view_list,
-                                      color: Colors.green,
+                                    icon: Icon(
+                                      controller.trx.records![index].docStatus
+                                                  ?.id !=
+                                              "CO"
+                                          ? Icons.view_list
+                                          : controller.trx.records![index]
+                                                          .docStatus?.id ==
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .cOrderID ==
+                                                      null
+                                              ? Icons.view_list
+                                              : Icons.check_box,
+                                      color: controller.trx.records![index]
+                                                      .docStatus?.id ==
+                                                  "CO" &&
+                                              /* controller.trx.records![index]
+                                                      .cOrderID !=
+                                                  null && */
+                                              controller.trx.records![index]
+                                                      .cInvoiceID ==
+                                                  null
+                                          ? Colors.green
+                                          : controller.trx.records![index]
+                                                          .docStatus?.id ==
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .cInvoiceID !=
+                                                      null
+                                              ? Colors.blue
+                                              : Colors.yellow,
                                     ),
                                   ),
                                   tilePadding: const EdgeInsets.symmetric(
@@ -1864,15 +2577,29 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.edit,
+                                        color: Colors.green,
                                       ),
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
+                                        var index2 = 0;
+                                        var count = 0;
+                                        for (var element
+                                            in controller._trx2.records!) {
+                                          count++;
+                                          if (element.id ==
+                                              controller
+                                                  .trx.records![index].id) {
+                                            index2 = count;
+                                          }
+                                        }
                                         //log("info button pressed");
+                                        /* print(controller.trx.records![index]
+                                            .jpToDoStartDate); */
                                         Get.to(const EditMaintenanceMptask(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
-                                              "index": index,
+                                              "index": index2,
                                               "docNo": controller.trx
                                                   .records![index].documentNo,
                                               "businessPartner": controller
@@ -1883,8 +2610,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               "date": controller
                                                   .trx
                                                   .records![index]
-                                                  .jpToDoStartDate
-                                                  ?.substring(0, 10),
+                                                  .jpToDoStartDate,
                                               "timeStart": controller
                                                   .trx
                                                   .records![index]
@@ -1909,6 +2635,28 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       .ref2name,
                                               "team": controller
                                                   .trx.records![index].team,
+                                              "jpId": controller.trx
+                                                  .records![index].jPToDoID?.id,
+                                              "paidAmt": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .paidAmt !=
+                                                          0 &&
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .paidAmt !=
+                                                          null
+                                                  ? controller.trx
+                                                      .records![index].paidAmt
+                                                  : 0,
+                                              "paymentRuleId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .paymentRule
+                                                  ?.id,
+                                              "IsPrinted": controller
+                                                  .trx.records![index].isPrinted
                                             });
                                       },
                                     ),
@@ -1923,20 +2671,87 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                  subtitle: Row(
-                                    children: <Widget>[
-                                      const Icon(
-                                        Icons.handshake,
-                                        color: Colors.yellow,
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          Icon(
+                                            Icons.handshake,
+                                            color: controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order'.tr ||
+                                                    controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order with Material'
+                                                            .tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Shipment Order'.tr
+                                                ? Colors.orange
+                                                : Colors.yellow,
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                      Expanded(
-                                        child: Text(
-                                          controller.trx.records![index]
-                                                  .cBPartnerID?.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
+                                      Visibility(
+                                        visible: controller
+                                                .trx.records![index].name !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            /* const Text(
+                                                "BPartner: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ), */
+                                            const Icon(Icons.location_city,
+                                                color: Colors.white),
+                                            Expanded(
+                                              child: Text(
+                                                  "${controller.trx.records![index].name}",
+                                                  style: const TextStyle(
+                                                      color: Colors.white)),
+                                            ),
+                                          ],
                                         ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          /* const Text(
+                                              "BPartner: ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ), */
+                                          Icon(Icons.location_pin,
+                                              color: Colors.red.shade700),
+                                          Expanded(
+                                            child: Text(
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -1953,7 +2768,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                         Row(
                                           children: [
                                             Text(
-                                              'N° Work Order'.tr,
+                                              'N° Work Order: '.tr,
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1982,13 +2797,13 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "${controller.trx.records![index].jpToDoStartTime!.substring(1, 5)} - ${controller.trx.records![index].jpToDoEndTime!.substring(1, 5)}")
+                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(1, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(1, 5) : "N/A"}")
                                           ],
                                         ),
                                         Row(
                                           children: [
                                             Text(
-                                              "${'N° Maintenance'.tr}: ",
+                                              "${'Contract Type'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1996,10 +2811,46 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child: Text(controller
                                                       .trx
                                                       .records![index]
-                                                      .documentNo2 ??
+                                                      .contracttypename ??
                                                   ""),
                                             )
                                           ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .records![index]
+                                                  .mPMaintainID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"N° Maintenance".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed(
+                                                      '/MaintenanceMpContracts',
+                                                      arguments: {
+                                                        'notificationId':
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .mPMaintainID
+                                                                ?.id,
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller._trx.records![index].documentNo2}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         Row(
                                           children: [
@@ -2059,6 +2910,24 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}"),
                                             ),
                                           ],
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx.records![index].name !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Location Note'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].name}"
+                                                      .tr),
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
                                           visible: controller.trx
@@ -2176,20 +3045,399 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             )
                                           ],
                                         ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Payment Rule".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .paymentRule
+                                                      ?.identifier ??
+                                                  ""),
+                                            )
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "${"Paid Amt".tr}:  ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Expanded(
+                                              child: Text(controller
+                                                  .trx.records![index].paidAmt
+                                                  .toString()),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                controller.trx.records![index]
+                                                                .isPaid !=
+                                                            true ||
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .isPaid ==
+                                                            null
+                                                    ? 'Not Paid'.tr
+                                                    : 'Paid'.tr,
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .isPaid !=
+                                                                true ||
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .isPaid ==
+                                                                null
+                                                        ? Colors.yellow
+                                                        : kNotifColor),
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cOrderID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Sales Order".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/SalesOrder',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cOrderID
+                                                                ?.id
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller.trx.records![index].cOrderID?.identifier}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller._trx
+                                                  .records![index].cInvoiceID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Invoice".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/Invoice',
+                                                      arguments: {
+                                                        "notificationId":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cInvoiceID
+                                                                ?.id
+                                                      });
+                                                },
+                                                child: Text(
+                                                  '${controller._trx.records![index].cInvoiceID?.identifier}',
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                ),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {
+                                                    GetStorage().write(
+                                                        'selectedWorkOrderId',
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPOTID!
+                                                            .id);
+
+                                                    GetStorage().write(
+                                                        'selectedTaskDocNo',
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mPMaintainID
+                                                            ?.id);
+                                                    GetStorage().write(
+                                                        'selectedTaskBP',
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "");
+                                                    Get.toNamed(
+                                                        '/MaintenanceMpResourceBarcode',
+                                                        arguments: {
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .manage_search_outlined)),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    Get.to(
+                                                        const MaintenanceMptaskInfo(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPMaintainID
+                                                              ?.id,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.info_outline)),
+                                              IconButton(
+                                                tooltip: "Sign".tr,
+                                                onPressed: () {
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .litSignImageID ==
+                                                      null) {
+                                                    Get.to(
+                                                        const SignatureWorkOrderScreen(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID
+                                                              ?.id,
+                                                        });
+                                                  } else {
+                                                    Get.defaultDialog(
+                                                      title:
+                                                          'Record already Signed'
+                                                              .tr,
+                                                      content: Text(
+                                                          "Are you sure you want Sign again?"
+                                                              .tr),
+                                                      onCancel: () {},
+                                                      onConfirm: () async {
+                                                        Get.to(
+                                                            const SignatureWorkOrderScreen(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .mPOTID
+                                                                  ?.id,
+                                                            });
+                                                      },
+                                                    );
+                                                  }
+                                                },
+                                                icon: Icon(
+                                                  EvaIcons.edit2Outline,
+                                                  color: controller
+                                                              .trx
+                                                              .records![index]
+                                                              .litSignImageID !=
+                                                          null
+                                                      ? kNotifColor
+                                                      : Colors.yellow,
+                                                ),
+                                              ),
+                                              IconButton(
+                                                tooltip: "Print".tr,
+                                                onPressed: () {
+                                                  controller.getDocument(index);
+                                                },
+                                                icon: const Icon(
+                                                    EvaIcons.printer),
+                                              ),
+                                              Visibility(
+                                                visible: controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier !=
+                                                        'Special Order'.tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Special Order with Material'
+                                                            .tr ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeID
+                                                            ?.identifier ==
+                                                        'Shipment Order'.tr,
+                                                child: IconButton(
+                                                  tooltip: "Tasks".tr,
+                                                  onPressed: () {
+                                                    Get.toNamed(
+                                                        '/MaintenanceMptaskLine',
+                                                        arguments: {
+                                                          "isSpecialOrder":
+                                                              false,
+                                                          "bPartner": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerID
+                                                              ?.identifier,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                          "docType": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier,
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPOTID!
+                                                              .id,
+                                                          "note": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .note,
+                                                          "manualNote":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manualNote,
+                                                          "request": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .description,
+                                                          "index": index,
+                                                          "date": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .dateWorkStart,
+                                                          "org": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .aDOrgID
+                                                              ?.identifier,
+                                                          "hasAttachment":
+                                                              controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .attachment ??
+                                                                  "false"
+                                                        });
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .document_scanner_outlined),
+                                                ),
+                                              ),
+                                            ]),
                                         ButtonBar(
                                           alignment: MainAxisAlignment.center,
                                           overflowDirection:
                                               VerticalDirection.down,
                                           overflowButtonSpacing: 5,
                                           children: [
-                                            ElevatedButton(
-                                              style: ButtonStyle(
-                                                backgroundColor:
-                                                    MaterialStateProperty.all(
-                                                        Colors.green),
+                                            Visibility(
+                                              visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .jpToDoStatus
+                                                      ?.id !=
+                                                  'CO',
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  var isConnected =
+                                                      await checkConnection();
+
+                                                  if (isConnected) {
+                                                    //print('si.');
+                                                    controller
+                                                        .completeToDo(index);
+                                                  }
+                                                },
+                                                child: Text("Complete".tr),
                                               ),
-                                              onPressed: () async {},
-                                              child: Text("Complete".tr),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .jpToDoStatus
+                                                          ?.id ==
+                                                      'CO' &&
+                                                  controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .docStatus
+                                                          ?.id ==
+                                                      'CO',
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  var isConnected =
+                                                      await checkConnection();
+
+                                                  if (isConnected) {
+                                                    //print('si.');
+                                                    controller
+                                                        .reOpenToDo(index);
+                                                  }
+                                                },
+                                                child: Text("Reopen".tr),
+                                              ),
                                             ),
                                             ElevatedButton(
                                               style: ButtonStyle(
@@ -2204,7 +3452,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       "id": controller
                                                           .trx
                                                           .records![index]
-                                                          .mPMaintainTaskID
+                                                          .mPOTID
                                                           ?.id,
                                                       "record-id": controller
                                                               .trx
@@ -2223,13 +3471,31 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               child:
                                                   Text("Anomalies Review".tr),
                                             ),
-                                            Visibility(
+                                            ElevatedButton(
+                                              style: ButtonStyle(
+                                                backgroundColor:
+                                                    MaterialStateProperty.all(
+                                                        Colors.green),
+                                              ),
+                                              onPressed: () async {
+                                                controller
+                                                    .createSalesOrderFromWorkOrder(
+                                                        index);
+                                              },
+                                              child: Text(
+                                                  "Create Sales Order from Work Order"
+                                                      .tr
+                                                      .tr),
+                                            ),
+                                            /* Visibility(
                                               visible: controller
                                                       .trx
                                                       .records![index]
                                                       .cOrderID !=
                                                   null,
                                               child: ElevatedButton(
+                                                child:
+                                                    Text("Sales Order Zoom".tr),
                                                 style: ButtonStyle(
                                                   backgroundColor:
                                                       MaterialStateProperty.all(
@@ -2246,10 +3512,8 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                                 ?.id
                                                       });
                                                 },
-                                                child:
-                                                    Text("Sales Order Zoom".tr),
                                               ),
-                                            ),
+                                            ), */
                                           ],
                                         ),
                                       ],

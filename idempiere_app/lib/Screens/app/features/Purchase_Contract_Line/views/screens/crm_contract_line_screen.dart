@@ -293,10 +293,394 @@ class CRMContractCustomerLineScreen
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: controller.bpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.handshake),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    //maxLines: 5,
+                    controller: controller.documentFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                //const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Sales Order Line'.tr,
+                                      onPressed: () {
+                                        /*  Get.to(const EditSalesOrderLine(),
+                                            arguments: {
+                                              "ID": controller
+                                                  .trx.records![index].id,
+                                              "qty": controller.trx
+                                                  .records![index].qtyEntered,
+                                              "date": controller.trx
+                                                  .records![index].datePromised,
+                                              "price": controller.trx
+                                                  .records![index].priceEntered,
+                                            }); */
+                                      },
+                                    ),
+                                  ),
+
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Qty".tr}: ",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          Text(
+                                            "${controller.trx.records![index].qty}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Text(
+                                            "EUR ",
+                                            style: TextStyle(
+                                                color: kNotifColor,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                  .trx.records![index].amount
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: const [
+                                        /* Row(
+                                          children: [
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].priceList}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].priceEntered}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].qtyEntered}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Instance Attribute: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mAttributeSetInstanceID
+                                                    ?.identifier ??
+                                                ""),
+                                          ],
+                                        ), */
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    readOnly: true,
+                    controller: controller.bpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.handshake),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Business Partner'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    //maxLines: 5,
+                    controller: controller.documentFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                //const SizedBox(height: kSpacing),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.rowcount,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Sales Order Line'.tr,
+                                      onPressed: () {
+                                        /*  Get.to(const EditSalesOrderLine(),
+                                            arguments: {
+                                              "ID": controller
+                                                  .trx.records![index].id,
+                                              "qty": controller.trx
+                                                  .records![index].qtyEntered,
+                                              "date": controller.trx
+                                                  .records![index].datePromised,
+                                              "price": controller.trx
+                                                  .records![index].priceEntered,
+                                            }); */
+                                      },
+                                    ),
+                                  ),
+
+                                  title: Text(
+                                    controller.trx.records![index].mProductID
+                                            ?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Qty".tr}: ",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          Text(
+                                            "${controller.trx.records![index].qty}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Text(
+                                            "EUR ",
+                                            style: TextStyle(
+                                                color: kNotifColor,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                  .trx.records![index].amount
+                                                  .toString(),
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                      Icons.keyboard_arrow_right,
+                                      color: Colors.white,
+                                      size: 30.0,
+                                    ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: const [
+                                        /* Row(
+                                          children: [
+                                            Text(
+                                              "Listed Price: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].priceList}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Entered Price: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "€${controller.trx.records![index].priceEntered}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Quantity: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(
+                                                "${controller.trx.records![index].qtyEntered}"),
+                                          ],
+                                        ),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Instance Attribute: ".tr,
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mAttributeSetInstanceID
+                                                    ?.identifier ??
+                                                ""),
+                                          ],
+                                        ), */
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
           ),
         ),

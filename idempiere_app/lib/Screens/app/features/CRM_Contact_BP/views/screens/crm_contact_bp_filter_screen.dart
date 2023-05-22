@@ -257,13 +257,253 @@ class _CRMFilterContactState extends State<CRMFilterContact> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
+                      child: FutureBuilder(
+                        future: getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<BPRecords>(
+                                    direction: AxisDirection.down,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            businessPartnerId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: bpSearchFieldController,
+                                      //autofocus: true,
+
+                                      decoration: InputDecoration(
+                                        labelText: 'Business Partner'.tr,
+                                        //filled: true,
+                                        border: const OutlineInputBorder(
+                                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                            ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        //hintText: "search..",
+                                        isDense: true,
+                                        //fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      bpSearchFieldController.text =
+                                          suggestion.name!;
+                                      businessPartnerId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: mailFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Mail'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: phoneFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Phone'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
+                      child: FutureBuilder(
+                        future: getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<BPRecords>(
+                                    direction: AxisDirection.down,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            businessPartnerId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: bpSearchFieldController,
+                                      //autofocus: true,
+
+                                      decoration: InputDecoration(
+                                        labelText: 'Business Partner'.tr,
+                                        //filled: true,
+                                        border: const OutlineInputBorder(
+                                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                            ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        //hintText: "search..",
+                                        isDense: true,
+                                        //fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      bpSearchFieldController.text =
+                                          suggestion.name!;
+                                      businessPartnerId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: mailFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Mail'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: phoneFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Phone'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
         ),

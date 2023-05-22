@@ -753,8 +753,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: getProfil()),
-            const SizedBox(height: kSpacing),
+            //_buildProfile(data: getProfil()),
+            //const SizedBox(height: kSpacing),
             Visibility(
               visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
@@ -764,49 +764,91 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ? true
                   : false,
               child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
                 margin: const EdgeInsets.all(10),
                 child: FutureBuilder(
                   future: getAllSalesRep(),
                   builder: (BuildContext ctx,
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
-                          ? Autocomplete<Records>(
-                              initialValue: TextEditingValue(
-                                  text: GetStorage().read('user') ?? ""),
-                              displayStringForOption: _displayStringForOption,
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<Records>.empty();
-                                }
-                                return snapshot.data!.where((Records option) {
-                                  return option.name!
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(
-                                          textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              onSelected: (Records selection) {
-                                //debugPrint(
-                                //'You just selected ${_displayStringForOption(selection)}');
-                                setState(() {
-                                  flag = false;
-                                  adUserId = selection.id!;
-                                  //flag = true;
-                                });
-                                getAllEvents();
+                          ? Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: /* Autocomplete<Records>(
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user') ?? ""),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = selection.id!;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
 
-                                //print(salesrepValue);
-                              },
-                            )
+                                  //print(salesrepValue);
+                                },
+                              ), */
+                                  TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  controller: userFieldController,
+                                  //autofocus: true,
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    hintText: "search..",
+                                    isDense: true,
+                                    fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = suggestion.id!;
+                                    userFieldController.text = suggestion.name;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
+                                },
+                              ))
                           : Visibility(
                               visible: int.parse(list[0], radix: 16)
                                           .toRadixString(2)
@@ -1103,8 +1145,8 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: getProfil()),
-            const SizedBox(height: kSpacing),
+            //_buildProfile(data: getProfil()),
+            //const SizedBox(height: kSpacing),
             Visibility(
               visible: int.parse(list[0], radix: 16)
                           .toRadixString(2)
@@ -1114,49 +1156,91 @@ class _CalendarScreenState extends State<CalendarScreen> {
                   ? true
                   : false,
               child: Container(
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                  borderRadius: BorderRadius.circular(5),
-                ),
                 margin: const EdgeInsets.all(10),
                 child: FutureBuilder(
                   future: getAllSalesRep(),
                   builder: (BuildContext ctx,
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
-                          ? Autocomplete<Records>(
-                              initialValue: TextEditingValue(
-                                  text: GetStorage().read('user') ?? ""),
-                              displayStringForOption: _displayStringForOption,
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<Records>.empty();
-                                }
-                                return snapshot.data!.where((Records option) {
-                                  return option.name!
-                                      .toString()
-                                      .toLowerCase()
-                                      .contains(
-                                          textEditingValue.text.toLowerCase());
-                                });
-                              },
-                              onSelected: (Records selection) {
-                                //debugPrint(
-                                //'You just selected ${_displayStringForOption(selection)}');
-                                setState(() {
-                                  flag = false;
-                                  adUserId = selection.id!;
-                                  //flag = true;
-                                });
-                                getAllEvents();
+                          ? Visibility(
+                              visible: int.parse(list[0], radix: 16)
+                                          .toRadixString(2)
+                                          .padLeft(8, "0")
+                                          .toString()[7] ==
+                                      "1"
+                                  ? true
+                                  : false,
+                              child: /* Autocomplete<Records>(
+                                initialValue: TextEditingValue(
+                                    text: GetStorage().read('user') ?? ""),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return option.name!
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  //debugPrint(
+                                  //'You just selected ${_displayStringForOption(selection)}');
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = selection.id!;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
 
-                                //print(salesrepValue);
-                              },
-                            )
+                                  //print(salesrepValue);
+                                },
+                              ), */
+                                  TypeAheadField<Records>(
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  controller: userFieldController,
+                                  //autofocus: true,
+                                  style: DefaultTextStyle.of(context)
+                                      .style
+                                      .copyWith(fontStyle: FontStyle.italic),
+                                  decoration: InputDecoration(
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    hintText: "search..",
+                                    isDense: true,
+                                    fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  setState(() {
+                                    flag = false;
+                                    adUserId = suggestion.id!;
+                                    userFieldController.text = suggestion.name;
+                                    //flag = true;
+                                  });
+                                  getAllEvents();
+                                },
+                              ))
                           : Visibility(
                               visible: int.parse(list[0], radix: 16)
                                           .toRadixString(2)

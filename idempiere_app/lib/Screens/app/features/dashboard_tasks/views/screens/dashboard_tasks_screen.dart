@@ -311,8 +311,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                   Container(
                     margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
-                        ? Text(
-                            "${"In Progress: ".tr}${controller.wpCount.value}")
+                        ? Text("In Progress: ".tr +
+                            controller.wpCount.value.toString())
                         : Text("In Progress: ".tr)),
                   ),
                   Container(
@@ -384,7 +384,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead'.tr,
+                                    tooltip: 'Edit Task'.tr,
                                     onPressed: () {
                                       var formatter = DateFormat('yyyy-MM-dd');
 
@@ -526,7 +526,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
             ]);
           },
           desktopBuilder: (context, constraints) {
-            return Column(children: [
+           return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -539,8 +539,8 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                   Container(
                     margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
-                        ? Text(
-                            "${"In Progress: ".tr}${controller.wpCount.value}")
+                        ? Text("In Progress: ".tr +
+                            controller.wpCount.value.toString())
                         : Text("In Progress: ".tr)),
                   ),
                   Container(
@@ -612,7 +612,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                       Icons.edit,
                                       color: Colors.green,
                                     ),
-                                    tooltip: 'Edit Lead'.tr,
+                                    tooltip: 'Edit Task'.tr,
                                     onPressed: () {
                                       var formatter = DateFormat('yyyy-MM-dd');
 

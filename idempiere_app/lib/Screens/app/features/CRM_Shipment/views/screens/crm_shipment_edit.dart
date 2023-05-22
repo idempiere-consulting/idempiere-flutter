@@ -491,6 +491,119 @@ class _EditShipmentState extends State<EditShipment> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: docTypeFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.document_scanner),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document Type'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllMovementTypes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<MTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Movement Type'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  isExpanded: true,
+                                  value: movementTypeId == "0"
+                                      ? null
+                                      : movementTypeId,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      movementTypeId = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllDeliveryViaRules(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<DVRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Delivery Via Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  isExpanded: true,
+                                  value: deliveryViaRule == "0"
+                                      ? null
+                                      : deliveryViaRule,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      deliveryViaRule = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value,
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
                     maxLines: 5,
                     controller: noteFieldController,
                     decoration: InputDecoration(
@@ -499,6 +612,101 @@ class _EditShipmentState extends State<EditShipment> {
                       labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: aspectFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'External Aspect'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Movement Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['movementDate'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2200),
+                    //dateLabelText: 'Shipment Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      var date = DateTime.parse(val);
+
+                      movementDate = DateFormat('yyyy-MM-dd').format(date);
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Shipment Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.dateTime,
+                    initialValue: args['shipDate'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2200),
+                    //dateLabelText: 'Shipment Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      var date = DateTime.parse(val);
+
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(date);
+                      String formattedTime = DateFormat('kk:mm').format(date);
+                      shipmentDate = '${formattedDate}T$formattedTime:00Z';
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
                   ),
                 ),
               ],
@@ -513,6 +721,119 @@ class _EditShipmentState extends State<EditShipment> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: docTypeFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.document_scanner),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document Type'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllMovementTypes(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<MTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Movement Type'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  isExpanded: true,
+                                  value: movementTypeId == "0"
+                                      ? null
+                                      : movementTypeId,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      movementTypeId = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllDeliveryViaRules(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<DVRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Delivery Via Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  isExpanded: true,
+                                  value: deliveryViaRule == "0"
+                                      ? null
+                                      : deliveryViaRule,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      deliveryViaRule = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value,
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
                     maxLines: 5,
                     controller: noteFieldController,
                     decoration: InputDecoration(
@@ -521,6 +842,101 @@ class _EditShipmentState extends State<EditShipment> {
                       labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: aspectFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'External Aspect'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Movement Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.date,
+                    initialValue: args['movementDate'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2200),
+                    //dateLabelText: 'Shipment Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      var date = DateTime.parse(val);
+
+                      movementDate = DateFormat('yyyy-MM-dd').format(date);
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    locale: Locale('language'.tr, 'LANGUAGE'.tr),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.event),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Shipment Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    //locale: Locale('languageCalendar'.tr),
+                    type: DateTimePickerType.dateTime,
+                    initialValue: args['shipDate'],
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2200),
+                    //dateLabelText: 'Shipment Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {
+                      //print(DateTime.parse(val));
+                      //print(val);
+                      var date = DateTime.parse(val);
+
+                      String formattedDate =
+                          DateFormat('yyyy-MM-dd').format(date);
+                      String formattedTime = DateFormat('kk:mm').format(date);
+                      shipmentDate = '${formattedDate}T$formattedTime:00Z';
+                      //print(date);
+                    },
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    //onSaved: (val) => print(val),
                   ),
                 ),
               ],

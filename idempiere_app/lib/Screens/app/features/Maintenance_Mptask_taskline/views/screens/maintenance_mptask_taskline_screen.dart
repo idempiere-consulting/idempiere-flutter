@@ -362,47 +362,56 @@ class MaintenanceMptaskLineScreen
                 width: screenSize.width,
                 height: 0.25,
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  readOnly: true,
-                  minLines: 1,
-                  maxLines: 4,
-                  controller: controller.requestFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
-                    border: const OutlineInputBorder(),
-                    labelText: 'Request Description'.tr,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+              Visibility(
+                visible: controller.args["isSpecialOrder"],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: controller.requestFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Request Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  readOnly: true,
-                  minLines: 1,
-                  maxLines: 4,
-                  controller: controller.noteFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
-                    border: const OutlineInputBorder(),
-                    labelText: 'Activity To Do'.tr,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+              Visibility(
+                visible: controller.args["isSpecialOrder"],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: controller.noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity To Do'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  minLines: 1,
-                  maxLines: 4,
-                  controller: controller.manualNoteFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
-                    border: const OutlineInputBorder(),
-                    labelText: 'Activity Done'.tr,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+              Visibility(
+                visible: controller.args["isSpecialOrder"],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: controller.manualNoteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity Done'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ),
@@ -424,23 +433,45 @@ class MaintenanceMptaskLineScreen
                               child: ExpansionTile(
                                 trailing: IconButton(
                                   onPressed: () {
-                                    /* GetStorage().write(
-                                        'selectedTaskDocNo',
-                                        controller
-                                            .trx.records![index].documentNo);
-                                    GetStorage().write(
-                                        'selectedTaskBP',
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            "");
-                                    GetStorage().write(
-                                        'selectedTaskId',
-                                        controller.trx.records![index]
-                                            .mPMaintainTaskID!.id);
-                                    Get.toNamed('/MaintenanceMpResource'); */
+                                    int taskindex = 0;
+                                    for (var i = 0;
+                                        i < controller._trx2.records!.length;
+                                        i++) {
+                                      if (controller._trx2.records![i].id ==
+                                          controller._trx.records![index].id) {
+                                        taskindex = i;
+                                      }
+                                    }
+                                    //print(taskindex);
+                                    Get.to(const EditMaintenanceMptaskLine(),
+                                        arguments: {
+                                          "index": taskindex,
+                                          "id": controller
+                                              ._trx.records![index].id,
+                                          "qtyEntered": controller
+                                              ._trx.records![index].qtyEntered
+                                              .toString(),
+                                          "resourceQty": controller
+                                              ._trx.records![index].resourceQty
+                                              .toString(),
+                                          "description": controller
+                                              ._trx.records![index].description,
+                                          "qty": controller
+                                              ._trx.records![index].qty
+                                              .toString(),
+                                          "offlineid": controller
+                                              ._trx.records![index].offlineId,
+                                          "prod": controller
+                                              ._trx
+                                              .records![index]
+                                              .mProductID
+                                              ?.identifier,
+                                          "prodId": controller._trx
+                                              .records![index].mProductID?.id,
+                                        });
                                   },
                                   icon: const Icon(
-                                    Icons.view_list,
+                                    Icons.edit,
                                     color: Colors.green,
                                   ),
                                 ),
@@ -558,47 +589,56 @@ class MaintenanceMptaskLineScreen
                 width: screenSize.width,
                 height: 0.25,
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  readOnly: true,
-                  minLines: 1,
-                  maxLines: 4,
-                  controller: controller.requestFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
-                    border: const OutlineInputBorder(),
-                    labelText: 'Request Description'.tr,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+              Visibility(
+                visible: controller.args["isSpecialOrder"],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: controller.requestFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Request Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  readOnly: true,
-                  minLines: 1,
-                  maxLines: 4,
-                  controller: controller.noteFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
-                    border: const OutlineInputBorder(),
-                    labelText: 'Activity To Do'.tr,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+              Visibility(
+                visible: controller.args["isSpecialOrder"],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: controller.noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity To Do'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ),
-              Container(
-                margin: const EdgeInsets.all(10),
-                child: TextField(
-                  minLines: 1,
-                  maxLines: 4,
-                  controller: controller.manualNoteFieldController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
-                    border: const OutlineInputBorder(),
-                    labelText: 'Activity Done'.tr,
-                    floatingLabelBehavior: FloatingLabelBehavior.always,
+              Visibility(
+                visible: controller.args["isSpecialOrder"],
+                child: Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: controller.manualNoteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity Done'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
               ),
@@ -620,7 +660,42 @@ class MaintenanceMptaskLineScreen
                               child: ExpansionTile(
                                 trailing: IconButton(
                                   onPressed: () {
-                                    Get.to(const EditMaintenanceMptaskLine());
+                                    int taskindex = 0;
+                                    for (var i = 0;
+                                        i < controller._trx2.records!.length;
+                                        i++) {
+                                      if (controller._trx2.records![i].id ==
+                                          controller._trx.records![index].id) {
+                                        taskindex = i;
+                                      }
+                                    }
+                                    //print(taskindex);
+                                    Get.to(const EditMaintenanceMptaskLine(),
+                                        arguments: {
+                                          "index": taskindex,
+                                          "id": controller
+                                              ._trx.records![index].id,
+                                          "qtyEntered": controller
+                                              ._trx.records![index].qtyEntered
+                                              .toString(),
+                                          "resourceQty": controller
+                                              ._trx.records![index].resourceQty
+                                              .toString(),
+                                          "description": controller
+                                              ._trx.records![index].description,
+                                          "qty": controller
+                                              ._trx.records![index].qty
+                                              .toString(),
+                                          "offlineid": controller
+                                              ._trx.records![index].offlineId,
+                                          "prod": controller
+                                              ._trx
+                                              .records![index]
+                                              .mProductID
+                                              ?.identifier,
+                                          "prodId": controller._trx
+                                              .records![index].mProductID?.id,
+                                        });
                                   },
                                   icon: const Icon(
                                     Icons.edit,

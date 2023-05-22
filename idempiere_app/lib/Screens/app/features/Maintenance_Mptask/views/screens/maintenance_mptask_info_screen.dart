@@ -143,19 +143,43 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: const [
+              children: [
                 SizedBox(
-                  height: 10,
-                ),
+                  height: size.height,
+                  width: size.width,
+                  //padding: const EdgeInsets.all(15),
+                  child: PlutoGrid(
+                    columns: columns,
+                    rows: rows,
+                    //columnGroups: controllecolumnGroups,
+                    onLoaded: (PlutoGridOnLoadedEvent event) {
+                      stateManager = event.stateManager;
+                      getWorkOrderInfo();
+                    },
+                    onChanged: (PlutoGridOnChangedEvent event) {},
+                  ),
+                )
               ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: const [
+              children: [
                 SizedBox(
-                  height: 10,
-                ),
+                  height: size.height,
+                  width: size.width,
+                  //padding: const EdgeInsets.all(15),
+                  child: PlutoGrid(
+                    columns: columns,
+                    rows: rows,
+                    //columnGroups: controllecolumnGroups,
+                    onLoaded: (PlutoGridOnLoadedEvent event) {
+                      stateManager = event.stateManager;
+                      getWorkOrderInfo();
+                    },
+                    onChanged: (PlutoGridOnChangedEvent event) {},
+                  ),
+                )
               ],
             );
           },

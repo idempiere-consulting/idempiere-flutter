@@ -131,8 +131,8 @@ class TicketClientScreen extends GetView<TicketClientController> {
                 crossAxisCount: 6,
                 crossAxisCellCount: 6,
               ), */
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              /* const SizedBox(height: kSpacing),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           desktopBuilder: (context, constraints) {
@@ -165,8 +165,8 @@ class TicketClientScreen extends GetView<TicketClientController> {
                 crossAxisCount: 6,
                 crossAxisCellCount: 6,
               ), */
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()),
+              /* const SizedBox(height: kSpacing),
+              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
         )),

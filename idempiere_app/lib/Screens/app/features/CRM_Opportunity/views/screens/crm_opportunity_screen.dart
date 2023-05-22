@@ -555,113 +555,12 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("OPPORTUNITY: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("OPPORTUNITY: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateOpportunity());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getOpportunities();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: TextButton(
-                        onPressed: () {
-                          //controller.changeFilter();
-                          //print("hello");
-                        },
-                        child: const Text('filter'),
-                        //Text(controller.value.value),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
 
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
+                //const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
@@ -669,217 +568,322 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Obx(
-                            () => Visibility(
-                              visible: controller.searchFilterValue.value == ""
-                                  ? true
-                                  : controller.dropdownValue.value == "1"
-                                      ? controller.trx.records![index].cBPartnerID!.identifier
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(controller.searchFilterValue.value
-                                              .toLowerCase())
-                                      : controller.dropdownValue.value == "2"
-                                          ? (controller.trx.records![index].mProductID?.identifier ?? "")
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller.searchFilterValue.value
-                                                  .toLowerCase())
-                                          : controller.dropdownValue.value ==
-                                                  "3"
-                                              ? controller.trx.records![index]
-                                                  .salesRepID!.identifier
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller.searchFilterValue.value
-                                                      .toLowerCase())
-                                              : controller.dropdownValue.value ==
-                                                      "4"
-                                                  ? controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cSalesStageID!
-                                                      .identifier
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : true,
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
                                   decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 12.0),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.paid,
-                                          color: Colors.green,
-                                        ),
-                                        tooltip: 'Edit Opportunity',
-                                        onPressed: () {
-                                          Get.to(const EditOpportunity(),
-                                              arguments: {
-                                                "id": controller
-                                                    .trx.records![index].id,
-                                                "SaleStageID": controller
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Opportunity'.tr,
+                                    onPressed: () {
+                                      Get.to(const EditOpportunity(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "SaleStageID": controller
+                                                .trx
+                                                .records![index]
+                                                .cSalesStageID!
+                                                .id,
+                                            "salesRep": controller
                                                     .trx
                                                     .records![index]
-                                                    .cSalesStageID!
-                                                    .id,
-                                                "salesRep": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .salesRepID
-                                                        ?.identifier ??
-                                                    "",
-                                                "productName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    "",
-                                                "productId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.id ??
-                                                    0,
-                                                "opportunityAmt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .opportunityAmt ??
-                                                    0,
-                                                "cBPartnerID": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.id ??
-                                                    0,
-                                                "cBPartnerName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.identifier ??
-                                                    "",
-                                                "Description": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .description ??
-                                                    "",
-                                              });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      controller.trx.records![index].cBPartnerID
-                                              ?.identifier ??
-                                          "???",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                "",
+                                            "productName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.identifier ??
+                                                "",
+                                            "productId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.id ??
+                                                0,
+                                            "opportunityAmt": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .opportunityAmt ??
+                                                0,
+                                            "cBPartnerID": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id ??
+                                                0,
+                                            "cBPartnerName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                "",
+                                            "Description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "Note": controller
+                                                    .trx.records![index].note ??
+                                                "",
+                                            "Probability": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .probability ??
+                                                0,
+                                            "CampaignName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cCampaignID
+                                                    ?.identifier ??
+                                                "",
+                                            "CampaignId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cCampaignID
+                                                    ?.id ??
+                                                "",
+                                          });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].cBPartnerID
+                                          ?.identifier ??
+                                      "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.linear_scale,
-                                            color: Colors.yellowAccent),
-                                        Text(
-                                          controller.trx.records![index]
-                                                  .cSalesStageID!.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ],
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(Icons.linear_scale,
+                                        color: Colors.yellowAccent),
+                                    Text(
+                                      controller.trx.records![index]
+                                              .cSalesStageID!.identifier ??
+                                          "??",
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
-                                    /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.white,
+                                  size: 30.0,
+                                ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
                                     children: [
-                                      Column(
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'ContactBP'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .aDUserID
-                                                      ?.identifier ??
-                                                  ""),
-                                            ],
+                                          Text(
+                                            "${'ContactBP'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'Product'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .mProductID
-                                                      ?.identifier ??
-                                                  ""),
-                                            ],
+                                          Text(controller.trx.records![index]
+                                                  .aDUserID?.identifier ??
+                                              ""),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'Description'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'OpportunityAmt'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trx.records![index].opportunityAmt}"),
-                                            ],
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                ""),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'SalesRep'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .salesRepID!
-                                                      .identifier ??
-                                                  ""),
-                                            ],
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'Product'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'OpportunityAmt'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                              "€${controller.trx.records![index].opportunityAmt}"),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'SalesRep'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(controller.trx.records![index]
+                                                  .salesRepID?.identifier ??
+                                              ""),
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: controller._trx.records![index]
+                                                .latestJPToDoID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${'Latest Appointment'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .latestJPToDoName ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Create Sales Order'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to create a Sales Order from Opportunity?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  final ip =
+                                                      GetStorage().read('ip');
+                                                  String authorization =
+                                                      'Bearer ${GetStorage().read('token')}';
+                                                  final msg = jsonEncode({
+                                                    "DocAction": "CO",
+                                                  });
+                                                  final protocol = GetStorage()
+                                                      .read('protocol');
+                                                  var url = Uri.parse(
+                                                      '$protocol://$ip/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
+
+                                                  var response = await http.put(
+                                                    url,
+                                                    body: msg,
+                                                    headers: <String, String>{
+                                                      'Content-Type':
+                                                          'application/json',
+                                                      'Authorization':
+                                                          authorization,
+                                                    },
+                                                  );
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    //print("done!");
+                                                    /* completeOrder(
+                                                                index); */
+                                                  } else {
+                                                    //print(response.body);
+                                                    Get.snackbar(
+                                                      "Error!".tr,
+                                                      "Record not completed".tr,
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.red,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                            tooltip: "Create Sales Order".tr,
+                                            icon: const Icon(
+                                                Icons.description_outlined),
+                                          ),
+                                          IconButton(
+                                            tooltip: "Create Appointment".tr,
+                                            onPressed: () {
+                                              Get.to(
+                                                  const CreateOpportunityTasks(),
+                                                  arguments: {
+                                                    "opportunityId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .id,
+                                                    "opportunityName":
+                                                        controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .description,
+                                                    "bPartnerId": controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cBPartnerID
+                                                            ?.id ??
+                                                        0,
+                                                  });
+                                            },
+                                            icon: const Icon(Icons.add_task),
+                                          )
                                         ],
                                       ),
                                     ],
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           );
@@ -889,115 +893,14 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
               ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: [
+             return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("OPPORTUNITY: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("OPPORTUNITY: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateOpportunity());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getOpportunities();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: TextButton(
-                        onPressed: () {
-                          //controller.changeFilter();
-                          //print("hello");
-                        },
-                        child: const Text('filter'),
-                        //Text(controller.value.value),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
 
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
+                //const SizedBox(height: kSpacing),
                 Obx(() => controller.dataAvailable
                     ? ListView.builder(
                         primary: false,
@@ -1005,218 +908,322 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
                         shrinkWrap: true,
                         itemCount: controller.trx.rowcount,
                         itemBuilder: (BuildContext context, int index) {
-                          return Obx(
-                            () => Visibility(
-                              visible: /* controller.searchFilterValue.value == ""
-                                  ? true
-                                  : controller.dropdownValue.value == "1"
-                                      ? controller.trx.records![index].cBPartnerID!.identifier
-                                          .toString()
-                                          .toLowerCase()
-                                          .contains(controller.searchFilterValue.value
-                                              .toLowerCase())
-                                      : controller.dropdownValue.value == "2"
-                                          ? (controller.trx.records![index].mProductID?.identifier ?? "")
-                                              .toString()
-                                              .toLowerCase()
-                                              .contains(controller.searchFilterValue.value
-                                                  .toLowerCase())
-                                          : controller.dropdownValue.value ==
-                                                  "3"
-                                              ? controller.trx.records![index]
-                                                  .salesRepID!.identifier
-                                                  .toString()
-                                                  .toLowerCase()
-                                                  .contains(controller.searchFilterValue.value
-                                                      .toLowerCase())
-                                              : controller.dropdownValue.value ==
-                                                      "4"
-                                                  ? controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cSalesStageID!
-                                                      .identifier
-                                                      .toString()
-                                                      .toLowerCase()
-                                                      .contains(controller.searchFilterValue.value.toLowerCase())
-                                                  : */
-                                  true,
-                              child: Card(
-                                elevation: 8.0,
-                                margin: const EdgeInsets.symmetric(
-                                    horizontal: 10.0, vertical: 6.0),
-                                child: Container(
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
                                   decoration: const BoxDecoration(
-                                      color: Color.fromRGBO(64, 75, 96, .9)),
-                                  child: ExpansionTile(
-                                    tilePadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
-                                    leading: Container(
-                                      padding:
-                                          const EdgeInsets.only(right: 12.0),
-                                      decoration: const BoxDecoration(
-                                          border: Border(
-                                              right: BorderSide(
-                                                  width: 1.0,
-                                                  color: Colors.white24))),
-                                      child: IconButton(
-                                        icon: const Icon(
-                                          Icons.edit,
-                                          color: Colors.green,
-                                        ),
-                                        tooltip: 'Edit Opportunity',
-                                        onPressed: () {
-                                          Get.to(const EditOpportunity(),
-                                              arguments: {
-                                                "id": controller
-                                                    .trx.records![index].id,
-                                                "SaleStageID": controller
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.edit,
+                                      color: Colors.green,
+                                    ),
+                                    tooltip: 'Edit Opportunity'.tr,
+                                    onPressed: () {
+                                      Get.to(const EditOpportunity(),
+                                          arguments: {
+                                            "id": controller
+                                                .trx.records![index].id,
+                                            "SaleStageID": controller
+                                                .trx
+                                                .records![index]
+                                                .cSalesStageID!
+                                                .id,
+                                            "salesRep": controller
                                                     .trx
                                                     .records![index]
-                                                    .cSalesStageID!
-                                                    .id,
-                                                "salesRep": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .salesRepID
-                                                        ?.identifier ??
-                                                    "",
-                                                "productName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    "",
-                                                "productId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.id ??
-                                                    0,
-                                                "opportunityAmt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .opportunityAmt ??
-                                                    0,
-                                                "cBPartnerID": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.id ??
-                                                    0,
-                                                "cBPartnerName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.identifier ??
-                                                    "",
-                                                "Description": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .description ??
-                                                    "",
-                                              });
-                                        },
-                                      ),
-                                    ),
-                                    title: Text(
-                                      controller.trx.records![index].cBPartnerID
-                                              ?.identifier ??
-                                          "???",
-                                      style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                    // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                                    .salesRepID
+                                                    ?.identifier ??
+                                                "",
+                                            "productName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.identifier ??
+                                                "",
+                                            "productId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.id ??
+                                                0,
+                                            "opportunityAmt": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .opportunityAmt ??
+                                                0,
+                                            "cBPartnerID": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id ??
+                                                0,
+                                            "cBPartnerName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                "",
+                                            "Description": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                "",
+                                            "Note": controller
+                                                    .trx.records![index].note ??
+                                                "",
+                                            "Probability": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .probability ??
+                                                0,
+                                            "CampaignName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cCampaignID
+                                                    ?.identifier ??
+                                                "",
+                                            "CampaignId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cCampaignID
+                                                    ?.id ??
+                                                "",
+                                          });
+                                    },
+                                  ),
+                                ),
+                                title: Text(
+                                  controller.trx.records![index].cBPartnerID
+                                          ?.identifier ??
+                                      "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                    subtitle: Row(
-                                      children: <Widget>[
-                                        const Icon(Icons.linear_scale,
-                                            color: Colors.yellowAccent),
-                                        Text(
-                                          controller.trx.records![index]
-                                                  .cSalesStageID!.identifier ??
-                                              "??",
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ],
+                                subtitle: Row(
+                                  children: <Widget>[
+                                    const Icon(Icons.linear_scale,
+                                        color: Colors.yellowAccent),
+                                    Text(
+                                      controller.trx.records![index]
+                                              .cSalesStageID!.identifier ??
+                                          "??",
+                                      style:
+                                          const TextStyle(color: Colors.white),
                                     ),
-                                    /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
-                                    childrenPadding: const EdgeInsets.symmetric(
-                                        horizontal: 20.0, vertical: 10.0),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.white,
+                                  size: 30.0,
+                                ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
                                     children: [
-                                      Column(
+                                      Row(
                                         children: [
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'ContactBP'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .aDUserID
-                                                      ?.identifier ??
-                                                  ""),
-                                            ],
+                                          Text(
+                                            "${'ContactBP'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'Product'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .mProductID
-                                                      ?.identifier ??
-                                                  ""),
-                                            ],
+                                          Text(controller.trx.records![index]
+                                                  .aDUserID?.identifier ??
+                                              ""),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'Description'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'OpportunityAmt'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(
-                                                  "€${controller.trx.records![index].opportunityAmt}"),
-                                            ],
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .description ??
+                                                ""),
                                           ),
-                                          Row(
-                                            children: [
-                                              Text(
-                                                "${'SalesRep'.tr}: ",
-                                                style: const TextStyle(
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                              Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .salesRepID!
-                                                      .identifier ??
-                                                  ""),
-                                            ],
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'Product'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
                                           ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mProductID
+                                                    ?.identifier ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'OpportunityAmt'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                              "€${controller.trx.records![index].opportunityAmt}"),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${'SalesRep'.tr}: ",
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(controller.trx.records![index]
+                                                  .salesRepID?.identifier ??
+                                              ""),
+                                        ],
+                                      ),
+                                      Visibility(
+                                        visible: controller._trx.records![index]
+                                                .latestJPToDoID !=
+                                            null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              "${'Latest Appointment'.tr}: ",
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            TextButton(
+                                                onPressed: () {},
+                                                child: Text(
+                                                  controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .latestJPToDoName ??
+                                                      "",
+                                                  style: const TextStyle(
+                                                      color: kNotifColor),
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [
+                                          IconButton(
+                                            style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStateProperty.all(
+                                                      Colors.green),
+                                            ),
+                                            onPressed: () async {
+                                              Get.defaultDialog(
+                                                title: 'Create Sales Order'.tr,
+                                                content: Text(
+                                                    "Are you sure you want to create a Sales Order from Opportunity?"
+                                                        .tr),
+                                                onCancel: () {},
+                                                onConfirm: () async {
+                                                  final ip =
+                                                      GetStorage().read('ip');
+                                                  String authorization =
+                                                      'Bearer ${GetStorage().read('token')}';
+                                                  final msg = jsonEncode({
+                                                    "DocAction": "CO",
+                                                  });
+                                                  final protocol = GetStorage()
+                                                      .read('protocol');
+                                                  var url = Uri.parse(
+                                                      '$protocol://$ip/api/v1/models/c_opportunity/${controller.trx.records![index].id}');
+
+                                                  var response = await http.put(
+                                                    url,
+                                                    body: msg,
+                                                    headers: <String, String>{
+                                                      'Content-Type':
+                                                          'application/json',
+                                                      'Authorization':
+                                                          authorization,
+                                                    },
+                                                  );
+                                                  if (response.statusCode ==
+                                                      200) {
+                                                    //print("done!");
+                                                    /* completeOrder(
+                                                                index); */
+                                                  } else {
+                                                    //print(response.body);
+                                                    Get.snackbar(
+                                                      "Error!".tr,
+                                                      "Record not completed".tr,
+                                                      icon: const Icon(
+                                                        Icons.error,
+                                                        color: Colors.red,
+                                                      ),
+                                                    );
+                                                  }
+                                                },
+                                              );
+                                            },
+                                            tooltip: "Create Sales Order".tr,
+                                            icon: const Icon(
+                                                Icons.description_outlined),
+                                          ),
+                                          IconButton(
+                                            tooltip: "Create Appointment".tr,
+                                            onPressed: () {
+                                              Get.to(
+                                                  const CreateOpportunityTasks(),
+                                                  arguments: {
+                                                    "opportunityId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .id,
+                                                    "opportunityName":
+                                                        controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .description,
+                                                    "bPartnerId": controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cBPartnerID
+                                                            ?.id ??
+                                                        0,
+                                                  });
+                                            },
+                                            icon: const Icon(Icons.add_task),
+                                          )
                                         ],
                                       ),
                                     ],
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           );

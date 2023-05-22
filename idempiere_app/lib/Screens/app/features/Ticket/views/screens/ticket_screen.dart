@@ -73,69 +73,19 @@ class TicketScreen extends GetView<TicketController> {
         tabletBuilder: (context, constraints) {
           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-            _buildHeader(
+            _buildHeader2(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: controller.getProfil()),
-            const SizedBox(height: kSpacing),
-            _buildProgress(axis: Axis.vertical),
-            const SizedBox(height: kSpacing),
-            _buildTeamMember(data: controller.getMember()),
-            const SizedBox(height: kSpacing),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-              child: GetPremiumCard(onPressed: () {}),
-            ),
-            /* const SizedBox(height: kSpacing * 2),
-            _buildTaskOverview(
-              data: controller.getAllTask(),
-              headerAxis: Axis.vertical,
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ),
-            const SizedBox(height: kSpacing * 2),
-            _buildActiveProject(
-              data: controller.getActiveProject(),
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ), */
-            const SizedBox(height: kSpacing),
-            _buildRecentMessages(data: controller.getChatting()),
           ]);
         },
         desktopBuilder: (context, constraints) {
           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-            _buildHeader(
+            _buildHeader2(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
             const SizedBox(height: kSpacing / 2),
             const Divider(),
-            _buildProfile(data: controller.getProfil()),
-            const SizedBox(height: kSpacing),
-            _buildProgress(axis: Axis.vertical),
-            const SizedBox(height: kSpacing),
-            _buildTeamMember(data: controller.getMember()),
-            const SizedBox(height: kSpacing),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-              child: GetPremiumCard(onPressed: () {}),
-            ),
-            /* const SizedBox(height: kSpacing * 2),
-            _buildTaskOverview(
-              data: controller.getAllTask(),
-              headerAxis: Axis.vertical,
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ),
-            const SizedBox(height: kSpacing * 2),
-            _buildActiveProject(
-              data: controller.getActiveProject(),
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ), */
-            const SizedBox(height: kSpacing),
-            _buildRecentMessages(data: controller.getChatting()),
           ]);
         },
       )),

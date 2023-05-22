@@ -1365,7 +1365,7 @@ class _EditMaintenanceMpContractsState
             );
           },
           tabletBuilder: (context, constraints) {
-            return Column(
+             return Column(
               children: [
                 const SizedBox(
                   height: 10,
@@ -1556,6 +1556,21 @@ class _EditMaintenanceMpContractsState
                             : const Center(
                                 child: CircularProgressIndicator(),
                               ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    //readOnly: true,
+                    controller: helpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.badge),
+                      border: const OutlineInputBorder(),
+                      labelText: 'WO Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
                 /* Container(
@@ -2283,7 +2298,7 @@ class _EditMaintenanceMpContractsState
             );
           },
           desktopBuilder: (context, constraints) {
-            return Column(
+             return Column(
               children: [
                 const SizedBox(
                   height: 10,
@@ -2474,6 +2489,21 @@ class _EditMaintenanceMpContractsState
                             : const Center(
                                 child: CircularProgressIndicator(),
                               ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    //readOnly: true,
+                    controller: helpFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.badge),
+                      border: const OutlineInputBorder(),
+                      labelText: 'WO Note'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
                 /* Container(

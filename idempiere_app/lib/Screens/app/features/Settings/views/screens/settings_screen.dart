@@ -293,12 +293,17 @@ class SettingsScreen extends GetView<SettingsController> {
                           ),
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Language'.tr),
+                            title: Text('Bluetooth Printer'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile.navigation(
-                                leading: const Icon(Icons.language),
-                                title: Text('Language'.tr),
-                                value: Text('Italian'.tr),
+                                title: Text(controller.posPrinterName.value),
+                                leading: const Icon(Icons.receipt),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  if (Platform.isAndroid) {
+                                    controller.getBluetooth(context);
+                                  }
+                                },
                               ),
                             ],
                           ),
@@ -397,12 +402,17 @@ class SettingsScreen extends GetView<SettingsController> {
                           ),
                           SettingsSection(
                             margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Language'.tr),
+                            title: Text('Bluetooth Printer'.tr),
                             tiles: <SettingsTile>[
                               SettingsTile.navigation(
-                                leading: const Icon(Icons.language),
-                                title: Text('Language'.tr),
-                                value: Text('Italian'.tr),
+                                title: Text(controller.posPrinterName.value),
+                                leading: const Icon(Icons.receipt),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  if (Platform.isAndroid) {
+                                    controller.getBluetooth(context);
+                                  }
+                                },
                               ),
                             ],
                           ),

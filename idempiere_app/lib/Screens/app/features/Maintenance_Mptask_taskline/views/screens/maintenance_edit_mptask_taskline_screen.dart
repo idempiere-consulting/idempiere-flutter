@@ -495,18 +495,292 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: productFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: productName),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    productName = selection.name;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: resourceQtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'N° Technicians'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: qtyEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
                 ),
               ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: const [
-                SizedBox(
+              children: [
+                const SizedBox(
                   height: 10,
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: productFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue:
+                                    TextEditingValue(text: productName),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id!;
+                                    productName = selection.name;
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: resourceQtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'N° Technicians'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: qtyEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
                 ),
               ],
             );

@@ -722,10 +722,1244 @@ class MaintenanceMpContractsCreateContractScreen
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                //const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  child: Obx(
+                    () => StepProgressIndicator(
+                      roundedEdges: const Radius.circular(10),
+                      totalSteps: 4,
+                      currentStep: controller.filterCount.value + 1,
+                      size: 36,
+                      onTap: (index) {
+                        return () {
+                          if (kDebugMode) {
+                            print('$index pressed');
+                          }
+                        };
+                      },
+                      selectedColor: kNotifColor,
+                      unselectedColor: Colors.grey,
+                      customStep: (index, color, _) => color == kNotifColor
+                          ? index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.build,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                          : index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.build,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId =
+                                          selection.id!;
+                                      controller.getBusinessPartner();
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.nameFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.badge),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.ivaFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.payments),
+                          border: const OutlineInputBorder(),
+                          labelText: 'P. IVA'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.addressFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.home),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Address'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 3,
+                      child: const Divider()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.technicianFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.build),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Technician'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Technician".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      /* decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllTechnicians(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<Records>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<Records>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .technicianFieldController.text),
+                                    displayStringForOption:
+                                        controller.displayTechStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<Records>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((Records option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (Records selection) {
+                                      //debugPrint(
+                                      //'You just selected ${_displayStringForOption(selection)}');
+                                      controller.technicianFieldController
+                                          .text = selection.name!;
+                                      controller.technicianId = selection.id!;
+
+                                      //print(salesrepValue);
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          right: 20, left: 20, top: 10, bottom: 20),
+                      /*  decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: DateTimePicker(
+                        //locale: Locale('languageCalendar'.tr),
+                        type: DateTimePickerType.date,
+                        initialValue: DateTime.now().toString(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'Contract Date'.tr,
+                        icon: const Icon(Icons.event),
+                        onChanged: (val) {
+                          //print(DateTime.parse(val));
+                          //print(val);
+
+                          controller.date = val.substring(0, 10);
+
+                          //print(date);
+                        },
+                        validator: (val) {
+                          //print(val);
+                          return null;
+                        },
+                        //onSaved: (val) => print(val),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 3,
+                      child: const Divider()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.dataAvailable &&
+                        controller.filterCount.value == 2,
+                    child: controller.dataAvailable
+                        ? SizedBox(
+                            //margin: const EdgeInsets.only(top: 10),
+                            //height: size.height,
+                            width: double.infinity,
+                            child: MasonryGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: controller._trx.records?.length ?? 0,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              itemBuilder: (BuildContext context, index) =>
+                                  buildImageCard(index),
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller
+                                                  .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ ${controller.productList[index].cost}",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: const []);
+              return Column(children: [
+                //const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                Container(
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 10.0, vertical: 10.0),
+                  child: Obx(
+                    () => StepProgressIndicator(
+                      roundedEdges: const Radius.circular(10),
+                      totalSteps: 4,
+                      currentStep: controller.filterCount.value + 1,
+                      size: 36,
+                      onTap: (index) {
+                        return () {
+                          if (kDebugMode) {
+                            print('$index pressed');
+                          }
+                        };
+                      },
+                      selectedColor: kNotifColor,
+                      unselectedColor: Colors.grey,
+                      customStep: (index, color, _) => color == kNotifColor
+                          ? index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.build,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                          : index == 0
+                              ? Container(
+                                  color: color,
+                                  child: const Icon(
+                                    Icons.handshake,
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : index == 1
+                                  ? Container(
+                                      color: color,
+                                      child: const Icon(
+                                        Icons.build,
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : index == 2
+                                      ? Container(
+                                          color: color,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Stack(
+                                                children: <Widget>[
+                                                  const Icon(Icons
+                                                      .shopping_cart_checkout),
+                                                  Obx(
+                                                    () => Visibility(
+                                                      visible: controller
+                                                                  .counter
+                                                                  .value !=
+                                                              0
+                                                          ? true
+                                                          : false,
+                                                      child: Positioned(
+                                                        right: 1,
+                                                        top: 1,
+                                                        child: Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(1),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.red,
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        6),
+                                                          ),
+                                                          constraints:
+                                                              const BoxConstraints(
+                                                            minWidth: 12,
+                                                            minHeight: 12,
+                                                          ),
+                                                          child: Obx(
+                                                            () => Text(
+                                                              '${controller.counter.value}',
+                                                              style:
+                                                                  const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 8,
+                                                              ),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ))
+                                      : index == 3
+                                          ? Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.payment,
+                                                color: Colors.white,
+                                              ),
+                                            )
+                                          : Container(
+                                              color: color,
+                                              child: const Icon(
+                                                Icons.check,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Business Partner".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      /* decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<BPRecords>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .businessPartnerName.value),
+                                    displayStringForOption:
+                                        controller.displayStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<
+                                            BPRecords>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((BPRecords option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (BPRecords selection) {
+                                      controller.businessPartnerId =
+                                          selection.id!;
+                                      controller.getBusinessPartner();
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.nameFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.badge),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.ivaFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.payments),
+                          border: const OutlineInputBorder(),
+                          labelText: 'P. IVA'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 0 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.addressFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.home),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Address'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 3,
+                      child: const Divider()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.all(20),
+                      child: TextField(
+                        //maxLines: 5,
+                        readOnly: true,
+                        controller: controller.technicianFieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.build),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Technician'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1,
+                    child: Container(
+                      margin: const EdgeInsets.only(top: 40),
+                      padding: const EdgeInsets.only(left: 20),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "Technician".tr,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1,
+                    child: Container(
+                      padding: const EdgeInsets.all(10),
+                      /* decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ), */
+                      margin: const EdgeInsets.all(10),
+                      child: FutureBuilder(
+                        future: controller.getAllTechnicians(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<Records>> snapshot) =>
+                            snapshot.hasData
+                                ? Autocomplete<Records>(
+                                    initialValue: TextEditingValue(
+                                        text: controller
+                                            .technicianFieldController.text),
+                                    displayStringForOption:
+                                        controller.displayTechStringForOption,
+                                    optionsBuilder:
+                                        (TextEditingValue textEditingValue) {
+                                      if (textEditingValue.text == '') {
+                                        return const Iterable<Records>.empty();
+                                      }
+                                      return snapshot.data!
+                                          .where((Records option) {
+                                        return option.name!
+                                            .toString()
+                                            .toLowerCase()
+                                            .contains(textEditingValue.text
+                                                .toLowerCase());
+                                      });
+                                    },
+                                    onSelected: (Records selection) {
+                                      //debugPrint(
+                                      //'You just selected ${_displayStringForOption(selection)}');
+                                      controller.technicianFieldController
+                                          .text = selection.name!;
+                                      controller.technicianId = selection.id!;
+
+                                      //print(salesrepValue);
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 1 ||
+                        controller.filterCount.value == 3,
+                    child: Container(
+                      margin: const EdgeInsets.only(
+                          right: 20, left: 20, top: 10, bottom: 20),
+                      /*  decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                        borderRadius: BorderRadius.circular(5),
+                      ), */
+                      child: DateTimePicker(
+                        //locale: Locale('languageCalendar'.tr),
+                        type: DateTimePickerType.date,
+                        initialValue: DateTime.now().toString(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                        dateLabelText: 'Contract Date'.tr,
+                        icon: const Icon(Icons.event),
+                        onChanged: (val) {
+                          //print(DateTime.parse(val));
+                          //print(val);
+
+                          controller.date = val.substring(0, 10);
+
+                          //print(date);
+                        },
+                        validator: (val) {
+                          //print(val);
+                          return null;
+                        },
+                        //onSaved: (val) => print(val),
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                      visible: controller.filterCount.value == 3,
+                      child: const Divider()),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.dataAvailable &&
+                        controller.filterCount.value == 2,
+                    child: controller.dataAvailable
+                        ? SizedBox(
+                            //margin: const EdgeInsets.only(top: 10),
+                            //height: size.height,
+                            width: double.infinity,
+                            child: MasonryGridView.count(
+                              shrinkWrap: true,
+                              crossAxisCount: 2,
+                              itemCount: controller._trx.records?.length ?? 0,
+                              crossAxisSpacing: 8,
+                              mainAxisSpacing: 8,
+                              itemBuilder: (BuildContext context, index) =>
+                                  buildImageCard(index),
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.filterCount.value == 3,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller
+                                                  .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ ${controller.productList[index].cost}",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ]);
             },
           ),
         ),

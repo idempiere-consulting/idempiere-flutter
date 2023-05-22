@@ -366,15 +366,61 @@ class _EditContactBPState extends State<EditContactBP> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Business Partner".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllBPs(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<BPRecords>(
+                                initialValue: bPName,
+                                displayStringForOption:
+                                    _displayBPStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<BPRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (BPRecords selection) {
+                                  setState(() {
+                                    bPId = selection.id!;
+                                    //productName = selection.name;
+                                  });
+                                  //print(bPId);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(
@@ -423,15 +469,61 @@ class _EditContactBPState extends State<EditContactBP> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: bPartnerFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_pin_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Business Partner',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Business Partner".tr,
+                      style: const TextStyle(
+                          fontSize: 12, fontWeight: FontWeight.bold),
                     ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllBPs(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<BPRecords>(
+                                initialValue: bPName,
+                                displayStringForOption:
+                                    _displayBPStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<BPRecords>.empty();
+                                  }
+                                  return snapshot.data!
+                                      .where((BPRecords option) {
+                                    return ("${option.value}_${option.name}")
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (BPRecords selection) {
+                                  setState(() {
+                                    bPId = selection.id!;
+                                    //productName = selection.name;
+                                  });
+                                  //print(bPId);
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
                   ),
                 ),
                 Container(

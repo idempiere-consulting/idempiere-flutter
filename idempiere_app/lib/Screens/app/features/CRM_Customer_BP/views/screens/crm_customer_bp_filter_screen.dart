@@ -362,13 +362,393 @@ class _CRMFilterCustomerState extends State<CRMFilterCustomer> {
           tabletBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'SalesRep Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding:
+                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                  children: [
+                    RadioListTile(
+                      value: 0,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("All".tr),
+                      //subtitle: Text("Radio 1 Subtitle"),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+
+                      //selected: true,
+                    ),
+                    RadioListTile(
+                      value: 1,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("Mine Only".tr),
+                      subtitle: Text(GetStorage().read('user')),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      //activeColor: Colors.red,
+                      activeColor: Theme.of(context).primaryColor,
+
+                      selected: false,
+                    ),
+                    RadioListTile(
+                      value: 2,
+                      groupValue: selectedUserRadioTile,
+                      title: FutureBuilder(
+                        future: getAllSalesRep(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<Records>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<Records>(
+                                    direction: AxisDirection.up,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            salesRepId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: salesRepFieldController,
+                                      //autofocus: true,
+
+                                      decoration: InputDecoration(
+                                        labelText: 'SalesRep'.tr,
+                                        filled: true,
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        hintText: "search..",
+                                        isDense: true,
+                                        fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      salesRepFieldController.text =
+                                          suggestion.name!;
+                                      salesRepId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                      //subtitle: Text(GetStorage().read('user')),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      //activeColor: Colors.red,
+                      activeColor: Theme.of(context).primaryColor,
+
+                      selected: false,
+                    )
+                  ],
+                ),
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllBPGroups(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPGRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'BP Group'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a BP Group".tr),
+                                      isExpanded: true,
+                                      value: bpGroupId == "" ? null : bpGroupId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          bpGroupId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [],
+              children: <Widget>[
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'SalesRep Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding:
+                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                  children: [
+                    RadioListTile(
+                      value: 0,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("All".tr),
+                      //subtitle: Text("Radio 1 Subtitle"),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      activeColor: Theme.of(context).primaryColor,
+
+                      //selected: true,
+                    ),
+                    RadioListTile(
+                      value: 1,
+                      groupValue: selectedUserRadioTile,
+                      title: Text("Mine Only".tr),
+                      subtitle: Text(GetStorage().read('user')),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      //activeColor: Colors.red,
+                      activeColor: Theme.of(context).primaryColor,
+
+                      selected: false,
+                    ),
+                    RadioListTile(
+                      value: 2,
+                      groupValue: selectedUserRadioTile,
+                      title: FutureBuilder(
+                        future: getAllSalesRep(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<Records>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<Records>(
+                                    direction: AxisDirection.up,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            salesRepId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: salesRepFieldController,
+                                      //autofocus: true,
+
+                                      decoration: InputDecoration(
+                                        labelText: 'SalesRep'.tr,
+                                        filled: true,
+                                        border: OutlineInputBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          borderSide: BorderSide.none,
+                                        ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        hintText: "search..",
+                                        isDense: true,
+                                        fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      salesRepFieldController.text =
+                                          suggestion.name!;
+                                      salesRepId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                      //subtitle: Text(GetStorage().read('user')),
+                      onChanged: (val) {
+                        //print("Radio Tile pressed $val");
+                        setSelectedUserRadioTile(val as int);
+                      },
+                      //activeColor: Colors.red,
+                      activeColor: Theme.of(context).primaryColor,
+
+                      selected: false,
+                    )
+                  ],
+                ),
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: nameFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Name'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                    Container(
+                      margin:
+                          const EdgeInsets.only(left: 10, right: 10, top: 10),
+                      child: FutureBuilder(
+                        future: getAllBPGroups(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPGRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? InputDecorator(
+                                    decoration: InputDecoration(
+                                      labelText: 'BP Group'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.list),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                    child: DropdownButton(
+                                      isDense: true,
+                                      underline: const SizedBox(),
+                                      hint: Text("Select a BP Group".tr),
+                                      isExpanded: true,
+                                      value: bpGroupId == "" ? null : bpGroupId,
+                                      elevation: 16,
+                                      onChanged: (newValue) {
+                                        setState(() {
+                                          bpGroupId = newValue as String;
+                                        });
+
+                                        //print(dropdownValue);
+                                      },
+                                      items: snapshot.data!.map((list) {
+                                        return DropdownMenuItem<String>(
+                                          value: list.id.toString(),
+                                          child: Text(
+                                            list.name.toString(),
+                                          ),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(
+                  height: 100,
+                )
+              ],
             );
           },
         ),

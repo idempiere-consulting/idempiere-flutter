@@ -367,6 +367,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                   ),
                 ),
               ),
+
               /* const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -447,35 +448,39 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                           right: BorderSide(
                                               width: 1.0,
                                               color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                    tooltip: 'Edit Shipment'.tr,
-                                    onPressed: () {
-                                      //log("info button pressed");
-                                      Get.to(const EditShipmentline(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "qtyPlanned": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .plannedQty ??
-                                                0,
-                                            "description": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .description ??
-                                                "",
-                                            "isSelected": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .isSelected ??
-                                                false,
-                                          });
-                                    },
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color: Colors.green,
+                                        ),
+                                        tooltip: 'Edit Shipment'.tr,
+                                        onPressed: () {
+                                          //log("info button pressed");
+                                          Get.to(const EditShipmentline(),
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "qtyEntered": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .plannedQty ??
+                                                    0,
+                                                "description": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    "",
+                                                "isSelected": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .isSelected ??
+                                                    false,
+                                              });
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 trailing: IconButton(
@@ -509,7 +514,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                   Row(
                                     children: <Widget>[
                                       Text(
-                                        "- Qty Confirmed: ".tr,
+                                        "- ${"Quantity".tr}: ".tr,
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
@@ -517,28 +522,11 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                       Expanded(
                                         child: Text(
                                           controller
-                                              .trx.records![index].confirmedQty
+                                              .trx.records![index].qtyEntered
                                               .toString(),
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        "- Qty Planned: ".tr,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        controller
-                                            .trx.records![index].plannedQty
-                                            .toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
@@ -565,6 +553,20 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                                     .trx
                                                     .records![index]
                                                     .description ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Help".tr}: ".tr,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx.records![index].help ??
                                                 ""),
                                           ),
                                         ],
@@ -611,6 +613,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                   ),
                 ),
               ),
+
               /* const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -691,35 +694,39 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                           right: BorderSide(
                                               width: 1.0,
                                               color: Colors.white24))),
-                                  child: IconButton(
-                                    icon: const Icon(
-                                      Icons.edit,
-                                      color: Colors.green,
-                                    ),
-                                    tooltip: 'Edit Shipment'.tr,
-                                    onPressed: () {
-                                      //log("info button pressed");
-                                      Get.to(const EditShipmentline(),
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "qtyPlanned": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .plannedQty ??
-                                                0,
-                                            "description": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .description ??
-                                                "",
-                                            "isSelected": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .isSelected ??
-                                                false,
-                                          });
-                                    },
+                                  child: Column(
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                          Icons.edit,
+                                          color: Colors.green,
+                                        ),
+                                        tooltip: 'Edit Shipment'.tr,
+                                        onPressed: () {
+                                          //log("info button pressed");
+                                          Get.to(const EditShipmentline(),
+                                              arguments: {
+                                                "id": controller
+                                                    .trx.records![index].id,
+                                                "qtyEntered": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .plannedQty ??
+                                                    0,
+                                                "description": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    "",
+                                                "isSelected": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .isSelected ??
+                                                    false,
+                                              });
+                                        },
+                                      ),
+                                    ],
                                   ),
                                 ),
                                 trailing: IconButton(
@@ -753,7 +760,7 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                   Row(
                                     children: <Widget>[
                                       Text(
-                                        "- Qty Confirmed: ".tr,
+                                        "- ${"Quantity".tr}: ".tr,
                                         style: const TextStyle(
                                             fontWeight: FontWeight.bold,
                                             color: Colors.white),
@@ -761,28 +768,11 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                       Expanded(
                                         child: Text(
                                           controller
-                                              .trx.records![index].confirmedQty
+                                              .trx.records![index].qtyEntered
                                               .toString(),
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: <Widget>[
-                                      Text(
-                                        "- Qty Planned: ".tr,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.white),
-                                      ),
-                                      Text(
-                                        controller
-                                            .trx.records![index].plannedQty
-                                            .toString(),
-                                        style: const TextStyle(
-                                            color: Colors.white),
                                       ),
                                     ],
                                   ),
@@ -809,6 +799,20 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                                     .trx
                                                     .records![index]
                                                     .description ??
+                                                ""),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Help".tr}: ".tr,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Expanded(
+                                            child: Text(controller
+                                                    .trx.records![index].help ??
                                                 ""),
                                           ),
                                         ],

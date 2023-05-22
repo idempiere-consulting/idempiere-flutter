@@ -498,7 +498,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
             );
           },
           tabletBuilder: (context, constraints) {
-            return Column(
+             return Column(
               children: [
                 const SizedBox(
                   height: 10,
@@ -506,6 +506,23 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: opportunityFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Opportunity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
                     controller: nameFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
@@ -518,6 +535,8 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -525,75 +544,6 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                  ),
-                ),
-                /* Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: projectFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Progetto',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ), */
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Project".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllProjects(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<PJRecords>> snapshot) =>
-                        snapshot.hasData && flagProject
-                            ? Autocomplete<PJRecords>(
-                                initialValue: initialValue,
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<PJRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((PJRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (PJRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  projectId = selection.id!;
-                                  nameFieldController.text =
-                                      "${selection.value}_${selection.name}";
-                                  setState(() {});
-                                  getProjectBP();
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
                   ),
                 ),
                 Container(
@@ -640,7 +590,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
-                    readOnly: true,
+                    //readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
@@ -671,7 +621,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
-                    readOnly: true,
+                    //readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
@@ -724,7 +674,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
             );
           },
           desktopBuilder: (context, constraints) {
-            return Column(
+             return Column(
               children: [
                 const SizedBox(
                   height: 10,
@@ -732,6 +682,23 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: opportunityFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Opportunity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
                     controller: nameFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_outlined),
@@ -744,6 +711,8 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
                     controller: descriptionFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
@@ -751,75 +720,6 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                       labelText: 'Description'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
-                  ),
-                ),
-                /* Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: projectFieldController,
-                    decoration: const InputDecoration(
-                      prefixIcon: Icon(Icons.person_outlined),
-                      border: OutlineInputBorder(),
-                      labelText: 'Progetto',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ), */
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Project".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllProjects(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<PJRecords>> snapshot) =>
-                        snapshot.hasData && flagProject
-                            ? Autocomplete<PJRecords>(
-                                initialValue: initialValue,
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<PJRecords>.empty();
-                                  }
-                                  return snapshot.data!
-                                      .where((PJRecords option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (PJRecords selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  projectId = selection.id!;
-                                  nameFieldController.text =
-                                      "${selection.value}_${selection.name}";
-                                  setState(() {});
-                                  getProjectBP();
-                                  //print(salesrepValue);
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
                   ),
                 ),
                 Container(
@@ -866,7 +766,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
-                    readOnly: true,
+                    //readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),
@@ -897,7 +797,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
                     borderRadius: BorderRadius.circular(5),
                   ),
                   child: DateTimePicker(
-                    readOnly: true,
+                    //readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
                     firstDate: DateTime(2000),

@@ -338,6 +338,61 @@ class _CreateMaintenanceShipmentlineState
                   height: 10,
                 ),
                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id;
+                                    productName =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
@@ -345,7 +400,7 @@ class _CreateMaintenanceShipmentlineState
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
-                      labelText: 'Quantity Planned'.tr,
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -387,6 +442,61 @@ class _CreateMaintenanceShipmentlineState
                   height: 10,
                 ),
                 Container(
+                  padding: const EdgeInsets.only(left: 40),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      "Product".tr,
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.all(10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey,
+                    ),
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  margin: const EdgeInsets.all(10),
+                  child: FutureBuilder(
+                    future: getAllProducts(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? Autocomplete<Records>(
+                                initialValue: const TextEditingValue(text: ''),
+                                displayStringForOption: _displayStringForOption,
+                                optionsBuilder:
+                                    (TextEditingValue textEditingValue) {
+                                  if (textEditingValue.text == '') {
+                                    return const Iterable<Records>.empty();
+                                  }
+                                  return snapshot.data!.where((Records option) {
+                                    return "${option.value}_${option.name}"
+                                        .toString()
+                                        .toLowerCase()
+                                        .contains(textEditingValue.text
+                                            .toLowerCase());
+                                  });
+                                },
+                                onSelected: (Records selection) {
+                                  setState(() {
+                                    productId = selection.id;
+                                    productName =
+                                        _displayStringForOption(selection);
+                                  });
+
+                                  //print(salesrepValue);
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
@@ -394,7 +504,7 @@ class _CreateMaintenanceShipmentlineState
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
-                      labelText: 'Quantity Planned'.tr,
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

@@ -352,7 +352,7 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Lead'.tr,
+                                      tooltip: 'Edit Commission'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
                                         /* Get.to(const EditLead(), arguments: {
@@ -398,12 +398,14 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            '??',
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              '??',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -589,12 +591,14 @@ class CRMCommissionScreen extends GetView<CRMCommissionController> {
                                     children: <Widget>[
                                       const Icon(Icons.linear_scale,
                                           color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index]
-                                                .cBPartnerID?.identifier ??
-                                            '??',
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .cBPartnerID?.identifier ??
+                                              '??',
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),

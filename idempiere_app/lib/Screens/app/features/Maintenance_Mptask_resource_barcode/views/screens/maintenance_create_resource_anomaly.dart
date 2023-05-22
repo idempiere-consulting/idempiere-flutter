@@ -1077,9 +1077,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                               print(newValue);
                             }
 
-                            if (newValue == missingPartId) {
+                            /* if (newValue == missingPartId) {
                               getProductBOM();
-                            }
+                            } */
+                            getProductBOM();
                           },
                           items: list
                               .map((list) {
@@ -1124,7 +1125,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
                 Visibility(
-                  visible: missingPartFlag && manByCustomer != true,
+                  visible: /* missingPartFlag && */ /*  manByCustomer != true */
+                      false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -1139,7 +1141,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: missingPartFlag && manByCustomer != true,
+                  visible: /* missingPartFlag && manByCustomer != true */ false,
                   child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -1207,7 +1209,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: locatorAvailable && manByCustomer != true,
+                  visible: /* locatorAvailable && manByCustomer != true */
+                      false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -1220,7 +1223,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: locatorAvailable && manByCustomer != true,
+                  visible: /* locatorAvailable && manByCustomer != true */
+                      false,
                   child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -1258,7 +1262,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                             )),
                 ),
                 Visibility(
-                  visible: manByCustomer != true,
+                  visible: /* manByCustomer != true */ false,
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1301,6 +1305,74 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Valid'.tr),
+                  value: isValid,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isValid = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                IconButton(
+                    onPressed: () {
+                      attachImage();
+                    },
+                    icon: Icon(
+                      Icons.attach_file,
+                      color: image64 != "" ? Colors.green : Colors.white,
+                    )),
+                ListView.builder(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: attachment.attachments!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 8.0,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 6.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(64, 75, 96, .9)),
+                        child: ListTile(
+                          onTap: () {
+                            Get.to(const AnomalyImage(), arguments: {
+                              "base64": attachment.attachments![index].value
+                            });
+                          },
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                attachmentData = false;
+                              });
+
+                              attachment.attachments!.removeAt(index);
+                              setState(() {
+                                attachmentData = true;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            attachment.attachments![index].name ?? "",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
               ],
             );
           },
@@ -1343,9 +1415,10 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                               print(newValue);
                             }
 
-                            if (newValue == missingPartId) {
+                            /* if (newValue == missingPartId) {
                               getProductBOM();
-                            }
+                            } */
+                            getProductBOM();
                           },
                           items: list
                               .map((list) {
@@ -1390,7 +1463,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
                 Visibility(
-                  visible: missingPartFlag && manByCustomer != true,
+                  visible: /* missingPartFlag && */ /*  manByCustomer != true */
+                      false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -1405,7 +1479,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: missingPartFlag && manByCustomer != true,
+                  visible: /* missingPartFlag && manByCustomer != true */ false,
                   child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -1473,7 +1547,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: locatorAvailable && manByCustomer != true,
+                  visible: /* locatorAvailable && manByCustomer != true */
+                      false,
                   child: Container(
                     padding: const EdgeInsets.only(left: 40),
                     child: Align(
@@ -1486,7 +1561,8 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   ),
                 ),
                 Visibility(
-                  visible: locatorAvailable && manByCustomer != true,
+                  visible: /* locatorAvailable && manByCustomer != true */
+                      false,
                   child: Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
@@ -1524,7 +1600,7 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                             )),
                 ),
                 Visibility(
-                  visible: manByCustomer != true,
+                  visible: /* manByCustomer != true */ false,
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
@@ -1567,6 +1643,74 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Valid'.tr),
+                  value: isValid,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isValid = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                IconButton(
+                    onPressed: () {
+                      attachImage();
+                    },
+                    icon: Icon(
+                      Icons.attach_file,
+                      color: image64 != "" ? Colors.green : Colors.white,
+                    )),
+                ListView.builder(
+                  primary: false,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  itemCount: attachment.attachments!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Card(
+                      elevation: 8.0,
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 10.0, vertical: 6.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            color: Color.fromRGBO(64, 75, 96, .9)),
+                        child: ListTile(
+                          onTap: () {
+                            Get.to(const AnomalyImage(), arguments: {
+                              "base64": attachment.attachments![index].value
+                            });
+                          },
+                          trailing: IconButton(
+                            icon: const Icon(
+                              Icons.cancel_outlined,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                attachmentData = false;
+                              });
+
+                              attachment.attachments!.removeAt(index);
+                              setState(() {
+                                attachmentData = true;
+                              });
+                            },
+                          ),
+                          title: Text(
+                            attachment.attachments![index].name ?? "",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const Divider(),
               ],
             );
           },

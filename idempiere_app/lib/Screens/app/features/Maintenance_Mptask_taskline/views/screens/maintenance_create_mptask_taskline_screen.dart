@@ -462,7 +462,34 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: qtyFieldController,
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: resourceQtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'N° Technicians'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: qtyEnteredFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
@@ -470,7 +497,22 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
                     ],
                   ),
                 ),
@@ -554,7 +596,34 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    controller: qtyFieldController,
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: resourceQtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'N° Technicians'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    onChanged: (value) {
+                      qtyFieldController.text =
+                          (double.parse(resourceQtyFieldController.text) *
+                                  double.parse(qtyEnteredFieldController.text))
+                              .toString();
+                    },
+                    controller: qtyEnteredFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
@@ -562,7 +631,22 @@ class _CreateMaintenanceMptaskState extends State<CreateMaintenanceMptask> {
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                     inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: qtyFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
                     ],
                   ),
                 ),

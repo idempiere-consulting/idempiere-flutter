@@ -95,7 +95,7 @@ class VehicleEquipmentScreen extends GetView<VehicleEquipmentController> {
           ]);
         },
         tabletBuilder: (context, constraints) {
-          return Column(children: [
+           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -129,7 +129,7 @@ class VehicleEquipmentScreen extends GetView<VehicleEquipmentController> {
           ]);
         },
         desktopBuilder: (context, constraints) {
-          return Column(children: [
+           return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),

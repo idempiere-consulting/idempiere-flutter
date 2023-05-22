@@ -673,336 +673,447 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("LEAD: ${controller.trx.rowcount}")
-                          : const Text("LEAD: ")),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getLeads();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
+                /* _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing), */
 
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Contact Name',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
+                //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.windowrecords!.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.trx.windowrecords![index].name
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(controller
-                                            .searchFilterValue.value
-                                            .toLowerCase()),
-                                child: Card(
-                                  elevation: 8.0,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
                                     decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(64, 75, 96, .9)),
-                                    child: ExpansionTile(
-                                      tilePadding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      leading: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 12.0),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                right: BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
-                                          ),
-                                          tooltip: 'Edit Lead',
-                                          onPressed: () {
-                                            //log("info button pressed");
-                                            Get.to(const EditLead(),
-                                                arguments: {
-                                                  "id": controller.trx
-                                                      .windowrecords![index].id,
-                                                  "name": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .name ??
-                                                      "",
-                                                  "leadStatus": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .leadStatus
-                                                          ?.id ??
-                                                      "",
-                                                  "bpName": controller
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Lead'.tr,
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        Get.to(const EditLead(), arguments: {
+                                          "id": controller
+                                              .trx.windowrecords![index].id,
+                                          "name": controller.trx
+                                                  .windowrecords![index].name ??
+                                              "",
+                                          "description": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .description ??
+                                              "",
+                                          "note": controller.trx
+                                                  .windowrecords![index].note ??
+                                              "",
+                                          "leadStatus": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .leadStatus
+                                                  ?.id ??
+                                              "",
+                                          "bpName": controller
+                                              .trx.windowrecords![index].bPName,
+                                          "businessPartner": controller
+                                              .trx
+                                              .windowrecords![index]
+                                              .cbPartnerID
+                                              ?.identifier,
+                                          "Tel": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .phone ??
+                                              "",
+                                          "eMail": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .eMail ??
+                                              "",
+                                          "url": controller.trx
+                                                  .windowrecords![index].url ??
+                                              "",
+                                          "size": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .litLeadSizeID
+                                                  ?.id ??
+                                              "",
+                                          "source": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .leadSource
+                                                  ?.id ??
+                                              "",
+                                          "sector": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .litIndustrySectorID
+                                                  ?.id ??
+                                              "",
+                                          "campaign": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .cCampaignID
+                                                  ?.id ??
+                                              "",
+                                          "address": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPLocationID
+                                                  ?.identifier ??
+                                              "",
+                                          "salesRep": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .salesRepID
+                                                  ?.identifier ??
+                                              ""
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.windowrecords![index].name ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.windowrecords![index]
+                                                .leadStatus?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPName !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                "Business Partner: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
                                                       .trx
                                                       .windowrecords![index]
-                                                      .bPName,
-                                                  "Tel": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .phone ??
-                                                      "",
-                                                  "eMail": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .eMail ??
-                                                      "",
-                                                  "salesRep": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .salesRepID
-                                                          ?.identifier ??
-                                                      ""
-                                                });
-                                          },
-                                        ),
-                                      ),
-                                      title: Text(
-                                        controller.trx.windowrecords![index]
-                                                .name ??
-                                            "???",
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                      subtitle: Row(
-                                        children: <Widget>[
-                                          const Icon(Icons.linear_scale,
-                                              color: Colors.yellowAccent),
-                                          Text(
-                                            controller.trx.windowrecords![index]
-                                                    .leadStatus?.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                                      .bPName ??
+                                                  ""),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      /* trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0,
-                                      ), */
-                                      childrenPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 10.0),
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const Text(
-                                                  "Business Partner: ",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(controller
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPLocationID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {},
+                                                  icon: const Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.red,
+                                                  )),
+                                              Expanded(
+                                                child: Text(controller
                                                         .trx
                                                         .windowrecords![index]
-                                                        .bPName ??
+                                                        .bPLocationID
+                                                        ?.identifier ??
                                                     ""),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.call,
-                                                    color: Colors.green,
-                                                  ),
-                                                  tooltip: 'Call',
-                                                  onPressed: () {
-                                                    //log("info button pressed");
-                                                    if (controller
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .phone !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .windowrecords![index]
+                                                          .phone ==
+                                                      null) {
+                                                    log("info button pressed");
+                                                  } else {
+                                                    controller.makePhoneCall(
+                                                        controller
                                                             .trx
                                                             .windowrecords![
                                                                 index]
-                                                            .phone ==
-                                                        null) {
-                                                      log("info button pressed");
-                                                    } else {
-                                                      controller.makePhoneCall(
-                                                          controller
-                                                              .trx
-                                                              .windowrecords![
-                                                                  index]
-                                                              .phone
-                                                              .toString());
-                                                    }
-                                                  },
+                                                            .phone
+                                                            .toString());
+                                                    controller
+                                                        .createPhoneCallActivity(
+                                                            controller
+                                                                .trx
+                                                                .windowrecords![
+                                                                    index]
+                                                                .id!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .eMail !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.mail,
+                                                  color: Colors.white,
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone ??
-                                                    ""),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.mail,
-                                                    color: Colors.white,
-                                                  ),
-                                                  tooltip: 'EMail',
-                                                  onPressed: () {
-                                                    if (controller
+                                                tooltip: 'EMail',
+                                                onPressed: () {
+                                                  if (controller
+                                                          .trx
+                                                          .windowrecords![index]
+                                                          .eMail ==
+                                                      null) {
+                                                    log("mail button pressed");
+                                                  } else {
+                                                    controller.writeMailTo(
+                                                        controller
                                                             .trx
                                                             .windowrecords![
                                                                 index]
-                                                            .eMail ==
-                                                        null) {
-                                                      log("mail button pressed");
-                                                    } else {
-                                                      controller.writeMailTo(
-                                                          controller
-                                                              .trx
-                                                              .windowrecords![
-                                                                  index]
-                                                              .eMail
-                                                              .toString());
-                                                    }
-                                                  },
-                                                ),
-                                                Text(controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail ??
-                                                    ""),
-                                              ],
-                                            ),
-                                            Row(
+                                                            .eMail
+                                                            .toString());
+                                                    controller
+                                                        .createEmailActivity(
+                                                            controller
+                                                                .trx
+                                                                .windowrecords![
+                                                                    index]
+                                                                .id!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .eMail ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .salesRepID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"SalesRep".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .windowrecords![index]
+                                                  .latestJPToDoID !=
+                                              null,
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
                                               children: [
                                                 Text(
-                                                  "SalesRep".tr,
+                                                  "${'Latest Appointment'.tr}: ",
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .salesRepID
-                                                        ?.identifier ??
-                                                    ""),
+                                                Expanded(
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .latestJPToDoName ??
+                                                        "",
+                                                    style: TextStyle(
+                                                        color: controller
+                                                                    ._trx
+                                                                    .windowrecords![
+                                                                        index]
+                                                                    .latestJPToDoStatus ==
+                                                                'CO'
+                                                            ? kNotifColor
+                                                            : Colors.yellow),
+                                                  ),
+                                                ),
                                               ],
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .windowrecords![index]
+                                                  .latestActivityID !=
+                                              null,
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "${'Latest Activity'.tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .latestActivityName ??
+                                                        "",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              tooltip: "Create Appointment".tr,
+                                              onPressed: () {
+                                                Get.to(const CreateLeadTasks(),
+                                                    arguments: {
+                                                      "leadId": controller
+                                                          ._trx
+                                                          .windowrecords![index]
+                                                          .id,
+                                                      "leadName": controller
+                                                          ._trx
+                                                          .windowrecords![index]
+                                                          .name,
+                                                      /* "bPartnerId": controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cBPartnerID
+                                                            ?.id ??
+                                                        0, */
+                                                    });
+                                              },
+                                              icon: const Icon(Icons.add_task),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      ._trx
+                                                      .windowrecords![index]
+                                                      .cbPartnerID ==
+                                                  null,
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  controller.convertLead(index);
+                                                },
+                                                child: Text("Convert Lead".tr),
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             );
@@ -1015,336 +1126,447 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("LEAD: ${controller.trx.rowcount}")
-                          : const Text("LEAD: ")),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getLeads();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.dropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.dropdownValue.value = newValue!;
+                /* _buildProfile(data: controller.getProfil()),
+                const SizedBox(height: kSpacing), */
 
-                            //print(dropdownValue);
-                          },
-                          items: controller.dropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.searchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.searchFilterValue.value =
-                                controller.searchFieldController.text;
-                          },
-                          decoration: const InputDecoration(
-                            prefixIcon: Icon(Icons.search_outlined),
-                            border: OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Contact Name',
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
+                //const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.windowrecords!.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return Obx(
-                              () => Visibility(
-                                visible: controller.searchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.trx.windowrecords![index].name
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(controller
-                                            .searchFilterValue.value
-                                            .toLowerCase()),
-                                child: Card(
-                                  elevation: 8.0,
-                                  margin: const EdgeInsets.symmetric(
-                                      horizontal: 10.0, vertical: 6.0),
-                                  child: Container(
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
                                     decoration: const BoxDecoration(
-                                        color: Color.fromRGBO(64, 75, 96, .9)),
-                                    child: ExpansionTile(
-                                      tilePadding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0),
-                                      leading: Container(
-                                        padding:
-                                            const EdgeInsets.only(right: 12.0),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                right: BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
-                                          ),
-                                          tooltip: 'Edit Lead',
-                                          onPressed: () {
-                                            //log("info button pressed");
-                                            Get.to(const EditLead(),
-                                                arguments: {
-                                                  "id": controller.trx
-                                                      .windowrecords![index].id,
-                                                  "name": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .name ??
-                                                      "",
-                                                  "leadStatus": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .leadStatus
-                                                          ?.id ??
-                                                      "",
-                                                  "bpName": controller
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
+                                      ),
+                                      tooltip: 'Edit Lead'.tr,
+                                      onPressed: () {
+                                        //log("info button pressed");
+                                        Get.to(const EditLead(), arguments: {
+                                          "id": controller
+                                              .trx.windowrecords![index].id,
+                                          "name": controller.trx
+                                                  .windowrecords![index].name ??
+                                              "",
+                                          "description": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .description ??
+                                              "",
+                                          "note": controller.trx
+                                                  .windowrecords![index].note ??
+                                              "",
+                                          "leadStatus": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .leadStatus
+                                                  ?.id ??
+                                              "",
+                                          "bpName": controller
+                                              .trx.windowrecords![index].bPName,
+                                          "businessPartner": controller
+                                              .trx
+                                              .windowrecords![index]
+                                              .cbPartnerID
+                                              ?.identifier,
+                                          "Tel": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .phone ??
+                                              "",
+                                          "eMail": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .eMail ??
+                                              "",
+                                          "url": controller.trx
+                                                  .windowrecords![index].url ??
+                                              "",
+                                          "size": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .litLeadSizeID
+                                                  ?.id ??
+                                              "",
+                                          "source": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .leadSource
+                                                  ?.id ??
+                                              "",
+                                          "sector": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .litIndustrySectorID
+                                                  ?.id ??
+                                              "",
+                                          "campaign": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .cCampaignID
+                                                  ?.id ??
+                                              "",
+                                          "address": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPLocationID
+                                                  ?.identifier ??
+                                              "",
+                                          "salesRep": controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .salesRepID
+                                                  ?.identifier ??
+                                              ""
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  title: Text(
+                                    controller.trx.windowrecords![index].name ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Row(
+                                    children: <Widget>[
+                                      const Icon(Icons.linear_scale,
+                                          color: Colors.yellowAccent),
+                                      Text(
+                                        controller.trx.windowrecords![index]
+                                                .leadStatus?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: [
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPName !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                "Business Partner: ",
+                                                style: TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
                                                       .trx
                                                       .windowrecords![index]
-                                                      .bPName,
-                                                  "Tel": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .phone ??
-                                                      "",
-                                                  "eMail": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .eMail ??
-                                                      "",
-                                                  "salesRep": controller
-                                                          .trx
-                                                          .windowrecords![index]
-                                                          .salesRepID
-                                                          ?.identifier ??
-                                                      ""
-                                                });
-                                          },
-                                        ),
-                                      ),
-                                      title: Text(
-                                        controller.trx.windowrecords![index]
-                                                .name ??
-                                            "???",
-                                        style: const TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold),
-                                      ),
-                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                                      subtitle: Row(
-                                        children: <Widget>[
-                                          const Icon(Icons.linear_scale,
-                                              color: Colors.yellowAccent),
-                                          Text(
-                                            controller.trx.windowrecords![index]
-                                                    .leadStatus?.identifier ??
-                                                "??",
-                                            style: const TextStyle(
-                                                color: Colors.white),
+                                                      .bPName ??
+                                                  ""),
+                                            ],
                                           ),
-                                        ],
-                                      ),
-                                      /* trailing: const Icon(
-                                        Icons.keyboard_arrow_right,
-                                        color: Colors.white,
-                                        size: 30.0,
-                                      ), */
-                                      childrenPadding:
-                                          const EdgeInsets.symmetric(
-                                              horizontal: 20.0, vertical: 10.0),
-                                      children: [
-                                        Column(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const Text(
-                                                  "Business Partner: ",
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(controller
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .bPLocationID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                  onPressed: () {},
+                                                  icon: const Icon(
+                                                    Icons.location_on,
+                                                    color: Colors.red,
+                                                  )),
+                                              Expanded(
+                                                child: Text(controller
                                                         .trx
                                                         .windowrecords![index]
-                                                        .bPName ??
+                                                        .bPLocationID
+                                                        ?.identifier ??
                                                     ""),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.call,
-                                                    color: Colors.green,
-                                                  ),
-                                                  tooltip: 'Call',
-                                                  onPressed: () {
-                                                    //log("info button pressed");
-                                                    if (controller
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .phone !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .windowrecords![index]
+                                                          .phone ==
+                                                      null) {
+                                                    log("info button pressed");
+                                                  } else {
+                                                    controller.makePhoneCall(
+                                                        controller
                                                             .trx
                                                             .windowrecords![
                                                                 index]
-                                                            .phone ==
-                                                        null) {
-                                                      log("info button pressed");
-                                                    } else {
-                                                      controller.makePhoneCall(
-                                                          controller
-                                                              .trx
-                                                              .windowrecords![
-                                                                  index]
-                                                              .phone
-                                                              .toString());
-                                                    }
-                                                  },
+                                                            .phone
+                                                            .toString());
+                                                    controller
+                                                        .createPhoneCallActivity(
+                                                            controller
+                                                                .trx
+                                                                .windowrecords![
+                                                                    index]
+                                                                .id!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .eMail !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.mail,
+                                                  color: Colors.white,
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .phone ??
-                                                    ""),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                IconButton(
-                                                  icon: const Icon(
-                                                    Icons.mail,
-                                                    color: Colors.white,
-                                                  ),
-                                                  tooltip: 'EMail',
-                                                  onPressed: () {
-                                                    if (controller
+                                                tooltip: 'EMail',
+                                                onPressed: () {
+                                                  if (controller
+                                                          .trx
+                                                          .windowrecords![index]
+                                                          .eMail ==
+                                                      null) {
+                                                    log("mail button pressed");
+                                                  } else {
+                                                    controller.writeMailTo(
+                                                        controller
                                                             .trx
                                                             .windowrecords![
                                                                 index]
-                                                            .eMail ==
-                                                        null) {
-                                                      log("mail button pressed");
-                                                    } else {
-                                                      controller.writeMailTo(
-                                                          controller
-                                                              .trx
-                                                              .windowrecords![
-                                                                  index]
-                                                              .eMail
-                                                              .toString());
-                                                    }
-                                                  },
-                                                ),
-                                                Text(controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .eMail ??
-                                                    ""),
-                                              ],
-                                            ),
-                                            Row(
+                                                            .eMail
+                                                            .toString());
+                                                    controller
+                                                        .createEmailActivity(
+                                                            controller
+                                                                .trx
+                                                                .windowrecords![
+                                                                    index]
+                                                                .id!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .eMail ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .windowrecords![index]
+                                                  .salesRepID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"SalesRep".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .windowrecords![index]
+                                                      .salesRepID
+                                                      ?.identifier ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .windowrecords![index]
+                                                  .latestJPToDoID !=
+                                              null,
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
                                               children: [
                                                 Text(
-                                                  "SalesRep".tr,
+                                                  "${'Latest Appointment'.tr}: ",
                                                   style: const TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold),
                                                 ),
-                                                Text(controller
-                                                        .trx
-                                                        .windowrecords![index]
-                                                        .salesRepID
-                                                        ?.identifier ??
-                                                    ""),
+                                                Expanded(
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .latestJPToDoName ??
+                                                        "",
+                                                    style: TextStyle(
+                                                        color: controller
+                                                                    ._trx
+                                                                    .windowrecords![
+                                                                        index]
+                                                                    .latestJPToDoStatus ==
+                                                                'CO'
+                                                            ? kNotifColor
+                                                            : Colors.yellow),
+                                                  ),
+                                                ),
                                               ],
+                                            ),
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  ._trx
+                                                  .windowrecords![index]
+                                                  .latestActivityID !=
+                                              null,
+                                          child: Container(
+                                            margin:
+                                                const EdgeInsets.only(top: 10),
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  "${'Latest Activity'.tr}: ",
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold),
+                                                ),
+                                                Expanded(
+                                                  child: Text(
+                                                    controller
+                                                            ._trx
+                                                            .windowrecords![
+                                                                index]
+                                                            .latestActivityName ??
+                                                        "",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                              tooltip: "Create Appointment".tr,
+                                              onPressed: () {
+                                                Get.to(const CreateLeadTasks(),
+                                                    arguments: {
+                                                      "leadId": controller
+                                                          ._trx
+                                                          .windowrecords![index]
+                                                          .id,
+                                                      "leadName": controller
+                                                          ._trx
+                                                          .windowrecords![index]
+                                                          .name,
+                                                      /* "bPartnerId": controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .cBPartnerID
+                                                            ?.id ??
+                                                        0, */
+                                                    });
+                                              },
+                                              icon: const Icon(Icons.add_task),
+                                            ),
+                                            Visibility(
+                                              visible: controller
+                                                      ._trx
+                                                      .windowrecords![index]
+                                                      .cbPartnerID ==
+                                                  null,
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor:
+                                                      MaterialStateProperty.all(
+                                                          Colors.green),
+                                                ),
+                                                onPressed: () async {
+                                                  controller.convertLead(index);
+                                                },
+                                                child: Text("Convert Lead".tr),
+                                              ),
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ),
+                                  ],
                                 ),
                               ),
                             );

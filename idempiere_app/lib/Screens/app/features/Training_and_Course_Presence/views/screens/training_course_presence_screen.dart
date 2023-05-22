@@ -121,7 +121,7 @@ class TrainingCoursePresenceScreen
                 child: GetPremiumCard(onPressed: () {}),
               ), */
                 const SizedBox(height: kSpacing * 2),
-                /* _buildTaskOverview(
+                /* /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
                   crossAxisCount: 6,
@@ -132,7 +132,7 @@ class TrainingCoursePresenceScreen
                   data: controller.getActiveProject(),
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
-                ), */
+                ), */ */
                 const SizedBox(height: kSpacing),
                 _buildRecentMessages(data: controller.getChatting()),
               ]);
@@ -155,7 +155,7 @@ class TrainingCoursePresenceScreen
                 child: GetPremiumCard(onPressed: () {}),
               ), */
                 const SizedBox(height: kSpacing * 2),
-                /* _buildTaskOverview(
+                /* /* _buildTaskOverview(
                   data: controller.getAllTask(),
                   headerAxis: Axis.vertical,
                   crossAxisCount: 6,
@@ -166,7 +166,7 @@ class TrainingCoursePresenceScreen
                   data: controller.getActiveProject(),
                   crossAxisCount: 6,
                   crossAxisCellCount: 6,
-                ), */
+                ), */ */
                 const SizedBox(height: kSpacing),
                 _buildRecentMessages(data: controller.getChatting()),
               ]);
