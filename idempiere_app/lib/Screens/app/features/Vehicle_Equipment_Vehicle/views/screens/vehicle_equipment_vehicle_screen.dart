@@ -10,7 +10,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/models/asset_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -54,28 +54,112 @@ class VehicleEquipmentVehicleScreen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        shape: const AutomaticNotchedShape(
+            RoundedRectangleBorder(), StadiumBorder()),
+        //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+        color: Theme.of(context).cardColor,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.getVehicles();
+                        },
+                        child: Row(
+                          children: [
+                            //Icon(Icons.filter_alt),
+                            Obx(() => controller.dataAvailable
+                                ? Text(
+                                    "${"VEHICLE".tr}:  ${controller.trx.rowcount}")
+                                : Text("${"VEHICLE".tr}:  ")),
+                          ],
+                        ),
+                      ),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                  ],
+                )
+              ],
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (controller.pagesCount > 1) {
+                            controller.pagesCount.value -= 1;
+                            controller.getVehicles();
+                          }
+                        },
+                        icon: const Icon(Icons.skip_previous),
+                      ),
+                      Obx(() => Text(
+                          "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                      IconButton(
+                        onPressed: () {
+                          if (controller.pagesCount <
+                              controller.pagesTot.value) {
+                            controller.pagesCount.value += 1;
+                            controller.getVehicles();
+                          }
+                        },
+                        icon: const Icon(Icons.skip_next),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Text("VEHICLE".tr),
-              const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
@@ -101,34 +185,75 @@ class VehicleEquipmentVehicleScreen
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Icons.paid,
-                                    color: Colors.green,
+                                    Icons.edit,
+                                    color: Colors.grey,
                                   ),
-                                  tooltip: 'Lead Info'.tr,
+                                  tooltip: 'Edit Vehicle'.tr,
                                   onPressed: () {
-                                    log("info button pressed".tr);
+                                    //log("info button pressed".tr);
                                   },
                                 ),
                               ),
                               title: Text(
-                                controller.trx.records![index].cBPartnerID
-                                        ?.identifier ??
-                                    "???",
+                                controller.trx.records![index].name ?? "???",
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
                               // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                              subtitle: Row(
-                                children: <Widget>[
-                                  const Icon(Icons.linear_scale,
-                                      color: Colors.yellowAccent),
-                                  Text(
-                                    controller.trx.records![index]
-                                            .cSalesStageID!.identifier ??
-                                        "??",
-                                    style: const TextStyle(color: Colors.white),
+                              subtitle: Column(
+                                children: [
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        controller.trx.records![index].value ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      Text(
+                                        controller.trx.records![index]
+                                                .licensePlate ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.person,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        controller.trx.records![index].adUserID
+                                                ?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      const Icon(
+                                        Icons.handshake,
+                                        color: Colors.white,
+                                      ),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .cbPartnerID?.identifier ??
+                                            "??",
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      ),
+                                    ],
                                   ),
                                 ],
                               ),
@@ -139,61 +264,7 @@ class VehicleEquipmentVehicleScreen
                               ), */
                               childrenPadding: const EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
-                              children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Contact: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .aDUserID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Product: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .mProductID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Expected amount: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("€" +
-                                            controller.trx.records![index]
-                                                .opportunityAmt
-                                                .toString()),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Agent: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .salesRepID!.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
+                              children: const [],
                             ),
                           ),
                         );
@@ -203,278 +274,10 @@ class VehicleEquipmentVehicleScreen
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Text("VEHICLE".tr),
-              const SizedBox(height: kSpacing),
-              Obx(() => controller.dataAvailable
-                  ? ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: controller.trx.rowcount,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 8.0,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 6.0),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromRGBO(64, 75, 96, .9)),
-                            child: ExpansionTile(
-                              tilePadding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              leading: Container(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                decoration: const BoxDecoration(
-                                    border: Border(
-                                        right: BorderSide(
-                                            width: 1.0,
-                                            color: Colors.white24))),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.paid,
-                                    color: Colors.green,
-                                  ),
-                                  tooltip: 'Lead Info'.tr,
-                                  onPressed: () {
-                                    log("info button pressed".tr);
-                                  },
-                                ),
-                              ),
-                              title: Text(
-                                controller.trx.records![index].cBPartnerID
-                                        ?.identifier ??
-                                    "???",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                              subtitle: Row(
-                                children: <Widget>[
-                                  const Icon(Icons.linear_scale,
-                                      color: Colors.yellowAccent),
-                                  Text(
-                                    controller.trx.records![index]
-                                            .cSalesStageID!.identifier ??
-                                        "??",
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              /* trailing: const Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white,
-                                size: 30.0,
-                              ), */
-                              childrenPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Contact: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .aDUserID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Product: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .mProductID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Expected amount: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("€" +
-                                            controller.trx.records![index]
-                                                .opportunityAmt
-                                                .toString()),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Agent: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .salesRepID!.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : const Center(child: CircularProgressIndicator())),
-            ]);
+            return Column(children: const []);
           },
           desktopBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Text("VEHICLE".tr),
-              const SizedBox(height: kSpacing),
-              Obx(() => controller.dataAvailable
-                  ? ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: controller.trx.rowcount,
-                      itemBuilder: (BuildContext context, int index) {
-                        return Card(
-                          elevation: 8.0,
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 10.0, vertical: 6.0),
-                          child: Container(
-                            decoration: const BoxDecoration(
-                                color: Color.fromRGBO(64, 75, 96, .9)),
-                            child: ExpansionTile(
-                              tilePadding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              leading: Container(
-                                padding: const EdgeInsets.only(right: 12.0),
-                                decoration: const BoxDecoration(
-                                    border: Border(
-                                        right: BorderSide(
-                                            width: 1.0,
-                                            color: Colors.white24))),
-                                child: IconButton(
-                                  icon: const Icon(
-                                    Icons.paid,
-                                    color: Colors.green,
-                                  ),
-                                  tooltip: 'Lead Info'.tr,
-                                  onPressed: () {
-                                    log("info button pressed".tr);
-                                  },
-                                ),
-                              ),
-                              title: Text(
-                                controller.trx.records![index].cBPartnerID
-                                        ?.identifier ??
-                                    "???",
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
-                              subtitle: Row(
-                                children: <Widget>[
-                                  const Icon(Icons.linear_scale,
-                                      color: Colors.yellowAccent),
-                                  Text(
-                                    controller.trx.records![index]
-                                            .cSalesStageID!.identifier ??
-                                        "??",
-                                    style: const TextStyle(color: Colors.white),
-                                  ),
-                                ],
-                              ),
-                              /* trailing: const Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white,
-                                size: 30.0,
-                              ), */
-                              childrenPadding: const EdgeInsets.symmetric(
-                                  horizontal: 20.0, vertical: 10.0),
-                              children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Contact: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .aDUserID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Product: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .mProductID?.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Expected amount: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text("€" +
-                                            controller.trx.records![index]
-                                                .opportunityAmt
-                                                .toString()),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Agent: ".tr,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(controller.trx.records![index]
-                                                .salesRepID!.identifier ??
-                                            ""),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    )
-                  : const Center(child: CircularProgressIndicator())),
-            ]);
+            return Column(children: const []);
           },
         ),
       ),
@@ -496,6 +299,40 @@ class VehicleEquipmentVehicleScreen
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

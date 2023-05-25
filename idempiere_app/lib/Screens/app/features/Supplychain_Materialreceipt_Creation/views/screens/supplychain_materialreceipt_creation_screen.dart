@@ -22,6 +22,8 @@ import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_js
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_Contract/models/documenttype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
@@ -273,6 +275,8 @@ class SupplychainMaterialreceiptCreationScreen
                                         suggestion.id!;
                                     controller
                                         .getPurchaseOrders(suggestion.id!);
+                                    controller.getLocationFromBP();
+                                    controller.getSalesOrderDefaultValues();
                                   },
                                 )
                               : const Center(
@@ -637,7 +641,9 @@ class SupplychainMaterialreceiptCreationScreen
                                     'Are you sure you want to confirm the Material Receipt?'
                                         .tr),
                                 textCancel: 'Cancel',
-                                onConfirm: () {});
+                                onConfirm: () {
+                                  controller.createMaterialReceipt();
+                                });
                           },
                           child: Text('Confirm Material Receipt'.tr)),
                     ),

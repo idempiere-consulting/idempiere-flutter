@@ -7,11 +7,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/edit_supplychain_inventory.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_create_inventory.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/supplychain_inventory_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -57,8 +60,137 @@ class SupplychainInventoryScreen
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomAppBar(
+        shape: const AutomaticNotchedShape(
+            RoundedRectangleBorder(), StadiumBorder()),
+        //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+        color: Theme.of(context).cardColor,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 10),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          controller.getInventories();
+                        },
+                        child: Row(
+                          children: [
+                            //Icon(Icons.filter_alt),
+                            Obx(() => controller.dataAvailable
+                                ? Text("INVENTORY:  ".tr +
+                                    controller.trx.rowcount.toString())
+                                : Text("INVENTORY:  ".tr)),
+                          ],
+                        ),
+                      ),
+                    ),
+                    /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                  ],
+                )
+              ],
+            ),
+            Flexible(
+              fit: FlexFit.tight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          if (controller.pagesCount > 1) {
+                            controller.pagesCount.value -= 1;
+                            controller.getInventories();
+                          }
+                        },
+                        icon: const Icon(Icons.skip_previous),
+                      ),
+                      Obx(() => Text(
+                          "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                      IconButton(
+                        onPressed: () {
+                          if (controller.pagesCount <
+                              controller.pagesTot.value) {
+                            controller.pagesCount.value += 1;
+                            controller.getInventories();
+                          }
+                        },
+                        icon: const Icon(Icons.skip_next),
+                      )
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.home_menu,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+        children: [
+          SpeedDialChild(
+              label: 'New'.tr,
+              child: const Icon(MaterialSymbols.assignment_add_outlined),
+              onTap: () {
+                Get.to(const CreateSupplychainInventory(), arguments: {
+                  "idDoc": controller.idDoc,
+                  "warehouseId": GetStorage().read("warehouseid")
+                });
+              }),
+          SpeedDialChild(
+              label: 'Filter'.tr,
+              child: Obx(() => Icon(
+                    MaterialSymbols.filter_alt_filled,
+                    color: controller.docTypeId.value == "0" &&
+                            controller.warehouseId.value == "0" &&
+                            controller.docNoValue.value == "" &&
+                            controller.dateStartValue.value == "" &&
+                            controller.dateEndValue.value == ""
+                        ? Colors.white
+                        : kNotifColor,
+                  )),
+              onTap: () {
+                Get.to(const SupplychainFilterInventory(), arguments: {
+                  'docNo': controller.docNoValue.value,
+                  'warehouseId': controller.warehouseId.value,
+                  'docTypeId': controller.docTypeId.value,
+                  'dateStart': controller.dateStartValue.value,
+                  'dateEnd': controller.dateEndValue.value,
+                });
+              }),
+        ],
+      ),
       //key: controller.scaffoldKey,
-      drawer: /* (ResponsiveBuilder.isDesktop(context))
+      drawer: /* (ResponsiveBuilder.isDesktop(context)) 
           ? null
           : */
           Drawer(
@@ -72,50 +204,10 @@ class SupplychainInventoryScreen
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 15),
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
-                        : Text("INVENTORY: ".tr)),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        Get.to(const CreateSupplychainInventory(), arguments: {
-                          "idDoc": controller.idDoc,
-                          "warehouseId": GetStorage().read("warehouseid")
-                        });
-                      },
-                      icon: const Icon(
-                        Icons.add,
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.getInventories();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.yellow,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
                       primary: false,
@@ -280,18 +372,14 @@ class SupplychainInventoryScreen
                                                   final ip =
                                                       GetStorage().read('ip');
                                                   String authorization =
-                                                      'Bearer ' +
-                                                          GetStorage()
-                                                              .read('token');
+                                                      'Bearer ${GetStorage().read('token')}';
                                                   final msg = jsonEncode({
                                                     "DocAction": "CO",
                                                   });
                                                   final protocol = GetStorage()
                                                       .read('protocol');
                                                   var url = Uri.parse(
-                                                      '$protocol://' +
-                                                          ip +
-                                                          '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                      '$protocol://$ip/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                   var response = await http.put(
                                                     url,
@@ -353,7 +441,7 @@ class SupplychainInventoryScreen
                   Container(
                     margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
-                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
+                        ? Text("${"INVENTORY: ".tr}${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
                   ),
                   Container(
@@ -546,18 +634,14 @@ class SupplychainInventoryScreen
                                                   final ip =
                                                       GetStorage().read('ip');
                                                   String authorization =
-                                                      'Bearer ' +
-                                                          GetStorage()
-                                                              .read('token');
+                                                      'Bearer ${GetStorage().read('token')}';
                                                   final msg = jsonEncode({
                                                     "DocAction": "CO",
                                                   });
                                                   final protocol = GetStorage()
                                                       .read('protocol');
                                                   var url = Uri.parse(
-                                                      '$protocol://' +
-                                                          ip +
-                                                          '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                      '$protocol://$ip/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                   var response = await http.put(
                                                     url,
@@ -619,7 +703,7 @@ class SupplychainInventoryScreen
                   Container(
                     margin: const EdgeInsets.only(left: 15),
                     child: Obx(() => controller.dataAvailable
-                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
+                        ? Text("${"INVENTORY: ".tr}${controller.trx.rowcount}")
                         : Text("INVENTORY: ".tr)),
                   ),
                   Container(
@@ -812,18 +896,14 @@ class SupplychainInventoryScreen
                                                   final ip =
                                                       GetStorage().read('ip');
                                                   String authorization =
-                                                      'Bearer ' +
-                                                          GetStorage()
-                                                              .read('token');
+                                                      'Bearer ${GetStorage().read('token')}';
                                                   final msg = jsonEncode({
                                                     "DocAction": "CO",
                                                   });
                                                   final protocol = GetStorage()
                                                       .read('protocol');
                                                   var url = Uri.parse(
-                                                      '$protocol://' +
-                                                          ip +
-                                                          '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                      '$protocol://$ip/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                   var response = await http.put(
                                                     url,
@@ -891,6 +971,40 @@ class SupplychainInventoryScreen
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

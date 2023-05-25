@@ -6,6 +6,14 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
 
   int documentTypeId = 0;
 
+  late BusinessPartnerLocationJson bpLocation;
+
+  var bpLocationAvailable = false.obs;
+
+  var bpLocationId = '0'.obs;
+
+  late SalesOrderDefaultsJson defValues;
+
   late int businessPartnerId;
   late TextEditingController bpSearchFieldController;
   late TextEditingController documentDateFieldController;
@@ -27,14 +35,97 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     documentDateFieldController = TextEditingController();
     docNoFieldController = TextEditingController();
     pOrderdocNoSearchFieldController = TextEditingController();
+    getMaterialReceiptDocType();
     //getPurchaseOrders();
   }
 
-  Future<void> createMaterialReceipt() async {
+  Future<void> getLocationFromBP() async {
+    bpLocationAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/M_InOut/');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      bpLocation = BusinessPartnerLocationJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (bpLocation.rowcount! > 0) {
+        if (bpLocation.records![0].id != null) {
+          bpLocationId.value = bpLocation.records![0].id.toString();
+        }
+      }
+      //print(trx.rowcount);
+      //print(response.body);
+      //print(paymentTermId);
+      bpLocationAvailable.value = true;
+      // ignore: unnecessary_null_comparison
+      //pTermAvailable.value = pTerm != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getSalesOrderDefaultValues() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_order_defaults_v?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    if (businessPartnerId != 0) {
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print(response.body);
+        defValues = SalesOrderDefaultsJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //getPriceListVersionID();
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    }
+  }
+
+  Future<void> createMaterialReceipt() async {
+    var inputFormat = DateFormat('dd/MM/yyyy');
+    var date = inputFormat.parse(documentDateFieldController.text);
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/processes/cordercreateinoutpo');
+
+    /* List<Map<String, Object>> list = [];
+
+    for (var element in orderLineList.records!) {
+      list.add({
+        "C_OrderLine_ID": {"id": element.id},
+        "QtyEntered": element.qtyRegistered!.toInt(),
+      });
+    } */
+    List<int> list = [];
+
+    for (var element in orderLineList.records!) {
+      list.add(element.cOrderID!.id!);
+    }
     //print(url.toString());
     // physical-inventory/conteggio-inventario-if00/tabs/
     // physical-inventory/tabs/inventory-count/1000008/
@@ -42,8 +133,11 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     // 1000008
     // 1000159
     final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      'record-id': list,
+      'C_DocType_ID': {'id': documentTypeId},
+      'DocumentNo': docNoFieldController.text,
+      'MovementDate': DateFormat('yyyy-MM-dd').format(date),
+      'DocAction': 'PR',
     });
     var response = await http.post(
       url,
@@ -54,8 +148,10 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
+      print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
       Get.snackbar(
-        "Done!".tr,
+        "${json["DocumentNo"]}",
         "The record has been created".tr,
         icon: const Icon(
           Icons.done,
@@ -138,7 +234,9 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
 
       orderListAvailable.value = true;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

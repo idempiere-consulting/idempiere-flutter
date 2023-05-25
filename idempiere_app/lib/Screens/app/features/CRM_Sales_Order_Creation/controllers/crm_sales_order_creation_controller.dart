@@ -550,7 +550,7 @@ class CRMSalesOrderCreationController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
-      //print(response.body);
+      print(response.body);
 
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 

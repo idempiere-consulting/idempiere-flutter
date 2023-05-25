@@ -356,8 +356,6 @@ class _CreateLeadState extends State<CreateLead> {
     //getAllCampaigns();
     getAllLeadSources();
   }
-
-  static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 

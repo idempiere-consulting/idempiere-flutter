@@ -16,7 +16,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/busine
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/models/customer_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_edit_customer_bp.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';

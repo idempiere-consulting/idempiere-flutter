@@ -260,52 +260,10 @@ class SupplychainLoadUnloadScreen
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text(
-                              "${"Load & Unload".tr}: ${controller.trx.rowcount}")
-                          : Text("Load & Unload".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateSupplychainLoadUnload(),
-                              arguments: {
-                                "idDoc": controller.idDoc,
-                                "warehouseId": GetStorage().read("warehouseid")
-                              });
-                        },
-                        icon: const Icon(
-                          Icons.post_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getLoadUnloads();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -1043,6 +1001,40 @@ class SupplychainLoadUnloadScreen
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );

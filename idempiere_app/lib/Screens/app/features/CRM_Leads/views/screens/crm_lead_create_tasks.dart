@@ -288,8 +288,6 @@ class _CreateLeadTasksState extends State<CreateLeadTasks> {
     //getProject();
   }
 
-  static String _displayStringForOption(PJRecords option) => option.name!;
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

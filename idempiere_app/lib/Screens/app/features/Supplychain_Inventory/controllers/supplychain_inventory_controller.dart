@@ -7,10 +7,30 @@ class SupplychainInventoryController extends GetxController {
   var _dataAvailable = false.obs;
   late int idDoc;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var docNoFilter = GetStorage().read('Inventory_docNoFilter') ?? "";
+  var warehouseFilter = GetStorage().read('Inventory_warehouseFilter') ?? "";
+  var docTypeFilter = GetStorage().read('Inventory_docTypeFilter') ?? "";
+  var dateStartFilter = GetStorage().read('Inventory_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('Inventory_dateEndFilter') ?? "";
+
+  var docNoValue = "".obs;
+  var warehouseId = "0".obs;
+  var docTypeId = "0".obs;
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+
   @override
   void onInit() {
     getDocType();
     super.onInit();
+    docNoValue.value = GetStorage().read('Inventory_docNo') ?? "";
+    warehouseId.value = GetStorage().read('Inventory_warehouseId') ?? "0";
+    docTypeId.value = GetStorage().read('Inventory_docTypeId') ?? "0";
+    dateStartValue.value = GetStorage().read('Inventory_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('Inventory_dateEnd') ?? "";
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -24,8 +44,7 @@ class SupplychainInventoryController extends GetxController {
       "record-id": _trx.records![index].id,
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/processes/m-inventory-process');
+    var url = Uri.parse('$protocol://$ip/api/v1/processes/m-inventory-process');
 
     var response = await http.post(
       url,
@@ -72,7 +91,7 @@ class SupplychainInventoryController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and DocStatus neq \'CO\' and MovementDate le \'$formattedNow 23:59:59\' and MovementDate ge \'$formattedthirtyDaysAgo 00:00:00\' and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby= MovementDate desc');
+        '/api/v1/models/M_Inventory?\$filter= C_DocType_ID eq $idDoc and DocStatus neq \'CO\' and  AD_Client_ID eq ${GetStorage().read('clientid')}$docNoFilter$docTypeFilter$dateStartFilter$dateEndFilter$warehouseFilter&\$orderby= MovementDate desc&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -84,6 +103,7 @@ class SupplychainInventoryController extends GetxController {
       //print(response.body);
       _trx =
           LoadUnloadJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

@@ -191,6 +191,7 @@ class SupplychainMaterialreceiptScreen
                     'businessPartnerName': controller.businessPartnerName,
                     'dateStart': controller.dateStartValue.value,
                     'dateEnd': controller.dateEndValue.value,
+                    'docNo': controller.docNoValue.value,
                   });
                 }),
             SpeedDialChild(

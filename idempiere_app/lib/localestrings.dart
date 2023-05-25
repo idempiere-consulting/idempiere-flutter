@@ -597,7 +597,7 @@ class LocaleString extends Translations {
           'Select Organization': 'Seleziona Organizzazione',
           'Select Warehouse': 'Seleziona magazzino',
           'VEHICLE': 'VEICOLO',
-          'EQUIPMENT': 'EQUIPAGGIAMENTO',
+          'EQUIPMENT': 'ATTREZZATURA',
           'Failed to load lead statuses':
               'Fallito lo stato del caricamento dei lead',
           'Failed to load sales reps':
@@ -1127,6 +1127,7 @@ class LocaleString extends Translations {
           'View Reserved Only': 'Vedi Solo Residui',
           'All Received': 'Tutto Ricevuto',
           'Vendor Code': 'Codice Venditore',
+          'receipt-line': 'linea-di-entrata-merci',
         },
       };
 }

@@ -735,7 +735,6 @@ class _EditLeadState extends State<EditLead> {
     getAllLeadStatuses();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
   static String _displayCountryStringForOption(CtrRecords option) =>
       option.name!;
   static String _displayRegionStringForOption(RegRecords option) =>

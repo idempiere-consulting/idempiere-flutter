@@ -16,7 +16,6 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_edit_contact_bp.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';

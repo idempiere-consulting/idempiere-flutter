@@ -32,13 +32,13 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
+                  activeIcon: Icons.airport_shuttle,
+                  icon: Icons.airport_shuttle_outlined,
                   label: "VehicleEquipmentVehicle".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
+                  activeIcon: Icons.home_repair_service,
+                  icon: Icons.home_repair_service_outlined,
                   label: "VehicleEquipmentEquipment".tr,
                 ),
               ],

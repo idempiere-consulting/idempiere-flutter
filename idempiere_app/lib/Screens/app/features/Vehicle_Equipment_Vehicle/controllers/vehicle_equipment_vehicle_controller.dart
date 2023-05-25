@@ -2,25 +2,29 @@ part of dashboard;
 
 class VehicleEquipmentVehicleController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late OpportunityJson _trx;
+  late AssetJSON _trx;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
 
   @override
   void onInit() {
     super.onInit();
-    getOpportunities();
+    getVehicles();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  OpportunityJson get trx => _trx;
+  AssetJSON get trx => _trx;
 
-  Future<void> getOpportunities() async {
+  Future<void> getVehicles() async {
+    _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/c_opportunity');
+        '$protocol://$ip/api/v1/models/A_Asset?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -30,7 +34,8 @@ class VehicleEquipmentVehicleController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = OpportunityJson.fromJson(jsonDecode(response.body));
+      _trx = AssetJSON.fromJson(jsonDecode(response.body));
+      pagesTot.value = _trx.pagecount!;
       //print(_trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
