@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -11,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/dashboard/models/userpreferen
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EditProdutionOrder extends StatefulWidget {
   const EditProdutionOrder({Key? key}) : super(key: key);
@@ -98,8 +100,8 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
       "Qty": qty
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/processes/endproductdeclarationmobile');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/processes/endproductdeclaration');
 
     var response = await http.post(
       url,
@@ -109,6 +111,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
         'Authorization': authorization,
       },
     );
+    print(response.body);
     var res = jsonDecode(response.body);
     if (response.statusCode == 200 && res["isError"] == false) {
       //controller.getSalesOrders();
@@ -148,8 +151,8 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
       "Qty": qty
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/processes/runpickingcomponentsmobile');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/processes/runpickingcomponents');
 
     var response = await http.post(
       url,
@@ -204,7 +207,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/processes/runpickingcompendproddeclarationmobile');
+        '$protocol://$ip/api/v1/processes/runpickingcomponentsendproddeclaration');
 
     var response = await http.post(
       url,
@@ -240,6 +243,14 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     }
   }
 
+  getUsetPreferences() async {
+    const filename = "userpreferences";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    pref = UserPreferencesJson.fromJson(jsonDecode(file.readAsStringSync()));
+  }
+
   dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var documentNoFieldController;
@@ -253,8 +264,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
   // ignore: prefer_typing_uninitialized_variables
   var qtyFieldController;
 
-  var pref = UserPreferencesJson.fromJson(
-      jsonDecode(GetStorage().read('userPreferencesSync')));
+  UserPreferencesJson pref = UserPreferencesJson(records: []);
 
   var warehouseId = 0;
   var locatorId = 0;
@@ -264,6 +274,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
   @override
   void initState() {
     super.initState();
+    getUsetPreferences();
     docId = args["docType"];
     documentNoFieldController = TextEditingController();
     productFieldController = TextEditingController();
@@ -297,6 +308,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
                     controller: documentNoFieldController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person_outlined),
@@ -309,6 +321,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
                     controller: productFieldController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person_pin_outlined),
@@ -321,6 +334,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
                     controller: productionFieldController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person_pin_outlined),
@@ -333,6 +347,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
                     controller: actualFieldController,
                     decoration: const InputDecoration(
                       prefixIcon: Icon(Icons.person_pin_outlined),

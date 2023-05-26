@@ -11,6 +11,9 @@ class ProductionOrderController extends GetxController {
 
   var searchFieldController = TextEditingController();
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
   @override
   void onInit() {
     //getDocType();
@@ -52,7 +55,7 @@ class ProductionOrderController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/M_Production?\$filter= DocStatus neq \'CO\' and DocStatus neq \'VO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/M_Production?\$filter= DocStatus neq \'CO\' and DocStatus neq \'VO\' and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

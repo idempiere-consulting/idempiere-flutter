@@ -578,7 +578,10 @@ class PortalMpSalesOrderB2BController extends GetxController {
       });
       for (var i = 0; i < columnList.length; i++) {
         dateStockRow.addAll({
-          columnList[i]: PlutoCell(value: (dateStockList[i])),
+          columnList[i]: PlutoCell(
+              value: (dateStockList[i].length >= 10
+                  ? dateStockList[i].substring(0, 10)
+                  : dateStockList[i])),
         });
       }
 
@@ -955,7 +958,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       button: gridAddToCart,
       context: context,
       columns: columns,
-      width: columns.length * 100,
+      width: columns.length * 150,
       //height: 400,
       rows: rows,
       mode: PlutoGridMode.normal,
