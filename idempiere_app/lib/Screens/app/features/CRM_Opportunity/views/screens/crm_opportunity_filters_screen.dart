@@ -432,7 +432,6 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                                           setState(() {
                                             productId = 0;
                                           });
-                                          print(productId);
                                         }
                                       },
                                       controller: productFieldController,
@@ -529,7 +528,7 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -734,7 +733,6 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                                           setState(() {
                                             productId = 0;
                                           });
-                                          print(productId);
                                         }
                                       },
                                       controller: productFieldController,
@@ -831,7 +829,7 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -1036,7 +1034,6 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                                           setState(() {
                                             productId = 0;
                                           });
-                                          print(productId);
                                         }
                                       },
                                       controller: productFieldController,
@@ -1133,7 +1130,7 @@ class _CRMFilterOpportunityState extends State<CRMFilterOpportunity> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],

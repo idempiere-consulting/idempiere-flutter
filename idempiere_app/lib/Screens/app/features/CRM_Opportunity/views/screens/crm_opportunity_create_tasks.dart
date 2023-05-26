@@ -289,8 +289,6 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
     //getProject();
   }
 
-  static String _displayStringForOption(PJRecords option) => option.name!;
-
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -498,7 +496,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
             );
           },
           tabletBuilder: (context, constraints) {
-             return Column(
+            return Column(
               children: [
                 const SizedBox(
                   height: 10,
@@ -674,7 +672,7 @@ class _CreateOpportunityTasksState extends State<CreateOpportunityTasks> {
             );
           },
           desktopBuilder: (context, constraints) {
-             return Column(
+            return Column(
               children: [
                 const SizedBox(
                   height: 10,

@@ -127,7 +127,6 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
           "IsClosed": isClosed,
         });
       }
-      print(msg);
 
       //print(msg);
       var response = await http.post(

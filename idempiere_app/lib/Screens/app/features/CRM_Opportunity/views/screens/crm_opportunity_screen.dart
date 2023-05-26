@@ -10,7 +10,6 @@ import 'dart:io';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -893,7 +892,7 @@ class CRMOpportunityScreen extends GetView<CRMOpportunityController> {
               ]);
             },
             desktopBuilder: (context, constraints) {
-             return Column(children: [
+              return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                 _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),

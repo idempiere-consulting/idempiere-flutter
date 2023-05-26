@@ -55,7 +55,6 @@ class CRMScreen extends GetView<CRMController> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return WillPopScope(
       onWillPop: () async {
         Get.offNamed('/Dashboard');

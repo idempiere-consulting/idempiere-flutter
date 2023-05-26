@@ -14,7 +14,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/busine
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/CRM_Payment/views/screens/crm_payment_screen.dart';
 import 'package:intl/intl.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -457,14 +456,14 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
             );
           },
           tabletBuilder: (context, constraints) {
-          return Column(
+            return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 ExpansionTile(
@@ -641,7 +640,7 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -825,7 +824,7 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],

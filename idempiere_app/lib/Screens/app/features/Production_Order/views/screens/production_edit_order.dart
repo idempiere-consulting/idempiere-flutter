@@ -24,9 +24,8 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_Production?\$filter= M_Production_ID eq ${args["id"]} and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Production?\$filter= M_Production_ID eq ${args["id"]} and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -59,9 +58,8 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_Locator?\$filter= M_Locator_ID eq $locator');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Locator?\$filter= M_Locator_ID eq $locator');
     if (locator != null) {
       var response = await http.get(
         url,
@@ -101,7 +99,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/processes/endproductdeclarationmobile');
+        '$protocol://$ip/api/v1/processes/endproductdeclarationmobile');
 
     var response = await http.post(
       url,
@@ -151,7 +149,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/processes/runpickingcomponentsmobile');
+        '$protocol://$ip/api/v1/processes/runpickingcomponentsmobile');
 
     var response = await http.post(
       url,
@@ -205,9 +203,8 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
       "Qty": qty
     });
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/processes/runpickingcompendproddeclarationmobile');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/processes/runpickingcompendproddeclarationmobile');
 
     var response = await http.post(
       url,

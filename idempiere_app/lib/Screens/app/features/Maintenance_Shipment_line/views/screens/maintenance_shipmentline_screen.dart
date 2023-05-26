@@ -12,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_edit.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Shipment_line/views/screens/maintenance_shipmentline_create.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Shipment_line/views/screens/maintenance_shipmentline_edit.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';

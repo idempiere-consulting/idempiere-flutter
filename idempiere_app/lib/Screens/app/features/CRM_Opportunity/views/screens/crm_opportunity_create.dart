@@ -300,10 +300,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     getAllBPs();
     getSaleStageDefault();
   }
-
-  static String _displayStringForOption(Records option) => option.name!;
-  static String _displayProductStringForOption(PRecords option) => option.name!;
-  static String _displayBPStringForOption(BPRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 

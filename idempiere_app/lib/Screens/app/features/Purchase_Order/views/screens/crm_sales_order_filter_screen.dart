@@ -437,7 +437,7 @@ class _PurchaseFilterOrderState extends State<PurchaseFilterOrder> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -642,7 +642,7 @@ class _PurchaseFilterOrderState extends State<PurchaseFilterOrder> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -847,7 +847,7 @@ class _PurchaseFilterOrderState extends State<PurchaseFilterOrder> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],

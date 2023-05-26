@@ -9,6 +9,14 @@ class VehicleEquipmentVehicleController extends GetxController {
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
 
+  var valueFilter = "";
+  var nameFilter = "";
+  var licensePlateFilter = "";
+
+  var value = "".obs;
+  var name = "".obs;
+  var licensePlate = "".obs;
+
   @override
   void onInit() {
     super.onInit();

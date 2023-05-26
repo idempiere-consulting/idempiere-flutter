@@ -402,7 +402,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
 
       /* filteredProds =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
@@ -486,7 +486,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
 
       var gridDetail = B2BGridDetailJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -863,7 +863,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
-      print(response.body);
+      //print(response.body);
 
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
@@ -1003,7 +1003,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         //stateManager = event.stateManager;
       },
       onSelected: (PlutoGridOnSelectedEvent event) {
-        print(event.rowIdx);
+        //print(event.rowIdx);
         //event.
         /* controller.text = event.row!.cells[selectFieldName]!.value.toString(); */
       },
@@ -1011,7 +1011,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         //print(event);
       },
       onChanged: (event) {
-        print(rows[1].cells[columns[event.columnIdx].field]!.value);
+        //print(rows[1].cells[columns[event.columnIdx].field]!.value);
         gridProdValueList.addAll({
           '$gridSkuSelected.${columns[event.columnIdx].field}': [
             event.value,

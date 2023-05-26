@@ -7,10 +7,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/models/asset_json.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -140,6 +143,37 @@ class VehicleEquipmentVehicleScreen
             ),
           ],
         ),
+      ),
+
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.home_menu,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+        children: [
+          SpeedDialChild(
+              label: 'Filter'.tr,
+              child: Obx(
+                () => Icon(
+                  MaterialSymbols.filter_alt_filled,
+                  color: controller.value.value == "" &&
+                          controller.name.value == "" &&
+                          controller.licensePlate.value == ""
+                      ? Colors.white
+                      : kNotifColor,
+                ),
+              ),
+              onTap: () {
+                Get.to(const VehicleEquipmentFilterVehicles(), arguments: {
+                  'value': controller.value.value,
+                  'name': controller.name.value,
+                  'licensePlate': controller.licensePlate.value,
+                });
+              }),
+        ],
       ),
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))

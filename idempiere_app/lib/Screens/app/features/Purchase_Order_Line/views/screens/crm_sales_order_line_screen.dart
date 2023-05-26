@@ -13,8 +13,6 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Order_Line/views/screens/crm_create_sales_orderline.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Order_Line/views/screens/crm_edit_sales_orderline.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_create_sales_orderline.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_edit_sales_orderline.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';

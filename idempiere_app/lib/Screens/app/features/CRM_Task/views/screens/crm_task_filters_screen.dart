@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
@@ -74,7 +75,9 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
         Get.find<CRMTaskController>().dateStartValue =
             dateStartFieldController.text;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
       Get.find<CRMTaskController>().dateStartFilter = "";
@@ -90,7 +93,9 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
         Get.find<CRMTaskController>().dateEndValue =
             dateEndFieldController.text;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
       Get.find<CRMTaskController>().dateEndFilter = "";
@@ -503,7 +508,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -792,7 +797,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -1081,7 +1086,7 @@ class _CRMFilterTaskState extends State<CRMFilterTask> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],

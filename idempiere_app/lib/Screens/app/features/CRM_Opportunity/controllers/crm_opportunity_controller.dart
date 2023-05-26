@@ -35,9 +35,6 @@ class CRMOpportunityController extends GetxController {
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
 
-  static String _displaySaleStageStringForOption(SSRecords option) =>
-      option.name!;
-
   final json = {
     "types": [
       {"id": "1", "name": "Business Partner".tr},

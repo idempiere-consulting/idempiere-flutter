@@ -191,7 +191,9 @@ class EmployeeTicketController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -326,7 +328,9 @@ class EmployeeTicketController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -393,7 +397,9 @@ class EmployeeTicketController extends GetxController {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not deleted".tr,

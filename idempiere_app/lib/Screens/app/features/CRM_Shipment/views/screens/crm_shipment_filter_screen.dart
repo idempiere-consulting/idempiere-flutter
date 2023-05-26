@@ -2,16 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_screen.dart';
-import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -47,7 +44,9 @@ class _CRMFilterShipmentState extends State<CRMFilterShipment> {
         Get.find<CRMShipmentController>().dateStartValue.value =
             dateStartFieldController.text;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
       Get.find<CRMShipmentController>().dateStartFilter = "";
@@ -63,7 +62,9 @@ class _CRMFilterShipmentState extends State<CRMFilterShipment> {
         Get.find<CRMShipmentController>().dateEndValue.value =
             dateEndFieldController.text;
       } catch (e) {
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
       Get.find<CRMShipmentController>().dateEndFilter = "";
@@ -289,7 +290,7 @@ class _CRMFilterShipmentState extends State<CRMFilterShipment> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -434,7 +435,7 @@ class _CRMFilterShipmentState extends State<CRMFilterShipment> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -579,7 +580,7 @@ class _CRMFilterShipmentState extends State<CRMFilterShipment> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],

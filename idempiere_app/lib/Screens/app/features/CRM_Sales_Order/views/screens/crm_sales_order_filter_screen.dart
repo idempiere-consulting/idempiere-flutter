@@ -436,7 +436,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -641,7 +641,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],
@@ -846,7 +846,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 )
               ],

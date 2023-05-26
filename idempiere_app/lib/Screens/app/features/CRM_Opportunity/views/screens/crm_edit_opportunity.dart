@@ -257,6 +257,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
   var noteFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var productFieldController;
@@ -312,10 +313,6 @@ class _EditOpportunityState extends State<EditOpportunity> {
     getAllOpportunityStatuses();
     getAllBPs();
   }
-
-  static String _displayStringForOption(Records option) => option.name!;
-  static String _displayProductStringForOption(PRecords option) => option.name!;
-  static String _displayBPStringForOption(BPRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
