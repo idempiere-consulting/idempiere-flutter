@@ -57,7 +57,7 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
     return Scaffold(
       //key: controller.scaffoldKey,
       appBar: AppBar(
-        title: const Text("Quiz"),
+        title: Text("Survey".tr),
         leading: IconButton(
           icon: const Icon(Icons.chevron_left),
           onPressed: () {
@@ -70,9 +70,9 @@ class CourseQuizScreen extends GetView<CourseQuizController> {
             child: IconButton(
               onPressed: () {
                 Get.defaultDialog(
-                    title: "Send Quiz".tr,
+                    title: "Send Survey".tr,
                     content:
-                        Text("Are you sure you want to finish the Quiz?".tr),
+                        Text("Are you sure you want to finish the Survey?".tr),
                     buttonColor: kNotifColor,
                     textConfirm: "Send".tr,
                     textCancel: "Cancel".tr,

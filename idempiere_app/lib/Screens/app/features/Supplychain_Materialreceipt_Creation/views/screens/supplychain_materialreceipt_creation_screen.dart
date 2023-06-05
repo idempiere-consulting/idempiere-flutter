@@ -6,37 +6,21 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_Contract/models/documenttype_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
-import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_edit.dart';
-import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt_Creation/models/materialreceipt_purchaseorder_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt_Creation/views/screens/supplychain_materialreceipt_create_orderlines.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
-import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
-import 'package:idempiere_app/Screens/app/shared_components/progress_report_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/project_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
@@ -341,7 +325,10 @@ class SupplychainMaterialreceiptCreationScreen
                   child: Container(
                     margin: const EdgeInsets.all(10),
                     child: TextField(
-                      controller: controller.docNoFieldController,
+                      controller: controller.pOrderdocNoSearchFieldController,
+                      onChanged: (value) {
+                        controller.pOrderDocNoSearch.value = value;
+                      },
                       decoration: InputDecoration(
                         filled: true,
                         border: OutlineInputBorder(
@@ -370,79 +357,92 @@ class SupplychainMaterialreceiptCreationScreen
                         //shrinkWrap: true,
                         itemCount: controller.orderList.records!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ExpansionTile(
-                                tilePadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-
-                                leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
+                          return Obx(() => Visibility(
+                                visible: controller
+                                    .orderList.records![index].documentNo!
+                                    .contains(
+                                        controller.pOrderDocNoSearch.value),
+                                child: Card(
+                                  elevation: 8.0,
+                                  margin: const EdgeInsets.symmetric(
+                                      horizontal: 10.0, vertical: 6.0),
+                                  child: Container(
                                     decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: Checkbox(
-                                        value: false,
-                                        onChanged: (newvalue) {})),
-                                title: Text(
-                                  controller.orderList.records![index]
-                                          .documentNo ??
-                                      '',
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                        color: Color.fromRGBO(64, 75, 96, .9)),
+                                    child: ExpansionTile(
+                                      tilePadding: const EdgeInsets.symmetric(
+                                          horizontal: 20.0, vertical: 10.0),
 
-                                subtitle: Column(children: [
-                                  Row(
-                                    children: [
-                                      Text(
+                                      leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: Checkbox(
+                                              value: false,
+                                              onChanged: (newvalue) {})),
+                                      title: Text(
                                         controller.orderList.records![index]
-                                                .dateOrdered ??
+                                                .documentNo ??
                                             '',
                                         style: const TextStyle(
-                                            color: Colors.white),
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
                                       ),
-                                    ],
+                                      // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                      subtitle: Column(children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              controller
+                                                      .orderList
+                                                      .records![index]
+                                                      .dateOrdered ??
+                                                  '',
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ]),
+                                      trailing: IconButton(
+                                          onPressed: () {
+                                            Get.to(
+                                                () =>
+                                                    const SupplychainCreateMaterialReceiptOrderLine(),
+                                                arguments: {
+                                                  "id": controller.orderList
+                                                      .records![index].id,
+                                                  "docNo": controller
+                                                      .orderList
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "businessPartnerName":
+                                                      controller
+                                                          .orderList
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier,
+                                                });
+                                          },
+                                          icon: const Icon(
+                                              Icons.manage_search_outlined)),
+                                      childrenPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: 20.0, vertical: 10.0),
+                                      children: [
+                                        Column(
+                                          children: const [],
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ]),
-                                trailing: IconButton(
-                                    onPressed: () {
-                                      Get.to(
-                                          () =>
-                                              const SupplychainCreateMaterialReceiptOrderLine(),
-                                          arguments: {
-                                            "id": controller
-                                                .orderList.records![index].id,
-                                            "docNo": controller.orderList
-                                                .records![index].documentNo,
-                                            "businessPartnerName": controller
-                                                .orderList
-                                                .records![index]
-                                                .cBPartnerID
-                                                ?.identifier,
-                                          });
-                                    },
-                                    icon: const Icon(
-                                        Icons.manage_search_outlined)),
-                                childrenPadding: const EdgeInsets.symmetric(
-                                    horizontal: 20.0, vertical: 10.0),
-                                children: [
-                                  Column(
-                                    children: const [],
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
+                                ),
+                              ));
                         }),
                   ),
                 ),
@@ -459,165 +459,173 @@ class SupplychainMaterialreceiptCreationScreen
                         //shrinkWrap: true,
                         itemCount: controller.orderLineList.records!.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return Card(
-                            elevation: 8.0,
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 10.0, vertical: 6.0),
-                            child: Container(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 10.0),
-                              decoration: const BoxDecoration(
-                                  color: Color.fromRGBO(64, 75, 96, .9)),
-                              child: ListTile(
-                                /*  tilePadding: const EdgeInsets.symmetric(
-                                          horizontal: 20.0, vertical: 10.0), */
-                                /* leading: Container(
-                                        padding: const EdgeInsets.only(right: 12.0),
-                                        decoration: const BoxDecoration(
-                                            border: Border(
-                                                right: BorderSide(
-                                                    width: 1.0,
-                                                    color: Colors.white24))),
-                                        child: IconButton(
-                                          icon: const Icon(
-                                            Icons.edit,
-                                            color: Colors.green,
+                          final item =
+                              controller.orderList.records![index].documentNo!;
+                          return Dismissible(
+                            key: Key(item),
+                            onDismissed: (direction) {
+                              controller.orderLineList.records!.removeAt(index);
+                            },
+                            child: Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 10.0),
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ListTile(
+                                  /*  tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0), */
+                                  /* leading: Container(
+                                          padding: const EdgeInsets.only(right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                              color: Colors.green,
+                                            ),
+                                            tooltip: ''.tr,
+                                            onPressed: () {},
                                           ),
-                                          tooltip: ''.tr,
-                                          onPressed: () {},
-                                        ),
-                                      ), */
+                                        ), */
 
-                                title: Text(
-                                  controller.orderLineList.records![index]
-                                          .mProductID?.identifier ??
-                                      "???",
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+                                  title: Text(
+                                    controller.orderLineList.records![index]
+                                            .mProductID?.identifier ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
-                                subtitle: Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Order: ".tr,
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        Text(
-                                          controller
-                                                  .orderLineList
-                                                  .records![index]
-                                                  .cOrderID
-                                                  ?.identifier ??
-                                              '',
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    Row(
-                                      children: [
-                                        Text(
-                                          "Vendor Code: ".tr,
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                        Text(
-                                          controller
-                                                  .orderLineList
-                                                  .records![index]
-                                                  .vendorProductNo ??
-                                              'N/A',
-                                          style: const TextStyle(
-                                              color: Colors.white),
-                                        ),
-                                      ],
-                                    ),
-                                    Container(
-                                      margin: const EdgeInsets.only(top: 15),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Flexible(
-                                            child: Container(
-                                              margin: const EdgeInsets.all(1),
-                                              child: TextField(
-                                                textAlign: TextAlign.end,
-                                                readOnly: true,
-                                                controller:
-                                                    TextEditingController(
-                                                        text: controller
-                                                            .orderLineList
-                                                            .records![index]
-                                                            .qtyOrdered!
-                                                            .toInt()
-                                                            .toString()),
-                                                decoration: InputDecoration(
-                                                  border:
-                                                      const OutlineInputBorder(),
-                                                  labelText: 'Ordered'.tr,
-                                                  floatingLabelBehavior:
-                                                      FloatingLabelBehavior
-                                                          .always,
-                                                ),
-                                              ),
-                                            ),
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Order: ".tr,
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
-                                          Flexible(
-                                            child: Container(
-                                              margin: const EdgeInsets.all(1),
-                                              child: TextField(
-                                                textAlign: TextAlign.end,
-                                                readOnly: true,
-                                                controller:
-                                                    TextEditingController(
-                                                        text: controller
-                                                            .orderLineList
-                                                            .records![index]
-                                                            .qtyReserved!
-                                                            .toInt()
-                                                            .toString()),
-                                                decoration: InputDecoration(
-                                                  border:
-                                                      const OutlineInputBorder(),
-                                                  labelText: 'Reserved'.tr,
-                                                  floatingLabelBehavior:
-                                                      FloatingLabelBehavior
-                                                          .always,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          Flexible(
-                                            child: Container(
-                                              margin: const EdgeInsets.all(1),
-                                              child: TextField(
-                                                textAlign: TextAlign.end,
-                                                controller:
-                                                    TextEditingController(
-                                                        text: controller
-                                                            .orderLineList
-                                                            .records![index]
-                                                            .qtyRegistered!
-                                                            .toString()),
-                                                decoration: InputDecoration(
-                                                  border:
-                                                      const OutlineInputBorder(),
-                                                  labelText: 'Quantity'.tr,
-                                                  floatingLabelBehavior:
-                                                      FloatingLabelBehavior
-                                                          .always,
-                                                ),
-                                              ),
-                                            ),
+                                          Text(
+                                            controller
+                                                    .orderLineList
+                                                    .records![index]
+                                                    .cOrderID
+                                                    ?.identifier ??
+                                                '',
+                                            style: const TextStyle(
+                                                color: Colors.white),
                                           ),
                                         ],
                                       ),
-                                    ),
-                                  ],
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "Vendor Code: ".tr,
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                          Text(
+                                            controller
+                                                    .orderLineList
+                                                    .records![index]
+                                                    .vendorProductNo ??
+                                                'N/A',
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ],
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 15),
+                                        child: Row(
+                                          children: <Widget>[
+                                            Flexible(
+                                              child: Container(
+                                                margin: const EdgeInsets.all(1),
+                                                child: TextField(
+                                                  textAlign: TextAlign.end,
+                                                  readOnly: true,
+                                                  controller:
+                                                      TextEditingController(
+                                                          text: controller
+                                                              .orderLineList
+                                                              .records![index]
+                                                              .qtyOrdered!
+                                                              .toInt()
+                                                              .toString()),
+                                                  decoration: InputDecoration(
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Ordered'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Container(
+                                                margin: const EdgeInsets.all(1),
+                                                child: TextField(
+                                                  textAlign: TextAlign.end,
+                                                  readOnly: true,
+                                                  controller:
+                                                      TextEditingController(
+                                                          text: controller
+                                                              .orderLineList
+                                                              .records![index]
+                                                              .qtyReserved!
+                                                              .toInt()
+                                                              .toString()),
+                                                  decoration: InputDecoration(
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Reserved'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            Flexible(
+                                              child: Container(
+                                                margin: const EdgeInsets.all(1),
+                                                child: TextField(
+                                                  textAlign: TextAlign.end,
+                                                  controller:
+                                                      TextEditingController(
+                                                          text: controller
+                                                              .orderLineList
+                                                              .records![index]
+                                                              .qtyRegistered!
+                                                              .toString()),
+                                                  decoration: InputDecoration(
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Quantity'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),

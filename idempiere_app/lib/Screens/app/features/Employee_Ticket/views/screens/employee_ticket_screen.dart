@@ -7,11 +7,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Ticket/views/screens/employee_create_ticket.dart';
+import 'package:idempiere_app/Screens/app/features/Employee_Ticket/views/screens/employee_ticket_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_chat_ticket.dart';
@@ -167,7 +169,22 @@ class EmployeeTicketScreen extends GetView<EmployeeTicketController> {
                 child: const Icon(Icons.bookmark_add_outlined),
                 onTap: () {
                   controller.openTicketType();
-                })
+                }),
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.dateStartValue.value == "" &&
+                              controller.dateEndValue.value == ""
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
+                onTap: () {
+                  Get.to(() => const EmployeeFilterTicket(), arguments: {
+                    'dateStart': controller.dateStartValue.value,
+                    'dateEnd': controller.dateEndValue.value,
+                  });
+                }),
           ],
         ),
         //key: controller.scaffoldKey,

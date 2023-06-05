@@ -11,6 +11,15 @@ class HumanResourceTicketController extends GetxController {
 
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
+
+  var userFilter = GetStorage().read('TicketHR_userFilter') ?? "";
+  var dateStartFilter = GetStorage().read('TicketHR_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('TicketHR_dateEndFilter') ?? "";
+
+  var userId = 0.obs;
+  String userName = "";
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
@@ -35,6 +44,10 @@ class HumanResourceTicketController extends GetxController {
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
+    userName = GetStorage().read('TicketHR_userName') ?? "";
+    userId.value = GetStorage().read('TicketHR_userId') ?? 0;
+    dateStartValue.value = GetStorage().read('TicketHR_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('TicketHR_dateEnd') ?? "";
     getTicketTypes();
     getClosedTicketsID();
     //getBusinessPartner();
@@ -305,7 +318,7 @@ class HumanResourceTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= StartDate');
+        '$protocol://$ip/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)$userFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= StartDate');
     var response = await http.get(
       url,
       headers: <String, String>{

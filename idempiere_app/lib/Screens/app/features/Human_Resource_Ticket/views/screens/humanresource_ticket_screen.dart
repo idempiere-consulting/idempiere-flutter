@@ -7,10 +7,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_create_ticket.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_chat_ticket.dart';
@@ -151,7 +154,7 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
           ),
         ),
 
-        /* floatingActionButtonLocation:
+        floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: SpeedDial(
           animatedIcon: AnimatedIcons.home_menu,
@@ -161,13 +164,25 @@ class HumanResourceTicketScreen extends GetView<HumanResourceTicketController> {
         childrenButtonSize: const Size(45, 45), */
           children: [
             SpeedDialChild(
-                label: 'New'.tr,
-                child: const Icon(Icons.bookmark_add_outlined),
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.userId.value == 0 &&
+                              controller.dateStartValue.value == "" &&
+                              controller.dateEndValue.value == ""
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
                 onTap: () {
-                  controller.openTicketType();
-                })
+                  Get.to(() => const HumanResourceFilterTicket(), arguments: {
+                    'userId': controller.userId.value,
+                    'userName': controller.userName,
+                    'dateStart': controller.dateStartValue.value,
+                    'dateEnd': controller.dateEndValue.value,
+                  });
+                }),
           ],
-        ), */
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null

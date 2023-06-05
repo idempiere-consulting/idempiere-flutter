@@ -87,6 +87,7 @@ class _SupplychainCreateMaterialReceiptOrderLineState
             .orderLineList
             .records!
             .add(rec);
+        Get.back();
       }
     }
   }

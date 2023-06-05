@@ -20,6 +20,8 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
   late TextEditingController docNoFieldController;
 
   late TextEditingController pOrderdocNoSearchFieldController;
+  var pOrderDocNoSearch = "".obs;
+
   var orderListAvailable = false.obs;
 
   MaterialReceiptPurchaseOrderJSON orderList =
@@ -29,7 +31,6 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     bpSearchFieldController = TextEditingController();
     documentDateFieldController = TextEditingController();
@@ -110,22 +111,23 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/processes/cordercreateinoutpo');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/material-receipt');
 
-    /* List<Map<String, Object>> list = [];
+    List<Map<String, Object>> list = [];
 
     for (var element in orderLineList.records!) {
       list.add({
         "C_OrderLine_ID": {"id": element.id},
         "QtyEntered": element.qtyRegistered!.toInt(),
+        "C_ProjectPhase_ID": {"id": -1},
+        "C_Activity_ID": {"id": -1},
+        "C_Campaign_ID": {"id": -1},
+        "User1_ID": {"id": -1},
+        "User2_ID": {"id": -1},
+        "C_Project_ID": {"id": -1},
       });
-    } */
-    List<int> list = [];
-
-    for (var element in orderLineList.records!) {
-      list.add(element.cOrderID!.id!);
     }
+
     //print(url.toString());
     // physical-inventory/conteggio-inventario-if00/tabs/
     // physical-inventory/tabs/inventory-count/1000008/
@@ -133,11 +135,20 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     // 1000008
     // 1000159
     final msg = jsonEncode({
-      'record-id': list,
-      'C_DocType_ID': {'id': documentTypeId},
-      'DocumentNo': docNoFieldController.text,
-      'MovementDate': DateFormat('yyyy-MM-dd').format(date),
-      'DocAction': 'PR',
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+      "C_DocType_ID": {"id": documentTypeId},
+      "DateDoc": DateFormat('yyyy-MM-dd').format(date),
+      "MovementDate": DateFormat('yyyy-MM-dd').format(date),
+      "DateAcct": DateFormat('yyyy-MM-dd').format(date),
+      "C_BPartner_ID": businessPartnerId,
+      "C_BPartner_Location_ID": {"id": int.parse(bpLocationId.value)},
+      "PriorityRule": "5",
+      "MovementType": {"id": 'V+'},
+      "DocumentNo": docNoFieldController.text,
+      "FreightCostRule": defValues.records![0].freightCostRule!.id,
+      "receipt-line".tr: list,
     });
     var response = await http.post(
       url,
@@ -148,7 +159,9 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       var json = jsonDecode(utf8.decode(response.bodyBytes));
       Get.snackbar(
         "${json["DocumentNo"]}",
@@ -178,7 +191,7 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_DocType?\$filter= DocBaseType eq \'MMR\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/C_DocType?\$filter= LIT_DocType_DynamicVal eq null and IsSOTrx eq N and DocBaseType eq \'MMR\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -189,7 +202,7 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
 
     if (response.statusCode == 200) {
       var jsondecoded = jsonDecode(response.body);
-      //print(response.body);
+      print(response.body);
 
       var json = DocumentTypeJSON.fromJson(jsondecoded);
 

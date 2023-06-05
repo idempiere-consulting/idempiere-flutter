@@ -1091,7 +1091,7 @@ class LocaleString extends Translations {
           'Teacher': 'Docente',
           'Date From': 'Data Da',
           'Date To': 'Data A',
-          'EXAMS: ': 'ESAMI: ',
+          'EXAMS: ': 'QUESTIONARI: ',
           'Course Attendance': 'Presenza Corsi',
           'Score': 'Punteggio',
           'Course List': 'Lista Corsi',
@@ -1128,6 +1128,13 @@ class LocaleString extends Translations {
           'All Received': 'Tutto Ricevuto',
           'Vendor Code': 'Codice Venditore',
           'receipt-line': 'linea-di-entrata-merci',
+          'Survey': 'Questionario',
+          'Send Survey': 'Invia Questionario',
+          'Are you sure you want to finish the Survey?':
+              'Sicuro di voler terminare il Questionario',
+          'Take the Exam': 'Inizia il Questionario',
+          'Frequency': 'Frequenza',
+          'U.o.M.': 'U.d.M.',
         },
       };
 }

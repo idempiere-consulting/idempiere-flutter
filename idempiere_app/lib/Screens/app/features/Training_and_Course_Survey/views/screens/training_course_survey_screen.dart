@@ -232,7 +232,7 @@ class TrainingCourseSurveyScreen
                                         Icons.auto_stories,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Take the Quiz'.tr,
+                                      tooltip: 'Take the Exam'.tr,
                                       onPressed: () {
                                         print(controller.trx.records![index]
                                             .mpResourceSurveyID?.id);

@@ -48,6 +48,7 @@ class Records {
   final int? cContractID;
   final MProductID? mProductID;
   final int? amtAcct;
+  final DurationUnit? durationUnit;
   final String? modelname;
 
   Records({
@@ -67,6 +68,7 @@ class Records {
     this.cContractID,
     this.mProductID,
     this.amtAcct,
+    this.durationUnit,
     this.modelname,
   });
 
@@ -95,6 +97,10 @@ class Records {
         cContractID = json['C_Contract_ID'] as int?,
         mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
             ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+            : null,
+        durationUnit = (json['DurationUnit'] as Map<String, dynamic>?) != null
+            ? DurationUnit.fromJson(
+                json['DurationUnit'] as Map<String, dynamic>)
             : null,
         amtAcct = json['AmtAcct'] as int?,
         modelname = json['model-name'] as String?;
@@ -244,6 +250,33 @@ class MProductID {
   MProductID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class DurationUnit {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  DurationUnit({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  DurationUnit.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

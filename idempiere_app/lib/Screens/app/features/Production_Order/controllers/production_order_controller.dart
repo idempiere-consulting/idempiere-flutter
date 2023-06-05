@@ -14,11 +14,28 @@ class ProductionOrderController extends GetxController {
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
 
+  var productFilter = GetStorage().read('ProductionOrder_productFilter') ?? "";
+  var docNoFilter = GetStorage().read('ProductionOrder_docNoFilter') ?? "";
+  var dateStartFilter =
+      GetStorage().read('ProductionOrder_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('ProductionOrder_dateEndFilter') ?? "";
+
+  var productId = 0.obs;
+  String productName = "";
+  var docNoValue = "".obs;
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+
   @override
   void onInit() {
     //getDocType();
     super.onInit();
     getProductionOrders();
+    productName = GetStorage().read('ProductionOrder_productName') ?? "";
+    productId.value = GetStorage().read('ProductionOrder_productId') ?? 0;
+    docNoValue.value = GetStorage().read('ProductionOrder_docNo') ?? "";
+    dateStartValue.value = GetStorage().read('ProductionOrder_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('ProductionOrder_dateEnd') ?? "";
     //getLoadUnloads();
     //getADUserID();
   }

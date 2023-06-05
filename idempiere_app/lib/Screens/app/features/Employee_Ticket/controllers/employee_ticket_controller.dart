@@ -11,6 +11,13 @@ class EmployeeTicketController extends GetxController {
 
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
+
+  var dateStartFilter =
+      GetStorage().read('TicketEmployee_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('TicketEmployee_dateEndFilter') ?? "";
+
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
@@ -310,7 +317,7 @@ class EmployeeTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/r_request?\$filter= StartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= StartDate');
+        '$protocol://$ip/api/v1/models/r_request?\$filter= StartDate ge \'$formattedFiftyDaysAgo 00:00:00\' and AD_User_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter  and ($ticketFilter)$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= StartDate');
     var response = await http.get(
       url,
       headers: <String, String>{

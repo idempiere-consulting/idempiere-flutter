@@ -221,7 +221,7 @@ class _EditProdutionOrderState extends State<EditProdutionOrder> {
     if (response.statusCode == 200 && res["isError"] == false) {
       //controller.getSalesOrders();
       //print("done!");
-      //print(response.body);
+      print(response.body);
       Get.snackbar(
         "Done!",
         "Processed: Picking and Release",
