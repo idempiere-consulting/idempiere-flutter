@@ -5,14 +5,24 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:typed_data';
 
+import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
+import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice_Line/models/invoiceline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/models/portal_mp_invoice_line_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Invoice/views/screens/portal_mp_invoice_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -29,8 +39,12 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:intl/intl.dart';
+import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
+// ignore: depend_on_referenced_packages
+import 'package:pdf/pdf.dart';
 
 // binding
 part '../../bindings/portal_mp_invoice_binding.dart';
@@ -61,157 +75,187 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
         return false;
       },
       child: Scaffold(
-        //key: controller.scaffoldKey,
-        drawer: /* (ResponsiveBuilder.isDesktop(context))
+        bottomNavigationBar: (ResponsiveBuilder.isDesktop(context))
             ? null
-            : */ Drawer(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: kSpacing),
-                  child: _Sidebar(data: controller.getSelectedProject()),
-                ),
-              ),
-        body: SingleChildScrollView(
-          child: ResponsiveBuilder(
-            mobileBuilder: (context, constraints) {
-              return Column(children: [
-                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
-                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
-                const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
+            : BottomAppBar(
+                shape: const AutomaticNotchedShape(
+                    RoundedRectangleBorder(), StadiumBorder()),
+                //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+                color: Theme.of(context).cardColor,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
-                          : Text("INVOICES: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.only(left: 10),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  controller.getInvoices();
+                                },
+                                child: Row(
+                                  children: [
+                                    //Icon(Icons.filter_alt),
+                                    Obx(() => controller.dataAvailable
+                                        ? Text("INVOICES: ".tr +
+                                            controller.trx.rowcount.toString())
+                                        : Text("INVOICES: ".tr)),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            /* Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
-                          controller.getInvoices();
+                          controller.getTasks();
                         },
                         icon: const Icon(
                           Icons.refresh,
                           color: Colors.yellow,
                         ),
                       ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.invoiceDropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.invoiceDropdownValue.value = newValue!;
-
-                            //print(invoiceDropdownValue);
-                          },
-                          items: controller.invoiceDropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                    ), */
+                          ],
+                        )
+                      ],
                     ),
                     Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.invoiceSearchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.invoiceSearchFilterValue.value =
-                                controller.invoiceSearchFieldController.text;
-                          },
-                          decoration:  InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                      fit: FlexFit.tight,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  if (controller.pagesCount > 1) {
+                                    controller.pagesCount.value -= 1;
+                                    controller.getInvoices();
+                                  }
+                                },
+                                icon: const Icon(Icons.skip_previous),
+                              ),
+                              Obx(() => Text(
+                                  "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                              IconButton(
+                                onPressed: () {
+                                  if (controller.pagesCount <
+                                      controller.pagesTot.value) {
+                                    controller.pagesCount.value += 1;
+                                    controller.getInvoices();
+                                  }
+                                },
+                                icon: const Icon(Icons.skip_next),
+                              )
+                            ],
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: kSpacing),
+              ),
+
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: (ResponsiveBuilder.isDesktop(context))
+            ? null
+            : SpeedDial(
+                animatedIcon: AnimatedIcons.home_menu,
+                backgroundColor: Theme.of(context).primaryColor,
+                foregroundColor: Colors.white,
+                /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+                children: [
+                  SpeedDialChild(
+                      label: 'Filter'.tr,
+                      child: Obx(() => Icon(
+                            MaterialSymbols.filter_alt_filled,
+                            color: controller.businessPartnerId.value == 0 &&
+                                    controller.selectedUserRadioTile.value ==
+                                        0 &&
+                                    controller.docNoValue.value == "" &&
+                                    controller.description.value == "" &&
+                                    controller.dateStartValue.value == "" &&
+                                    controller.dateEndValue.value == ""
+                                ? Colors.white
+                                : kNotifColor,
+                          )),
+                      onTap: () {
+                        Get.to(const PortalMPFilterInvoice(), arguments: {
+                          'selectedUserRadioTile':
+                              controller.selectedUserRadioTile.value,
+                          'salesRepId': controller.salesRepId,
+                          'salesRepName': controller.salesRepName,
+                          'businessPartnerId':
+                              controller.businessPartnerId.value,
+                          'businessPartnerName': controller.businessPartnerName,
+                          'docNo': controller.docNoValue.value,
+                          'description': controller.description.value,
+                          'dateStart': controller.dateStartValue.value,
+                          'dateEnd': controller.dateEndValue.value,
+                        });
+                      }),
+                ],
+              ),
+        //key: controller.scaffoldKey,
+        drawer: /* (ResponsiveBuilder.isDesktop(context))
+            ? null
+            : */
+            Drawer(
+          child: Padding(
+            padding: const EdgeInsets.only(top: kSpacing),
+            child: _Sidebar(data: controller.getSelectedProject()),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: ResponsiveBuilder(
+            mobileBuilder: (context, constraints) {
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader2(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
-                                  visible: controller.invoiceSearchFilterValue.value ==
+                                  visible: controller.searchFilterValue.value ==
                                           ""
                                       ? true
-                                      : controller.invoiceDropdownValue.value == "1"
+                                      : controller.dropdownValue.value == "1"
                                           ? controller
                                               .trx.records![index].documentNo
                                               .toString()
                                               .toLowerCase()
                                               .contains(controller
-                                                  .invoiceSearchFilterValue.value
+                                                  .searchFilterValue.value
                                                   .toLowerCase())
-                                          : controller.invoiceDropdownValue.value ==
+                                          : controller.dropdownValue.value ==
                                                   "2"
                                               ? controller.trx.records![index]
                                                   .dateInvoiced
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .invoiceSearchFilterValue.value
+                                                      .searchFilterValue.value
                                                       .toLowerCase())
-                                              : controller.invoiceDropdownValue.value ==
+                                              : controller.dropdownValue.value ==
                                                       "3"
                                                   ? controller
                                                       .trx
@@ -220,9 +264,9 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                       .identifier
                                                       .toString()
                                                       .toLowerCase()
-                                                      .contains(controller.invoiceSearchFilterValue.value.toLowerCase())
-                                                  : controller.invoiceDropdownValue.value == "4"
-                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.invoiceSearchFilterValue.value.toLowerCase())
+                                                      .contains(controller.searchFilterValue.value.toLowerCase())
+                                                  : controller.dropdownValue.value == "4"
+                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
                                                       : true,
                                   child: Card(
                                     elevation: 8.0,
@@ -246,35 +290,29 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                           child: IconButton(
                                             icon: const Icon(
                                               Icons.edit,
-                                              color: Colors.green,
+                                              color: Colors.grey,
                                             ),
                                             tooltip: 'Edit Invoice'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
-                                              /* Get.to(const EditLead(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .Status
-                                                    ?.id ??
-                                                "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                              /* Get.to(
+                                                  () =>
+                                                      const PurchaseEditInvoice(),
+                                                  arguments: {
+                                                    "paymentTermId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .cPaymentTermID
+                                                        ?.id,
+                                                    "paymentRuleId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "description": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .description,
+                                                  }); */
                                             },
                                           ),
                                         ),
@@ -291,7 +329,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                 : Colors.yellow,
                                           ),
                                           onPressed: () {
-                                            Get.offNamed('/PortalMpInvoiceLine',
+                                            Get.offNamed('/InvoicePOLine',
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,
@@ -365,6 +403,85 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      tooltip: 'print Document',
+                                                      onPressed: () async {
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        controller
+                                                            .getDocument(index);
+                                                        /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.print),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'print POS',
+                                                      onPressed: () async {
+                                                        controller
+                                                            .printTicket(index);
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                        /* controller
+                                                        .printTicket(index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.receipt),
+                                                    ),
+                                                    IconButton(
+                                                        tooltip:
+                                                            'print POS invoice',
+                                                        onPressed: () async {
+                                                          controller
+                                                              .getBusinessPartner(
+                                                                  index);
+                                                          /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                          /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                          /* controller
+                                                        .printTicket(index); */
+                                                        },
+                                                        icon: const Icon(Icons
+                                                            .receipt_long)),
+                                                  ]),
                                             ],
                                           ),
                                         ],
@@ -381,143 +498,40 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
-                          : Text("INVOICES: ".tr)),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ), */
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getInvoices();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      //padding: const EdgeInsets.all(10),
-                      //width: 20,
-                      /* decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                        ),
-                        borderRadius: BorderRadius.circular(5),
-                      ), */
-                      child: Obx(
-                        () => DropdownButton(
-                          icon: const Icon(Icons.filter_alt_sharp),
-                          value: controller.invoiceDropdownValue.value,
-                          elevation: 16,
-                          onChanged: (String? newValue) {
-                            controller.invoiceDropdownValue.value = newValue!;
-
-                            //print(invoiceDropdownValue);
-                          },
-                          items: controller.invoiceDropDownList.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id,
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
-                    Flexible(
-                      child: Container(
-                        margin: const EdgeInsets.only(left: 10, right: 10),
-                        child: TextField(
-                          controller: controller.invoiceSearchFieldController,
-                          onSubmitted: (String? value) {
-                            controller.invoiceSearchFilterValue.value =
-                                controller.invoiceSearchFieldController.text;
-                          },
-                          decoration:  InputDecoration(
-                            prefixIcon: const Icon(Icons.search_outlined),
-                            border: const OutlineInputBorder(),
-                            //labelText: 'Product Value',
-                            hintText: 'Search'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller._trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Obx(() => Visibility(
-                                  visible: controller.invoiceSearchFilterValue.value ==
+                                  visible: controller.searchFilterValue.value ==
                                           ""
                                       ? true
-                                      : controller.invoiceDropdownValue.value == "1"
+                                      : controller.dropdownValue.value == "1"
                                           ? controller
                                               .trx.records![index].documentNo
                                               .toString()
                                               .toLowerCase()
                                               .contains(controller
-                                                  .invoiceSearchFilterValue.value
+                                                  .searchFilterValue.value
                                                   .toLowerCase())
-                                          : controller.invoiceDropdownValue.value ==
+                                          : controller.dropdownValue.value ==
                                                   "2"
                                               ? controller.trx.records![index]
                                                   .dateInvoiced
                                                   .toString()
                                                   .toLowerCase()
                                                   .contains(controller
-                                                      .invoiceSearchFilterValue.value
+                                                      .searchFilterValue.value
                                                       .toLowerCase())
-                                              : controller.invoiceDropdownValue.value ==
+                                              : controller.dropdownValue.value ==
                                                       "3"
                                                   ? controller
                                                       .trx
@@ -526,9 +540,9 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                       .identifier
                                                       .toString()
                                                       .toLowerCase()
-                                                      .contains(controller.invoiceSearchFilterValue.value.toLowerCase())
-                                                  : controller.invoiceDropdownValue.value == "4"
-                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.invoiceSearchFilterValue.value.toLowerCase())
+                                                      .contains(controller.searchFilterValue.value.toLowerCase())
+                                                  : controller.dropdownValue.value == "4"
+                                                      ? controller.trx.records![index].description.toString().toLowerCase().contains(controller.searchFilterValue.value.toLowerCase())
                                                       : true,
                                   child: Card(
                                     elevation: 8.0,
@@ -552,35 +566,29 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                           child: IconButton(
                                             icon: const Icon(
                                               Icons.edit,
-                                              color: Colors.green,
+                                              color: Colors.grey,
                                             ),
                                             tooltip: 'Edit Invoice'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
-                                              /* Get.to(const EditLead(), arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "name": controller
-                                                .trx.records![index].name,
-                                            "leadStatus": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .Status
-                                                    ?.id ??
-                                                "",
-                                            "bpName": controller
-                                                .trx.records![index].bPName,
-                                            "Tel": controller
-                                                .trx.records![index].phone,
-                                            "eMail": controller
-                                                .trx.records![index].eMail,
-                                            "salesRep": controller
-                                                    .trx
-                                                    .records![index]
-                                                    .salesRepID
-                                                    ?.identifier ??
-                                                ""
-                                          }); */
+                                              /* Get.to(
+                                                  () =>
+                                                      const PurchaseEditInvoice(),
+                                                  arguments: {
+                                                    "paymentTermId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .cPaymentTermID
+                                                        ?.id,
+                                                    "paymentRuleId": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "description": controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .description,
+                                                  }); */
                                             },
                                           ),
                                         ),
@@ -597,7 +605,7 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                 : Colors.yellow,
                                           ),
                                           onPressed: () {
-                                            Get.offNamed('/PortalMpInvoiceLine',
+                                            Get.offNamed('/InvoicePOLine',
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,
@@ -671,6 +679,85 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      tooltip: 'print Document',
+                                                      onPressed: () async {
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        controller
+                                                            .getDocument(index);
+                                                        /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.print),
+                                                    ),
+                                                    IconButton(
+                                                      tooltip: 'print POS',
+                                                      onPressed: () async {
+                                                        controller
+                                                            .printTicket(index);
+                                                        /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                        /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                        /* controller
+                                                        .printTicket(index); */
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.receipt),
+                                                    ),
+                                                    IconButton(
+                                                        tooltip:
+                                                            'print POS invoice',
+                                                        onPressed: () async {
+                                                          controller
+                                                              .getBusinessPartner(
+                                                                  index);
+                                                          /* var isConnected =
+                                                            await checkConnection();
+                                                        controller
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                          /* Get.to(
+                                                          const PrintPOSScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                          /* controller
+                                                        .printTicket(index); */
+                                                        },
+                                                        icon: const Icon(Icons
+                                                            .receipt_long)),
+                                                  ]),
                                             ],
                                           ),
                                         ],
@@ -686,431 +773,581 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
             },
             desktopBuilder: (context, constraints) {
               return Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Flexible(
-                flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                child: ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topRight: Radius.circular(kBorderRadius),
-                      bottomRight: Radius.circular(kBorderRadius),
-                    ),
-                    child: _Sidebar(data: controller.getSelectedProject())),
-              ),
-              Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Flexible(flex: 5, child: _buildProfile(data: controller.getProfil())),
-                          ],
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Flexible(
+                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topRight: Radius.circular(kBorderRadius),
+                          bottomRight: Radius.circular(kBorderRadius),
                         ),
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 15),
-                              child: Obx(() => controller.dataAvailable
-                                  ? Text("INVOICES: ".tr + controller.trx.rowcount.toString())
-                                  : Text("INVOICES: ".tr)),
+                        child: _Sidebar(data: controller.getSelectedProject())),
+                  ),
+                  Flexible(
+                    flex: 10,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Column(
+                        children: [
+                          const SizedBox(height: kSpacing),
+                          _buildHeader(),
+                          //const SizedBox(height: kSpacing * 2),
+                          Container(
+                            margin: const EdgeInsets.only(
+                                left: 10, right: 10, top: 10),
+                            child: Row(
+                              children: [
+                                Obx(
+                                  () => Visibility(
+                                    visible: controller.showLines.value,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          controller.showLines.value = false;
+                                          controller.showHeader.value = true;
+                                        },
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.chevron_left),
+                                            Text('Back'.tr),
+                                          ],
+                                        )),
+                                  ),
+                                ),
+                              ],
                             ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: IconButton(
-                                onPressed: () {
-                                  controller.getInvoices();
-                                },
-                                icon: const Icon(
-                                  Icons.refresh,
-                                  color: Colors.yellow,
+                          ),
+                          Obx(
+                            () => Visibility(
+                              visible: controller.showHeader.value,
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: StaggeredGrid.count(
+                                  crossAxisCount: 9,
+                                  mainAxisSpacing: 3,
+                                  crossAxisSpacing: 2,
+                                  children: [
+                                    StaggeredGridTile.count(
+                                      crossAxisCellCount: 9,
+                                      mainAxisCellCount: 1,
+                                      child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceAround,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Container(
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 10),
+                                                    child: ElevatedButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .getInvoicesDesktop();
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          //Icon(Icons.filter_alt),
+                                                          Obx(() => controller
+                                                                  ._desktopDataAvailable
+                                                                  .value
+                                                              ? Text("INVOICES: "
+                                                                      .tr +
+                                                                  controller
+                                                                      ._trxDesktop
+                                                                      .rowcount
+                                                                      .toString())
+                                                              : Text(
+                                                                  "INVOICES: "
+                                                                      .tr)),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    width: 200,
+                                                    margin:
+                                                        const EdgeInsets.only(
+                                                            left: 20),
+                                                    child: TextField(
+                                                      controller: controller
+                                                          .desktopDocNosearchFieldController,
+                                                      onSubmitted: (value) {
+                                                        controller
+                                                            .getInvoicesDesktop();
+                                                      },
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText:
+                                                            'Document N°'.tr,
+                                                        //filled: true,
+                                                        border:
+                                                            const OutlineInputBorder(),
+                                                        prefixIcon: const Icon(
+                                                            EvaIcons.search),
+                                                        isDense: true,
+                                                      ),
+                                                      minLines: 1,
+                                                      maxLines: 1,
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                          Flexible(
+                                            fit: FlexFit.tight,
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.spaceAround,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.end,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        if (controller
+                                                                .desktopPagesCount >
+                                                            1) {
+                                                          controller
+                                                              .desktopPagesCount
+                                                              .value -= 1;
+                                                          controller
+                                                              .getInvoicesDesktop();
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.skip_previous),
+                                                    ),
+                                                    Obx(() => Text(
+                                                        "${controller.desktopPagesCount.value}/${controller.desktopPagesTot.value}")),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        if (controller
+                                                                .desktopPagesCount <
+                                                            controller
+                                                                .desktopPagesTot
+                                                                .value) {
+                                                          controller
+                                                              .desktopPagesCount
+                                                              .value += 1;
+                                                          controller
+                                                              .getInvoicesDesktop();
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.skip_next),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    StaggeredGridTile.count(
+                                      crossAxisCellCount: 9,
+                                      mainAxisCellCount: 5,
+                                      child: SingleChildScrollView(
+                                        scrollDirection: Axis.vertical,
+                                        child: Obx(
+                                          () => controller
+                                                  ._desktopDataAvailable.value
+                                              ? DataTable(
+                                                  columns: <DataColumn>[
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Document N°'.tr,
+                                                          style: const TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Date'.tr,
+                                                          style: const TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Payment Rule'.tr,
+                                                          style: const TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Payment Terms'.tr,
+                                                          style: const TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Charge Amount'.tr,
+                                                          style: const TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    DataColumn(
+                                                      label: Expanded(
+                                                        child: Text(
+                                                          'Print'.tr,
+                                                          style: const TextStyle(
+                                                              fontStyle:
+                                                                  FontStyle
+                                                                      .italic),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                  rows: controller.headerRows,
+                                                )
+                                              : SizedBox(),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-                            ),                            
-                          ],
-                        ),
-                        _buildInvoicesFilter(),
-                        const SizedBox(height: kSpacing),
-                        Obx(
-                          () => controller.dataAvailable
-                              ? ListView.builder(
-                                  primary: false,
-                                  scrollDirection: Axis.vertical,
-                                  shrinkWrap: true,
-                                  itemCount: controller.trx.rowcount,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return Obx (() => Visibility(
-                                      visible: controller.invoiceSearchFilterValue.value ==
-                                                ""
-                                            ? true
-                                            : controller.invoiceDropdownValue.value == "1"
-                                                ? controller.trx.records![index].documentNo
-                                                    .toString()
-                                                    .toLowerCase()
-                                                    .contains(controller
-                                                        .invoiceSearchFilterValue.value
-                                                        .toLowerCase())
-                                            : controller.invoiceDropdownValue.value == "2"
-                                                    ? (controller
-                                                        .trx.records![index].dateInvoiced ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .invoiceSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : controller.invoiceDropdownValue.value == "3"
-                                                    ? (controller
-                                                        .trx.records![index].cDocTypeID?.identifier ?? "")
-                                                        .toString()
-                                                        .toLowerCase()
-                                                        .contains(controller
-                                                            .invoiceSearchFilterValue.value
-                                                            .toLowerCase())
-                                            : true,
-                                    
-                                      child: Card(
-                                        elevation: 8.0,
-                                        margin: const EdgeInsets.symmetric(
-                                            horizontal: 10.0, vertical: 6.0),
-                                        child: Obx( () => controller.selectedCard == index ? 
-                                          _buildCard(Theme.of(context).cardColor, context, index) : 
-                                          _buildCard(const Color.fromRGBO(64, 75, 96, .9), context, index),
+                            ),
+                          ),
+                          Obx(
+                            () => Visibility(
+                              visible: controller.linesDataAvailable.value &&
+                                  controller.showLines.value,
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: StaggeredGrid.count(
+                                  crossAxisCount: 9,
+                                  mainAxisSpacing: 3,
+                                  crossAxisSpacing: 2,
+                                  children: [
+                                    StaggeredGridTile.count(
+                                      crossAxisCellCount: 3,
+                                      mainAxisCellCount: 3,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopDocNoFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon: const Icon(
+                                                    Icons.text_fields),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Document N°'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 4,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopDocTypeFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon: const Icon(
+                                                    Icons.text_fields),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Document Type'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 4,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopBusinessPartnerFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon:
+                                                    const Icon(Icons.handshake),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText:
+                                                    'Business Partner'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 4,
+                                            ),
+                                          ),
+                                        ],
                                       ),
-                                    )));
-                                  },
-                                )
-                              : const Center(child: CircularProgressIndicator()),
-                        )
-                      ],
+                                    ),
+                                    StaggeredGridTile.count(
+                                      crossAxisCellCount: 3,
+                                      mainAxisCellCount: 3,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopNameFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon: const Icon(
+                                                    Icons.text_fields),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Name'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 2,
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopDescriptionFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon: const Icon(
+                                                    Icons.text_fields),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Description'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 5,
+                                              maxLines: 5,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    StaggeredGridTile.count(
+                                      crossAxisCellCount: 3,
+                                      mainAxisCellCount: 3,
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopDateFromFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon:
+                                                    const Icon(Icons.event),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Date From'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopDateToFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon:
+                                                    const Icon(Icons.event),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Date To'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopFrequencyFieldController,
+                                              decoration: InputDecoration(
+                                                //isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon:
+                                                    const Icon(Icons.timelapse),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Frequency'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Flexible(
+                                            child: Column(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        if (controller
+                                                                .desktopLinePagesCount >
+                                                            1) {
+                                                          controller
+                                                              .desktopLinePagesCount
+                                                              .value -= 1;
+                                                          controller
+                                                              .getInvoiceLineDesktop();
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.skip_previous),
+                                                    ),
+                                                    Obx(() => Text(
+                                                        "${controller.desktopLinePagesCount.value}/${controller.desktopLinePagesTot.value}")),
+                                                    IconButton(
+                                                      onPressed: () {
+                                                        if (controller
+                                                                .desktopLinePagesCount <
+                                                            controller
+                                                                .desktopLinePagesTot
+                                                                .value) {
+                                                          controller
+                                                              .desktopLinePagesCount
+                                                              .value += 1;
+                                                          controller
+                                                              .getInvoiceLineDesktop();
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.skip_next),
+                                                    )
+                                                  ],
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    StaggeredGridTile.count(
+                                      crossAxisCellCount: 9,
+                                      mainAxisCellCount: 4,
+                                      child: Obx(
+                                        () => controller
+                                                ._desktopDataAvailable.value
+                                            ? DataTable(
+                                                columns: <DataColumn>[
+                                                  DataColumn(
+                                                    label: Expanded(
+                                                      child: Text(
+                                                        'Name'.tr,
+                                                        style: const TextStyle(
+                                                            fontStyle: FontStyle
+                                                                .italic),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                                rows: controller.lineRows,
+                                              )
+                                            : const SizedBox(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          /*_buildProgress(),
+                      const SizedBox(height: kSpacing * 2),
+                      const SizedBox(height: kSpacing * 2),
+                      const SizedBox(height: kSpacing), */
+                        ],
+                      ),
                     ),
                   ),
                   Flexible(
-                    flex: 4,
+                    flex: 3,
                     child: Column(
                       children: [
-                        const SizedBox(height: kSpacing ),
-                        _buildHeader(),
-                        const SizedBox(height: kSpacing * 6.5),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                              //width: 100,
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              child: 
-                              Obx( () => controller.dataAvailable ? 
-                                SingleChildScrollView(
-                                  child: Container(
-                                    //margin: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-                                    margin: const EdgeInsets.only(right: 10.0, left: 10.0, /* top: kSpacing * 7.7 */ bottom: 6.0),
-                                    color: const Color.fromRGBO(64, 75, 96, .9),
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Column(
-                                        children: [
-                                          Container( 
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'DocumentNo'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .documentNo ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Business Partner'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .cBPartnerID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Document Type'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .cDocTypeTargetID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Date Invoiced'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .dateInvoiced ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Payment Rule'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .paymentRule?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'Payment Term'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .cPaymentTermID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              decoration: InputDecoration(
-                                                hintStyle: const TextStyle(
-                                                  color: Color.fromARGB(255, 255, 255, 255)
-                                                ),
-                                                labelStyle: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 20,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                border: const OutlineInputBorder(),
-                                                labelText: 'SalesRep'.tr,
-                                                floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                hintText: controller.trx.records![controller.selectedCard]
-                                                .salesRepID?.identifier ?? '',
-                                                enabled: false
-                                              ),
-                                            ),
-                                          ),
-                                          Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Lines Amount'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText:  ( controller.trx.records![controller.selectedCard]
-                                                      .totalLines ?? "").toString(),
-                                                    enabled: false
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            //const SizedBox(width: kSpacing * 2,),
-                                            Container(
-                                              margin: const EdgeInsets.all(10),
-                                              child: SizedBox(
-                                                width: 200,
-                                                child: TextField(
-                                                  decoration: InputDecoration(
-                                                    hintStyle: const TextStyle(
-                                                      color: Color.fromARGB(255, 255, 255, 255)
-                                                    ),
-                                                    labelStyle: const TextStyle(
-                                                      color: Colors.white,
-                                                      fontSize: 20,
-                                                      fontWeight: FontWeight.bold,
-                                                    ),
-                                                    border: const OutlineInputBorder(),
-                                                    labelText: 'Charge Amount'.tr,
-                                                    floatingLabelBehavior: FloatingLabelBehavior.always,
-                                                    hintText: (controller.trx.records![controller.selectedCard]
-                                                    .chargeAmt ?? "").toString(),
-                                                    enabled: false
-                                            ),
-                                          ),
-                                              ),
-                                        ), 
-                                      ],),
-                                    ]),
-                                  )),
-                                ) : const Center(child: CircularProgressIndicator()) 
-                                )),
-                            ),
-                          ],
-                        ),
-                      ]
-                    )),
-                    Flexible(
-                    flex: 4,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing * 3.3),
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 15),
-                              child: Obx(() => controller.showData
-                                  ? Text("LINES: ".tr + controller.trx1.rowcount.toString())
-                                  : Text("LINES: ".tr)),
-                            ),
-                            Container(
-                              margin: const EdgeInsets.only(left: 20),
-                              child: IconButton(
-                                onPressed: () {
-                                  controller.getInvoiceLines();
-                                },
-                                icon: const Icon(
-                                  Icons.refresh,
-                                  color: Colors.yellow,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        _buildLinesFilter(),
-                        const SizedBox(height: kSpacing * 1.2),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: SizedBox(
-                              //width: 100,
-                              height: MediaQuery.of(context).size.height / 1.3,
-                              child: 
-                              Obx( () => controller.showData ? 
-                              
-                                SingleChildScrollView(
-                                  child: ListView.builder(
-                                    primary: false,
-                                    scrollDirection: Axis.vertical,
-                                    shrinkWrap: true,
-                                    itemCount: controller.trx1.rowcount,
-                                    itemBuilder: (BuildContext context, int index) {
-                                      return Obx(() => Visibility(
-                                visible: controller.linesSearchFilterValue.value ==
-                                        ""
-                                    ? true
-                                    : controller.linesDropdownValue.value == "1"
-                                        ? (controller.trx1.records![index].mProductID?.identifier ?? "")
-                                            .toString()
-                                            .toLowerCase()
-                                            .contains(controller
-                                                .linesSearchFilterValue.value
-                                                .toLowerCase())
-                                        : controller.linesDropdownValue.value == "2"
-                                            ? (controller
-                                                .trx1.records![index].line ?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .linesSearchFilterValue.value
-                                                    .toLowerCase())
-                                        : controller.linesDropdownValue.value == "3"
-                                            ? (controller
-                                                .trx1.records![index].name ?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .linesSearchFilterValue.value
-                                                    .toLowerCase())
-                                        : controller.linesDropdownValue.value == "4"
-                                            ? (controller
-                                                .trx1.records![index].lineTotalAmt ?? "")
-                                                .toString()
-                                                .toLowerCase()
-                                                .contains(controller
-                                                    .linesSearchFilterValue.value
-                                                    .toLowerCase())
-                                                : true,
-                                child: _buildLineCard(context, index)));
-                                    }
-                                  ),
-                                )
-                            : Center(child: Text('No Invoice Selected'.tr)) 
-                            )),
-                        ),
+                        const SizedBox(height: kSpacing / 2),
+                        _buildProfile(data: controller.getProfil()),
+                        const Divider(thickness: 1),
+                        const SizedBox(height: kSpacing),
                       ],
                     ),
-                  ],
-                ),
-              ),
-            ],
-          );
+                  )
+                ],
+              );
             },
           ),
         ),
@@ -1133,6 +1370,40 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );
@@ -1295,283 +1566,5 @@ class PortalMpInvoiceScreen extends GetView<PortalMpInvoiceController> {
           )
           .toList(),
     ]);
-  }
-
-  Widget _buildCard(Color selectionColor, context, index){
-    return Container(
-      decoration: BoxDecoration(
-          color: selectionColor),
-      child: ExpansionTile(
-        trailing: IconButton(
-          icon: const Icon(
-            Icons.article,
-            color: Colors.green,
-          ),
-          onPressed: () {
-            controller.selectedCard = index;
-            controller.invoiceId = controller.trx.records?[index].id;
-            controller.getInvoiceLines();
-          },
-        ),
-        title: Text(
-          '${'DocumentNo'.tr} ${controller.trx.records![index].documentNo!}',
-          style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
-        ),
-        subtitle: Row(
-          children: <Widget>[
-            const Icon(Icons.payments,
-                color: Colors.green),
-            Expanded(
-              child: Text(
-                controller.trx.records![index].cBPartnerID?.identifier ??
-                    "",
-                style: const TextStyle(
-                    color: Colors.white),
-              ),
-            ),
-          ],
-        ),
-        childrenPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 10.0),
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('${'Document Type'.tr}: '),
-                        Text(controller.trx.records![index].cDocTypeTargetID?.identifier ?? "",)
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('${'Date Invoiced'.tr}: '),
-                        Text(controller.trx.records![index].dateInvoiced ?? "",)
-                      ],
-                    ),                    
-                  ],
-                ),
-              ],
-            ),
-          );
-  }
-
-  _buildInvoicesFilter(){
-    return Row(
-      children: [
-        Container(
-          margin: const EdgeInsets.all(10),
-          //padding: const EdgeInsets.all(10),
-          //width: 20,
-          /* decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.grey,
-            ),
-            borderRadius: BorderRadius.circular(5),
-          ), */
-          child: Obx(
-            () => DropdownButton(
-              icon: const Icon(Icons.filter_alt_sharp),
-              value: controller.invoiceDropdownValue.value,
-              elevation: 16,
-              onChanged: (String? newValue) {
-                controller.invoiceDropdownValue.value = newValue!;
-              },
-              items: controller.invoiceDropDownList.map((list) {
-                return DropdownMenuItem<String>(
-                  value: list.id,
-                  child: Text(
-                    list.name.toString(),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-        Flexible(
-          child: Container(
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            child: TextField(
-              controller: controller.invoiceSearchFieldController,
-              onSubmitted: (String? value) {
-                controller.invoiceSearchFilterValue.value =
-                    controller.invoiceSearchFieldController.text;
-              },
-              decoration:  InputDecoration(
-                prefixIcon: const Icon(Icons.search_outlined),
-                border: const OutlineInputBorder(),
-                //labelText: 'Product Value',
-                hintText: 'Search'.tr,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLinesFilter(){
-    return Row(children: [
-      Container(
-          margin: const EdgeInsets.all(10),
-          child: Obx(
-            () => DropdownButton(
-              icon: const Icon(Icons.filter_alt_sharp),
-              value: controller.linesDropdownValue.value,
-              elevation: 16,
-              onChanged: (String? newValue) {
-                controller.linesDropdownValue.value = newValue!;
-              },
-              items: controller.linesDropDownList.map((list) {
-                return DropdownMenuItem<String>(
-                  value: list.id,
-                  child: Text(
-                    list.name.toString(),
-                  ),
-                );
-              }).toList(),
-            ),
-          ),
-        ),
-        Flexible(
-          child: Container(
-            margin: const EdgeInsets.only(left: 10, right: 10),
-            child: TextField(
-              controller: controller.linesSearchFieldController,
-              onSubmitted: (String? value) {
-                controller.linesSearchFilterValue.value =
-                    controller.linesSearchFieldController.text;
-              },
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.search_outlined),
-                border: const OutlineInputBorder(),
-                hintText: 'Search'.tr,
-                floatingLabelBehavior: FloatingLabelBehavior.always,
-              ),
-            ),
-          ),
-        ),
-    ],);
-  }
-
-  Widget _buildLineCard(context, index){
-    return Container(
-      decoration: const BoxDecoration(
-          color: Color.fromRGBO(64, 75, 96, .9)),
-      child: ExpansionTile(
-        title: Text(
-          controller.trx1.records![index].mProductID?.identifier ?? "",
-          style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold),
-        ),
-        subtitle: Expanded(
-          child: Column(
-            children: <Widget>[
-              /* Container(
-                margin: const EdgeInsets.only(right: 5),
-                child: const Icon(Icons.payments,
-                    color: Colors.green),
-              ), */
-              Row(
-                children: [
-                  Text(
-                    '${'LineNo'.tr}: ',
-                    style: const TextStyle(
-                        color: Colors.white),
-                  ),
-                  Text((controller.trx1.records![index].line ??
-                        "").toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                        ),)
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    '${'Name'.tr}: ',
-                    style: const TextStyle(
-                        color: Colors.white),
-                  ),
-                  Text(controller.trx1.records![index].name ??
-                        "",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold
-                      ))
-                ],
-              ),
-              Row(
-                children: [
-                  Text(
-                    '${'Line Amount'.tr}: ',
-                    style: const TextStyle(
-                        color: Colors.white),
-                  ),
-                  Text((controller.trx1.records![index].lineTotalAmt ??
-                        "").toString(),
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
-                      )
-                ],
-              ),
-            ],
-          ),
-        ),
-        childrenPadding: const EdgeInsets.symmetric(
-            horizontal: 20.0, vertical: 10.0),
-              children: [
-                Column(
-                  children: [
-                    Row(
-                      children: [
-                        Text('${'Description'.tr}: '),
-                        Text(controller.trx1.records![index].description ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('${'Price'.tr}: '),
-                        Text((controller.trx1.records![index].priceEntered ?? "").toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('${'List Price'.tr}: '),
-                        Text((controller.trx1.records![index].priceList ?? "").toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Text('${'Tax'.tr}: '),
-                        Text(controller.trx1.records![index].cTaxID?.identifier ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          );
   }
 }

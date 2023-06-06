@@ -3,7 +3,6 @@ part of dashboard;
 class PortalMpInvoiceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late InvoiceJson _trx;
-  late PortalMPInvoiceLineJson _trx1;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -14,44 +13,90 @@ class PortalMpInvoiceController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
-  // ignore: prefer_typing_uninitialized_variables
-  var businessPartnerId;
 
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var userFilter = GetStorage().read('PortalMPInvoice_userFilter') ?? "";
+  var businessPartnerFilter =
+      GetStorage().read('PortalMPInvoice_businessPartnerFilter') ?? "";
+  var docNoFilter = GetStorage().read('PurchaseInvoice_docNoFilter') ?? "";
+  var descriptionFilter =
+      GetStorage().read('PortalMPInvoice_descriptionFilter') ?? "";
+  var dateStartFilter =
+      GetStorage().read('PortalMPInvoice_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('PortalMPInvoice_dateEndFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
+  var docNoValue = "".obs;
+  var description = "".obs;
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+
+  var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  //DESKTOP VIEW VARIABLES
+
+  int selectedHeaderId = 0;
+  int selectedHeaderIndex = 0;
+
+  InvoiceJson _trxDesktop = InvoiceJson(records: []);
+
+  InvoiceLineJson _trxDesktopLines = InvoiceLineJson(records: []);
+
+  var desktopDocNosearchFieldController = TextEditingController();
+
+  TextEditingController desktopDocNoFieldController = TextEditingController();
+  TextEditingController desktopDocTypeFieldController = TextEditingController();
+  TextEditingController desktopBusinessPartnerFieldController =
+      TextEditingController();
+  TextEditingController desktopNameFieldController = TextEditingController();
+  TextEditingController desktopDescriptionFieldController =
+      TextEditingController();
+  TextEditingController desktopDateFromFieldController =
+      TextEditingController();
+  TextEditingController desktopDateToFieldController = TextEditingController();
+  TextEditingController desktopFrequencyFieldController =
+      TextEditingController();
+
+  List<DataRow> headerRows = [];
+
+  List<DataRow> lineRows = [];
   // ignore: prefer_final_fields
-  var _selectedCard = 0.obs;
-
   // ignore: prefer_final_fields
-  var _invoicetId = 0.obs;
+  var _desktopDataAvailable = false.obs;
 
-  // ignore: prefer_final_fields
-  var _showData = false.obs;
+  var desktopPagesCount = 1.obs;
+  var desktopPagesTot = 1.obs;
+  var desktopLinePagesCount = 1.obs;
+  var desktopLinePagesTot = 1.obs;
 
-  var invoiceSearchFieldController = TextEditingController();
-  var invoiceSearchFilterValue = "".obs;
-  late List<Types> invoiceDropDownList;
-  var invoiceDropdownValue = "1".obs;
-  final invoiceJson = {
+  var showHeader = true.obs;
+  var headerDataAvailable = false.obs;
+
+  var showLines = false.obs;
+  var linesDataAvailable = false.obs;
+
+  //END DESKTOP VIEW VARIABLES
+
+  final json = {
     "types": [
-      {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Date Invoiced".tr},
-      {"id": "3", "name": "Document Type".tr},
+      {"id": "1", "name": "Doc N°"},
+      {"id": "2", "name": "Date Invoiced"},
+      {"id": "3", "name": "Business Partner"},
+      {"id": "4", "name": "Description"}
     ]
   };
 
-  var linesSearchFieldController = TextEditingController();
-  var linesSearchFilterValue = "".obs;
-  var linesDropdownValue = "1".obs;
-  late List<Types> linesDropDownList;
-  final linesJson = {
-    "types": [
-      {"id": "1", "name": "Product".tr},
-      {"id": "2", "name": "LineNo".tr},
-      {"id": "3", "name": "Name".tr},
-      {"id": "4", "name": "Line Total Amount".tr},
-    ]
-  };
-
-  List<Types>? getTypes(json) {
+  List<Types>? getTypes() {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
@@ -59,24 +104,29 @@ class PortalMpInvoiceController extends GetxController {
 
   @override
   void onInit() {
-    invoiceDropDownList = getTypes(invoiceJson)!;
-    linesDropDownList = getTypes(linesJson)!;
+    dropDownList = getTypes()!;
     super.onInit();
+    selectedUserRadioTile.value =
+        GetStorage().read('PortalMPInvoice_selectedUserRadioTile') ?? 0;
+    businessPartnerName =
+        GetStorage().read('PortalMPInvoice_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('PortalMPInvoice_businessPartnerId') ?? 0;
+    salesRepId = GetStorage().read('PortalMPInvoice_salesRepId') ?? 0;
+    salesRepName = GetStorage().read('PortalMPInvoice_salesRepName') ?? "";
+    docNoValue.value = GetStorage().read('PortalMPInvoice_docNo') ?? "";
+    description.value = GetStorage().read('PortalMPInvoice_description') ?? "";
+    dateStartValue.value = GetStorage().read('PortalMPInvoice_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('PortalMPInvoice_dateEnd') ?? "";
     getInvoices();
+    getInvoicesDesktop();
     getADUserID();
+    setConnect();
   }
 
   bool get dataAvailable => _dataAvailable.value;
   InvoiceJson get trx => _trx;
-  PortalMPInvoiceLineJson get trx1 => _trx1;
-
-  int get selectedCard => _selectedCard.value;
-  set selectedCard(index) => _selectedCard.value = index;
-
-  int get invoiceId => _invoicetId.value;
-  set invoiceId(id) => _invoicetId.value = id;
-
-  bool get showData => _showData.value;
+  //String get value => _value.toString();
 
   changeFilter() {
     filterCount++;
@@ -88,43 +138,13 @@ class PortalMpInvoiceController extends GetxController {
     getInvoices();
   }
 
-  Future<void> getBusinessPartner() async {
-    var name = GetStorage().read("user");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      GetStorage().write('BusinessPartnerName',
-          json["records"][0]["C_BPartner_ID"]["identifier"]);
-      GetStorage().write(
-          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
-
-      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
-    } else {
-      //print(response.body);
-    }
-  }
-
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -169,24 +189,26 @@ class PortalMpInvoiceController extends GetxController {
   }
 
   Future<void> getInvoices() async {
-    await getBusinessPartner();
-    /* var now = DateTime.now();
+    var now = DateTime.now();
     DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
     String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
+    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
+    var notificationFilter = '';
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and C_Invoice_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
     _dataAvailable.value = false;
-    _showData.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_invoice?\$filter= DocStatus eq \'CO\'  and C_BPartner_ID eq $businessPartnerId&\$orderby= DateInvoiced desc');
-    //SalesRep_ID eq ${GetStorage().read("userId")}
-    //and IsSoTrx eq Y and DateInvoiced le \'$formattedDate 23:59:59\' and DateInvoiced ge \'$formattedNinetyDaysAgo 00:00:00\'
-    //and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_invoice?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter$descriptionFilter$dateStartFilter$dateEndFilter&\$orderby= DateInvoiced desc&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -195,19 +217,42 @@ class PortalMpInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
+      //print(response.body);
       _trx = InvoiceJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      _dataAvailable.value = _trx.records!.isNotEmpty;
+
+      pagesTot.value = _trx.pagecount!;
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
   }
 
-  Future<void> getInvoiceLines() async {
-    _showData.value = false;
+  Future<void> getInvoicesDesktop() async {
+    _desktopDataAvailable.value = false;
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and C_Contract_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
+    // ignore: unused_local_variable
+    var searchFilter = "";
+    if (desktopDocNosearchFieldController.text != "") {
+      searchFilter =
+          " and contains(DocumentNo,'${desktopDocNosearchFieldController.text}')";
+    }
+    //var userFilters = [];
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/C_InvoiceLine?\$filter= C_Invoice_ID eq $invoiceId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_invoice?\$filter= DocStatus eq \'CO\' and IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter&\$skip=${(desktopPagesCount.value - 1) * 100}&\$orderby= DateInvoiced desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -216,16 +261,792 @@ class PortalMpInvoiceController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx1 = PortalMPInvoiceLineJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
+      //print(response.body);
+      _trxDesktop =
+          InvoiceJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      desktopPagesTot.value = _trxDesktop.pagecount!;
 
-      _showData.value = _trx1.records!.isNotEmpty;
+      headerRows = [];
+
+      for (var i = 0; i < _trxDesktop.records!.length; i++) {
+        headerRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              /* IconButton(
+                  onPressed: () {
+                    selectedHeaderId = _trxDesktop.records![i].id!;
+                    selectedHeaderIndex = i;
+
+                    desktopDocNoFieldController.text =
+                        _trxDesktop.records![i].documentNo ?? '??';
+                    desktopDocTypeFieldController.text =
+                        _trxDesktop.records![i].cDocTypeTargetID?.identifier ??
+                            '??';
+                    desktopBusinessPartnerFieldController.text =
+                        _trxDesktop.records![i].cBPartnerID?.identifier ?? '??';
+
+                    showHeader.value = false;
+                    showLines.value = true;
+                    getInvoiceLineDesktop();
+                  },
+                  icon: const Icon(EvaIcons.search)), */
+              Tooltip(
+                message: _trxDesktop.records![i].isPaid!
+                    ? 'Paid'.tr
+                    : 'Completed'.tr,
+                child: Text(
+                  _trxDesktop.records![i].documentNo ?? 'N/A',
+                  style: TextStyle(
+                      color: _trxDesktop.records![i].isPaid!
+                          ? Colors.lightBlue
+                          : kNotifColor),
+                ),
+              )
+            ],
+          )),
+          DataCell(
+            Text(_trxDesktop.records![i].dateInvoiced!.substring(0, 10)),
+          ),
+          DataCell(
+            Text(_trxDesktop.records![i].paymentRule?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Text(_trxDesktop.records![i].cPaymentTermID?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text((_trxDesktop.records![i].grandTotal ?? 'N/A').toString()),
+              ],
+            ),
+          ),
+          DataCell(
+            _trxDesktop.records![i].liteInvoiceID?.id != null
+                ? IconButton(
+                    onPressed: () {
+                      Get.defaultDialog(
+                        title: 'Print Electronic Invoice'.tr,
+                        content: Text(
+                            'Are you sure you want to print the Invoice?'.tr),
+                        textCancel: 'Cancel',
+                        onConfirm: () {
+                          getElectronicInvoiceAttachments(
+                              _trxDesktop.records![i].liteInvoiceID!.id!);
+                        },
+                      );
+                    },
+                    icon: const Icon(EvaIcons.printer))
+                : const Icon(
+                    Icons.remove,
+                    color: Colors.red,
+                  ),
+          ),
+        ]));
+      }
+      //print(trx.records!.length);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _desktopDataAvailable.value = true;
     } else {
-      _showData.value = false;
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getInvoiceLineDesktop() async {
+    linesDataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_InvoiceLine?\$filter= C_Invoice_ID eq $selectedHeaderId and  AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(desktopLinePagesCount.value - 1) * 100}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trxDesktopLines =
+          InvoiceLineJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      desktopLinePagesTot.value = _trxDesktopLines.pagecount!;
+
+      lineRows = [];
+
+      for (var i = 0; i < _trxDesktopLines.records!.length; i++) {
+        lineRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(
+            Text(_trxDesktopLines.records![i].name ?? '??'),
+          ),
+        ]));
+      }
+
+      linesDataAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getElectronicInvoiceAttachments(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/LIT_EInvoice/$id/attachments');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      if ((json["attachments"] as List).isNotEmpty) {
+        //print(json["attachments"][0]["name"]);
+        getElectronicInvoiceAttachmentPDF(id, json["attachments"][0]["name"]);
+      }
+      /* var json = jsonDecode(utf8.decode(response.bodyBytes));
+ 
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes); */
+
+      //return json.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to get Attachments from EI");
+    }
+  }
+
+  Future<void> getElectronicInvoiceAttachmentPDF(int id, String name) async {
+    print(id);
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_EInvoice/$id/attachments/$name');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.bodyBytes);
+      /* var json = jsonDecode(utf8.decode(response.bodyBytes));
+ 
+      String pdfString = json["exportFile"];*/
+      //print(pdfString);
+
+      // List<int> list = base64.decode(pdfString);
+      Uint8List bytes = response.bodyBytes;
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load PDF");
+    }
+  }
+
+  Future<void> getDocument(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/invoice-customer/${_trx.records![index].id}/print');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      throw Exception("Failed to load PDF");
+    }
+  }
+
+  Future<void> setConnect() async {
+    try {
+      final String? result = await BluetoothThermalPrinter.connect(
+          GetStorage().read('posMacAddress'));
+      //print("state conneected $result");
+      if (result == "true") {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('nope');
+      }
+    }
+    //printTicket();
+  }
+
+  Future<void> printTicket(int index) async {
+    late SalesOrderLineJson json;
+    String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+    if (isConnected == "true") {
+      final ip = GetStorage().read('ip');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/c_invoiceline?\$filter= C_Invoice_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+      //print(Get.arguments["id"]);
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print(response.body);
+        json = SalesOrderLineJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //print(trx.rowcount);
+        //print(response.body);
+        // ignore: unnecessary_null_comparison
+        //_dataAvailable.value = _trx != null;
+      }
+      try {
+        List<int> bytes = await getPOSSalesOrder(index, json);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope');
+        }
+      }
+      //print("Print $result");
+    } else {
+      //Hadnle Not Connected Senario
+    }
+  }
+
+  Future<List<int>> getPOSSalesOrder(int index, SalesOrderLineJson json) async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    bytes += generator.text("${GetStorage().read('clientname') ?? "???"}",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text("VIA DEL MARANGON, 10",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("MESCOLINO-MINELLE (TV)",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text("PARTITA IVA 43892049842",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    bytes += generator.text(
+        "${"Document Type: ".tr}${trx.records![index].cDocTypeID!.identifier}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        '${'Document: '.tr}${trx.records![index].documentNo}',
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.hr();
+    bytes += generator.row([
+      PosColumn(
+          text: 'Product'.tr,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'VAT'.tr,
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Price'.tr,
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    // ignore: unnecessary_null_comparison
+    if (json != null) {
+      for (var line in json.records!) {
+        bytes += generator.row([
+          PosColumn(
+              text: "${line.name}",
+              width: 8,
+              styles: const PosStyles(
+                align: PosAlign.left,
+              )),
+          PosColumn(
+              text: "${line.cTaxID!.identifier}",
+              width: 2,
+              styles: const PosStyles(align: PosAlign.center)),
+          PosColumn(
+              text:
+                  (double.parse(line.lineNetAmt.toString())).toStringAsFixed(2),
+              width: 2,
+              styles: const PosStyles(align: PosAlign.right)),
+        ]);
+        if (line.qtyEntered! > 1) {
+          bytes += generator.text(
+              "*  ${line.qtyEntered} X ${line.priceEntered!.toStringAsFixed(2)}",
+              styles: const PosStyles(align: PosAlign.center));
+        }
+      }
+    }
+
+    /*  bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]); */
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Total'.tr,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: trx.records![index].grandTotal!.toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'VAT'.tr,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: (double.parse(trx.records![index].grandTotal!.toString()) -
+                  double.parse(trx.records![index].totalLines!.toString()))
+              .toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!'.tr,
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.cut();
+    return bytes;
+  }
+
+  /* void openDrawer() {
+    if (scaffoldKey.currentState != null) {
+      scaffoldKey.currentState!.openDrawer();
+    }
+  } */
+
+  Future<List<int>> getInvoiceTicket(int index, SalesOrderLineJson json,
+      OrgInfoJSON frombpartner, RVbpartnerJSON tobpartner) async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    var dateString = trx.records![index].dateInvoiced;
+    DateTime date = DateTime.parse(dateString!);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+
+    bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text(frombpartner.records![0].cLocationID!.identifier!,
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.text("P. IVA ${frombpartner.records![0].taxID}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    bytes += generator.text(
+        "${"Document Type: ".tr}${trx.records![index].cDocTypeID!.identifier}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        '${'Document: '.tr}${trx.records![index].documentNo} $formattedDate',
+        styles: const PosStyles(align: PosAlign.center),
+        linesAfter: 1);
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Cust.'.tr,
+          width: 2,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].name ?? "???",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(
+          text: ' ',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: tobpartner.records![0].address1 ?? "???",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: ' ',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text:
+              "${tobpartner.records![0].postal} ${tobpartner.records![0].city} (${tobpartner.records![0].regionName})",
+          width: 10,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+    ]);
+
+    bytes += generator.hr();
+    bytes += generator.row([
+      PosColumn(
+          text: 'Product'.tr,
+          width: 8,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'VAT'.tr,
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Price'.tr,
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    // ignore: unnecessary_null_comparison
+    if (json != null) {
+      for (var line in json.records!) {
+        bytes += generator.row([
+          PosColumn(
+              text: "${line.name}",
+              width: 8,
+              styles: const PosStyles(
+                align: PosAlign.left,
+              )),
+          PosColumn(
+              text: "${line.cTaxID!.identifier}",
+              width: 2,
+              styles: const PosStyles(align: PosAlign.center)),
+          PosColumn(
+              text:
+                  (double.parse(line.lineNetAmt.toString())).toStringAsFixed(2),
+              width: 2,
+              styles: const PosStyles(align: PosAlign.right)),
+        ]);
+        if (line.qtyEntered! > 1) {
+          bytes += generator.text(
+              "*  ${line.qtyEntered} X ${line.priceEntered!.toStringAsFixed(2)}",
+              styles: const PosStyles(align: PosAlign.center));
+        }
+      }
+    }
+
+    /*  bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]); */
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Total'.tr,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: trx.records![index].grandTotal!.toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'VAT'.tr,
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: (double.parse(trx.records![index].grandTotal!.toString()) -
+                  double.parse(trx.records![index].totalLines!.toString()))
+              .toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!'.tr,
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.cut();
+    return bytes;
+  }
+
+  /* Future<void> getBpData(int index, int bpID) async {
+    //late SalesOrderLineJson json;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq \'Y\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      print('getbpdata');
+      var json =
+          RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      getInvoiceData(index, json);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+
+    //print("Print $result");
+  } */
+
+  Future<void> getToBPdata(int index, int bpID, OrgInfoJSON frombpartner,
+      SalesOrderLineJson jsonLines) async {
+    //late SalesOrderLineJson json;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/rv_bpartner?\$filter= C_BPartner_ID eq $bpID and c_bp_location_isbillto eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print('gettobpdata');
+      var jsonTobpartner =
+          RVbpartnerJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      try {
+        List<int> bytes = await getInvoiceTicket(
+            index, jsonLines, frombpartner, jsonTobpartner);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope1');
+        }
+      }
+
+      //getInvoiceData(index, json);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    }
+
+    //print("Print $result");
+  }
+
+  Future<void> getInvoiceData(int index, OrgInfoJSON bpdata) async {
+    late SalesOrderLineJson jsonLines;
+    //String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_invoiceline?\$filter= C_Invoice_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    //print(Get.arguments["id"]);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print('getinvoicedata');
+      jsonLines = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      getToBPdata(
+          index, _trx.records![index].cBPartnerID!.id!, bpdata, jsonLines);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      //_dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+
+    //print("Print $result");
+  }
+
+  Future<void> getBusinessPartner(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print('getbusinesspartner');
+
+      //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
+      var json =
+          OrgInfoJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      getInvoiceData(index, json);
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
     }
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -298,7 +1119,7 @@ class PortalMpInvoiceController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }
@@ -364,45 +1185,5 @@ class PortalMpInvoiceController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

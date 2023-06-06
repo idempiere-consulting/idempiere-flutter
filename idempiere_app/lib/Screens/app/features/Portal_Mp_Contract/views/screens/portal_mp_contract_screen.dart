@@ -333,7 +333,7 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
                                           tooltip: 'Edit Contract'.tr,
                                           onPressed: () {
                                             //log("info button pressed");
-                                            Get.to(const PortalMPEditContract(),
+                                            /*  Get.to(const PortalMPEditContract(),
                                                 arguments: {
                                                   "id": controller
                                                       .trx.records![index].id,
@@ -394,7 +394,7 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
                                                           ._trx
                                                           .records![index]
                                                           .frequencyNextDate,
-                                                });
+                                                }); */
                                           },
                                         ),
                                       ),

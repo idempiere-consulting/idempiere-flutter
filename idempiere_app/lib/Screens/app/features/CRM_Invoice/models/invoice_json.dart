@@ -47,6 +47,7 @@ class Records {
   final String? description;
   final bool? processed;
   final CBPartnerID? cBPartnerID;
+  final LITEInvoiceID? liteInvoiceID;
   final CPaymentTermID? cPaymentTermID;
   final CBPartnerLocationID? cBPartnerLocationID;
   final bool? isApproved;
@@ -94,6 +95,7 @@ class Records {
     this.updatedBy,
     this.documentNo,
     this.cDocTypeID,
+    this.liteInvoiceID,
     this.docStatus,
     this.description,
     this.processed,
@@ -157,6 +159,11 @@ class Records {
         cDocTypeID = (json['C_DocType_ID'] as Map<String, dynamic>?) != null
             ? CDocTypeID.fromJson(json['C_DocType_ID'] as Map<String, dynamic>)
             : null,
+        liteInvoiceID =
+            (json['LIT_EInvoice_ID'] as Map<String, dynamic>?) != null
+                ? LITEInvoiceID.fromJson(
+                    json['LIT_EInvoice_ID'] as Map<String, dynamic>)
+                : null,
         docStatus = (json['DocStatus'] as Map<String, dynamic>?) != null
             ? DocStatus.fromJson(json['DocStatus'] as Map<String, dynamic>)
             : null,
@@ -248,6 +255,7 @@ class Records {
         'DocStatus': docStatus?.toJson(),
         'Processed': processed,
         'C_BPartner_ID': cBPartnerID?.toJson(),
+        'LIT_EInvoice_ID': liteInvoiceID?.toJson(),
         'C_PaymentTerm_ID': cPaymentTermID?.toJson(),
         'C_BPartner_Location_ID': cBPartnerLocationID?.toJson(),
         'IsApproved': isApproved,
@@ -461,6 +469,33 @@ class CBPartnerID {
   });
 
   CBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITEInvoiceID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITEInvoiceID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITEInvoiceID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

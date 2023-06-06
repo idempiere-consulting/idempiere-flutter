@@ -227,7 +227,7 @@ class PortalMpContractController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_contract?\$filter= C_BPartner_ID eq $businessPartnerId and IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$docNoFilter$docTypeFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/c_contract?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$docNoFilter$docTypeFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -272,7 +272,7 @@ class PortalMpContractController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_contract?\$filter= IsSoTrx eq N and  AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter&\$skip=${(desktopPagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/c_contract?\$filter=  C_BPartner_ID eq $businessPartnerId and IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter&\$skip=${(desktopPagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
