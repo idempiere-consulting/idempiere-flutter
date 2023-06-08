@@ -522,10 +522,10 @@ class _CreateMaintenanceMpResourceState
 
     if (dateCheckFieldController.text != "") {
       try {
-        var date = inputFormat.parse(dateCheckFieldController.text);
+        var date1 = inputFormat.parse(dateCheckFieldController.text);
 
         msg.addAll(
-            {"LIT_Control1DateFrom": DateFormat('yyyy-MM-dd').format(date)});
+            {"LIT_Control1DateFrom": DateFormat('yyyy-MM-dd').format(date1)});
       } catch (e) {
         if (kDebugMode) {
           print(e);
@@ -534,10 +534,10 @@ class _CreateMaintenanceMpResourceState
     }
     if (dateRevisionFieldController.text != "") {
       try {
-        var date = inputFormat.parse(dateRevisionFieldController.text);
+        var date2 = inputFormat.parse(dateRevisionFieldController.text);
 
         msg.addAll(
-            {"LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)});
+            {"LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date2)});
       } catch (e) {
         if (kDebugMode) {
           print(e);
@@ -546,10 +546,10 @@ class _CreateMaintenanceMpResourceState
     }
     if (dateTestingFieldController.text != "") {
       try {
-        var date = inputFormat.parse(dateTestingFieldController.text);
+        var date3 = inputFormat.parse(dateTestingFieldController.text);
 
         msg.addAll(
-            {"LIT_Control2DateFrom": DateFormat('yyyy-MM-dd').format(date)});
+            {"LIT_Control3DateFrom": DateFormat('yyyy-MM-dd').format(date3)});
       } catch (e) {
         if (kDebugMode) {
           print(e);

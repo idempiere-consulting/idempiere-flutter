@@ -506,7 +506,7 @@ class LocaleString extends Translations {
           'ContactBP': 'Contatto',
           'CustomerBP': 'Cliente',
           'Task&Appuntamenti': 'Task',
-          'SalesOrder': 'Offerta',
+          'SalesOrder': 'Ordine di Vendita',
           'ProductList': 'Listino Prodotto',
           'Invoice': 'Fattura',
           'Payment: ': 'Pagamento: ',
@@ -518,7 +518,7 @@ class LocaleString extends Translations {
           'TicketTicketNew': 'Ticket',
           'TicketTaskToDo': 'Task',
           'TicketResourceAssignment': 'Ore',
-          'Maintenance': 'Intervento',
+          'Maintenance': 'Impianto',
           'MaintenanceCalendar': 'Calendario',
           'MaintenanceMptask': 'Ordini di Lavoro',
           'MaintenanceMpanomaly': 'Anomalia',
@@ -1135,6 +1135,14 @@ class LocaleString extends Translations {
           'Take the Exam': 'Inizia il Questionario',
           'Frequency': 'Frequenza',
           'U.o.M.': 'U.d.M.',
+          'OFFERS: ': 'OFFERTE: ',
+          'Print Electronic Invoice': 'Stampa Fattura Elettronica',
+          'Are you sure you want to print the Invoice?':
+              'Sicuro di voler stampare la Fattura?',
+          'Last Maintenance': 'Ultima Manutenzione',
+          'Next Maintenance': 'Prossima Manutenzione',
+          'Sales Offer': 'Offerta di Vendita',
+          'MAINTENANCES: ': 'IMPIANTI: '
         },
       };
 }

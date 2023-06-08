@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 6,
+              initialSelected: 7,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -62,35 +62,75 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
+                  label: "Sales Offer".tr,
+                  visible: int.parse(list[36], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
                   label: "SalesOrder".tr,
+                  visible: int.parse(list[50], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Training and Course".tr,
+                  visible: int.parse(list[50], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Impianto
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Maintenance".tr,
+                  visible: int.parse(list[41], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Anomaly".tr,
+                  visible: int.parse(list[40], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Scadenze
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Invoice".tr,
+                  visible: int.parse(list[34], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
+                  visible: int.parse(list[38], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
@@ -127,29 +167,32 @@ class _Sidebar extends StatelessWidget {
                     break;
 
                   case 3:
+                    Get.offNamed('/PortalMpSalesOffer');
+                    break;
+                  case 4:
                     Get.offNamed('/PortalMpSalesOrder');
                     break;
 
-                  case 4:
+                  case 5:
                     Get.offNamed('/PortalMpTrainingCourse');
                     break;
                   //Impianto
-                  case 5:
+                  case 6:
                     Get.offNamed('/PortalMpMaintenanceMp');
                     break;
                   //Impianti dettaglio
-                  case 6:
+                  case 7:
                     Get.offNamed('/PortalMpAnomaly');
                     break;
                   //Scadenze
-                  case 7:
+                  case 8:
                     Get.offNamed('/PortalMpInvoice');
                     break;
 
-                  case 8:
+                  case 9:
                     Get.offNamed('/PortalMpContract');
                     break;
-                  case 9:
+                  case 10:
                     Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
 

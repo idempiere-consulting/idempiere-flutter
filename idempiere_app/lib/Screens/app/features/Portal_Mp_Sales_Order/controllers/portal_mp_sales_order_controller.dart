@@ -2,21 +2,12 @@ part of dashboard;
 
 class PortalMpSalesOrderController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
+  List<dynamic> list = GetStorage().read('permission');
+
+  //final scaffoldKey = GlobalKey<ScaffoldState>();
   late SalesOrderJson _trx;
-  late PortalMPSalesOrderLineJson _trx1;
 
-  final SignatureController _signatureController = SignatureController(
-    penStrokeWidth: 1,
-    penColor: Colors.black,
-    exportBackgroundColor: Colors.white,
-  );
-  // ignore: prefer_final_fields
-  var _signatureNameController = TextEditingController();
-  // ignore: prefer_final_fields
-  var _canSign = false.obs;
-
-  // ignore: prefer_final_fields
-  var _canApprove = (List<bool>.of([])).obs;
+  ContractArticleJSON articleList = ContractArticleJSON(records: []);
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -27,44 +18,82 @@ class PortalMpSalesOrderController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
+  var userFilter = GetStorage().read('PortalMPSalesOrder_userFilter') ?? "";
+  var businessPartnerFilter =
+      GetStorage().read('PortalMPSalesOrder_businessPartnerFilter') ?? "";
+  var docNoFilter = GetStorage().read('PortalMPSalesOrder_docNoFilter') ?? "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var selectedUserRadioTile = 0.obs;
+  var salesRepId = 0;
+  var salesRepName = "";
+  var docNoValue = "".obs;
+
+  var searchFieldController = TextEditingController();
+  var searchFilterValue = "".obs;
+
+  late List<Types> dropDownList;
+  var dropdownValue = "1".obs;
+
+  var articleDropDownValue = "0".obs;
+
+  //DESKTOP VIEW VARIABLES
+
+  int selectedHeaderId = 0;
+  int selectedHeaderIndex = 0;
+
+  SalesOrderJson _trxDesktop = SalesOrderJson(records: []);
+
+  SalesOrderLineJson _trxDesktopLines = SalesOrderLineJson(records: []);
+
+  var desktopDocNosearchFieldController = TextEditingController();
+
+  TextEditingController desktopDocNoFieldController = TextEditingController();
+  TextEditingController desktopDocTypeFieldController = TextEditingController();
+  TextEditingController desktopBusinessPartnerFieldController =
+      TextEditingController();
+  TextEditingController desktopNameFieldController = TextEditingController();
+  TextEditingController desktopDescriptionFieldController =
+      TextEditingController();
+  TextEditingController desktopDateFromFieldController =
+      TextEditingController();
+  TextEditingController desktopDateToFieldController = TextEditingController();
+  TextEditingController desktopFrequencyFieldController =
+      TextEditingController();
+
+  List<DataRow> headerRows = [];
+
+  List<DataRow> lineRows = [];
   // ignore: prefer_final_fields
-  var _showData = false.obs;
+  var _desktopDataAvailable = false.obs;
 
-  // ignore: prefer_typing_uninitialized_variables
-  var businessPartnerId;
+  var desktopPagesCount = 1.obs;
+  var desktopPagesTot = 1.obs;
+  var desktopLinePagesCount = 1.obs;
+  var desktopLinePagesTot = 1.obs;
 
-  // ignore: prefer_final_fields
-  var _selectedCard = 0.obs;
+  var showHeader = true.obs;
+  var headerDataAvailable = false.obs;
 
-  // ignore: prefer_final_fields
-  var _salesOrderId = 0.obs;
+  var showLines = false.obs;
+  var linesDataAvailable = false.obs;
 
-  var salesOrderSearchFieldController = TextEditingController();
-  var salesOrderSearchFilterValue = "".obs;
-  late List<Types> salesOrderDropDownList;
-  var salesOrderDropdownValue = "1".obs;
-  final salesOrderJson = {
+  //END DESKTOP VIEW VARIABLES
+
+  final json = {
     "types": [
       {"id": "1", "name": "DocumentNo".tr},
-      {"id": "2", "name": "Document Type".tr},
-      {"id": "3", "name": "Date Ordered".tr},
+      {"id": "2", "name": "Business Partner".tr},
+      //{"id": "3", "name": "SalesRep".tr},
     ]
   };
 
-  var linesSearchFieldController = TextEditingController();
-  var linesSearchFilterValue = "".obs;
-  var linesDropdownValue = "1".obs;
-  late List<Types> linesDropDownList;
-  final linesJson = {
-    "types": [
-      {"id": "1", "name": "Product".tr},
-      {"id": "2", "name": "LineNo".tr},
-      {"id": "3", "name": "Name".tr},
-      {"id": "4", "name": "Line Amount".tr},
-    ]
-  };
-
-  List<Types>? getTypes(json) {
+  List<Types>? getTypes() {
     var dJson = TypeJson.fromJson(json);
 
     return dJson.types;
@@ -72,49 +101,32 @@ class PortalMpSalesOrderController extends GetxController {
 
   @override
   void onInit() {
-    salesOrderDropDownList = getTypes(salesOrderJson)!;
-    linesDropDownList = getTypes(linesJson)!;
+    dropDownList = getTypes()!;
     super.onInit();
-    getSalesOrders();
+    selectedUserRadioTile.value =
+        GetStorage().read('PortalMPSalesOrder_selectedUserRadioTile') ?? 0;
+    businessPartnerName =
+        GetStorage().read('PortalMPSalesOrder_businessPartnerName') ?? "";
+    businessPartnerId.value =
+        GetStorage().read('PortalMPSalesOrder_businessPartnerId') ?? 0;
+    salesRepId = GetStorage().read('PortalMPSalesOrder_salesRepId') ?? 0;
+    salesRepName = GetStorage().read('PortalMPSalesOrder_salesRepName') ?? "";
+    docNoValue.value = GetStorage().read('PortalMPSalesOrder_docNo') ?? "";
+    getBusinessPartnerDesktop();
     getADUserID();
+    setConnect();
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  bool get showData => _showData.value;
-  SalesOrderJson get trxSalesOrder => _trx;
-  PortalMPSalesOrderLineJson get trxLine => _trx1;
+  SalesOrderJson get trx => _trx;
+  //String get value => _value.toString();
 
-  int get selectedCard => _selectedCard.value;
-  set selectedCard(index) => _selectedCard.value = index;
-
-  int get salesOrderId => _salesOrderId.value;
-  set salesOrderId(id) => _salesOrderId.value = id;
-
-  SignatureController get signatureController => _signatureController;
-  set signatureController(value) => _signatureController.value = value;
-  TextEditingController get signatureNameController => _signatureNameController;
-  //set signatureNameController(name) => _signatureNameController.text = name;
-  bool get canSign => _canSign.value;
-  set canSign(value) => _canSign.value = value;
-
-  List<bool> get canApprove => _canApprove;
-  set canApprove(indexval) => _canApprove[indexval[0]] = indexval[1];
-
-  changeFilter() {
-    filterCount++;
-    if (filterCount == 2) {
-      filterCount = 0;
-    }
-
-    value.value = filters[filterCount];
-    getSalesOrders();
-  }
-
-  Future<void> getBusinessPartner() async {
+  Future<void> getBusinessPartnerDesktop() async {
+    final protocol = GetStorage().read('protocol');
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -133,12 +145,26 @@ class PortalMpSalesOrderController extends GetxController {
       GetStorage().write(
           'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
 
-      businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
+      businessPartnerId.value = json["records"][0]["C_BPartner_ID"]["id"];
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
     } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
+      //print(response.body);
     }
+    getSalesOrders();
+    getSalesOrdersDesktop();
+  }
+
+  changeFilter() {
+    filterCount++;
+    if (filterCount == 2) {
+      filterCount = 0;
+    }
+
+    value.value = filters[filterCount];
+    getSalesOrders();
   }
 
   Future<void> getADUserID() async {
@@ -146,9 +172,8 @@ class PortalMpSalesOrderController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -193,22 +218,21 @@ class PortalMpSalesOrderController extends GetxController {
   }
 
   Future<void> getSalesOrders() async {
-    await getBusinessPartner();
-    // ignore: unused_local_variable
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;
-    _showData.value = false;
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and C_Order_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_order?\$filter=   C_BPartner_ID eq $businessPartnerId &\$orderby= DateOrdered desc');
-    //and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}
-    //IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and
-    //SalesRep_ID eq ${GetStorage().read("userId")}
-    //lit_mobile_order_bploc_v
-    //print("so");
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_BPartner_ID eq $businessPartnerId and IsSoTrx eq Y and DocStatus eq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -220,30 +244,38 @@ class PortalMpSalesOrderController extends GetxController {
       //print(response.body);
       _trx =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
-      _dataAvailable.value = _trx.records!.isNotEmpty;
-
-      if (_canApprove.isEmpty) {
-        for (int i = 0; i < _trx.records!.length; i++) {
-          _canApprove.add(false);
-        }
-      }
-    } else {
-      _dataAvailable.value = false;
+      _dataAvailable.value = _trx != null;
     }
   }
 
-  Future<void> getSalesOrderLines() async {
-    _showData.value = false;
+  Future<void> getSalesOrdersDesktop() async {
+    _desktopDataAvailable.value = false;
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and C_Contract_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
+    // ignore: unused_local_variable
+    var searchFilter = "";
+    if (desktopDocNosearchFieldController.text != "") {
+      searchFilter =
+          " and contains(DocumentNo,'${desktopDocNosearchFieldController.text}')";
+    }
+    //var userFilters = [];
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_order?\$filter= C_Order_ID eq $salesOrderId');
-    //SalesRep_ID eq ${GetStorage().read("userId")}
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_BPartner_ID eq $businessPartnerId and DocStatus eq \'CO\' and IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter&\$skip=${(desktopPagesCount.value - 1) * 100}&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -252,15 +284,666 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      _trx1 = PortalMPSalesOrderLineJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
+      //C_BPartner_ID eq $businessPartnerId and
+      //print(response.body);
+      _trxDesktop =
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      desktopPagesTot.value = _trxDesktop.pagecount!;
 
-      _showData.value = _trx1.records!.isNotEmpty;
+      headerRows = [];
+
+      for (var i = 0; i < _trxDesktop.records!.length; i++) {
+        headerRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    selectedHeaderId = _trxDesktop.records![i].id!;
+                    selectedHeaderIndex = i;
+
+                    desktopDocNoFieldController.text =
+                        _trxDesktop.records![i].documentNo ?? '??';
+                    desktopDocTypeFieldController.text =
+                        _trxDesktop.records![i].cDocTypeTargetID?.identifier ??
+                            '??';
+                    desktopBusinessPartnerFieldController.text =
+                        _trxDesktop.records![i].cBPartnerID?.identifier ?? '??';
+
+                    showHeader.value = false;
+                    showLines.value = true;
+                    getSalesOrderLinesDesktop();
+                  },
+                  icon: const Icon(EvaIcons.search)),
+              Expanded(child: Text(_trxDesktop.records![i].documentNo ?? '??'))
+            ],
+          )),
+          DataCell(
+            Text(_trxDesktop.records![i].cDocTypeID?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Text(_trxDesktop.records![i].dateOrdered!.substring(0, 10)),
+          ),
+          DataCell(
+            Text(_trxDesktop.records![i].paymentRule?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Text(_trxDesktop.records![i].cPaymentTermID?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text((_trxDesktop.records![i].grandTotal ?? 'N/A').toString()),
+              ],
+            ),
+          ),
+          DataCell(
+            IconButton(
+                onPressed: () {
+                  getDocument(i);
+                },
+                icon: const Icon(EvaIcons.printer)),
+          ),
+        ]));
+      }
+      //print(trx.records!.length);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _desktopDataAvailable.value = true;
     } else {
-      _showData.value = false;
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
+  Future<void> getSalesOrderLinesDesktop() async {
+    linesDataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_orderline?\$filter= C_Order_ID eq $selectedHeaderId and  AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(desktopLinePagesCount.value - 1) * 100}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      _trxDesktopLines = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      desktopLinePagesTot.value = _trxDesktopLines.pagecount!;
+
+      lineRows = [];
+
+      for (var i = 0; i < _trxDesktopLines.records!.length; i++) {
+        lineRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(
+            Text(_trxDesktopLines.records![i].mProductID?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Text(_trxDesktopLines.records![i].cUOMID?.identifier ?? 'N/A'),
+          ),
+          DataCell(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text((_trxDesktopLines.records![i].qtyEntered ?? 'N/A')
+                    .toString()),
+              ],
+            ),
+          ),
+          DataCell(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text((_trxDesktopLines.records![i].qtyEntered ?? 'N/A')
+                    .toString()),
+              ],
+            ),
+          ),
+          DataCell(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text((_trxDesktopLines.records![i].priceList ?? 'N/A')
+                    .toString()),
+              ],
+            ),
+          ),
+          DataCell(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text((_trxDesktopLines.records![i].priceEntered ?? 'N/A')
+                    .toString()),
+              ],
+            ),
+          ),
+        ]));
+      }
+
+      linesDataAvailable.value = true;
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> getDocument(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/sales-order/${_trx.records![index].id}/print');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      //throw Exception("Failed to load PDF");
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> setConnect() async {
+    try {
+      final String? result = await BluetoothThermalPrinter.connect(
+          GetStorage().read('posMacAddress'));
+      //print("state conneected $result");
+      if (result == "true") {}
+    } catch (e) {
+      if (kDebugMode) {
+        print('nope');
+      }
+    }
+    //printTicket();
+  }
+
+  Future<void> getBusinessPartner(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_orginfo?\$filter= AD_Org_ID eq ${_trx.records![index].aDOrgID!.id} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print('getbusinesspartner');
+
+      //getBpData(index, json['records'][0]['C_BPartner_ID']['id']);
+      var json =
+          OrgInfoJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      printTicket(index, json);
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+  }
+
+  Future<void> printTicket(int index, OrgInfoJSON jsonBP) async {
+    late SalesOrderLineJson json;
+    String? isConnected = await BluetoothThermalPrinter.connectionStatus;
+    if (isConnected == "true") {
+      final ip = GetStorage().read('ip');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/c_orderline?\$filter= C_Order_ID eq ${trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+      //print(Get.arguments["id"]);
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        //print(response.body);
+        json = SalesOrderLineJson.fromJson(
+            jsonDecode(utf8.decode(response.bodyBytes)));
+        //print(trx.rowcount);
+        //print(response.body);
+        // ignore: unnecessary_null_comparison
+        //_dataAvailable.value = _trx != null;
+      }
+      try {
+        List<int> bytes = await getPOSSalesOrder(index, json, jsonBP);
+        // ignore: unused_local_variable
+        final result = await BluetoothThermalPrinter.writeBytes(bytes);
+      } catch (e) {
+        if (kDebugMode) {
+          print('nope');
+        }
+      }
+      //print("Print $result");
+    } else {
+      //Hadnle Not Connected Senario
+    }
+  }
+
+  Future<void> getSalesOrderLines() async {
+    _dataAvailable.value = false;
+  }
+
+  Future<List<int>> getPOSSalesOrder(
+      int index, SalesOrderLineJson json, OrgInfoJSON jsonBP) async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    var dateString = trx.records![index].dateOrdered;
+    DateTime date = DateTime.parse(dateString!);
+    String formattedDate = DateFormat('dd-MM-yyyy').format(date);
+
+    bytes += generator.text("${_trx.records![index].aDOrgID!.identifier}",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text(jsonBP.records![0].cLocationID!.identifier!,
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.text("P. IVA ${jsonBP.records![0].taxID}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.hr();
+
+    bytes += generator.text(
+        "${"Document Type: ".tr}${trx.records![index].cDocTypeID!.identifier}",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text(
+        '${'Document: '.tr}${trx.records![index].documentNo} $formattedDate',
+        styles: const PosStyles(align: PosAlign.center),
+        linesAfter: 1);
+    bytes += generator.row([
+      PosColumn(
+          text: 'Product',
+          width: 8,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'IVA',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Price',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    // ignore: unnecessary_null_comparison
+    if (json != null) {
+      for (var line in json.records!) {
+        bytes += generator.row([
+          PosColumn(
+              text: "${line.name}",
+              width: 8,
+              styles: const PosStyles(
+                align: PosAlign.left,
+              )),
+          PosColumn(
+              text: "${line.cTaxID!.identifier}",
+              width: 2,
+              styles: const PosStyles(align: PosAlign.center)),
+          PosColumn(
+              text:
+                  (double.parse(line.lineNetAmt.toString())).toStringAsFixed(2),
+              width: 2,
+              styles: const PosStyles(align: PosAlign.right)),
+        ]);
+        if (line.qtyEntered! > 1) {
+          bytes += generator.text(
+              "*  ${line.qtyEntered} X ${line.priceEntered!.toStringAsFixed(2)}",
+              styles: const PosStyles(align: PosAlign.center));
+        }
+      }
+    }
+
+    /*  bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]); */
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'Totale',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: trx.records![index].grandTotal!.toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+    bytes += generator.row([
+      PosColumn(
+          text: 'di cui IVA',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+      PosColumn(
+          text: (double.parse(trx.records![index].grandTotal!.toString()) -
+                  double.parse(trx.records![index].totalLines!.toString()))
+              .toStringAsFixed(2),
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size2,
+            width: PosTextSize.size2,
+          )),
+    ]);
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    //DateTime now = DateTime.now();
+    DateFormat dateFormat = DateFormat("yyyy-MM-dd HH:mm:ss");
+
+    bytes += generator.text(dateFormat.format(DateTime.now()),
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.text("Firma___________________",
+        styles: const PosStyles(
+          align: PosAlign.left,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+    bytes += generator.cut();
+    return bytes;
+  }
+
+  Future<List<int>> getTicket() async {
+    List<int> bytes = [];
+    CapabilityProfile profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+
+    bytes += generator.text("Demo Shop",
+        styles: const PosStyles(
+          align: PosAlign.center,
+          height: PosTextSize.size2,
+          width: PosTextSize.size2,
+        ),
+        linesAfter: 1);
+
+    bytes += generator.text(
+        "18th Main Road, 2nd Phase, J. P. Nagar, Bengaluru, Karnataka 560078",
+        styles: const PosStyles(align: PosAlign.center));
+    bytes += generator.text('Tel: +919591708470',
+        styles: const PosStyles(align: PosAlign.center));
+
+    bytes += generator.hr();
+    bytes += generator.row([
+      PosColumn(
+          text: 'No',
+          width: 1,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'Item',
+          width: 5,
+          styles: const PosStyles(align: PosAlign.left, bold: true)),
+      PosColumn(
+          text: 'Price',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Qty',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.center, bold: true)),
+      PosColumn(
+          text: 'Total',
+          width: 2,
+          styles: const PosStyles(align: PosAlign.right, bold: true)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "1", width: 1),
+      PosColumn(
+          text: "Tea",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "10",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "10", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "2", width: 1),
+      PosColumn(
+          text: "Sada Dosa",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "30",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "30", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "3", width: 1),
+      PosColumn(
+          text: "Masala Dosa",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "50",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "50", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.row([
+      PosColumn(text: "4", width: 1),
+      PosColumn(
+          text: "Rova Dosa",
+          width: 5,
+          styles: const PosStyles(
+            align: PosAlign.left,
+          )),
+      PosColumn(
+          text: "70",
+          width: 2,
+          styles: const PosStyles(
+            align: PosAlign.center,
+          )),
+      PosColumn(
+          text: "1", width: 2, styles: const PosStyles(align: PosAlign.center)),
+      PosColumn(
+          text: "70", width: 2, styles: const PosStyles(align: PosAlign.right)),
+    ]);
+
+    bytes += generator.hr();
+
+    bytes += generator.row([
+      PosColumn(
+          text: 'TOTAL',
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.left,
+            height: PosTextSize.size4,
+            width: PosTextSize.size4,
+          )),
+      PosColumn(
+          text: "160",
+          width: 6,
+          styles: const PosStyles(
+            align: PosAlign.right,
+            height: PosTextSize.size4,
+            width: PosTextSize.size4,
+          )),
+    ]);
+
+    bytes += generator.hr(ch: '=', linesAfter: 1);
+
+    // ticket.feed(2);
+    bytes += generator.text('Thank you!',
+        styles: const PosStyles(align: PosAlign.center, bold: true));
+
+    bytes += generator.text("26-11-2020 15:22:45",
+        styles: const PosStyles(align: PosAlign.center), linesAfter: 1);
+
+    bytes += generator.text(
+        'Note: Goods once sold will not be taken back or exchanged.',
+        styles: const PosStyles(align: PosAlign.center, bold: false));
+    bytes += generator.cut();
+    return bytes;
+  }
+
+  getContractArticles(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_ContractArticle?\$filter= C_Order_ID eq $id');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      articleList = ContractArticleJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      openArticleSelection();
+      if (kDebugMode) {
+        print(response.body);
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  openArticleSelection() {
+    Get.defaultDialog(
+        title: "Select which Article to Edit".tr,
+        content: Obx(
+          () => DropdownButton(
+            hint: Text("No Article Selected".tr),
+            value: articleDropDownValue.value == "0"
+                ? null
+                : articleDropDownValue.value,
+            style: const TextStyle(fontSize: 12.0),
+            elevation: 16,
+            onChanged: (String? newValue) async {
+              articleDropDownValue.value = newValue!;
+              Get.back();
+              //print(newValue);
+              for (var element in articleList.records!) {
+                if (element.help == articleDropDownValue.value) {
+                  Get.to(const CRMEditHTMLSalesOrder(), arguments: {
+                    "html": articleDropDownValue.value,
+                    "id": element.id
+                  });
+                }
+              }
+
+              articleDropDownValue.value = "0";
+            },
+            items: articleList.records!.map((list) {
+              return DropdownMenuItem<String>(
+                value: list.help,
+                child: Text(
+                  list.rowType?.identifier ?? "NONE",
+                ),
+              );
+            }).toList(),
+          ),
+        ));
+  }
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {
       scaffoldKey.currentState!.openDrawer();
@@ -268,6 +951,7 @@ class PortalMpSalesOrderController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -340,7 +1024,7 @@ class PortalMpSalesOrderController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "iDempiere APP",
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }
@@ -406,45 +1090,5 @@ class PortalMpSalesOrderController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

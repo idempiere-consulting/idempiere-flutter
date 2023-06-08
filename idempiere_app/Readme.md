@@ -1582,7 +1582,7 @@ CRUD=1111=F
  33 Portale cliente*****: 1 *** 4 Portale Cliente 
  -- sezione dashboard
  34 News                : R
- 35 Fatture di Acquisto : R
+ 35 Fatture di Vendita : R
  36 Indicatori          : 1
  37 Offerta di Vendita  : R
  -- sezione ticket
@@ -1601,8 +1601,8 @@ CRUD=1111=F
  48
  49
  50
- 51
- 52 B2B                  : F3
+ 51 Portale Ordini di V. : F3
+ 52 Portale B2B          : F3
  53 Formazione Corsita***: 1 *** 5 Formazione Corsista
  54 Presenza Corso       : F3
  55 Questionario         :

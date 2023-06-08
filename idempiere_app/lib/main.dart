@@ -10,6 +10,7 @@ import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.
 import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/crm_commission_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
@@ -112,7 +113,7 @@ import 'package:idempiere_app/Screens/Welcome/welcome_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_assetresource/views/screens/dashboard_assetresource_screen.dart';
 import 'package:idempiere_app/localestrings.dart';
 
-import 'Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
+import 'Screens/app/features/Portal_Mp_Sales_Offer/views/screens/portal_mp_sales_order_screen.dart';
 
 //import 'components/ignoressl.dart';
 
@@ -502,6 +503,11 @@ class MyApp extends StatelessWidget {
           name: '/PortalMpSalesOrder',
           page: () => const PortalMpSalesOrderScreen(),
           binding: PortalMpSalesOrderBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpSalesOffer',
+          page: () => const PortalMpSalesOfferScreen(),
+          binding: PortalMpSalesOfferBinding(),
         ),
         GetPage(
           name: '/PortalMpSalesOrderB2B',

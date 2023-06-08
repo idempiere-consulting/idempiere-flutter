@@ -41,6 +41,8 @@ class WORecords {
   final String? created;
   final CreatedBy? createdBy;
   final String? dateTrx;
+  final String? dateNextRun;
+  final String? dateLastRun;
   String? description;
   final DocStatus? docStatus;
   final bool? isActive;
@@ -99,6 +101,8 @@ class WORecords {
       this.aDClientID,
       this.documentNo,
       this.documentNo2,
+      this.dateNextRun,
+      this.dateLastRun,
       this.updatedBy,
       this.created,
       this.createdBy,
@@ -165,6 +169,8 @@ class WORecords {
             : null,
         documentNo = json['DocumentNo'] as String?,
         documentNo2 = json['maintain_documentno'] as String?,
+        dateNextRun = json['DateNextRun'] as String?,
+        dateLastRun = json['DateLastRun'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
@@ -270,6 +276,8 @@ class WORecords {
         'AD_Client_ID': aDClientID?.toJson(),
         'DocumentNo': documentNo,
         'maintain_documentno': documentNo2,
+        'DateNextRun': dateNextRun,
+        'DateLastRun': dateLastRun,
         'UpdatedBy': updatedBy?.toJson(),
         'Created': created,
         'CreatedBy': createdBy?.toJson(),

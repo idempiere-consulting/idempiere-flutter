@@ -69,8 +69,8 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
-  const PortalMpSalesOrderScreen({Key? key}) : super(key: key);
+class PortalMpSalesOfferScreen extends GetView<PortalMpSalesOfferController> {
+  const PortalMpSalesOfferScreen({Key? key}) : super(key: key);
 
   completeOrder(int index) async {
     Get.back();
