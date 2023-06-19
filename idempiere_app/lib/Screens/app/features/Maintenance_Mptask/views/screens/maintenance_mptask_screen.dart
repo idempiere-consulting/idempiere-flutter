@@ -231,6 +231,12 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                             arguments: {
                                               "docN": controller.trx
                                                   .records![index].documentNo,
+                                              "orderId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cOrderID
+                                                      ?.id ??
+                                                  0,
                                             });
                                       }
                                     },
@@ -284,7 +290,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                       tooltip: 'Edit Work Order',
                                       onPressed: () {
                                         var index2 = 0;
-                                        var count = 0;
+                                        /* var count = 0;
                                         for (var element
                                             in controller._trx2.records!) {
                                           count++;
@@ -292,6 +298,18 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                               controller
                                                   .trx.records![index].id) {
                                             index2 = count;
+                                          }
+                                        } */
+
+                                        for (var i = 0;
+                                            i <
+                                                controller
+                                                    ._trx2.records!.length;
+                                            i++) {
+                                          if (controller._trx2.records![i].id ==
+                                              controller
+                                                  .trx.records![index].id) {
+                                            index2 = i;
                                           }
                                         }
                                         //log("info button pressed");

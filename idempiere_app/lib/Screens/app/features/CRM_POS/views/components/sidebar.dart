@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 0,
+              initialSelected: 1,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -201,18 +201,6 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
-                SelectionButtonData(
-                  activeIcon: Icons.request_quote,
-                  icon: Icons.request_quote_outlined,
-                  label: "POS".tr,
-                  visible: int.parse(list[126], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -262,9 +250,6 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 14:
                     Get.offNamed('/Contract');
-                    break;
-                  case 15:
-                    Get.offNamed('/POS');
                     break;
 
                   default:

@@ -1876,8 +1876,7 @@ class MaintenanceMpResourceScreen
                                                               isConnected,
                                                               index);
                                                     },
-                                                    icon: const Icon(Icons
-                                                        .check_circle_outline),
+                                                    icon: const Text('C'),
                                                   ),
                                                   IconButton(
                                                     tooltip: 'Anomaly',
@@ -2278,8 +2277,7 @@ class MaintenanceMpResourceScreen
                                                                   index);
                                                         }
                                                       },
-                                                      icon: const Icon(Icons
-                                                          .check_circle_outline),
+                                                      icon: const Text('C'),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Revision',
@@ -2327,8 +2325,7 @@ class MaintenanceMpResourceScreen
                                                                   isConnected,
                                                                   index); */
                                                       },
-                                                      icon: const Icon(Icons
-                                                          .handyman_outlined),
+                                                      icon: const Text('R'),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Testing',
@@ -2370,8 +2367,7 @@ class MaintenanceMpResourceScreen
                                                                   index);
                                                         }
                                                       },
-                                                      icon: const Icon(
-                                                          Icons.gavel_outlined),
+                                                      icon: const Text('CL'),
                                                     ),
                                                     IconButton(
                                                       tooltip: 'Anomaly',
@@ -2739,8 +2735,7 @@ class MaintenanceMpResourceScreen
                                                               isConnected,
                                                               index);
                                                     },
-                                                    icon: const Icon(Icons
-                                                        .check_circle_outline),
+                                                    icon: const Text('C'),
                                                   ),
                                                   IconButton(
                                                     tooltip: 'Anomaly',

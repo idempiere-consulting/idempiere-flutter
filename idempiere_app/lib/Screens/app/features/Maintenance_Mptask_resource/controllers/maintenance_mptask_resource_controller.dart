@@ -702,8 +702,126 @@ class MaintenanceMpResourceController extends GetxController {
         ],
       ),
       barrierDismissible: true,
-      textConfirm: 'Add'.tr,
+      textCancel: 'Add'.tr,
+      textConfirm: 'Add + Sell'.tr,
       buttonColor: kNotifColor,
+      onCancel: () async {
+        DateFormat dateFormat = DateFormat("yyyy-MM-dd");
+
+        String date = dateFormat.format(DateTime.now());
+
+        var isConnected = await checkConnection();
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+        // ignore: unused_local_variable
+        var res = WorkOrderResourceLocalJson.fromJson(
+            jsonDecode(file.readAsStringSync()));
+
+        for (var i = 0; i < _trx2.records!.length; i++) {
+          if (_trx2.records![i].prodCode == passwordFieldController.text) {
+            //print('trovato');
+            var msg = jsonEncode({
+              "MP_Maintain_ID": {
+                "id": GetStorage().read('selectedTaskDocNo'),
+              },
+              "LIT_Control1DateFrom": date,
+              "LocationComment": newLocationCommentFieldController.text,
+              "V_Number": numberFieldController.text,
+              "LineNo": int.parse(lineFieldController.text == ""
+                  ? "0"
+                  : lineFieldController.text),
+              "LIT_ResourceStatus": {"id": "INS"},
+            });
+
+            _trx2.records![i].mpMaintainID?.id =
+                GetStorage().read('selectedTaskDocNo');
+            _trx2.records![i].lITControl1DateFrom = date;
+            _trx2.records![i].number = numberFieldController.text;
+            _trx2.records![i].lineNo = int.parse(lineFieldController.text == ""
+                ? "0"
+                : lineFieldController.text);
+            _trx2.records![i].locationComment =
+                newLocationCommentFieldController.text;
+            _trx2.records![i].resourceStatus =
+                ResourceStatus(id: "INS", identifier: "INS".tr);
+
+            //print(_trx.records![index].mpMaintainID?.id);
+            /*  print('http://' +
+                ip +
+                '/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'); */
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/windows/maintenance-resource/${_trx2.records![i].id}');
+            if (isConnected) {
+              emptyAPICallStak();
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+              if (response.statusCode == 200) {
+                var data = jsonEncode(_trx2.toJson());
+
+                file.writeAsStringSync(data);
+                //getWorkOrders();
+                //print("done!");
+                //Get.back();
+                Get.back();
+                Get.snackbar(
+                  "Fatto!",
+                  "Il record è stato modificato",
+                  icon: const Icon(
+                    Icons.done,
+                    color: Colors.green,
+                  ),
+                );
+              } else {
+                if (kDebugMode) {
+                  print(response.body);
+                }
+                //print(response.statusCode);
+                Get.snackbar(
+                  "Errore!",
+                  "Il record non è stato modificato",
+                  icon: const Icon(
+                    Icons.error,
+                    color: Colors.red,
+                  ),
+                );
+              }
+            } else {
+              var data = jsonEncode(_trx2.toJson());
+              //GetStorage().write('workOrderSync', data);
+              file.writeAsStringSync(data);
+              //getWorkOrders();
+              Map calls = {};
+              if (GetStorage().read('storedEditAPICalls') == null) {
+                calls['$protocol://$ip/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
+                    msg;
+              } else {
+                calls = GetStorage().read('storedEditAPICalls');
+                calls['$protocol://$ip/api/v1/windows/maintenance-resource/${_trx2.records![i].id}'] =
+                    msg;
+              }
+              GetStorage().write('storedEditAPICalls', calls);
+              Get.snackbar(
+                "Salvato!",
+                "Il record è stato salvato localmente in attesa di connessione internet.",
+                icon: const Icon(
+                  Icons.save,
+                  color: Colors.yellow,
+                ),
+              );
+            }
+
+            getWorkOrders();
+          }
+        }
+      },
       onConfirm: () async {
         DateFormat dateFormat = DateFormat("yyyy-MM-dd");
 
@@ -764,6 +882,9 @@ class MaintenanceMpResourceController extends GetxController {
               );
               if (response.statusCode == 200) {
                 var data = jsonEncode(_trx2.toJson());
+                addResourceToSalesOrder(
+                    _trx2.records![i].mProductID?.id ?? 0, 1);
+
                 file.writeAsStringSync(data);
                 //getWorkOrders();
                 //print("done!");
@@ -821,6 +942,34 @@ class MaintenanceMpResourceController extends GetxController {
         }
       },
     );
+  }
+
+  addResourceToSalesOrder(int prodId, int qty) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/sales-order/tabs/${"ORDER".tr}/${args["orderId"]}/${"order-line".tr}');
+
+    var msg = {
+      "M_Product_ID": {"id": prodId},
+      "qtyEntered": qty
+    };
+
+    var response = await http.post(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      print(response.body);
+    } else {
+      print(response.bodyBytes);
+    }
   }
 
   replaceResourceButton(int index) {

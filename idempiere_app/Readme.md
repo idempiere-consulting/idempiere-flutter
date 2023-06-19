@@ -1677,6 +1677,7 @@ CRUD=1111=F
  124 Attrezzatura
  125 Presa in Carico/Spostamento
  126 Scadenze
+ 127 POS *****************: *** POS
 
 
 

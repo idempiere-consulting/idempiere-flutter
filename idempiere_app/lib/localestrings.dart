@@ -492,6 +492,7 @@ class LocaleString extends Translations {
           'No': 'No',
           'Paid': 'Paid',
           'Not Paid': 'Not Paid',
+          'ORDER': 'order',
         },
 
         //ITALIAN LANGUAGE
@@ -1142,7 +1143,8 @@ class LocaleString extends Translations {
           'Last Maintenance': 'Ultima Manutenzione',
           'Next Maintenance': 'Prossima Manutenzione',
           'Sales Offer': 'Offerta di Vendita',
-          'MAINTENANCES: ': 'IMPIANTI: '
+          'MAINTENANCES: ': 'IMPIANTI: ',
+          'ORDER': 'ordine-odv00',
         },
       };
 }
