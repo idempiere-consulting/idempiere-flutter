@@ -130,6 +130,24 @@ class MaintenanceMptaskLineScreen
                   ),
                 ],
               ),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.prodCountList.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            child: ElevatedButton(
+                                onPressed: () {},
+                                child: Text(
+                                    "${controller.prodCountList.records![index].mProductID?.identifier} : ${controller.prodCountList.records![index].qty}")),
+                          );
+                        })
+                    : SizedBox(),
+              ),
               Container(
                 color: Colors.grey[600],
                 width: screenSize.width,

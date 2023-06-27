@@ -4,6 +4,8 @@ class CRMContractLineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late ContractLineJSON _trx;
 
+  var args = Get.arguments;
+
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 
@@ -56,6 +58,10 @@ class CRMContractLineController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

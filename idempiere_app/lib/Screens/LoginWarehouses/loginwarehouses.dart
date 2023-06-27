@@ -1153,6 +1153,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         checkSyncData();
       }
+    } else {
+      print(response.body);
     }
   }
 
@@ -1162,7 +1164,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}&\$orderby= LineNo asc');
 
     var response = await http.get(
       url,
@@ -1196,6 +1198,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         }
         checkSyncData();
       }
+    } else {
+      print(response.body);
     }
   }
 

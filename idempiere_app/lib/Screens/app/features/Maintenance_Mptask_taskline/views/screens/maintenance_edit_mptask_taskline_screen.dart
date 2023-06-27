@@ -238,7 +238,9 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
 
     //print(jsonResources.records!.length);
 
-    return jsonResources.records!;
+    return jsonResources.records!
+        .where((element) => element.lITIsContract ?? false)
+        .toList();
 
     //print(list[0].eMail);
 

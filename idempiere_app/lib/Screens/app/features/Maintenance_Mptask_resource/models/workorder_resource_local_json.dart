@@ -48,6 +48,7 @@ class RRecords {
   final ADOrgID? aDOrgID;
   MProductID? mProductID;
   final int? discount;
+  bool? isOwned;
   String? value;
   String? name;
   String? description;
@@ -115,6 +116,7 @@ class RRecords {
       this.discount,
       this.value,
       this.name,
+      this.isOwned,
       this.description,
       this.serNo,
       this.lITControl3DateFrom,
@@ -182,6 +184,7 @@ class RRecords {
             ? ResourceType.fromJson(
                 json['ResourceType'] as Map<String, dynamic>)
             : null,
+        isOwned = json['IsOwned'] as bool?,
         updated = json['Updated'] as String?,
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
@@ -272,6 +275,7 @@ class RRecords {
         'CreatedBy': createdBy?.toJson(),
         'IsActive': isActive,
         'IsValid': isValid,
+        'IsOwned': isOwned,
         'ResourceQty': resourceQty,
         'ResourceType': resourceType?.toJson(),
         'Updated': updated,

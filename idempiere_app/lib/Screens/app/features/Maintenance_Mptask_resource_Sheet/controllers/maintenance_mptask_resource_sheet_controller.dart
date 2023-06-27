@@ -4,6 +4,25 @@ class MaintenanceMpResourceSheetController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   //var _hasMailSupport = false;
 
+  //SURVEY
+
+  late WorkOrderResourceSurveyLinesJson _trx;
+  //var _hasMailSupport = false;
+  late RxList<int> selectedValue;
+
+  late RxList<int> checkValue;
+
+  late RxList<String> dateValue;
+
+  late RxList<String> openAnswerText;
+
+  List<TextEditingController> numberfieldController = [];
+  List<TextEditingController> textfieldController = [];
+
+  var surveyAvailable = false.obs;
+
+  //END SURVEY
+
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
 
@@ -45,9 +64,10 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   @override
   void onInit() {
-    checkboxState.value = Get.arguments["valid"] ?? false;
-    getSurveyLines();
     super.onInit();
+    checkboxState.value = Get.arguments["valid"] ?? false;
+    //getSurveyLines();
+    getQuiz();
     dropDownValue.value = Get.arguments['resTypeId'] ?? "1.1.2";
     getRefListResourceType();
     //getSurveyLines();
@@ -199,6 +219,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
     const filename = "workorderresourcesurveylines";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    //print(file.readAsStringSync());
     flagSurveyLines.value = false;
     WorkOrderResourceSurveyLinesJson surveyLines2 =
         WorkOrderResourceSurveyLinesJson.fromJson(
@@ -207,11 +228,12 @@ class MaintenanceMpResourceSheetController extends GetxController {
     surveyLines2.records!.removeWhere(
         (element) => element.mPMaintainResourceID?.id != Get.arguments["id"]);
     surveyLines = surveyLines2;
-    //print(surveyLines.records!.length);
+    print(surveyLines.records!.length);
     isChecked = RxList<bool>.filled(surveyLines.records!.length, false);
     for (var i = 0; i < surveyLines.records!.length; i++) {
       isChecked[i] = surveyLines.records![i].lITIsField1 ?? false;
     }
+
     //print(isChecked[0].obs.value);
 
     flagSurveyLines.value = true;
@@ -322,7 +344,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
           if (GetStorage().read('SignatureWorkOrderResource') != null) {
             sendAttachedImage(Get.arguments["id"]);
           }
-          sendSurveyLines();
+          //sendSurveyLines();
           var data = jsonEncode(trx.toJson());
           file.writeAsStringSync(data);
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
@@ -351,7 +373,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
           );
         }
       } else {
-        sendSurveyLinesOffline();
+        //sendSurveyLinesOffline();
         if (GetStorage().read('SignatureWorkOrderResource') != null) {
           sendAttachedImageOffline(Get.arguments["id"]);
         }
@@ -432,6 +454,213 @@ class MaintenanceMpResourceSheetController extends GetxController {
           );
         }
       }
+    }
+  }
+
+  Future<void> getQuiz() async {
+    var isConnected = await checkConnection();
+
+    //print(isConnected);
+
+    if (isConnected) {
+      emptyAPICallStak();
+      surveyAvailable.value = false;
+      String ip = GetStorage().read('ip');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/mp_resource_survey?\$filter= MP_Maintain_Resource_ID eq ${Get.arguments["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}'); //and LIT_SurveyCategory eq \'SU\'
+
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        print(response.body);
+        var json = jsonDecode(utf8.decode(response.bodyBytes));
+        getQuizLines(json["records"][0]["id"]);
+        //GetStorage().write('workOrderSync', response.body);
+        //isWorkOrderSyncing.value = false;
+      }
+    } else {
+      Get.snackbar(
+        "No internet connection!".tr,
+        "Failed to get records.".tr,
+        icon: const Icon(
+          Icons.signal_wifi_connected_no_internet_4,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> getQuizLines(int identifier) async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$filter= mp_resource_survey_ID eq $identifier and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      _trx = WorkOrderResourceSurveyLinesJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      selectedValue = RxList<int>.filled(_trx.records!.length, 0);
+      checkValue = RxList<int>.filled(_trx.records!.length, 2);
+      dateValue = RxList<String>.filled(_trx.records!.length, "");
+      openAnswerText = RxList<String>.filled(_trx.records!.length, "");
+      numberfieldController =
+          List.generate(_trx.records!.length, (i) => TextEditingController());
+      textfieldController =
+          List.generate(_trx.records!.length, (i) => TextEditingController());
+
+      surveyAvailable.value = true;
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> sendQuizLines() async {
+    var isConnected = await checkConnection();
+
+    if (isConnected) {
+      String ip = GetStorage().read('ip');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
+      final protocol = GetStorage().read('protocol');
+
+      for (var i = 0; i < _trx.records!.length; i++) {
+        switch (_trx.records![i].lITSurveyType?.id) {
+          case 'N':
+            if (numberfieldController[i].text != "") {
+              var url = Uri.parse(
+                  '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+              var msg = jsonEncode({
+                "ValueNumber": numberfieldController[i].text,
+              });
+
+              // ignore: unused_local_variable
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+            }
+
+            break;
+          case 'T':
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+            var msg = jsonEncode({
+              "ValueNumber": textfieldController[i].text,
+            });
+
+            // ignore: unused_local_variable
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            break;
+          case 'D':
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+            var msg = jsonEncode({
+              "DateValue": dateValue[i],
+            });
+
+            // ignore: unused_local_variable
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            break;
+          case 'M':
+            var url = Uri.parse(
+                '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+            var msg = jsonEncode({
+              "ValueNumber": selectedValue[i].toString(),
+            });
+
+            // ignore: unused_local_variable
+            var response = await http.put(
+              url,
+              body: msg,
+              headers: <String, String>{
+                'Content-Type': 'application/json',
+                'Authorization': authorization,
+              },
+            );
+            break;
+          case 'Y':
+            if (checkValue[i] != 2) {
+              var url = Uri.parse(
+                  '$protocol://$ip/api/v1/models/mp_resource_survey_line/${_trx.records![i].id}');
+
+              var msg = jsonEncode({
+                "ValueNumber": checkValue[i] == 1 ? "Y" : "N",
+              });
+
+              // ignore: unused_local_variable
+              var response = await http.put(
+                url,
+                body: msg,
+                headers: <String, String>{
+                  'Content-Type': 'application/json',
+                  'Authorization': authorization,
+                },
+              );
+            }
+
+            break;
+          default:
+        }
+      }
+      Get.back();
+      Get.snackbar(
+        "Done!".tr,
+        "You've completed the Quiz".tr,
+        isDismissible: true,
+        icon: const Icon(
+          Icons.done_all,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Internet connection unavailable".tr,
+        isDismissible: true,
+        icon: const Icon(
+          Icons.wifi_off_outlined,
+          color: Colors.red,
+        ),
+      );
     }
   }
 

@@ -1145,6 +1145,14 @@ class LocaleString extends Translations {
           'Sales Offer': 'Offerta di Vendita',
           'MAINTENANCES: ': 'IMPIANTI: ',
           'ORDER': 'ordine-odv00',
+          'SerNo': 'Matricola',
+          'Are you sure you want to create a Sales Order?':
+              'Sicuro di voler creare l\' ODV?',
+          'Has Anomaly': 'Anomalia',
+          'Is Property': 'Di Proprietà',
+          'The product can keep on being in service': 'Idoneità al Servizio',
+          'Product Unloaded': 'Prodotto Scaricato',
+          'Unload Product': 'Scarica Prodotto',
         },
       };
 }

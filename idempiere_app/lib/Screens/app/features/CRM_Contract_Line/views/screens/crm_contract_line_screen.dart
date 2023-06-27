@@ -7,10 +7,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/foundation.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/models/contract_line_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/views/screens/crm_edit_contract_line.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -157,19 +159,30 @@ class CRMContractLineScreen extends GetView<CRMContractLineController> {
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
-                                      tooltip: 'Edit Sales Order Line'.tr,
+                                      tooltip: 'Edit Contract Line'.tr,
                                       onPressed: () {
-                                        /*  Get.to(const EditSalesOrderLine(),
+                                        Get.to(const EditCRMContractLine(),
                                             arguments: {
                                               "ID": controller
                                                   .trx.records![index].id,
+                                              "price": controller
+                                                  .trx.records![index].amount,
+                                              "productId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID
+                                                  ?.id,
+                                              "productName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mProductID
+                                                  ?.identifier,
                                               "qty": controller.trx
-                                                  .records![index].qtyEntered,
-                                              "date": controller.trx
-                                                  .records![index].datePromised,
-                                              "price": controller.trx
-                                                  .records![index].priceEntered,
-                                            }); */
+                                                      .records![index].qty ??
+                                                  1,
+                                              "businessPartnerId":
+                                                  controller.args["bPartnerId"],
+                                            });
                                       },
                                     ),
                                   ),

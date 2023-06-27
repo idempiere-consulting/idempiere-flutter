@@ -746,6 +746,11 @@ class _CreateMaintenanceMpResourceState
         file.writeAsStringSync(data);
         try {
           Get.find<MaintenanceMpResourceController>().getWorkOrders();
+          Get.find<MaintenanceMpResourceController>()
+              .searchFieldController
+              .text = barcodeFieldController.text;
+          Get.find<MaintenanceMpResourceController>().searchFilterValue.value =
+              barcodeFieldController.text;
         } catch (e) {
           if (kDebugMode) {
             print("no page");
@@ -1000,6 +1005,10 @@ class _CreateMaintenanceMpResourceState
       file.writeAsStringSync(data);
       try {
         Get.find<MaintenanceMpResourceController>().getWorkOrders();
+        Get.find<MaintenanceMpResourceController>().searchFieldController.text =
+            barcodeFieldController.text;
+        Get.find<MaintenanceMpResourceController>().searchFilterValue.value =
+            barcodeFieldController.text;
       } catch (e) {
         if (kDebugMode) {
           print("no page");
@@ -1007,6 +1016,10 @@ class _CreateMaintenanceMpResourceState
       }
       try {
         Get.find<MaintenanceMpResourceBarcodeController>().getWorkOrders();
+        Get.find<MaintenanceMpResourceController>().searchFieldController.text =
+            barcodeFieldController.text;
+        Get.find<MaintenanceMpResourceController>().searchFilterValue.value =
+            barcodeFieldController.text;
       } catch (e) {
         if (kDebugMode) {
           print("no page");

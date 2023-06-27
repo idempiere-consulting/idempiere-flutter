@@ -4,12 +4,9 @@ part of dashboard;
 
 class MaintenanceMpResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late WorkOrderResourceLocalJson _trx;
-  late WorkOrderResourceLocalJson _trx2;
-  late RefListResourceTypeJson
-      _tt /* = RefListResourceTypeJson.fromJson(
-      jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
-      ;
+  WorkOrderResourceLocalJson _trx = WorkOrderResourceLocalJson(records: []);
+  WorkOrderResourceLocalJson _trx2 = WorkOrderResourceLocalJson(records: []);
+  late RefListResourceTypeJson _tt;
   late RefListResourceTypeJson
       _tt2 /* = RefListResourceTypeJson.fromJson(
       jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
@@ -18,6 +15,8 @@ class MaintenanceMpResourceController extends GetxController {
       _tt3 /* = RefListResourceTypeJson.fromJson(
       jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
       ;
+
+  var hqMaintainId = 0;
   //var _hasMailSupport = false;
   var args = Get.arguments;
   var offline = -1;
@@ -27,6 +26,13 @@ class MaintenanceMpResourceController extends GetxController {
   var dropDownValue = "A01";
   var dropDownValue2 = "0".obs;
   var dropDownValue3 = "0".obs;
+
+  int consumeItemProductId = 0;
+
+  TextEditingController consumeItemQtyFieldController =
+      TextEditingController(text: "1");
+  TextEditingController consumeItemProductFieldController =
+      TextEditingController();
 
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
@@ -159,6 +165,148 @@ class MaintenanceMpResourceController extends GetxController {
     return "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
   }
 
+  Future<List<PRecords>> getAllProducts() async {
+    //print(response.body);
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsondecoded = jsonDecode(await file.readAsString());
+    var jsonResources = ProductJson.fromJson(jsondecoded);
+
+    //print(jsonResources.rowcount);
+    return jsonResources.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  openConsumeItem() {
+    Get.defaultDialog(
+      title: 'Unload Product'.tr,
+      content: Column(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+            child: FutureBuilder(
+              future: getAllProducts(),
+              builder:
+                  (BuildContext ctx, AsyncSnapshot<List<PRecords>> snapshot) =>
+                      snapshot.hasData
+                          ? TypeAheadField<PRecords>(
+                              direction: AxisDirection.down,
+                              //getImmediateSuggestions: true,
+                              textFieldConfiguration: TextFieldConfiguration(
+                                onChanged: (value) {
+                                  if (value == "") {
+                                    consumeItemProductId = 0;
+                                  }
+                                },
+                                controller: consumeItemProductFieldController,
+                                //autofocus: true,
+
+                                decoration: InputDecoration(
+                                  labelText: 'Product'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.search),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return snapshot.data!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                consumeItemProductId = suggestion.id!;
+                                consumeItemProductFieldController.text =
+                                    suggestion.name!;
+                              },
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+            ),
+          ),
+          Container(
+            margin: const EdgeInsets.all(10),
+            child: TextField(
+              controller: consumeItemQtyFieldController,
+              keyboardType: const TextInputType.numberWithOptions(
+                  signed: true, decimal: true),
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+              ],
+              decoration: InputDecoration(
+                isDense: true,
+                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                prefixIcon: const Icon(Icons.text_fields),
+                border: const OutlineInputBorder(),
+                labelText: 'Qty'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+              minLines: 1,
+              maxLines: 1,
+            ),
+          ),
+        ],
+      ),
+      onConfirm: () async {
+        final ip = GetStorage().read('ip');
+        String authorization = 'Bearer ${GetStorage().read('token')}';
+        final protocol = GetStorage().read('protocol');
+
+        var url = Uri.parse('$protocol://$ip/api/v1/models/LIT_DraftJournal');
+
+        var msg = {
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+          "Name": " ",
+          "M_Product_ID": {
+            "id": consumeItemProductId == 0 ? -1 : consumeItemProductId
+          },
+          "Qty": int.parse(consumeItemQtyFieldController.text),
+        };
+
+        var response = await http.post(
+          url,
+          body: jsonEncode(msg),
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+        if (response.statusCode == 200) {
+          Get.snackbar(
+            "Done!".tr,
+            "Product Unloaded".tr,
+            icon: const Icon(
+              Icons.done,
+              color: Colors.green,
+            ),
+          );
+        } else {
+          print(response.body);
+        }
+      },
+    );
+  }
+
   reviewResourceButton(int index) {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -193,6 +341,7 @@ class MaintenanceMpResourceController extends GetxController {
             jsonDecode(file.readAsStringSync()));
         var count = 0;
         for (var i = 0; i < _trx2.records!.length; i++) {
+          //var hqMaintainId = _trx2.records![i].mpMaintainID?.id;
           //print(res.records![i].prodCode);
           if (_trx2.records![i].prodCode == passwordFieldController.text) {
             count++;
@@ -315,7 +464,18 @@ class MaintenanceMpResourceController extends GetxController {
                     ResourceStatus(id: "IRV", identifier: "IRV".tr);
                 var msg = jsonEncode({
                   "LIT_ResourceStatus": {"id": "IRV"},
+                  /* "MP_Maintain_ID": {
+                "id": hqMaintainId,
+              }, */
                 });
+                if (trx.records![index].isOwned ?? false) {
+                  msg = jsonEncode({
+                    "LIT_ResourceStatus": {"id": "REV"},
+                    "MP_Maintain_ID": {
+                      "id": hqMaintainId,
+                    },
+                  });
+                }
                 var url = Uri.parse(
                     '$protocol://$ip/api/v1/windows/maintenance-resource/${trx.records![index].id}');
                 if (isConnected) {
@@ -1142,6 +1302,14 @@ class MaintenanceMpResourceController extends GetxController {
                 var msg = jsonEncode({
                   "LIT_ResourceStatus": {"id": "IRX"},
                 });
+                if (trx.records![index].isOwned ?? false) {
+                  msg = jsonEncode({
+                    "LIT_ResourceStatus": {"id": "INC"},
+                    "MP_Maintain_ID": {
+                      "id": hqMaintainId,
+                    },
+                  });
+                }
                 var url = Uri.parse(
                     '$protocol://$ip/api/v1/windows/maintenance-resource/${trx.records![index].id}');
                 if (isConnected) {
@@ -2086,6 +2254,12 @@ class MaintenanceMpResourceController extends GetxController {
     //print(GetStorage().read('selectedTaskDocNo'));
     _trx = WorkOrderResourceLocalJson.fromJson(
         jsonDecode(file.readAsStringSync()));
+
+    for (var element in _trx.records!) {
+      if (element.mpMaintainID!.identifier!.contains('SEDE')) {
+        hqMaintainId = element.mpMaintainID!.id!;
+      }
+    }
 
     //print(_trx.records!.length);
 

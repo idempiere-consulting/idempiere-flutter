@@ -45,6 +45,7 @@ class Records {
   final DocStatus? docStatus;
   final CDocTypeID? cDocTypeID;
   final CDocTypeTargetID? cDocTypeTargetID;
+  final MPOTID? mpotid;
   final bool? isApproved;
   final bool? isCreditApproved;
   final bool? isDelivered;
@@ -124,6 +125,7 @@ class Records {
     this.dateAcct,
     this.salesRepID,
     this.cPaymentTermID,
+    this.mpotid,
     this.cCurrencyID,
     this.invoiceRule,
     this.freightAmt,
@@ -215,6 +217,9 @@ class Records {
                 ? CPaymentTermID.fromJson(
                     json['C_PaymentTerm_ID'] as Map<String, dynamic>)
                 : null,
+        mpotid = (json['MP_OT_ID'] as Map<String, dynamic>?) != null
+            ? MPOTID.fromJson(json['MP_OT_ID'] as Map<String, dynamic>)
+            : null,
         cCurrencyID = (json['C_Currency_ID'] as Map<String, dynamic>?) != null
             ? CCurrencyID.fromJson(
                 json['C_Currency_ID'] as Map<String, dynamic>)
@@ -332,6 +337,7 @@ class Records {
         'DateOrdered': dateOrdered,
         'DatePromised': datePromised,
         'DateAcct': dateAcct,
+        'MP_OT_ID': mpotid?.toJson(),
         'SalesRep_ID': salesRepID?.toJson(),
         'C_PaymentTerm_ID': cPaymentTermID?.toJson(),
         'C_Currency_ID': cCurrencyID?.toJson(),
@@ -608,6 +614,33 @@ class CPaymentTermID {
   });
 
   CPaymentTermID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPOTID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPOTID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPOTID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

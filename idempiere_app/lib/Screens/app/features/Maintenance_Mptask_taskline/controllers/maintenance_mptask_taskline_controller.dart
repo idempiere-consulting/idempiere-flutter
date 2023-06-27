@@ -7,6 +7,8 @@ class MaintenanceMptaskLineController extends GetxController {
   var _hasCallSupport = false;
   var args = Get.arguments;
   late OrgInfoJSON orgInfo;
+
+  WorkOrderTaskLocalJson prodCountList = WorkOrderTaskLocalJson(records: []);
   //var _hasMailSupport = false;
   //var args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
@@ -394,6 +396,7 @@ class MaintenanceMptaskLineController extends GetxController {
       _dataAvailable.value = _trx != null;
     } */
     _dataAvailable.value = false;
+    prodCountList.records = [];
     //print(GetStorage().read('workOrderSync'));
     //print(GetStorage().read('userId'));
     const filename = "workordertask";
@@ -405,6 +408,24 @@ class MaintenanceMptaskLineController extends GetxController {
     _trx2 = WorkOrderTaskLocalJson.fromJson(jsondecoded);
 
     _trx.records!.removeWhere((element) => element.mPOTID?.id != args["id"]);
+
+    for (var i = 0; i < _trx.records!.length; i++) {
+      if (prodCountList.records!
+          .where((element) =>
+              element.mProductID?.identifier ==
+              _trx.records![i].mProductID?.identifier)
+          .isEmpty) {
+        prodCountList.records!
+            .add(TRecords(mProductID: _trx.records![i].mProductID, qty: 1));
+      } else {
+        for (var j = 0; j < prodCountList.records!.length; j++) {
+          if (prodCountList.records![j].mProductID?.identifier ==
+              _trx.records![i].mProductID?.identifier) {
+            prodCountList.records![j].qty = prodCountList.records![j].qty! + 1;
+          }
+        }
+      }
+    }
     //print(_trx.records![0.]);
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;

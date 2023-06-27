@@ -3,7 +3,7 @@ class WorkOrderTaskLocalJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<TRecords>? records;
+  List<TRecords>? records;
 
   WorkOrderTaskLocalJson({
     this.pagecount,

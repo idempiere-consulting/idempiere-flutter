@@ -490,6 +490,48 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Visibility(
+                                                visible: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mpotid !=
+                                                    null,
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "Work Order: ".tr,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Get.offNamed(
+                                                              '/MaintenanceMptask',
+                                                              arguments: {
+                                                                'notificationId':
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mpotid
+                                                                        ?.id
+                                                              });
+                                                        },
+                                                        child: Text(
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mpotid
+                                                                    ?.identifier ??
+                                                                'N/A',
+                                                            style: TextStyle(
+                                                                color:
+                                                                    kNotifColor))),
+                                                  ],
+                                                ),
+                                              ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,

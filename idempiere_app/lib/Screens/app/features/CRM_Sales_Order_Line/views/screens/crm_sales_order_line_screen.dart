@@ -171,6 +171,11 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                                   .records![index].datePromised,
                                               "price": controller.trx
                                                   .records![index].priceEntered,
+                                              "businessPartnerId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBPartnerID
+                                                  ?.id,
                                             });
                                       },
                                     ),

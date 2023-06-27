@@ -8,8 +8,11 @@ import 'dart:io';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
 
@@ -90,6 +93,8 @@ class MaintenanceMpResourceScreen
         ),
       ),
       body: SingleChildScrollView(
+        //controller: controller._controller,
+        reverse: true,
         child: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
@@ -338,6 +343,7 @@ class MaintenanceMpResourceScreen
                 () => controller.dataAvailable
                     ? ListView.builder(
                         key: const PageStorageKey<String>('workorderresource'),
+                        //controller: controller._controller,
                         primary: false,
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
@@ -1372,6 +1378,38 @@ class MaintenanceMpResourceScreen
                                                   color: Colors.white),
                                             ),
                                           ]),
+                                          Visibility(
+                                            visible: controller.trx
+                                                    .records![index].isOwned ??
+                                                false,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.orange,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 5,
+                                                      vertical: 2.5),
+                                                  child: Text(
+                                                    "Is Property".tr,
+                                                    style: const TextStyle(
+                                                        fontSize: 11,
+                                                        color: Colors.white),
+                                                    maxLines: 1,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
                                           Visibility(
                                             visible: controller
                                                     .trx
@@ -2848,6 +2886,24 @@ class MaintenanceMpResourceScreen
                                                 ],
                                               ),
                                             ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                IconButton(
+                                                  tooltip: 'Consume Item',
+                                                  onPressed: () async {
+                                                    if (await checkConnection()) {
+                                                      controller
+                                                          .openConsumeItem();
+                                                    }
+                                                  },
+                                                  icon: const Icon(
+                                                      MaterialSymbols
+                                                          .place_item),
+                                                ),
+                                              ],
+                                            )
                                           ],
                                         ),
                                       ],

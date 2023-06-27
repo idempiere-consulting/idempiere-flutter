@@ -361,8 +361,11 @@ class _CreateSalesOrderLineState extends State<CreateSalesOrderLine> {
 
     var jsondecoded = jsonDecode(await file.readAsString());
     var jsonResources = ProductJson.fromJson(jsondecoded);
+
     //print(jsonResources.rowcount);
-    return jsonResources.records!;
+    return jsonResources.records!
+        .where((element) => element.isSold ?? false)
+        .toList();
 
     //print(list[0].eMail);
 
