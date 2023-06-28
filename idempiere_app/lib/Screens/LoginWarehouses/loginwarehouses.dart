@@ -70,6 +70,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         (syncPerm != null && syncPerm != "" ? syncPerm[4] == 'Y' : true)) {
       workOrderSync = true;
       syncWorkOrder();
+      syncCartelFormat();
       syncWorkOrderRefListResource();
       syncWorkOrderRefListResourceCategory();
       syncWorkOrderListResourceGroup();
@@ -677,6 +678,39 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       }
       workOrderSync = false;
       checkSyncData();
+    }
+  }
+
+  Future<void> syncCartelFormat() async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_cartel_format?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print(utf8.decode(response.bodyBytes));
+      const filename = "cartelformat";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(utf8.decode(response.bodyBytes));
+      //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+      if (kDebugMode) {
+        print('Cartel Format Checked');
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

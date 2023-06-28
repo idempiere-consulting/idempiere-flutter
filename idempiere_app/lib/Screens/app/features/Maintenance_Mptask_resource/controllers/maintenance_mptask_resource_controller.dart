@@ -6,15 +6,9 @@ class MaintenanceMpResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   WorkOrderResourceLocalJson _trx = WorkOrderResourceLocalJson(records: []);
   WorkOrderResourceLocalJson _trx2 = WorkOrderResourceLocalJson(records: []);
-  late RefListResourceTypeJson _tt;
-  late RefListResourceTypeJson
-      _tt2 /* = RefListResourceTypeJson.fromJson(
-      jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
-      ;
-  late RefListResourceTypeJson
-      _tt3 /* = RefListResourceTypeJson.fromJson(
-      jsonDecode(GetStorage().read('refListResourceTypeCategory'))) */
-      ;
+  RefListResourceTypeJson _tt = RefListResourceTypeJson(records: []);
+  RefListResourceTypeJson _tt2 = RefListResourceTypeJson(records: []);
+  RefListResourceTypeJson _tt3 = RefListResourceTypeJson(records: []);
 
   var hqMaintainId = 0;
   //var _hasMailSupport = false;

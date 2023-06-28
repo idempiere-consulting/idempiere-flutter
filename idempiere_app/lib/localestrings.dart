@@ -1153,6 +1153,7 @@ class LocaleString extends Translations {
           'The product can keep on being in service': 'Idoneità al Servizio',
           'Product Unloaded': 'Prodotto Scaricato',
           'Unload Product': 'Scarica Prodotto',
+          'Select a Cartel': 'Seleziona un Cartello',
         },
       };
 }

@@ -1787,6 +1787,20 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .mProductID!
                                                                     .id,
+                                                            "cartelFormatId":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litCartelFormID
+                                                                    ?.id,
+                                                            "cartelFormatName":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litCartelFormID
+                                                                    ?.identifier,
                                                             "location": controller
                                                                 .trx
                                                                 .records![index]
@@ -2147,6 +2161,20 @@ class MaintenanceMpResourceScreen
                                                                           index]
                                                                       .mProductID!
                                                                       .id,
+                                                              "cartelFormatId":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .litCartelFormID
+                                                                      ?.id,
+                                                              "cartelFormatName":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .litCartelFormID
+                                                                      ?.identifier,
                                                               "location": controller
                                                                   .trx
                                                                   .records![
@@ -2646,6 +2674,20 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .mProductID!
                                                                     .id,
+                                                            "cartelFormatId":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litCartelFormID!
+                                                                    .id,
+                                                            "cartelFormatName":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litCartelFormID!
+                                                                    .identifier,
                                                             "location": controller
                                                                 .trx
                                                                 .records![index]

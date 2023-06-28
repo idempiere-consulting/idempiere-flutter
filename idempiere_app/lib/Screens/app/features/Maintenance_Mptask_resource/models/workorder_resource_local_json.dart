@@ -80,6 +80,7 @@ class RRecords {
   bool? checked;
   MPMaintainID? mpMaintainID;
   ResourceStatus? resourceStatus;
+  LitCartelFormID? litCartelFormID;
   String? number;
   int? lineNo;
   String? team;
@@ -127,6 +128,7 @@ class RRecords {
       this.lITControl1DateNext,
       this.lITSurveySheetsID,
       this.eDIType,
+      this.litCartelFormID,
       this.lot,
       this.locationComment,
       this.manufacturedYear,
@@ -211,6 +213,11 @@ class RRecords {
         eDIType = (json['EDIType'] as Map<String, dynamic>?) != null
             ? EDIType.fromJson(json['EDIType'] as Map<String, dynamic>)
             : null,
+        litCartelFormID =
+            (json['lit_cartel_format_ID'] as Map<String, dynamic>?) != null
+                ? LitCartelFormID.fromJson(
+                    json['lit_cartel_format_ID'] as Map<String, dynamic>)
+                : null,
         lot = json['Lot'] as String?,
         locationComment = json['LocationComment'] as String?,
         manufacturedYear = json['ManufacturedYear'] as int?,
@@ -273,6 +280,7 @@ class RRecords {
         'CostAmt': costAmt,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
+        'lit_cartel_format_ID': litCartelFormID?.toJson(),
         'IsActive': isActive,
         'IsValid': isValid,
         'IsOwned': isOwned,
@@ -481,6 +489,33 @@ class LitResourceGroupID {
   });
 
   LitResourceGroupID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LitCartelFormID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LitCartelFormID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LitCartelFormID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

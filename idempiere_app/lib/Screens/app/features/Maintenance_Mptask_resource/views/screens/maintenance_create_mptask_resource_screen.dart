@@ -520,6 +520,12 @@ class _CreateMaintenanceMpResourceState
       "IsOwned": args["property"] ?? false,
     };
 
+    if (cartelDropDownValue != "") {
+      msg.addAll({
+        "lit_cartel_format_ID": {"id": int.parse(cartelDropDownValue)}
+      });
+    }
+
     if (dateCheckFieldController.text != "") {
       try {
         var date1 = inputFormat.parse(dateCheckFieldController.text);
@@ -669,6 +675,11 @@ class _CreateMaintenanceMpResourceState
       color: colorFieldController.text,
       textDetails: cartelFieldController.text,
     );
+
+    if (cartelDropDownValue != "") {
+      record.litCartelFormID =
+          LitCartelFormID(id: int.parse(cartelDropDownValue));
+    }
 
     if (dateCheckFieldController.text != "") {
       try {
@@ -840,6 +851,12 @@ class _CreateMaintenanceMpResourceState
               : "0"),
           "Color": colorFieldController.text,
         };
+
+        if (cartelDropDownValue != "") {
+          call.addAll({
+            "lit_cartel_format_ID": {"id": int.parse(cartelDropDownValue)}
+          });
+        }
 
         if (dateCheckFieldController.text != "") {
           try {
@@ -1040,17 +1057,6 @@ class _CreateMaintenanceMpResourceState
     var jsonResources =
         ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
 
-    /* for (var i = 0; i < jsonResources.records!.length; i++) {
-      if (((jsonResources.records![i].mProductCategoryID?.identifier ?? "")
-          .contains((args["id"] as String).tr))) {
-        print(jsonResources.records![i].mProductCategoryID?.identifier);
-      }
-    } */
-
-    if (kDebugMode) {
-      print(args["id"]);
-    }
-
     jsonResources.records!.retainWhere((element) =>
         (element.mProductCategoryID?.identifier ?? "").contains(args["id"]));
 
@@ -1061,6 +1067,17 @@ class _CreateMaintenanceMpResourceState
     //print(list[0].eMail);
 
     //print(json.);
+  }
+
+  Future<List<Records>> getAllCartelFormats() async {
+    const filename = "cartelformat";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    return jsonResources.records!;
   }
 
   Future<List<RefRecords>> getResourceGroup() async {
@@ -1119,6 +1136,7 @@ class _CreateMaintenanceMpResourceState
   int dateCalc1 = 0;
   var productId;
   var productName;
+  String cartelDropDownValue = "";
   String dateOrdered = "";
   String firstUseDate = "";
   late ResourceTypeJson tt;
@@ -1178,6 +1196,7 @@ class _CreateMaintenanceMpResourceState
     dateOrdered = "";
     firstUseDate = "";
     dropdownValue3 = "";
+    cartelDropDownValue = "";
   }
 
   static String _displayStringForOption(Records option) =>
@@ -1413,15 +1432,57 @@ class _CreateMaintenanceMpResourceState
                 Visibility(
                   visible: (args["perm"])[6] == "Y",
                   child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: cartelFieldController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.person_pin_outlined),
-                        border: const OutlineInputBorder(),
-                        labelText: 'Cartel'.tr,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Cartel".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[6] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllCartelFormats(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a Cartel".tr),
+                                  value: cartelDropDownValue == ""
+                                      ? null
+                                      : cartelDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      cartelDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                 ),
