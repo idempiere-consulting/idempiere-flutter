@@ -10,6 +10,8 @@ class MaintenanceMpResourceController extends GetxController {
   RefListResourceTypeJson _tt2 = RefListResourceTypeJson(records: []);
   RefListResourceTypeJson _tt3 = RefListResourceTypeJson(records: []);
 
+  ScrollController listscrollController = ScrollController();
+
   var hqMaintainId = 0;
   //var _hasMailSupport = false;
   var args = Get.arguments;
