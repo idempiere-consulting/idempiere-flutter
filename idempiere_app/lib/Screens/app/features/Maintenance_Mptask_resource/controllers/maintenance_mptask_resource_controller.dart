@@ -176,7 +176,7 @@ class MaintenanceMpResourceController extends GetxController {
     //print(json.);
   }
 
-  openConsumeItem() {
+  openConsumeItem(int id) {
     Get.defaultDialog(
       title: 'Unload Product'.tr,
       content: Column(
@@ -271,6 +271,7 @@ class MaintenanceMpResourceController extends GetxController {
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
           "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
           "Name": " ",
+          "MP_Maintain_Resource_ID": {"id": id},
           "M_Product_ID": {
             "id": consumeItemProductId == 0 ? -1 : consumeItemProductId
           },
@@ -285,7 +286,8 @@ class MaintenanceMpResourceController extends GetxController {
             'Authorization': authorization,
           },
         );
-        if (response.statusCode == 200) {
+        if (response.statusCode == 201) {
+          Get.back();
           Get.snackbar(
             "Done!".tr,
             "Product Unloaded".tr,
@@ -295,6 +297,14 @@ class MaintenanceMpResourceController extends GetxController {
             ),
           );
         } else {
+          Get.snackbar(
+            "Error".tr,
+            "Product not Unloaded".tr,
+            icon: const Icon(
+              Icons.cancel,
+              color: Colors.red,
+            ),
+          );
           print(response.body);
         }
       },

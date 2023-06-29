@@ -2937,7 +2937,7 @@ class MaintenanceMpResourceScreen
                                                   onPressed: () async {
                                                     if (await checkConnection()) {
                                                       controller
-                                                          .openConsumeItem();
+                                                          .openConsumeItem(controller._trx.records![index].id!);
                                                     }
                                                   },
                                                   icon: const Icon(

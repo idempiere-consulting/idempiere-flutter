@@ -467,6 +467,9 @@ class PortalMpSalesOrderB2BController extends GetxController {
   Future<void> getProduct(String sku, BuildContext context) async {
     //productFilterAvailable.value = false;
     //productDetailAvailable.value = false;
+    tableRows.removeWhere((element) => true);
+    tableColumns.removeWhere((element) => true);
+
     rows.removeWhere((element) => true);
     columns.removeWhere((element) => true);
 
@@ -491,7 +494,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
       var gridDetail = B2BGridDetailJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
-      var columnList = gridDetail.records![0].stringAgg!.split(';');
+      columnList = gridDetail.records![0].stringAgg!.split(';');
       columns.add(PlutoColumn(
           title: 'Size'.tr,
           field: 'Size'.tr,
@@ -507,6 +510,39 @@ class PortalMpSalesOrderB2BController extends GetxController {
           },
         ));
       }
+
+      //TABLE COLUMN
+
+      tableColumns.add(
+        DataColumn(
+          label: Row(
+            children: [
+              Text(
+                'Size'.tr,
+                style: const TextStyle(fontStyle: FontStyle.italic),
+              ),
+            ],
+          ),
+        ),
+      );
+
+      for (var element in columnList) {
+        tableColumns.add(
+          DataColumn(
+            label: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  element,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ],
+            ),
+          ),
+        );
+      }
+
+      //END TABLE COLUMN
 
       /* columns.add(PlutoColumn(
         title: 'status',
@@ -534,6 +570,34 @@ class PortalMpSalesOrderB2BController extends GetxController {
         });
       }
 
+      //TABLE PRICE ROW
+
+      List<DataCell> tablePriceRow = [];
+
+      tablePriceRow.add(DataCell(
+        Row(
+          children: [
+            Text(
+              'Price'.tr,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tablePriceRow.add(DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(rowPriceList[i]),
+          ],
+        )));
+      }
+
+      tableRows.add(DataRow(cells: tablePriceRow));
+
+      //END TABLE PRICE ROW
+
       var rowqtyAvailableList = gridDetail.records![0].qtyAvailable!.split(';');
 
       Map<String, PlutoCell> qtyAvailableRow = {};
@@ -545,6 +609,41 @@ class PortalMpSalesOrderB2BController extends GetxController {
           columnList[i]: PlutoCell(value: rowqtyAvailableList[i]),
         });
       }
+
+      //TABLE QTY AVAILABLE ROW
+
+      List<DataCell> tableQtyAvailableRow = [];
+
+      for (var i = 0; i < columnList.length; i++) {
+        headquarterQtyFieldControllerList
+            .add(TextEditingController(text: rowqtyAvailableList[i]));
+      }
+
+      tableQtyAvailableRow.add(DataCell(
+        Row(
+          children: [
+            Text(
+              'Headquarter'.tr,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tableQtyAvailableRow.add(DataCell(TextField(
+          textAlign: TextAlign.end,
+          readOnly: true,
+          decoration: const InputDecoration(
+            border: InputBorder.none,
+          ),
+          controller: headquarterQtyFieldControllerList[i],
+        )));
+      }
+
+      tableRows.add(DataRow(cells: tableQtyAvailableRow));
+
+      //END TABLE QTY AVAILABLE ROW
 
       var rowqtyOrderedList = gridDetail.records![0].qtyOrdered!.split(';');
 
@@ -558,6 +657,34 @@ class PortalMpSalesOrderB2BController extends GetxController {
         });
       }
 
+      //TABLE QTY ORDERED ROW
+
+      List<DataCell> tableQtyOrderedRow = [];
+
+      tableQtyOrderedRow.add(DataCell(
+        Row(
+          children: [
+            Text(
+              'Restock'.tr,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tableQtyOrderedRow.add(DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(rowqtyOrderedList[i]),
+          ],
+        )));
+      }
+
+      tableRows.add(DataRow(cells: tableQtyOrderedRow));
+
+      //END TABLE QTY ORDERED ROW
+
       var rowqtyOnHandList = gridDetail.records![0].qtyOnHand!.split(';');
 
       Map<String, PlutoCell> qtyOnHandRow = {};
@@ -569,6 +696,34 @@ class PortalMpSalesOrderB2BController extends GetxController {
           columnList[i]: PlutoCell(value: rowqtyOnHandList[i]),
         });
       }
+
+      //TABLE QTY ONHAND ROW
+
+      List<DataCell> tableQtyOnHandRow = [];
+
+      tableQtyOnHandRow.add(DataCell(
+        Row(
+          children: [
+            Text(
+              'Warehouse'.tr,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tableQtyOnHandRow.add(DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(rowqtyOnHandList[i]),
+          ],
+        )));
+      }
+
+      tableRows.add(DataRow(cells: tableQtyOnHandRow));
+
+      //END TABLE QTY ONHAND ROW
 
       var dateStockList = gridDetail.records![0].dateRestocks!.split(';');
 
@@ -585,6 +740,55 @@ class PortalMpSalesOrderB2BController extends GetxController {
         });
       }
 
+      //TABLE DATE RESTOCK ROW
+
+      List<DataCell> tableDateRestockRow = [];
+
+      tableDateRestockRow.add(DataCell(
+        Row(
+          children: [
+            Text(
+              'Date Restock'.tr,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tableDateRestockRow.add(DataCell(Text((dateStockList[i].length >= 10
+            ? dateStockList[i].substring(0, 10)
+            : dateStockList[i]))));
+      }
+
+      tableRows.add(DataRow(cells: tableDateRestockRow));
+
+      //END TABLE DATE RESTOCK ROW
+
+      // TABLE INSERT QTY ROW
+
+      List<DataCell> tableInsertQtyRow = [];
+
+      insertedQtyFieldControllerList = [];
+
+      insertedQtyFieldControllerList = List.generate(
+          columnList.length, (i) => TextEditingController(text: '0'));
+
+      tableInsertQtyRow.add(DataCell(
+        Text(' '.tr),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tableInsertQtyRow.add(DataCell(TextField(
+          textAlign: TextAlign.end,
+          controller: insertedQtyFieldControllerList[i],
+        )));
+      }
+
+      tableRows.add(DataRow(cells: tableInsertQtyRow));
+
+      //END TABLE INSERT QTY ROW
+
       /* priceRow.addAll({
         columnList[columnList.length - 1]: PlutoCell(value: 'Added'),
       }); */
@@ -596,7 +800,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       //var currentStock = gridDetail.records![0].!.split(';');
 
-      openGridPopUp(context, sku);
+      openDataTableGridPopUp(context, sku);
 
       //getProdB2BStock(id);
 
@@ -945,13 +1149,73 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
   final List<PlutoColumn> columns = [];
 
+  List<String> columnList = [];
+
+  final List<DataColumn> tableColumns = [];
+
   final List<PlutoRow> rows = [];
+
+  final List<DataRow> tableRows = [];
+
+  List<TextEditingController> insertedQtyFieldControllerList = [];
+  List<TextEditingController> headquarterQtyFieldControllerList = [];
 
   late PlutoGridStateManager stateManager;
 
   String gridSkuSelected = "";
 
   Map<String, List<dynamic>> gridProdValueList = {};
+
+  openDataTableGridPopUp(BuildContext context, String sku) {
+    Size size = MediaQuery.of(context).size;
+    return showDialog<void>(
+      context: context,
+      //barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          // <-- SEE HERE
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(sku),
+            ],
+          ),
+          content: Column(
+            children: [
+              SizedBox(
+                width: (size.width - 100),
+                height: (size.height * 0.5),
+                child: DataTable2(
+                  columns: tableColumns,
+                  rows: tableRows,
+                ),
+              ),
+              ElevatedButton(
+                  onPressed: tableGridAddToCart, child: Text('Add to Cart'.tr))
+              /* Container(
+                          width: (width ?? size.maxWidth) +
+                              PlutoGridSettings.gridInnerSpacing,
+                          padding: const EdgeInsets.only(top: 5, right: 5),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              ElevatedButton(
+                                  onPressed: button,
+                                  child: Row(
+                                    children: [
+                                      Text('${"Add to Cart".tr}  '),
+                                      const Icon(Icons.shopping_bag_outlined)
+                                    ],
+                                  )),
+                            ],
+                          ),
+                        ) */
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   openGridPopUp(BuildContext context, String sku) {
     PlutoGridPopupCustom(
@@ -1026,6 +1290,58 @@ class PortalMpSalesOrderB2BController extends GetxController {
         //print(event.row.sortIdx);
       },
     );
+  }
+
+  tableGridAddToCart() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+
+    for (var i = 0; i < columnList.length; i++) {
+      if (insertedQtyFieldControllerList[i].text != "0") {
+        var url = Uri.parse(
+            '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= Value eq \'$gridSkuSelected.${columnList[i]}\'');
+        var response = await http.get(
+          url,
+          headers: <String, String>{
+            'Content-Type': 'application/json',
+            'Authorization': authorization,
+          },
+        );
+
+        if (response.statusCode == 200) {
+          var data = ProductListJson.fromJson(
+              jsonDecode(utf8.decode(response.bodyBytes)));
+
+          productList.add(ProductCheckout(
+            id: data.records![0].id!,
+            name: data.records![0].name!,
+            qty: int.parse(
+              insertedQtyFieldControllerList[i].text,
+            ),
+            cost: data.records![0].price ?? 0,
+            adPrintColorID: data.records![0].adPrintColorID,
+            litProductSizeID: data.records![0].litProductSizeID,
+            imageData: data.records![0].imageData,
+            imageUrl: data.records![0].imageUrl,
+            datePromised: int.parse(insertedQtyFieldControllerList[i].text) >
+                    int.parse(headquarterQtyFieldControllerList[i].text)
+                ? data.records![0].dateRestock
+                : null,
+          ));
+
+          shoppingCartCounter.value++;
+          updateTotal();
+
+          //print(data.records![0].id);
+        } else {
+          if (kDebugMode) {
+            print(response.body);
+          }
+        }
+      }
+    }
+    Get.back();
   }
 
   gridAddToCart() {
