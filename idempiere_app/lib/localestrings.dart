@@ -1154,6 +1154,8 @@ class LocaleString extends Translations {
           'Product Unloaded': 'Prodotto Scaricato',
           'Unload Product': 'Scarica Prodotto',
           'Select a Cartel': 'Seleziona un Cartello',
+          'Serial N°': 'Matricola',
+          'Summary Info': 'Riep. Totali'
         },
       };
 }

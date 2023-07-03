@@ -1,4 +1,4 @@
-class InfoCountJSON {
+class ProductUnloadedJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
@@ -6,7 +6,7 @@ class InfoCountJSON {
   final int? arraycount;
   final List<Records>? records;
 
-  InfoCountJSON({
+  ProductUnloadedJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -15,7 +15,7 @@ class InfoCountJSON {
     this.records,
   });
 
-  InfoCountJSON.fromJson(Map<String, dynamic> json)
+  ProductUnloadedJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
@@ -37,159 +37,103 @@ class InfoCountJSON {
 
 class Records {
   final int? id;
-  final bool? isActive;
-  final String? updated;
-  final UpdatedBy? updatedBy;
-  final String? created;
-  final CreatedBy? createdBy;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
-  final MProductCategoryID? mProductCategoryID;
-  final String? categoryName;
-  final String? revsCount;
-  String? pcCount;
-  String? prCount;
-  String? ptCount;
-  final String? todoAction;
+  final String? created;
+  final CreatedBy? createdBy;
+  final bool? isActive;
+  final LITDraftJournalID? lITDraftJournalID;
+  final String? lITDraftJournalUU;
+  final MPMaintainResourceID? mPMaintainResourceID;
+  final MProductID? mProductID;
+  final String? name;
+  final String? updated;
+  final UpdatedBy? updatedBy;
+  final int? qty;
+  final MWarehouseID? mWarehouseID;
   final MPMaintainID? mPMaintainID;
-  final String? mpc2CategoryName;
-  final String? mpc2CategoryNote;
-  final MPOTID? mPOTID;
   final String? modelname;
 
   Records({
     this.id,
-    this.isActive,
-    this.updated,
-    this.updatedBy,
-    this.created,
-    this.createdBy,
     this.aDClientID,
     this.aDOrgID,
-    this.mProductCategoryID,
-    this.categoryName,
-    this.revsCount,
-    this.pcCount,
-    this.prCount,
-    this.ptCount,
-    this.todoAction,
+    this.created,
+    this.createdBy,
+    this.isActive,
+    this.lITDraftJournalID,
+    this.lITDraftJournalUU,
+    this.mPMaintainResourceID,
+    this.mProductID,
+    this.name,
+    this.updated,
+    this.updatedBy,
+    this.qty,
+    this.mWarehouseID,
     this.mPMaintainID,
-    this.mpc2CategoryName,
-    this.mpc2CategoryNote,
-    this.mPOTID,
     this.modelname,
   });
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
-        isActive = json['IsActive'] as bool?,
-        updated = json['Updated'] as String?,
-        updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
-            ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
-            : null,
-        created = json['Created'] as String?,
-        createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
-            ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
-            : null,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        mProductCategoryID =
-            (json['M_Product_Category_ID'] as Map<String, dynamic>?) != null
-                ? MProductCategoryID.fromJson(
-                    json['M_Product_Category_ID'] as Map<String, dynamic>)
+        created = json['Created'] as String?,
+        createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
+            ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
+            : null,
+        isActive = json['IsActive'] as bool?,
+        lITDraftJournalID =
+            (json['LIT_DraftJournal_ID'] as Map<String, dynamic>?) != null
+                ? LITDraftJournalID.fromJson(
+                    json['LIT_DraftJournal_ID'] as Map<String, dynamic>)
                 : null,
-        categoryName = json['CategoryName'] as String?,
-        revsCount = json['revs_count'] as String?,
-        pcCount = json['pc_count'] as String?,
-        prCount = json['pr_count'] as String?,
-        ptCount = json['pt_count'] as String?,
-        todoAction = json['todo_action'] as String?,
+        lITDraftJournalUU = json['LIT_DraftJournal_UU'] as String?,
+        mPMaintainResourceID =
+            (json['MP_Maintain_Resource_ID'] as Map<String, dynamic>?) != null
+                ? MPMaintainResourceID.fromJson(
+                    json['MP_Maintain_Resource_ID'] as Map<String, dynamic>)
+                : null,
+        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
+            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+            : null,
+        name = json['Name'] as String?,
+        updated = json['Updated'] as String?,
+        updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
+            ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
+            : null,
+        qty = json['Qty'] as int?,
+        mWarehouseID = (json['M_Warehouse_ID'] as Map<String, dynamic>?) != null
+            ? MWarehouseID.fromJson(
+                json['M_Warehouse_ID'] as Map<String, dynamic>)
+            : null,
         mPMaintainID = (json['MP_Maintain_ID'] as Map<String, dynamic>?) != null
             ? MPMaintainID.fromJson(
                 json['MP_Maintain_ID'] as Map<String, dynamic>)
             : null,
-        mpc2CategoryName = json['mpc2_category_name'] as String?,
-        mpc2CategoryNote = json['mpc2_category_note'] as String?,
-        mPOTID = (json['MP_OT_ID'] as Map<String, dynamic>?) != null
-            ? MPOTID.fromJson(json['MP_OT_ID'] as Map<String, dynamic>)
-            : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'IsActive': isActive,
-        'Updated': updated,
-        'UpdatedBy': updatedBy?.toJson(),
-        'Created': created,
-        'CreatedBy': createdBy?.toJson(),
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
-        'M_Product_Category_ID': mProductCategoryID?.toJson(),
-        'CategoryName': categoryName,
-        'revs_count': revsCount,
-        'todo_action': todoAction,
+        'Created': created,
+        'CreatedBy': createdBy?.toJson(),
+        'IsActive': isActive,
+        'LIT_DraftJournal_ID': lITDraftJournalID?.toJson(),
+        'LIT_DraftJournal_UU': lITDraftJournalUU,
+        'MP_Maintain_Resource_ID': mPMaintainResourceID?.toJson(),
+        'M_Product_ID': mProductID?.toJson(),
+        'Name': name,
+        'Updated': updated,
+        'UpdatedBy': updatedBy?.toJson(),
+        'Qty': qty,
+        'M_Warehouse_ID': mWarehouseID?.toJson(),
         'MP_Maintain_ID': mPMaintainID?.toJson(),
-        'mpc2_category_name': mpc2CategoryName,
-        'mpc2_category_note': mpc2CategoryNote,
-        'MP_OT_ID': mPOTID?.toJson(),
-        'model-name': modelname
-      };
-}
-
-class UpdatedBy {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  UpdatedBy({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  UpdatedBy.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CreatedBy {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CreatedBy({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CreatedBy.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
         'model-name': modelname
       };
 }
@@ -248,20 +192,148 @@ class ADOrgID {
       };
 }
 
-class MProductCategoryID {
+class CreatedBy {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  MProductCategoryID({
+  CreatedBy({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MProductCategoryID.fromJson(Map<String, dynamic> json)
+  CreatedBy.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITDraftJournalID {
+  final String? propertyLabel;
+  final int? id;
+  final String? modelname;
+
+  LITDraftJournalID({
+    this.propertyLabel,
+    this.id,
+    this.modelname,
+  });
+
+  LITDraftJournalID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() =>
+      {'propertyLabel': propertyLabel, 'id': id, 'model-name': modelname};
+}
+
+class MPMaintainResourceID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPMaintainResourceID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPMaintainResourceID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MProductID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class UpdatedBy {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  UpdatedBy({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  UpdatedBy.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MWarehouseID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MWarehouseID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MWarehouseID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -289,33 +361,6 @@ class MPMaintainID {
   });
 
   MPMaintainID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MPOTID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MPOTID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MPOTID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

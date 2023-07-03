@@ -12,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_info_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_product_unloaded_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Signature_WorkOrder/signature_page.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -940,7 +941,7 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                           "id": controller
                                                               .trx
                                                               .records![index]
-                                                              .mPMaintainID
+                                                              .mPOTID
                                                               ?.id,
                                                           "docN": controller
                                                               .trx
@@ -950,6 +951,24 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   },
                                                   icon: const Icon(
                                                       Icons.info_outline)),
+                                              IconButton(
+                                                  onPressed: () {
+                                                    Get.to(
+                                                        const MaintenanceMptaskProductUnloaded(),
+                                                        arguments: {
+                                                          "id": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mPMaintainID
+                                                              ?.id,
+                                                          "docN": controller
+                                                              .trx
+                                                              .records![index]
+                                                              .documentNo,
+                                                        });
+                                                  },
+                                                  icon: const Icon(Icons
+                                                      .screen_search_desktop)),
                                               IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {

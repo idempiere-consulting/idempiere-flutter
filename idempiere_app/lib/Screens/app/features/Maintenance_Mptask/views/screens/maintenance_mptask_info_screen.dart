@@ -2,6 +2,7 @@
 
 import 'dart:convert';
 //import 'dart:developer';
+import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,7 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
     final protocol = GetStorage().read('protocol');
 
     var url = Uri.parse(
-        '${'$protocol://' + ip}/api/v1/models/lit_mp_resource_testcount_v?\$filter=  lit_mp_resource_testcount_v_ID eq ${Get.arguments["id"]}');
+        '${'$protocol://' + ip}/api/v1/models/lit_mp_main_res_totct_v?\$filter=  MP_OT_ID eq ${Get.arguments["id"]}');
 
     var response = await http.get(
       url,
@@ -45,22 +46,34 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
       }
       trx = InfoCountJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
+      for (var i = 0; i < trx.records!.length; i++) {
+        if ((tableRows
+            .where((element) =>
+                element.categoryName == trx.records![i].categoryName)
+            .isEmpty)) {
+          tableRows.add(Records(
+              categoryName: trx.records![i].categoryName,
+              pcCount: trx.records![i].pcCount ?? "0",
+              prCount: trx.records![i].prCount ?? "0",
+              ptCount: trx.records![i].prCount ?? "0"));
+        } else {
+          for (var j = 0; j < tableRows.length; j++) {
+            if (tableRows[j].categoryName == trx.records![i].categoryName) {
+              tableRows[j].pcCount = (int.parse(tableRows[j].pcCount ?? "0") +
+                      int.parse(trx.records![i].pcCount ?? "0"))
+                  .toString();
+              tableRows[j].ptCount = (int.parse(tableRows[j].ptCount ?? "0") +
+                      int.parse(trx.records![i].ptCount ?? "0"))
+                  .toString();
+            }
+          }
+        }
+      }
+
       //InfoCountJSON list = InfoCountJSON(records: []);
 
       /* trx.records!.retainWhere((element) =>
           element.revisionCount == "0" && element.testingCount == "0"); */
-
-      List<PlutoRow> newRows = [];
-      for (var i = 0; i < (trx.records!.length); i++) {
-        PlutoRow row = PlutoRow(cells: {
-          'Product'.tr:
-              PlutoCell(value: trx.records![i].mProductID?.identifier),
-          'Revision'.tr: PlutoCell(value: trx.records![i].revisionCount),
-          'Testing'.tr: PlutoCell(value: trx.records![i].testingCount),
-        });
-        newRows.add(row);
-      }
-      stateManager.appendRows(newRows);
 
       setState(() {
         dataAvailable = true;
@@ -72,33 +85,16 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
     }
   }
 
-  final List<PlutoColumn> columns = <PlutoColumn>[
-    PlutoColumn(
-      //readOnly: true,
-      title: 'Product'.tr,
-      field: 'Product'.tr,
-      type: PlutoColumnType.text(),
-    ),
-    PlutoColumn(
-      title: 'Revision'.tr,
-      field: 'Revisione'.tr,
-      type: PlutoColumnType.number(),
-    ),
-    PlutoColumn(
-      title: 'Testing'.tr,
-      field: 'Testing'.tr,
-      type: PlutoColumnType.number(),
-    ),
-  ];
-  List<PlutoRow> rows = [];
-  late final PlutoGridStateManager stateManager;
   bool dataAvailable = false;
   late InfoCountJSON trx;
+
+  List<Records> tableRows = [];
 
   @override
   void initState() {
     super.initState();
     dataAvailable = false;
+    getWorkOrderInfo();
     //getWorkOrderInfo();
     //print('hello');
   }
@@ -124,20 +120,54 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
             return Column(
               children: [
                 SizedBox(
-                  height: size.height,
                   width: size.width,
-                  //padding: const EdgeInsets.all(15),
-                  child: PlutoGrid(
-                    columns: columns,
-                    rows: rows,
-                    //columnGroups: controllecolumnGroups,
-                    onLoaded: (PlutoGridOnLoadedEvent event) {
-                      stateManager = event.stateManager;
-                      getWorkOrderInfo();
-                    },
-                    onChanged: (PlutoGridOnChangedEvent event) {},
-                  ),
-                )
+                  height: size.height,
+                  child: dataAvailable
+                      ? DataTable2(
+                          columns: [
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Category'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot C'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot R'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot CL'.tr),
+                              ],
+                            )),
+                          ],
+                          rows: tableRows
+                              .map((e) => DataRow(cells: [
+                                    DataCell(Tooltip(
+                                        message: e.categoryName ?? "N/A",
+                                        child: Text(e.categoryName ?? "N/A"))),
+                                    DataCell(Text(
+                                      e.pcCount ?? "N/A",
+                                      textAlign: TextAlign.end,
+                                    )),
+                                    DataCell(Text(e.prCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                    DataCell(Text(e.ptCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                  ]))
+                              .toList(),
+                        )
+                      : const SizedBox(),
+                ),
               ],
             );
           },
@@ -145,20 +175,54 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
             return Column(
               children: [
                 SizedBox(
-                  height: size.height,
                   width: size.width,
-                  //padding: const EdgeInsets.all(15),
-                  child: PlutoGrid(
-                    columns: columns,
-                    rows: rows,
-                    //columnGroups: controllecolumnGroups,
-                    onLoaded: (PlutoGridOnLoadedEvent event) {
-                      stateManager = event.stateManager;
-                      getWorkOrderInfo();
-                    },
-                    onChanged: (PlutoGridOnChangedEvent event) {},
-                  ),
-                )
+                  height: size.height,
+                  child: dataAvailable
+                      ? DataTable2(
+                          columns: [
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Category'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot C'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot R'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot CL'.tr),
+                              ],
+                            )),
+                          ],
+                          rows: tableRows
+                              .map((e) => DataRow(cells: [
+                                    DataCell(Tooltip(
+                                        message: e.categoryName ?? "N/A",
+                                        child: Text(e.categoryName ?? "N/A"))),
+                                    DataCell(Text(
+                                      e.pcCount ?? "N/A",
+                                      textAlign: TextAlign.end,
+                                    )),
+                                    DataCell(Text(e.prCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                    DataCell(Text(e.ptCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                  ]))
+                              .toList(),
+                        )
+                      : const SizedBox(),
+                ),
               ],
             );
           },
@@ -166,20 +230,54 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
             return Column(
               children: [
                 SizedBox(
-                  height: size.height,
                   width: size.width,
-                  //padding: const EdgeInsets.all(15),
-                  child: PlutoGrid(
-                    columns: columns,
-                    rows: rows,
-                    //columnGroups: controllecolumnGroups,
-                    onLoaded: (PlutoGridOnLoadedEvent event) {
-                      stateManager = event.stateManager;
-                      getWorkOrderInfo();
-                    },
-                    onChanged: (PlutoGridOnChangedEvent event) {},
-                  ),
-                )
+                  height: size.height,
+                  child: dataAvailable
+                      ? DataTable2(
+                          columns: [
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Category'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot C'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot R'.tr),
+                              ],
+                            )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot CL'.tr),
+                              ],
+                            )),
+                          ],
+                          rows: tableRows
+                              .map((e) => DataRow(cells: [
+                                    DataCell(Tooltip(
+                                        message: e.categoryName ?? "N/A",
+                                        child: Text(e.categoryName ?? "N/A"))),
+                                    DataCell(Text(
+                                      e.pcCount ?? "N/A",
+                                      textAlign: TextAlign.end,
+                                    )),
+                                    DataCell(Text(e.prCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                    DataCell(Text(e.ptCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                  ]))
+                              .toList(),
+                        )
+                      : const SizedBox(),
+                ),
               ],
             );
           },
