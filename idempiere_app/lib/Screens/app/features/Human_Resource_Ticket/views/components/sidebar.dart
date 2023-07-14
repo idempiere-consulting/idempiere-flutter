@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 1,
+              initialSelected: 2,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -34,15 +34,28 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                    activeIcon: Icons.person_add,
-                    icon: EvaIcons.personOutline,
-                    label: "Ticket".tr,
-                    visible: true),
+                  activeIcon: Icons.person_add,
+                  icon: EvaIcons.personOutline,
+                  label: "Ticket HR",
+                  visible: true,
+                ),
                 SelectionButtonData(
                   activeIcon: Icons.punch_clock,
                   icon: EvaIcons.personOutline,
                   label: "Work Hours".tr,
                   visible: GetPlatform.isAndroid || GetPlatform.isIOS,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.punch_clock,
+                  icon: EvaIcons.personOutline,
+                  label: "Employee Sheet".tr,
+                  visible: int.parse(list[100], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
               ],
               onSelected: (index, value) {
@@ -50,13 +63,16 @@ class _Sidebar extends StatelessWidget {
                 //Get.toNamed('/${value.label}');
                 switch (index) {
                   case 0:
-                    Get.offNamed('/Dashboard'.tr);
+                    Get.offNamed('/Dashboard');
                     break;
                   case 1:
-                    Get.offNamed('/TicketClientTicket');
+                    Get.offNamed('/HumanResourceTicket');
                     break;
                   case 2:
                     Get.offNamed('/HumanResourceWorkHours');
+                    break;
+                  case 3:
+                    Get.offNamed('/HumanResourceEmployeeSheetScreen');
                     break;
                   default:
                 }

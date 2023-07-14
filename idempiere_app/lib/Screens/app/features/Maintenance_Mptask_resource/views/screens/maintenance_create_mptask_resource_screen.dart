@@ -9,8 +9,11 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/reflist_resource_type_json.dart';
@@ -472,7 +475,11 @@ class _CreateMaintenanceMpResourceState
     final msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
+      "MP_Maintain_ID": {
+        "id": (args["propertyMaintain"] ?? false) && isPropertyMaintainId != "0"
+            ? int.parse(isPropertyMaintainId)
+            : GetStorage().read('selectedTaskDocNo')
+      },
       "M_Product_ID": {"id": productId},
       "IsActive": true,
       "ResourceType": {"id": "BP"},
@@ -493,7 +500,7 @@ class _CreateMaintenanceMpResourceState
           ? "0"
           : useLifeYearsFieldController.text),
       "LIT_ProductModel": productModelFieldController.text,
-      //"Lot": lotFieldController.text,
+      "Lot": lotFieldController.text,
       "DateOrdered": dateOrdered,
       "ServiceDate": firstUseDate,
       "UserName": userNameFieldController.text,
@@ -517,8 +524,16 @@ class _CreateMaintenanceMpResourceState
             ? "INS"
             : "NEW"
       },
-      "IsOwned": args["property"] ?? false,
+      "IsOwned": isPropertyValue,
     };
+
+    if (subCategoryDropDownValue != "") {
+      msg.addAll({
+        "LIT_M_Product_SubCategory_ID": {
+          "id": int.parse(subCategoryDropDownValue)
+        }
+      });
+    }
 
     if (cartelDropDownValue != "") {
       msg.addAll({
@@ -636,7 +651,10 @@ class _CreateMaintenanceMpResourceState
     EDIType edt = EDIType(id: args["id"]);
     RRecords record = RRecords(
       mProductID: prod,
-      mpMaintainID: MPMaintainID(id: GetStorage().read('selectedTaskDocNo')),
+      mpMaintainID: MPMaintainID(
+          id: (args["propertyMaintain"] ?? false) && isPropertyMaintainId != "0"
+              ? int.parse(isPropertyMaintainId)
+              : GetStorage().read('selectedTaskDocNo')),
       //mpOtDocumentno: GetStorage().read('selectedTaskDocNo'),
       resourceType: res,
       resourceQty: 1,
@@ -659,7 +677,7 @@ class _CreateMaintenanceMpResourceState
       number: numberFieldController.text,
       lineNo: int.parse(
           lineFieldController.text == "" ? "0" : lineFieldController.text),
-      //lot: lotFieldController.text,
+      lot: lotFieldController.text,
       dateOrdered: dateOrdered,
       serviceDate: firstUseDate,
       userName: userNameFieldController.text,
@@ -674,11 +692,17 @@ class _CreateMaintenanceMpResourceState
           : "0"),
       color: colorFieldController.text,
       textDetails: cartelFieldController.text,
+      isOwned: isPropertyValue,
     );
 
     if (cartelDropDownValue != "") {
       record.litCartelFormID =
           LitCartelFormID(id: int.parse(cartelDropDownValue));
+    }
+
+    if (subCategoryDropDownValue != "") {
+      record.litmProductSubCategoryID =
+          LITMProductSubCategoryID(id: int.parse(subCategoryDropDownValue));
     }
 
     if (dateCheckFieldController.text != "") {
@@ -805,7 +829,12 @@ class _CreateMaintenanceMpResourceState
               '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
-          "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
+          "MP_Maintain_ID": {
+            "id": (args["propertyMaintain"] ?? false) &&
+                    isPropertyMaintainId != "0"
+                ? int.parse(isPropertyMaintainId)
+                : GetStorage().read('selectedTaskDocNo')
+          },
           "M_Product_ID": {"id": productId},
           "IsActive": true,
           "ResourceType": {"id": "BP"},
@@ -827,7 +856,7 @@ class _CreateMaintenanceMpResourceState
               ? "0"
               : useLifeYearsFieldController.text),
           "LIT_ProductModel": productModelFieldController.text,
-          //"Lot": lotFieldController.text,
+          "Lot": lotFieldController.text,
           "DateOrdered": dateOrdered,
           "ServiceDate": firstUseDate,
           "UserName": userNameFieldController.text,
@@ -850,7 +879,16 @@ class _CreateMaintenanceMpResourceState
               ? heightFieldController.text
               : "0"),
           "Color": colorFieldController.text,
+          "IsOwned": isPropertyValue,
         };
+
+        if (subCategoryDropDownValue != "") {
+          msg.addAll({
+            "LIT_M_Product_SubCategory_ID": {
+              "id": int.parse(subCategoryDropDownValue)
+            }
+          });
+        }
 
         if (cartelDropDownValue != "") {
           call.addAll({
@@ -913,7 +951,12 @@ class _CreateMaintenanceMpResourceState
               '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"maintenance".tr}/${GetStorage().read('selectedTaskDocNo')}/${"mp-resources".tr}',
           "AD_Org_ID": {"id": GetStorage().read("organizationid")},
           "AD_Client_ID": {"id": GetStorage().read("clientid")},
-          "MP_Maintain_ID": {"id": GetStorage().read('selectedTaskDocNo')},
+          "MP_Maintain_ID": {
+            "id": (args["propertyMaintain"] ?? false) &&
+                    isPropertyMaintainId != "0"
+                ? int.parse(isPropertyMaintainId)
+                : GetStorage().read('selectedTaskDocNo')
+          },
           "M_Product_ID": {"id": productId},
           "IsActive": true,
           "ResourceType": {"id": "BP"},
@@ -935,7 +978,7 @@ class _CreateMaintenanceMpResourceState
               ? "0"
               : useLifeYearsFieldController.text),
           "LIT_ProductModel": productModelFieldController.text,
-          //"Lot": lotFieldController.text,
+          "Lot": lotFieldController.text,
           "DateOrdered": dateOrdered,
           "ServiceDate": firstUseDate,
           "UserName": userNameFieldController.text,
@@ -958,7 +1001,22 @@ class _CreateMaintenanceMpResourceState
               ? heightFieldController.text
               : "0"),
           "Color": colorFieldController.text,
+          "IsOwned": isPropertyValue,
         };
+
+        if (subCategoryDropDownValue != "") {
+          call.addAll({
+            "LIT_M_Product_SubCategory_ID": {
+              "id": int.parse(subCategoryDropDownValue)
+            }
+          });
+        }
+
+        if (cartelDropDownValue != "") {
+          call.addAll({
+            "lit_cartel_format_ID": {"id": int.parse(cartelDropDownValue)}
+          });
+        }
         if (dateCheckFieldController.text != "") {
           try {
             var date = inputFormat.parse(dateCheckFieldController.text);
@@ -1080,6 +1138,17 @@ class _CreateMaintenanceMpResourceState
     return jsonResources.records!;
   }
 
+  Future<List<Records>> getAllSubCategories() async {
+    const filename = "resourcesubcategory";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    return jsonResources.records!;
+  }
+
   Future<List<RefRecords>> getResourceGroup() async {
     const filename = "listresourcegroup";
     final file2 = File(
@@ -1092,6 +1161,32 @@ class _CreateMaintenanceMpResourceState
         element.mpMaintain3ID?.id == GetStorage().read('selectedTaskDocNo'));
 
     return dJson.records!;
+  }
+
+  Future<List<LSRecords>> getPropertyMaintains() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_maintain?\$filter= contains(tolower(DocumentNo),\'sede\')');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json = LeadStatusJson.fromJson(jsonDecode(response.body));
+
+      //print(json.rowcount);
+
+      return json.records!;
+    } else {
+      throw Exception("Failed to load lead statuses");
+    }
+
+    //print(response.body);
   }
 
   /* void fillFields() {
@@ -1137,12 +1232,16 @@ class _CreateMaintenanceMpResourceState
   var productId;
   var productName;
   String cartelDropDownValue = "";
+  String subCategoryDropDownValue = "";
   String dateOrdered = "";
   String firstUseDate = "";
   late ResourceTypeJson tt;
   late String dropDownValue;
   bool saveFlag = true;
   String dropdownValue3 = "";
+  bool isPropertyValue = false;
+  String isPropertyMaintainId = "0";
+  late TextEditingController isPropertyMaintainFieldController;
 
   @override
   void initState() {
@@ -1197,6 +1296,9 @@ class _CreateMaintenanceMpResourceState
     firstUseDate = "";
     dropdownValue3 = "";
     cartelDropDownValue = "";
+    subCategoryDropDownValue = "";
+    isPropertyValue = args["property"] ?? false;
+    isPropertyMaintainId = "0";
   }
 
   static String _displayStringForOption(Records option) =>
@@ -1468,6 +1570,63 @@ class _CreateMaintenanceMpResourceState
                                   onChanged: (String? newValue) {
                                     setState(() {
                                       cartelDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Typology".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSubCategories(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a Typology".tr),
+                                  value: subCategoryDropDownValue == ""
+                                      ? null
+                                      : subCategoryDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      subCategoryDropDownValue = newValue!;
                                     });
                                     //print(dropdownValue);
                                   },
@@ -2025,6 +2184,75 @@ class _CreateMaintenanceMpResourceState
                     ),
                   ),
                 ),
+                Visibility(
+                  visible: (args["perm"])[25] == "Y",
+                  child: CheckboxListTile(
+                    title: Text('Is Property'.tr),
+                    value: isPropertyValue,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      setState(() {
+                        isPropertyValue = value!;
+                      });
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
+                  ),
+                ),
+                Visibility(
+                  visible: args["propertyMaintain"] ?? false,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                    child: FutureBuilder(
+                      future: getPropertyMaintains(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<LSRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? InputDecorator(
+                                  decoration: InputDecoration(
+                                    labelText: 'Property Maintain'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.list),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                  child: DropdownButton(
+                                    isDense: true,
+                                    underline: const SizedBox(),
+                                    hint: Text("Select a Property Maintain".tr),
+                                    isExpanded: true,
+                                    value: isPropertyMaintainId == "0"
+                                        ? null
+                                        : isPropertyMaintainId,
+                                    elevation: 16,
+                                    onChanged: (newValue) {
+                                      setState(() {
+                                        isPropertyMaintainId =
+                                            newValue as String;
+                                      });
+
+                                      //print(dropdownValue);
+                                    },
+                                    items: snapshot.data!.map((list) {
+                                      return DropdownMenuItem<String>(
+                                        value: list.id.toString(),
+                                        child: Text(
+                                          list.documentNo.toString(),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
               ],
             );
           },
@@ -2386,6 +2614,21 @@ class _CreateMaintenanceMpResourceState
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Location'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[26] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lotFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Lot'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),

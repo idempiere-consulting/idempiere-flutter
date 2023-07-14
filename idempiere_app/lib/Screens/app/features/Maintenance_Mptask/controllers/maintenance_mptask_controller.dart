@@ -340,6 +340,7 @@ class MaintenanceMptaskController extends GetxController {
   }
 
   Future<void> syncWorkOrder() async {
+    _dataAvailable.value = false;
     var isConnected = await checkConnection();
 
     //print(isConnected);
@@ -370,7 +371,8 @@ class MaintenanceMptaskController extends GetxController {
         file.writeAsStringSync(utf8.decode(response.bodyBytes));
         //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
-        getWorkOrders();
+        //getWorkOrders();
+        syncWorkOrderResource();
       } else {
         if (kDebugMode) {
           print(response.body);
@@ -385,6 +387,99 @@ class MaintenanceMptaskController extends GetxController {
           color: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<void> syncWorkOrderResource() async {
+    String ip = GetStorage().read('ip');
+    //var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        //print(response.body);
+      }
+      var json = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        getWorkOrders();
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+      }
+      //syncWorkOrderResourceSurveyLines();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderResourceLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderResourcePages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorderresource";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        getWorkOrders();
+        if (kDebugMode) {
+          print('WorkOrderResource Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

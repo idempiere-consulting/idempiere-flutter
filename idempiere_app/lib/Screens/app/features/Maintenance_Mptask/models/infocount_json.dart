@@ -50,6 +50,7 @@ class Records {
   String? pcCount;
   String? prCount;
   String? ptCount;
+  String? pxCount;
   final String? todoAction;
   final MPMaintainID? mPMaintainID;
   final String? mpc2CategoryName;
@@ -72,6 +73,7 @@ class Records {
     this.pcCount,
     this.prCount,
     this.ptCount,
+    this.pxCount,
     this.todoAction,
     this.mPMaintainID,
     this.mpc2CategoryName,
@@ -104,9 +106,10 @@ class Records {
                 : null,
         categoryName = json['CategoryName'] as String?,
         revsCount = json['revs_count'] as String?,
-        pcCount = json['pc_count'] as String?,
-        prCount = json['pr_count'] as String?,
+        pcCount = json['revs_count'] as String?,
+        prCount = json['prnow_count'] as String?,
         ptCount = json['pt_count'] as String?,
+        pxCount = json['px_count'] as String?,
         todoAction = json['todo_action'] as String?,
         mPMaintainID = (json['MP_Maintain_ID'] as Map<String, dynamic>?) != null
             ? MPMaintainID.fromJson(

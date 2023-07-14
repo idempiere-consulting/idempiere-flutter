@@ -59,6 +59,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       "ProdCode": barcodeFieldController.text,
       "TextDetails": cartelFieldController.text,
       "LIT_ProductModel": productModelFieldController.text,
+      "Lot": lotFieldController.text,
       "DateOrdered": dateOrdered,
       "ServiceDate": firstUseDate,
       "Note": observationFieldController.text,
@@ -122,6 +123,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
         ),
         "IsActive": isActive,
         "LIT_ResourceStatus": {"id": dropdownValue},
+        "Lot": lotFieldController.text,
         "Length": int.parse(lengthFieldController.text != ""
             ? lengthFieldController.text
             : "0"),
@@ -137,7 +139,14 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
         "lit_ResourceGroup_ID": {"id": dropdownValue3},
         "lit_cartel_format_ID": {
           "id": cartelDropDownValue != "" ? int.parse(cartelDropDownValue) : -1
+        },
+
+        "LIT_M_Product_SubCategory_ID": {
+          "id": subCategoryDropDownValue != ""
+              ? int.parse(subCategoryDropDownValue)
+              : -1
         }
+
         //"IsPrinted": sendWorkOrder,
       });
     }
@@ -167,6 +176,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
           yearFieldController.text == "null" ? "0" : yearFieldController.text);
       trx.records![Get.arguments["index"]].prodCode =
           barcodeFieldController.text;
+      trx.records![Get.arguments["index"]].lot = lotFieldController.text;
       trx.records![Get.arguments["index"]].textDetails =
           cartelFieldController.text;
       trx.records![Get.arguments["index"]].lITProductModel =
@@ -197,6 +207,11 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       if (dropdownValue3 != "") {
         trx.records![Get.arguments["index"]].litResourceGroupID =
             LitResourceGroupID(id: int.parse(dropdownValue3));
+      }
+
+      if (subCategoryDropDownValue != "") {
+        trx.records![Get.arguments["index"]].litmProductSubCategoryID =
+            LITMProductSubCategoryID(id: int.parse(subCategoryDropDownValue));
       }
 
       if (cartelDropDownValue != "") {
@@ -348,6 +363,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
             "ProdCode": barcodeFieldController.text,
             "TextDetails": cartelFieldController.text,
             "LIT_ProductModel": productModelFieldController.text,
+            "Lot": lotFieldController.text,
             "DateOrdered": dateOrdered,
             "ServiceDate": firstUseDate,
             "UserName": userNameFieldController.text,
@@ -368,17 +384,28 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                 ? heightFieldController.text
                 : "0"),
             "Color": colorFieldController.text,
+            "lit_cartel_format_ID": {
+              "id": cartelDropDownValue != ""
+                  ? int.parse(cartelDropDownValue)
+                  : -1
+            },
+
+            "LIT_M_Product_SubCategory_ID": {
+              "id": subCategoryDropDownValue != ""
+                  ? int.parse(subCategoryDropDownValue)
+                  : -1
+            }
             /* "lit_ResourceGroup_ID": {
               "id": dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3)
             } */
             //"IsPrinted": sendWorkOrder,
           };
 
-          if (cartelDropDownValue != "") {
+          /* if (cartelDropDownValue != "") {
             call.addAll({
               "lit_cartel_format_ID": {"id": int.parse(cartelDropDownValue)}
             });
-          }
+          } */
 
           list.removeAt(i);
           list.add(jsonEncode(call));
@@ -423,6 +450,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
       {"id": "DEL", "name": "DEL".tr},
       {"id": "RNR", "name": "RNR".tr},
       {"id": "OUT", "name": "OUT".tr},
+      {"id": "NEW", "name": "NEW".tr},
     ]
   };
 
@@ -434,6 +462,17 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
 
   Future<List<Records>> getAllCartelFormats() async {
     const filename = "cartelformat";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    return jsonResources.records!;
+  }
+
+  Future<List<Records>> getAllSubCategories() async {
+    const filename = "resourcesubcategory";
     final file = File(
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
 
@@ -476,6 +515,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   var barcodeFieldController;
   var sernoFieldController;
   var locationFieldController;
+  var lotFieldController;
   var manufacturerFieldController;
   var yearFieldController;
   var observationFieldController;
@@ -504,6 +544,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
   String dropdownValue = "OUT";
   String dropdownValue3 = "";
   String cartelDropDownValue = "";
+  String subCategoryDropDownValue = "";
 
   @override
   void initState() {
@@ -536,6 +577,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     barcodeFieldController.text = Get.arguments["barcode"] ?? "";
     locationFieldController = TextEditingController();
     locationFieldController.text = Get.arguments["location"] ?? "";
+    lotFieldController =
+        TextEditingController(text: Get.arguments["lot"] ?? "");
     manufacturerFieldController = TextEditingController();
     manufacturerFieldController.text = Get.arguments["manufacturer"] ?? "";
     yearFieldController = TextEditingController();
@@ -564,6 +607,8 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
     firstUseDate = Get.arguments["serviceDate"] ?? "";
 
     cartelDropDownValue = (Get.arguments["cartelFormatId"] ?? "").toString();
+    subCategoryDropDownValue =
+        (Get.arguments["subCategoryId"] ?? "").toString();
     //sendWorkOrder = Get.arguments["isPrinted"] ?? false;
     isActive = true;
     //print(Get.arguments["offlineid"]);
@@ -768,6 +813,63 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                         "Cartel".tr,
                         style: const TextStyle(fontSize: 12),
                       ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Typology".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSubCategories(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a typology".tr),
+                                  value: subCategoryDropDownValue == ""
+                                      ? null
+                                      : subCategoryDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      subCategoryDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                 ),
@@ -995,6 +1097,21 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Location'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[26] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lotFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Lot'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),

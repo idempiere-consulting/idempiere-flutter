@@ -440,6 +440,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         .records![index]
                                                         .totalLines
                                                         .toString(),
+                                                    "taxedAmt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .grandTotal
+                                                        .toString(),
                                                   });
                                             },
                                           ),
@@ -481,7 +486,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "Amount: ".tr,
+                                                    "Net Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                      "€${controller.trx.records![index].totalLines}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Taxed Amount: ".tr,
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -526,7 +543,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                     .mpotid
                                                                     ?.identifier ??
                                                                 'N/A',
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                                 color:
                                                                     kNotifColor))),
                                                   ],

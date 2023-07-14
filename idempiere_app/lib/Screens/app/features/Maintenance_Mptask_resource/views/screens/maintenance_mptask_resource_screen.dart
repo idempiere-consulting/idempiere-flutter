@@ -437,10 +437,10 @@ class MaintenanceMpResourceScreen
                                                             ?.id ==
                                                         "A08"
                                                 ? Icons.grid_4x4_outlined
-                                                : Icons.edit,
+                                                : Icons.auto_stories,
                                             color: Colors.green,
                                           ),
-                                          tooltip: 'Edit Resource',
+                                          //tooltip: '',
                                           onPressed: () async {
                                             switch (controller.trx
                                                 .records![index].eDIType?.id) {
@@ -560,6 +560,18 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .litResourceGroupID
                                                             ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
                                                       });
                                                 }
 
@@ -683,6 +695,18 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .litResourceGroupID
                                                             ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
                                                       });
                                                 }
 
@@ -798,6 +822,18 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .litResourceGroupID
                                                             ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
                                                       });
                                                 }
 
@@ -1028,6 +1064,18 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .litResourceGroupID
                                                             ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
                                                       });
                                                 }
 
@@ -1143,6 +1191,18 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .litResourceGroupID
                                                             ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
                                                       });
                                                 }
 
@@ -1258,6 +1318,18 @@ class MaintenanceMpResourceScreen
                                                             .records![index]
                                                             .litResourceGroupID
                                                             ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
                                                       });
                                                 }
 
@@ -1802,6 +1874,13 @@ class MaintenanceMpResourceScreen
                                                                         index]
                                                                     .litCartelFormID
                                                                     ?.id,
+                                                            "subCategoryId":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litmProductSubCategoryID
+                                                                    ?.id,
                                                             "cartelFormatName":
                                                                 controller
                                                                     .trx
@@ -1917,6 +1996,10 @@ class MaintenanceMpResourceScreen
                                                                 .trx
                                                                 .records![index]
                                                                 .name,
+                                                            "lot": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lot,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -2176,6 +2259,13 @@ class MaintenanceMpResourceScreen
                                                                           index]
                                                                       .litCartelFormID
                                                                       ?.id,
+                                                              "subCategoryId":
+                                                                  controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .litmProductSubCategoryID
+                                                                      ?.id,
                                                               "cartelFormatName":
                                                                   controller
                                                                       .trx
@@ -2300,6 +2390,11 @@ class MaintenanceMpResourceScreen
                                                                   .records![
                                                                       index]
                                                                   .name,
+                                                              "lot": controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .lot,
                                                             });
                                                         /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -2687,15 +2782,22 @@ class MaintenanceMpResourceScreen
                                                                     .trx
                                                                     .records![
                                                                         index]
-                                                                    .litCartelFormID!
-                                                                    .id,
+                                                                    .litCartelFormID
+                                                                    ?.id,
                                                             "cartelFormatName":
                                                                 controller
                                                                     .trx
                                                                     .records![
                                                                         index]
-                                                                    .litCartelFormID!
-                                                                    .identifier,
+                                                                    .litCartelFormID
+                                                                    ?.identifier,
+                                                            "subCategoryId":
+                                                                controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .litmProductSubCategoryID
+                                                                    ?.id,
                                                             "location": controller
                                                                 .trx
                                                                 .records![index]
@@ -2804,6 +2906,10 @@ class MaintenanceMpResourceScreen
                                                                 .trx
                                                                 .records![index]
                                                                 .name,
+                                                            "lot": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .lot,
                                                           });
                                                       /* controller
                                                               .editWorkOrderResourceDateCheck(
@@ -3415,6 +3521,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -3528,6 +3646,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -3536,6 +3666,10 @@ class MaintenanceMpResourceScreen
                                               if (controller.trx.records![index]
                                                       .offlineId ==
                                                   null) {
+                                                print(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .mpDateworkstart);
                                                 Get.toNamed(
                                                     '/MaintenanceMpResourceSheet',
                                                     arguments: {
@@ -3633,6 +3767,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -3738,6 +3884,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -3843,6 +4001,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -3948,6 +4118,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -4053,6 +4235,18 @@ class MaintenanceMpResourceScreen
                                                           .records![index]
                                                           .litResourceGroupID
                                                           ?.id,
+                                                      "dateWorkStart":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .mpDateworkstart,
+                                                      "middlePeriod": int.parse(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .periodAction ??
+                                                              "1"),
                                                     });
                                               }
 
@@ -4540,6 +4734,20 @@ class MaintenanceMpResourceScreen
                                                                       index]
                                                                   .mProductID!
                                                                   .id,
+                                                          "cartelFormatId":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .litCartelFormID
+                                                                  ?.id,
+                                                          "cartelFormatName":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .litCartelFormID
+                                                                  ?.identifier,
                                                           "location": controller
                                                               .trx
                                                               .records![index]

@@ -20,6 +20,7 @@ class DashboardController extends GetxController {
 
   var workStartFlag = false;
   var workStartHour = "N/A".obs;
+  var totWorkHour = 0.0.obs;
 
   final List<dynamic> list = GetStorage().read('permission');
   //late final NextCloudClient client;
@@ -58,6 +59,8 @@ class DashboardController extends GetxController {
     //DateTime fiftyDaysAgo = now.subtract(const Duration(days: 60));
     var formatter = DateFormat('yyyy-MM-dd');
     String formattedDate = formatter.format(now);
+
+    totWorkHour.value = 0.0;
     //String formattedFiftyDaysAgo = formatter.format(fiftyDaysAgo);
 
     final ip = GetStorage().read('ip');
@@ -78,7 +81,7 @@ class DashboardController extends GetxController {
       var json =
           EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
-      for (var i = 0; i < json.rowcount!; i++) {
+      for (var i = 0; i < json.records!.length; i++) {
         //print(json.records![i].jPToDoScheduledStartDate);
         if (workStartFlag == false &&
             json.records![i].jPToDoStatus!.id != "NY") {
@@ -97,6 +100,8 @@ class DashboardController extends GetxController {
             inProgressCount.value++;
             break;
           case "CO":
+            totWorkHour.value =
+                totWorkHour.value + (json.records![i].qty ?? 0).toDouble();
             doneCount.value++;
             break;
           default:

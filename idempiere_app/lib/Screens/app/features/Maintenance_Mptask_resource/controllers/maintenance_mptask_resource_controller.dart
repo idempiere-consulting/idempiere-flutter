@@ -10,6 +10,8 @@ class MaintenanceMpResourceController extends GetxController {
   RefListResourceTypeJson _tt2 = RefListResourceTypeJson(records: []);
   RefListResourceTypeJson _tt3 = RefListResourceTypeJson(records: []);
 
+  var dateWorkStart = Get.arguments["dateWorkStart"];
+
   ScrollController listscrollController = ScrollController();
 
   var hqMaintainId = 0;
@@ -419,6 +421,7 @@ class MaintenanceMpResourceController extends GetxController {
                 //print("done!");
                 //Get.back();
                 Get.back();
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Fatto!",
                   "Il record è stato modificato",
@@ -430,6 +433,7 @@ class MaintenanceMpResourceController extends GetxController {
               } else {
                 //print(response.body);
                 //print(response.statusCode);
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Errore!",
                   "Il record non è stato modificato",
@@ -454,6 +458,7 @@ class MaintenanceMpResourceController extends GetxController {
                     msg;
               }
               GetStorage().write('storedEditAPICalls', calls);
+              passwordFieldController.text = "";
               Get.snackbar(
                 "Salvato!",
                 "Il record è stato salvato localmente in attesa di connessione internet.",
@@ -669,6 +674,7 @@ class MaintenanceMpResourceController extends GetxController {
                 file.writeAsStringSync(data);
                 //getWorkOrders();
                 //print("done!");
+                passwordFieldController.text = "";
                 //Get.back();
                 Get.back();
                 Get.snackbar(
@@ -937,6 +943,7 @@ class MaintenanceMpResourceController extends GetxController {
                 //print("done!");
                 //Get.back();
                 Get.back();
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Fatto!",
                   "Il record è stato modificato",
@@ -950,6 +957,7 @@ class MaintenanceMpResourceController extends GetxController {
                   print(response.body);
                 }
                 //print(response.statusCode);
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Errore!",
                   "Il record non è stato modificato",
@@ -974,6 +982,7 @@ class MaintenanceMpResourceController extends GetxController {
                     msg;
               }
               GetStorage().write('storedEditAPICalls', calls);
+              passwordFieldController.text = "";
               Get.snackbar(
                 "Salvato!",
                 "Il record è stato salvato localmente in attesa di connessione internet.",
@@ -1056,6 +1065,7 @@ class MaintenanceMpResourceController extends GetxController {
                 //print("done!");
                 //Get.back();
                 Get.back();
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Fatto!",
                   "Il record è stato modificato",
@@ -1069,6 +1079,7 @@ class MaintenanceMpResourceController extends GetxController {
                   print(response.body);
                 }
                 //print(response.statusCode);
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Errore!",
                   "Il record non è stato modificato",
@@ -1093,6 +1104,7 @@ class MaintenanceMpResourceController extends GetxController {
                     msg;
               }
               GetStorage().write('storedEditAPICalls', calls);
+              passwordFieldController.text = "";
               Get.snackbar(
                 "Salvato!",
                 "Il record è stato salvato localmente in attesa di connessione internet.",
@@ -1256,6 +1268,7 @@ class MaintenanceMpResourceController extends GetxController {
                 //getWorkOrders();
                 //print("done!");
                 Get.back();
+                passwordFieldController.text = "";
                 Get.snackbar(
                   "Fatto!",
                   "Il record è stato modificato",
@@ -1265,6 +1278,7 @@ class MaintenanceMpResourceController extends GetxController {
                   ),
                 );
               } else {
+                passwordFieldController.text = "";
                 //print(response.body);
                 //print(response.statusCode);
                 Get.snackbar(
@@ -1291,6 +1305,7 @@ class MaintenanceMpResourceController extends GetxController {
                     msg;
               }
               GetStorage().write('storedEditAPICalls', calls);
+              passwordFieldController.text = "";
               Get.snackbar(
                 "Salvato!",
                 "Il record è stato salvato localmente in attesa di connessione internet.",
@@ -1423,10 +1438,11 @@ class MaintenanceMpResourceController extends GetxController {
               for (var i = 0; i < _tt.records!.length; i++) {
                 if (_tt.records![i].value == newValue) {
                   Get.to(const CreateMaintenanceMpResource(), arguments: {
-                    "id": dropDownValue,
+                    "id": "A02",
                     "reflistresourcetype": file,
                     "perm": _tt.records![i].parameterValue,
                     "property": true,
+                    "propertyMaintain": true,
                   });
                 }
               }

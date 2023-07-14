@@ -48,8 +48,16 @@ class HumanResourceWorkHoursController extends GetxController {
               String.fromCharCodes(ndef.cachedMessage!.records[0].payload);
 
           var text2 = text.substring(1);
+
+          Get.defaultDialog(
+            title: 'result',
+            content: Text(text2),
+            barrierDismissible: false,
+            //textConfirm: 'Confirm',
+            buttonColor: kNotifColor,
+          );
           var url = Uri.parse(
-              '$protocol://$ip/api/v1/models/ad_user?\$filter= DocumentNo eq \'$text2\'');
+              '$protocol://$ip/api/v1/models/ad_user?\$filter= Value eq \'$text2\'');
 
           var response = await http.get(
             url,

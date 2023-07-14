@@ -71,6 +71,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       workOrderSync = true;
       syncWorkOrder();
       syncCartelFormat();
+      syncResourceSubCategory();
       syncWorkOrderRefListResource();
       syncWorkOrderRefListResourceCategory();
       syncWorkOrderListResourceGroup();
@@ -706,6 +707,39 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
         print('Cartel Format Checked');
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> syncResourceSubCategory() async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_M_Product_SubCategory?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //print(utf8.decode(response.bodyBytes));
+      const filename = "resourcesubcategory";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(utf8.decode(response.bodyBytes));
+      //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+      if (kDebugMode) {
+        print('Resource SubCategory Checked');
       }
     } else {
       if (kDebugMode) {

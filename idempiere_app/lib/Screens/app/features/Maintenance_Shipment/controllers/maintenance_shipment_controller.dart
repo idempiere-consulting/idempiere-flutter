@@ -16,6 +16,20 @@ class MaintenanceShipmentController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  var businessPartnerFilter = "";
+  var dateStartFilter = "";
+  var dateEndFilter = "";
+  var docNoFilter = "";
+
+  var businessPartnerId = 0.obs;
+  String businessPartnerName = "";
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
+  var docNoValue = "".obs;
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
+
   @override
   void onInit() {
     super.onInit();
@@ -109,20 +123,14 @@ class MaintenanceShipmentController extends GetxController {
   }
 
   Future<void> getShipments() async {
-    /* var now = DateTime.now();
-    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
     _dataAvailable.value = false;
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
+    /* var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"]; */
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and (AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')})&\$orderby= MovementDate desc'); //?\$filter= AD_User2_ID eq $adUserId or SalesRep_ID eq $adUserId&\$orderby= MovementDate desc
-
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -133,6 +141,8 @@ class MaintenanceShipmentController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = ShipmentJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
@@ -593,7 +603,7 @@ class MaintenanceShipmentController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "Intervento",
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }
@@ -659,45 +669,5 @@ class MaintenanceShipmentController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getShipments() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }

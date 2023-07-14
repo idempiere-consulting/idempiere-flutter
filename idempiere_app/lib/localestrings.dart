@@ -575,8 +575,8 @@ class LocaleString extends Translations {
           'Series Number': 'Numero di Serie',
           'Price': 'Prezzo',
           'Warehouse': 'Magazzino',
-          'Create Entry': 'Timbra Entrata',
-          'Sign Entry': 'Timbra Uscita',
+          'Create Entry': 'Timbra Nuova Attività',
+          'Sign Entry': 'Timbra/Gestisci Attività',
           'SET IDEMPIERE URL': 'IMPOSTA IDEMPIERE URL',
           'Syncing data with iDempiere...':
               'Sincronizzazione dati con iDempiere...',
@@ -1155,7 +1155,21 @@ class LocaleString extends Translations {
           'Unload Product': 'Scarica Prodotto',
           'Select a Cartel': 'Seleziona un Cartello',
           'Serial N°': 'Matricola',
-          'Summary Info': 'Riep. Totali'
+          'Summary Info': 'Riep. Totali',
+          'Select a Maintain': 'Seleziona l\'impianto',
+          'From Maintain': 'Da Impianto',
+          'To Maintain': 'A Impianto',
+          'Switch': 'Cambio',
+          'Switch Maintenance Resource': 'Cambio Impianto del Disp.',
+          'Select a Typology': 'Seleziona una Tipologia',
+          'Typology': 'Tipologia',
+          'You\'ve done': 'Hai fatto',
+          'hours today': 'ore oggi',
+          'Taxed Amount: ': 'Importo Ivato: ',
+          'Net Amount: ': 'Importo Netto: ',
+          'Taxed Amount': 'Importo Ivato',
+          'Property Maintain': 'Impianto Sede',
+          'Select a Property Maintain': 'Seleziona Impianto Sede',
         },
       };
 }

@@ -2,13 +2,17 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/views/screens/calendar_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
+
+import '../../../CRM_Contact_BP/models/contact.dart';
 
 class EditCalendarEvent extends StatefulWidget {
   const EditCalendarEvent({Key? key}) : super(key: key);
@@ -68,6 +72,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
       "JP_ToDo_ScheduledEndTime": '$timeEnd:00Z',
       "JP_ToDo_Status": {"id": dropdownValue},
       "JP_ToDo_Type": {"id": "S"},
+      "AD_User_ID": {"id": userId == 0 ? -1 : userId}
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args['id']}');
@@ -119,6 +124,35 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     return dJson.types;
   }
 
+  Future<List<Records>> getAllUsers() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= DateLastLogin neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonContacts = ContactsJson.fromJson(jsondecoded);
+
+      return jsonContacts.records!;
+    } else {
+      throw Exception("Failed to load sales reps");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   fillFields() {
     nameFieldController.text = args['name'] ?? "";
     descriptionFieldController.text = args['description'] ?? "";
@@ -133,6 +167,10 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
   var nameFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
+
+  late TextEditingController userFieldController;
+  int userId = 0;
+
   String date = "";
   String timeStart = "";
   String timeEnd = "";
@@ -146,6 +184,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     super.initState();
     nameFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
+    userFieldController = TextEditingController(text: args["userName"] ?? "");
+    userId = args["userId"] ?? 0;
     dropDownList = getTypes()!;
     dropdownValue = "NY";
     timeStart = "";
@@ -246,6 +286,61 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                         labelText: 'Description'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllUsers(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<Records>(
+                                  direction: AxisDirection.up,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          userId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: userFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'User'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    setState(() {
+                                      userFieldController.text =
+                                          suggestion.name!;
+                                      userId = suggestion.id!;
+                                    });
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(

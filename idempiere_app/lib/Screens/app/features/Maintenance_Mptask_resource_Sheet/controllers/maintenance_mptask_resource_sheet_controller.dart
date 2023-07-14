@@ -21,6 +21,8 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   var surveyAvailable = false.obs;
 
+  DateTime dateWorkStart = DateTime.parse(Get.arguments["dateWorkStart"]);
+
   //END SURVEY
 
   // ignore: prefer_typing_uninitialized_variables
@@ -34,13 +36,13 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
   late RxList<bool> isChecked;
 
-  var value = "Info Sheet".obs;
+  var value = "Check List".obs;
   var productId = Get.arguments["prodId"] ?? 0;
   var productName = Get.arguments["prodName"] ?? "";
   var dropDownValue = "".obs;
   var offline = -1;
 
-  var filters = ["Info Sheet", "Check List", "Sign Sheet"];
+  var filters = ["Check List", "Sign Sheet"];
   var filterCount = 0.obs;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
@@ -94,7 +96,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
   //String get value => _value.toString();
 
   changeFilterPlus() {
-    if (filterCount < 2) {
+    if (filterCount < 1) {
       filterCount.value++;
       value.value = filters[filterCount.value];
     }
@@ -227,8 +229,35 @@ class MaintenanceMpResourceSheetController extends GetxController {
     //print(surveyLines2.records!.length);
     surveyLines2.records!.removeWhere(
         (element) => element.mPMaintainResourceID?.id != Get.arguments["id"]);
+
+    print('hallo');
+
+    var middlePeriod = Get.arguments["middlePeriod"];
+    var workOrderMonth = dateWorkStart.month;
+
+    for (var i = 0; i < surveyLines2.records!.length; i++) {
+      var isSemester = false;
+      var isTrimester = false;
+      var isMonth = false;
+      if ((surveyLines2.records![i].periodAction ?? " ").contains("S") &&
+          (middlePeriod == workOrderMonth ||
+              middlePeriod + 6 == workOrderMonth)) {
+        isSemester = true;
+      } else if ((surveyLines2.records![i].periodAction ?? " ").contains("T") &&
+          (middlePeriod + 3 == workOrderMonth ||
+              middlePeriod + 9 == workOrderMonth)) {
+        isTrimester = true;
+      } else if ((surveyLines2.records![i].periodAction ?? " ").contains("M")) {
+        isMonth = true;
+      }
+
+      if (isMonth == false && isSemester == false && isTrimester == false) {
+        surveyLines2.records!.removeAt(i);
+      }
+    }
+
     surveyLines = surveyLines2;
-    print(surveyLines.records!.length);
+
     isChecked = RxList<bool>.filled(surveyLines.records!.length, false);
     for (var i = 0; i < surveyLines.records!.length; i++) {
       isChecked[i] = surveyLines.records![i].lITIsField1 ?? false;
@@ -498,13 +527,13 @@ class MaintenanceMpResourceSheetController extends GetxController {
     }
   }
 
-  Future<void> getQuizLines(int identifier) async {
+  Future<void> getQuizLines(int id) async {
     String ip = GetStorage().read('ip');
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$filter= mp_resource_survey_ID eq $identifier and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$filter= mp_resource_survey_ID eq $id and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -517,6 +546,29 @@ class MaintenanceMpResourceSheetController extends GetxController {
     if (response.statusCode == 200) {
       _trx = WorkOrderResourceSurveyLinesJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
+
+      var middlePeriod = Get.arguments["middlePeriod"];
+      var workOrderMonth = dateWorkStart.month;
+
+      for (var i = 0; i < _trx.records!.length; i++) {
+        var remove = true;
+        if ((_trx.records![i].periodAction ?? " ").contains("S") &&
+            (middlePeriod == workOrderMonth ||
+                middlePeriod + 6 == workOrderMonth)) {
+          remove = false;
+        } else if ((_trx.records![i].periodAction ?? " ").contains("T") &&
+            (middlePeriod + 3 == workOrderMonth ||
+                middlePeriod + 9 == workOrderMonth)) {
+          remove = false;
+        } else if ((_trx.records![i].periodAction ?? " ").contains("M")) {
+          remove = false;
+        }
+
+        if (remove) {
+          _trx.records!.removeAt(i);
+        }
+      }
+
       selectedValue = RxList<int>.filled(_trx.records!.length, 0);
       checkValue = RxList<int>.filled(_trx.records!.length, 2);
       dateValue = RxList<String>.filled(_trx.records!.length, "");

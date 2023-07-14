@@ -43,6 +43,7 @@ class SRecords {
   final String? updated;
   final UpdatedBy? updatedBy;
   final LITSurveySheetsID? lITSurveySheetsID;
+  final String? periodAction;
   final bool? lITIsField1;
   final int? lineNo;
   final bool? isValid;
@@ -72,6 +73,7 @@ class SRecords {
     this.updated,
     this.updatedBy,
     this.lITSurveySheetsID,
+    this.periodAction,
     this.lITIsField1,
     this.lineNo,
     this.isValid,
@@ -114,6 +116,7 @@ class SRecords {
                 ? LITSurveySheetsID.fromJson(
                     json['LIT_SurveySheets_ID'] as Map<String, dynamic>)
                 : null,
+        periodAction = json['PeriodAction'] as String?,
         lITIsField1 = json['LIT_IsField1'] as bool?,
         lineNo = json['LineNo'] as int?,
         isValid = json['IsValid'] as bool?,
@@ -151,6 +154,7 @@ class SRecords {
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
         'LIT_SurveySheets_ID': lITSurveySheetsID?.toJson(),
+        'PeriodAction': periodAction,
         'LIT_IsField1': lITIsField1,
         'LineNo': lineNo,
         'IsValid': isValid,

@@ -213,6 +213,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   var businessPartnerFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var amountFieldController;
+  late TextEditingController taxedAmountFieldController;
   //String dropdownValue = "";
   //var bPartnerValue = "";
   late TextEditingValue bPName;
@@ -230,7 +231,7 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
   void initState() {
     isPaid = args['isPaid'] ?? false;
     pRuleAvailable = false;
-    paymentRuleId = args["PruleId"] ?? "K";
+    paymentRuleId = args["pRuleId"] ?? "K";
     //dropdownValue = (args["C_BP_Group_ID"]).toString();
     dropdownDocType = (args["docTypeTargetId"]).toString();
     dropdownBPLocation = (args["BPartnerLocationId"]).toString();
@@ -241,6 +242,8 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
     businessPartnerFieldController =
         TextEditingController(text: args['bPartnerName']);
     amountFieldController = TextEditingController(text: args["amt"] ?? "0");
+    taxedAmountFieldController =
+        TextEditingController(text: args["taxedAmt"] ?? "0");
     //bPGroupController = TextEditingController();
     fillFields();
     getPaymentRules();
@@ -499,6 +502,24 @@ class _CRMEditSalesOrderState extends State<CRMEditSalesOrder> {
                       prefixIcon: const Icon(Icons.note_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'Net Amount'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    controller: taxedAmountFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.note_alt),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Taxed Amount'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

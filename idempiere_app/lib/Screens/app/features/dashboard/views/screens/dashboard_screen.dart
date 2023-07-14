@@ -130,6 +130,35 @@ class DashboardScreen extends GetView<DashboardController> {
                   ),
                 ),
               ),
+
+              Obx(
+                () => Visibility(
+                  visible: controller.workStartHour.value != "N/A" &&
+                          int.parse(controller.list[105], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1"
+                      ? true
+                      : false,
+                  child: Container(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: ElevatedButton.icon(
+                      style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all<Color>(Colors.green)),
+                      onPressed: () {},
+                      icon: const Icon(
+                        // <-- Icon
+                        Icons.pending_actions_rounded,
+                        size: 24.0,
+                      ),
+                      label: Text(
+                          "${"You've done".tr} ${controller.totWorkHour.value} ${"hours today".tr}"), // <-- Text
+                    ),
+                  ),
+                ),
+              ),
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),

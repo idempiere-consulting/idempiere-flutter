@@ -81,6 +81,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
             .add(
           Event(
               id: list[i].id!,
+              userId: list[i].aDUserID?.id ?? 0,
+              userName: list[i].aDUserID?.identifier ?? "",
               workOrderId: list[i].mpotid?.id ?? 0,
               workOrderName: list[i].mpotid?.identifier ?? "",
               type: list[i].jPToDoType!.identifier ?? "???",
@@ -105,6 +107,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
             DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
           Event(
               id: list[i].id!,
+              userId: list[i].aDUserID?.id ?? 0,
+              userName: list[i].aDUserID?.identifier ?? "",
               workOrderId: list[i].mpotid?.id ?? 0,
               workOrderName: list[i].mpotid?.identifier ?? "",
               type: list[i].jPToDoType!.identifier ?? "???",
@@ -175,6 +179,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                 .add(
               Event(
                   id: list[i].id!,
+                  userId: list[i].aDUserID?.id ?? 0,
+                  userName: list[i].aDUserID?.identifier ?? "",
                   workOrderId: list[i].mpotid?.id ?? 0,
                   workOrderName: list[i].mpotid?.identifier ?? "",
                   type: list[i].jPToDoType!.identifier ?? "???",
@@ -200,6 +206,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                 DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
               Event(
                   id: list[i].id!,
+                  userId: list[i].aDUserID?.id ?? 0,
+                  userName: list[i].aDUserID?.identifier ?? "",
                   workOrderId: list[i].mpotid?.id ?? 0,
                   workOrderName: list[i].mpotid?.identifier ?? "",
                   type: list[i].jPToDoType!.identifier ?? "???",
@@ -288,6 +296,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                 .add(
               Event(
                   id: list[i].id!,
+                  userId: list[i].aDUserID?.id ?? 0,
+                  userName: list[i].aDUserID?.identifier ?? "",
                   workOrderId: list[i].mpotid?.id ?? 0,
                   workOrderName: list[i].mpotid?.identifier ?? "",
                   type: list[i].jPToDoType!.identifier ?? "???",
@@ -313,6 +323,8 @@ class _MaintenanceCalendarScreenState extends State<MaintenanceCalendarScreen> {
                 DateTime.parse('${formatter.format(date)} 00:00:00.000Z')] = [
               Event(
                   id: list[i].id!,
+                  userId: list[i].aDUserID?.id ?? 0,
+                  userName: list[i].aDUserID?.identifier ?? "",
                   workOrderId: list[i].mpotid?.id ?? 0,
                   workOrderName: list[i].mpotid?.identifier ?? "",
                   type: list[i].jPToDoType!.identifier ?? "???",

@@ -67,6 +67,10 @@ class MaintenanceMptaskLineScreen
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     return Scaffold(
+      floatingActionButton: FloatingActionButton.small(
+        onPressed: controller.syncWorkOrderTask,
+        child: Icon(Icons.refresh),
+      ),
       appBar: AppBar(
         centerTitle: true,
         title: Column(

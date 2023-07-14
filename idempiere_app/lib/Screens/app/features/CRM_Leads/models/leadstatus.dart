@@ -37,6 +37,7 @@ class LSRecords {
   final String? name;
   final ADReferenceID? aDReferenceID;
   final String? value;
+  final String? documentNo;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
   final bool? isActive;
@@ -53,6 +54,7 @@ class LSRecords {
     this.name,
     this.aDReferenceID,
     this.value,
+    this.documentNo,
     this.aDClientID,
     this.aDOrgID,
     this.isActive,
@@ -74,6 +76,7 @@ class LSRecords {
                     json['AD_Reference_ID'] as Map<String, dynamic>)
                 : null,
         value = json['Value'] as String?,
+        documentNo = json['DocumentNo'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,

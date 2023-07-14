@@ -11,6 +11,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/views/screens/crm_pos_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/views/screens/crm_contract_line_screen.dart';
@@ -87,6 +88,7 @@ import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot/vie
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot_Line/views/screens/supplychain_inventory_lot_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/views/screens/supplychain_load_unload_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/views/screens/supplychain_load_unload_line_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Maintenance_Switch_Resource/views/screens/supplychain_maintenance_switch_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt_Creation/views/screens/supplychain_materialreceipt_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Product_List/views/screens/supplychain_product_list_screen.dart';
@@ -630,6 +632,11 @@ class MyApp extends StatelessWidget {
           binding: SupplychainProductListBinding(),
         ),
         GetPage(
+          name: '/SupplychainMaintenanceSwitchResourceScreen',
+          page: () => const SupplychainMaintenanceSwitchResourceScreen(),
+          binding: SupplychainMaintenanceSwitchResourceBinding(),
+        ),
+        GetPage(
           name: '/VehicleEquipment',
           page: () => const VehicleEquipmentScreen(),
           binding: VehicleEquipmentBinding(),
@@ -663,6 +670,11 @@ class MyApp extends StatelessWidget {
           name: '/HumanResourceWorkHours',
           page: () => const HumanResourceWorkHoursScreen(),
           binding: HumanResourceWorkHoursBinding(),
+        ),
+        GetPage(
+          name: '/HumanResourceEmployeeSheetScreen',
+          page: () => const HumanResourceEmployeeSheetScreen(),
+          binding: HumanResourceEmployeeSheetBinding(),
         ),
         GetPage(
           name: '/Employee',

@@ -53,6 +53,7 @@ class RRecords {
   String? name;
   String? description;
   String? serNo;
+  String? periodAction;
   String? lITControl3DateFrom;
   String? lITControl3DateNext;
   String? lITControl2DateFrom;
@@ -60,6 +61,7 @@ class RRecords {
   String? lITControl1DateFrom;
   String? lITControl1DateNext;
   final LITSurveySheetsID? lITSurveySheetsID;
+  LITMProductSubCategoryID? litmProductSubCategoryID;
   EDIType? eDIType;
   String? lot;
   String? locationComment;
@@ -120,6 +122,7 @@ class RRecords {
       this.isOwned,
       this.description,
       this.serNo,
+      this.periodAction,
       this.lITControl3DateFrom,
       this.lITControl3DateNext,
       this.lITControl2DateFrom,
@@ -127,6 +130,7 @@ class RRecords {
       this.lITControl1DateFrom,
       this.lITControl1DateNext,
       this.lITSurveySheetsID,
+      this.litmProductSubCategoryID,
       this.eDIType,
       this.litCartelFormID,
       this.lot,
@@ -199,6 +203,7 @@ class RRecords {
         name = json['Name'] as String?,
         description = json['Description'] as String?,
         serNo = json['SerNo'] as String?,
+        periodAction = json['PeriodAction'] as String?,
         lITControl3DateFrom = json['LIT_Control3DateFrom'] as String?,
         lITControl3DateNext = json['LIT_Control3DateNext'] as String?,
         lITControl2DateFrom = json['LIT_Control2DateFrom'] as String?,
@@ -210,6 +215,12 @@ class RRecords {
                 ? LITSurveySheetsID.fromJson(
                     json['LIT_SurveySheets_ID'] as Map<String, dynamic>)
                 : null,
+        litmProductSubCategoryID = (json['LIT_M_Product_SubCategory_ID']
+                    as Map<String, dynamic>?) !=
+                null
+            ? LITMProductSubCategoryID.fromJson(
+                json['LIT_M_Product_SubCategory_ID'] as Map<String, dynamic>)
+            : null,
         eDIType = (json['EDIType'] as Map<String, dynamic>?) != null
             ? EDIType.fromJson(json['EDIType'] as Map<String, dynamic>)
             : null,
@@ -294,6 +305,7 @@ class RRecords {
         'Name': name,
         'Description': description,
         'SerNo': serNo,
+        'PeriodAction': periodAction,
         'LIT_Control3DateFrom': lITControl3DateFrom,
         'LIT_Control3DateNext': lITControl3DateNext,
         'LIT_Control2DateFrom': lITControl2DateFrom,
@@ -302,6 +314,7 @@ class RRecords {
         'LIT_Control1DateNext': lITControl1DateNext,
         'model-name': modelname,
         'LIT_SurveySheets_ID': lITSurveySheetsID?.toJson(),
+        'LIT_M_Product_SubCategory_ID': litmProductSubCategoryID?.toJson(),
         'EDIType': eDIType?.toJson(),
         'Lot': lot,
         'LocationComment': locationComment,
@@ -624,6 +637,33 @@ class LITSurveySheetsID {
   });
 
   LITSurveySheetsID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITMProductSubCategoryID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITMProductSubCategoryID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITMProductSubCategoryID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

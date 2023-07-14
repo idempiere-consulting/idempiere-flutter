@@ -52,18 +52,26 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
                 element.categoryName == trx.records![i].categoryName)
             .isEmpty)) {
           tableRows.add(Records(
-              categoryName: trx.records![i].categoryName,
-              pcCount: trx.records![i].pcCount ?? "0",
-              prCount: trx.records![i].prCount ?? "0",
-              ptCount: trx.records![i].prCount ?? "0"));
+            categoryName: trx.records![i].categoryName,
+            pcCount: trx.records![i].pcCount ?? "0",
+            prCount: trx.records![i].prCount ?? "0",
+            ptCount: trx.records![i].ptCount ?? "0",
+            pxCount: trx.records![i].pxCount ?? "0",
+          ));
         } else {
           for (var j = 0; j < tableRows.length; j++) {
             if (tableRows[j].categoryName == trx.records![i].categoryName) {
               tableRows[j].pcCount = (int.parse(tableRows[j].pcCount ?? "0") +
                       int.parse(trx.records![i].pcCount ?? "0"))
                   .toString();
+              tableRows[j].prCount = (int.parse(tableRows[j].prCount ?? "0") +
+                      int.parse(trx.records![i].prCount ?? "0"))
+                  .toString();
               tableRows[j].ptCount = (int.parse(tableRows[j].ptCount ?? "0") +
                       int.parse(trx.records![i].ptCount ?? "0"))
+                  .toString();
+              tableRows[j].pxCount = (int.parse(tableRows[j].pxCount ?? "0") +
+                      int.parse(trx.records![i].pxCount ?? "0"))
                   .toString();
             }
           }
@@ -149,6 +157,12 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
                                 Text('Tot CL'.tr),
                               ],
                             )),
+                            DataColumn(
+                                label: Row(
+                              children: [
+                                Text('Tot X'.tr),
+                              ],
+                            )),
                           ],
                           rows: tableRows
                               .map((e) => DataRow(cells: [
@@ -162,6 +176,8 @@ class _MaintenanceMptaskInfoState extends State<MaintenanceMptaskInfo> {
                                     DataCell(Text(e.prCount ?? "N/A",
                                         textAlign: TextAlign.end)),
                                     DataCell(Text(e.ptCount ?? "N/A",
+                                        textAlign: TextAlign.end)),
+                                    DataCell(Text(e.pxCount ?? "N/A",
                                         textAlign: TextAlign.end)),
                                   ]))
                               .toList(),

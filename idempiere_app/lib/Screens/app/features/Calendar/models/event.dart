@@ -24,6 +24,8 @@ class Event {
   final String cBPartner;
   final int workOrderId;
   final String workOrderName;
+  final int userId;
+  final String userName;
 
   const Event({
     required this.id,
@@ -44,5 +46,7 @@ class Event {
     required this.cBPartner,
     required this.workOrderId,
     required this.workOrderName,
+    required this.userId,
+    required this.userName,
   });
 }

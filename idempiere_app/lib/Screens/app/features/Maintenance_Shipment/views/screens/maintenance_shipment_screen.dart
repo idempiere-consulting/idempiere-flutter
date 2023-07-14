@@ -10,6 +10,8 @@ import 'dart:typed_data';
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -19,6 +21,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_c
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Shipment/views/screens/maintenance_shipment_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -72,6 +75,123 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
         return false;
       },
       child: Scaffold(
+        bottomNavigationBar: BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getShipments();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("Shipment: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("Shipment: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
+                      margin: const EdgeInsets.only(left: 20),
+                      child: IconButton(
+                        onPressed: () {
+                          controller.getTasks();
+                        },
+                        icon: const Icon(
+                          Icons.refresh,
+                          color: Colors.yellow,
+                        ),
+                      ),
+                    ), */
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getShipments();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getShipments();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+          children: [
+            SpeedDialChild(
+                label: 'Filter'.tr,
+                child: Obx(() => Icon(
+                      MaterialSymbols.filter_alt_filled,
+                      color: controller.businessPartnerId.value == 0 &&
+                              controller.dateStartValue.value == "" &&
+                              controller.dateEndValue.value == "" &&
+                              controller.docNoValue.value == ""
+                          ? Colors.white
+                          : kNotifColor,
+                    )),
+                onTap: () {
+                  Get.to(const MaintenanceFilterShipment(), arguments: {
+                    'businessPartnerId': controller.businessPartnerId.value,
+                    'businessPartnerName': controller.businessPartnerName,
+                    'dateStart': controller.dateStartValue.value,
+                    'dateEnd': controller.dateEndValue.value,
+                  });
+                }),
+          ],
+        ),
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
             ? null
@@ -87,60 +207,10 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
             mobileBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Shipment: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getShipments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -169,18 +239,16 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.toNamed('/MaintenanceShipmentLine',
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "docNo": controller
-                                                .trx.records![index].documentNo,
-                                            "bPartner": controller
-                                                .trx
-                                                .records![index]
-                                                .cBPartnerID
-                                                ?.identifier,
-                                          });
+                                      Get.toNamed('/ShipmentLine', arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                      });
                                     },
                                   ),
                                   leading: Container(
@@ -207,6 +275,31 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                       .records![index]
                                                       .privateNote ??
                                                   "",
+                                              "movementDate": controller.trx
+                                                  .records![index].movementDate,
+                                              "description": controller.trx
+                                                  .records![index].description,
+                                              "docTypeName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "movementTypeID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmMovementTypeID
+                                                  ?.id,
+                                              "shipDate": controller
+                                                  .trx.records![index].shipDate,
+                                              "deliveryViaRule": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .deliveryViaRule
+                                                  ?.id,
+                                              "externalAspect": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .externalAspect,
                                             });
                                       },
                                     ),
@@ -399,60 +492,10 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Shipment: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getShipments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -481,18 +524,16 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.toNamed('/MaintenanceShipmentLine',
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "docNo": controller
-                                                .trx.records![index].documentNo,
-                                            "bPartner": controller
-                                                .trx
-                                                .records![index]
-                                                .cBPartnerID
-                                                ?.identifier,
-                                          });
+                                      Get.toNamed('/ShipmentLine', arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                      });
                                     },
                                   ),
                                   leading: Container(
@@ -519,6 +560,31 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                       .records![index]
                                                       .privateNote ??
                                                   "",
+                                              "movementDate": controller.trx
+                                                  .records![index].movementDate,
+                                              "description": controller.trx
+                                                  .records![index].description,
+                                              "docTypeName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "movementTypeID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmMovementTypeID
+                                                  ?.id,
+                                              "shipDate": controller
+                                                  .trx.records![index].shipDate,
+                                              "deliveryViaRule": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .deliveryViaRule
+                                                  ?.id,
+                                              "externalAspect": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .externalAspect,
                                             });
                                       },
                                     ),
@@ -711,60 +777,10 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("Shipment: ".tr +
-                              controller.trx.rowcount.toString())
-                          : Text("Shipment: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          Get.to(const CreateLead());
-                        },
-                        icon: const Icon(
-                          Icons.person_add,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getShipments();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ), */
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -793,18 +809,16 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                           : Colors.yellow,
                                     ),
                                     onPressed: () {
-                                      Get.toNamed('/MaintenanceShipmentLine',
-                                          arguments: {
-                                            "id": controller
-                                                .trx.records![index].id,
-                                            "docNo": controller
-                                                .trx.records![index].documentNo,
-                                            "bPartner": controller
-                                                .trx
-                                                .records![index]
-                                                .cBPartnerID
-                                                ?.identifier,
-                                          });
+                                      Get.toNamed('/ShipmentLine', arguments: {
+                                        "id": controller.trx.records![index].id,
+                                        "docNo": controller
+                                            .trx.records![index].documentNo,
+                                        "bPartner": controller
+                                            .trx
+                                            .records![index]
+                                            .cBPartnerID
+                                            ?.identifier,
+                                      });
                                     },
                                   ),
                                   leading: Container(
@@ -831,6 +845,31 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
                                                       .records![index]
                                                       .privateNote ??
                                                   "",
+                                              "movementDate": controller.trx
+                                                  .records![index].movementDate,
+                                              "description": controller.trx
+                                                  .records![index].description,
+                                              "docTypeName": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cDocTypeID
+                                                  ?.identifier,
+                                              "movementTypeID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmMovementTypeID
+                                                  ?.id,
+                                              "shipDate": controller
+                                                  .trx.records![index].shipDate,
+                                              "deliveryViaRule": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .deliveryViaRule
+                                                  ?.id,
+                                              "externalAspect": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .externalAspect,
                                             });
                                       },
                                     ),
@@ -1041,6 +1080,40 @@ class MaintenanceShipmentScreen extends GetView<MaintenanceShipmentController> {
               ),
             ),
           const Expanded(child: _Header()),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeader2({Function()? onPressedMenu}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              if (onPressedMenu != null)
+                Padding(
+                  padding: const EdgeInsets.only(right: kSpacing),
+                  child: IconButton(
+                    onPressed: onPressedMenu,
+                    icon: const Icon(EvaIcons.menu),
+                    tooltip: "menu",
+                  ),
+                ),
+              Expanded(
+                child: _ProfilTile(
+                  data: controller.getProfil(),
+                  onPressedNotification: () {},
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: const [
+              Expanded(child: _Header()),
+            ],
+          ),
         ],
       ),
     );
