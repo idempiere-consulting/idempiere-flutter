@@ -65,7 +65,8 @@ class SupplychainMaintenanceSwitchResourceController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(fromMaintainId);
+      print(response.body);
       var jsondecoded = jsonDecode(response.body);
 
       maintainResourceList = WorkOrderResourceLocalJson.fromJson(jsondecoded);

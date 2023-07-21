@@ -145,7 +145,11 @@ class MaintenanceMptaskLineScreen
                           return Container(
                             margin: const EdgeInsets.all(10),
                             child: ElevatedButton(
-                                onPressed: () {},
+                                onPressed: () {
+                                  controller.setFilter(controller.prodCountList
+                                          .records![index].mProductID?.id ??
+                                      0);
+                                },
                                 child: Text(
                                     "${controller.prodCountList.records![index].mProductID?.identifier} : ${controller.prodCountList.records![index].qty}")),
                           );
@@ -243,8 +247,11 @@ class MaintenanceMptaskLineScreen
                                           "index": taskindex,
                                           "id": controller
                                               ._trx.records![index].id,
-                                          "qtyEntered": controller
-                                              ._trx.records![index].qtyEntered
+                                          "qtyEntered": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .qtyEntered ??
+                                                  0)
                                               .toString(),
                                           "resourceQty": controller
                                               ._trx.records![index].resourceQty

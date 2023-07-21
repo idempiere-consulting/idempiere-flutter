@@ -9,6 +9,9 @@ class MaintenanceMptaskLineController extends GetxController {
   late OrgInfoJSON orgInfo;
 
   WorkOrderTaskLocalJson prodCountList = WorkOrderTaskLocalJson(records: []);
+
+  int filterId = 0;
+
   //var _hasMailSupport = false;
   //var args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
@@ -37,6 +40,15 @@ class MaintenanceMptaskLineController extends GetxController {
     setConnect();
     getOrgInfo();
     //getADUserID();
+  }
+
+  setFilter(int id) {
+    if (filterId != id) {
+      filterId = id;
+    } else {
+      filterId = 0;
+    }
+    getWorkOrders();
   }
 
   Future<void> setConnect() async {
@@ -409,6 +421,11 @@ class MaintenanceMptaskLineController extends GetxController {
 
     _trx.records!.removeWhere((element) => element.mPOTID?.id != args["id"]);
 
+    if (filterId != 0) {
+      _trx.records!
+          .removeWhere((element) => element.mProductID?.id != filterId);
+    }
+
     for (var i = 0; i < _trx.records!.length; i++) {
       if (prodCountList.records!
           .where((element) =>
@@ -426,6 +443,7 @@ class MaintenanceMptaskLineController extends GetxController {
         }
       }
     }
+
     //print(_trx.records![0.]);
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;

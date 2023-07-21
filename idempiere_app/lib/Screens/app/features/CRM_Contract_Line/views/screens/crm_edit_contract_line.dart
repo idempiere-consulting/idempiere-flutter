@@ -27,7 +27,7 @@ class _EditCRMContractLineState extends State<EditCRMContractLine> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final msg = jsonEncode({
-      "Amount": double.parse(priceFieldController),
+      "Amount": double.parse(priceFieldController.text),
       "M_Product_ID": {"id": productId != 0 ? productId : -1},
       "Qty": int.parse(qtyFieldController.text),
     });
