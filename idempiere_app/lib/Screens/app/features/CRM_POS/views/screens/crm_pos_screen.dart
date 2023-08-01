@@ -23,6 +23,8 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_l
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_lead_filters_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_POS/models/pos_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_POS/models/posbuttonlayout_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/postablerow_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/product_category_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/models/product_list_json.dart';
@@ -686,39 +688,66 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                               crossAxisCellCount: 17,
                               mainAxisCellCount: 20,
                               child: Obx(
-                                () => controller.prodCategoryAvailable.value
-                                    ? MasonryGridView.count(
-                                        shrinkWrap: true,
-                                        itemCount: controller.prodCategoryList
-                                                .records?.length ??
-                                            0,
-                                        crossAxisCount: 2,
-                                        mainAxisSpacing: 2,
-                                        crossAxisSpacing: 2,
-                                        itemBuilder: (context, index) {
-                                          return SizedBox(
-                                            height: 60,
-                                            child: ElevatedButton(
-                                                onPressed: () {
-                                                  //controller.setCurrentProductQty("1");
-                                                },
-                                                child: Text(
-                                                  controller
-                                                          .prodCategoryList
-                                                          .records![index]
-                                                          .name ??
-                                                      "N/A",
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 10),
-                                                )),
-                                          );
-                                        },
-                                      )
-                                    : CircularProgressIndicator(),
+                                () =>
+                                    controller.prodCategoryButtonAvailable.value
+                                        ? MasonryGridView.count(
+                                            shrinkWrap: true,
+                                            itemCount: controller
+                                                    .prodCategoryButtonList
+                                                    .records
+                                                    ?.length ??
+                                                0,
+                                            crossAxisCount: 2,
+                                            mainAxisSpacing: 2,
+                                            crossAxisSpacing: 2,
+                                            itemBuilder: (context, index) {
+                                              return SizedBox(
+                                                height: 60,
+                                                child: ElevatedButton(
+                                                    onPressed: () {
+                                                      if (controller
+                                                              .prodCategoryButtonList
+                                                              .records![index]
+                                                              .subKeyLayoutID
+                                                              ?.id !=
+                                                          null) {
+                                                        controller.getPOSProductCategoryButtons(
+                                                            controller
+                                                                .prodCategoryButtonList
+                                                                .records![index]
+                                                                .subKeyLayoutID!
+                                                                .id!);
+                                                      } else if (controller
+                                                              .prodCategoryButtonList
+                                                              .records![index]
+                                                              .mProductCategoryID
+                                                              ?.id !=
+                                                          null) {
+                                                        controller.getProductByProductCategory(
+                                                            controller
+                                                                .prodCategoryButtonList
+                                                                .records![index]
+                                                                .mProductCategoryID!
+                                                                .id!);
+                                                      }
+                                                    },
+                                                    child: Text(
+                                                      controller
+                                                              .prodCategoryButtonList
+                                                              .records![index]
+                                                              .name ??
+                                                          "N/A",
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 10),
+                                                    )),
+                                              );
+                                            },
+                                          )
+                                        : SizedBox(),
                               ),
                             ),
                             StaggeredGridTile.count(

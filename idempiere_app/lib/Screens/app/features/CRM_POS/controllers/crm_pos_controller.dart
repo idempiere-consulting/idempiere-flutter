@@ -13,6 +13,8 @@ class CRMPOSController extends GetxController {
 
   ProductCategoryJSON prodCategoryList = ProductCategoryJSON(records: []);
 
+  PosButtonLayoutJSON prodCategoryButtonList = PosButtonLayoutJSON(records: []);
+
   List<DataRow> rows = [];
 
   List<POSTableRowJSON> productList = [];
@@ -33,6 +35,7 @@ class CRMPOSController extends GetxController {
   var tableAvailable = true.obs;
   var dataAvailable = false.obs;
   var prodCategoryAvailable = false.obs;
+  var prodCategoryButtonAvailable = false.obs;
 
   var cashPayment = false.obs;
   var creditCardPayment = false.obs;
@@ -47,6 +50,7 @@ class CRMPOSController extends GetxController {
     getBusinessPartner();
     getDefaultPaymentTermsFromBP();
     getPOSProductCategories();
+    getPOSProductCategoryButtonLayout();
   }
 
   Future<void> getProducts() async {
@@ -103,6 +107,37 @@ class CRMPOSController extends GetxController {
       if (json.records!.isNotEmpty) {
         setCurrentProduct(json.records![0]);
       }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getProductByProductCategory(int categoryId) async {
+    dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $categoryId and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      _trx =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
+
+      dataAvailable.value = true;
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -447,12 +482,67 @@ class CRMPOSController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
       //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       prodCategoryList = ProductCategoryJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
       prodCategoryAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getPOSProductCategoryButtonLayout() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_POS?\$filter= AD_User_ID eq ${GetStorage().read('userId')} and LIT_POSType eq \'POSF\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      var json = PosJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.records![0].cposKeyLayoutID?.id != null) {
+        getPOSProductCategoryButtons(json.records![0].cposKeyLayoutID!.id!);
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getPOSProductCategoryButtons(int id) async {
+    prodCategoryButtonAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_POSKey?\$filter= C_POSKeyLayout_ID eq $id and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      prodCategoryButtonList = PosButtonLayoutJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      prodCategoryButtonAvailable.value = true;
     } else {
       if (kDebugMode) {
         print(response.body);

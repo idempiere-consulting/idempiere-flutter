@@ -643,6 +643,44 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       tableRows.add(DataRow(cells: tableQtyAvailableRow));
 
+      var rowqtyOnHandList = gridDetail.records![0].qtyOnHand!.split(';');
+
+      Map<String, PlutoCell> qtyOnHandRow = {};
+      qtyOnHandRow.addAll({
+        'Size'.tr: PlutoCell(value: 'Warehouse'.tr),
+      });
+      for (var i = 0; i < columnList.length; i++) {
+        qtyOnHandRow.addAll({
+          columnList[i]: PlutoCell(value: rowqtyOnHandList[i]),
+        });
+      }
+
+      //TABLE QTY ONHAND ROW
+
+      List<DataCell> tableQtyOnHandRow = [];
+
+      tableQtyOnHandRow.add(DataCell(
+        Row(
+          children: [
+            Text(
+              'Warehouse'.tr,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
+        ),
+      ));
+
+      for (var i = 0; i < columnList.length; i++) {
+        tableQtyOnHandRow.add(DataCell(Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(rowqtyOnHandList[i]),
+          ],
+        )));
+      }
+
+      tableRows.add(DataRow(cells: tableQtyOnHandRow));
+
       //END TABLE QTY AVAILABLE ROW
 
       var rowqtyOrderedList = gridDetail.records![0].qtyOrdered!.split(';');
@@ -684,44 +722,6 @@ class PortalMpSalesOrderB2BController extends GetxController {
       tableRows.add(DataRow(cells: tableQtyOrderedRow));
 
       //END TABLE QTY ORDERED ROW
-
-      var rowqtyOnHandList = gridDetail.records![0].qtyOnHand!.split(';');
-
-      Map<String, PlutoCell> qtyOnHandRow = {};
-      qtyOnHandRow.addAll({
-        'Size'.tr: PlutoCell(value: 'Warehouse'.tr),
-      });
-      for (var i = 0; i < columnList.length; i++) {
-        qtyOnHandRow.addAll({
-          columnList[i]: PlutoCell(value: rowqtyOnHandList[i]),
-        });
-      }
-
-      //TABLE QTY ONHAND ROW
-
-      List<DataCell> tableQtyOnHandRow = [];
-
-      tableQtyOnHandRow.add(DataCell(
-        Row(
-          children: [
-            Text(
-              'Warehouse'.tr,
-              style: const TextStyle(fontStyle: FontStyle.italic),
-            ),
-          ],
-        ),
-      ));
-
-      for (var i = 0; i < columnList.length; i++) {
-        tableQtyOnHandRow.add(DataCell(Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(rowqtyOnHandList[i]),
-          ],
-        )));
-      }
-
-      tableRows.add(DataRow(cells: tableQtyOnHandRow));
 
       //END TABLE QTY ONHAND ROW
 
