@@ -1196,7 +1196,9 @@ class MaintenanceMpResourceController extends GetxController {
         var count = 0;
         for (var i = 0; i < _trx2.records!.length; i++) {
           //print(res.records![i].prodCode);
-          if (_trx2.records![i].prodCode == passwordFieldController.text) {
+          if (_trx2.records![i].prodCode == passwordFieldController.text &&
+              (_trx2.records![i].resourceStatus?.id == 'NEW' ||
+                  _trx2.records![i].resourceStatus?.id == 'REV')) {
             count++;
             var msg = jsonEncode({
               "MP_Maintain_ID": {
@@ -1324,6 +1326,7 @@ class MaintenanceMpResourceController extends GetxController {
                   "LIT_ResourceStatus": {"id": "IRX"},
                 });
                 if (trx.records![index].isOwned ?? false) {
+                  _trx2.records![i2].mpMaintainID!.id = hqMaintainId;
                   msg = jsonEncode({
                     "LIT_ResourceStatus": {"id": "INC"},
                     "MP_Maintain_ID": {
@@ -2303,7 +2306,7 @@ class MaintenanceMpResourceController extends GetxController {
       switch (filterCount) {
         case 1:
           temp = (_trx.records!.where((element) =>
-              element.resourceStatus!.id == "INS" &&
+              element.resourceStatus?.id == "INS" &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);
@@ -2343,8 +2346,8 @@ class MaintenanceMpResourceController extends GetxController {
           break;
         case 4:
           temp = (_trx.records!.where((element) =>
-              (element.resourceStatus!.id == "IRV" ||
-                  element.resourceStatus!.id == "IRX") &&
+              (element.resourceStatus?.id == "IRV" ||
+                  element.resourceStatus?.id == "IRX") &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);

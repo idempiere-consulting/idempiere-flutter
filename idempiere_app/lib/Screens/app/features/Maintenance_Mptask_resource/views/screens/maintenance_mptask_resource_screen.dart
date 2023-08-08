@@ -1334,6 +1334,138 @@ class MaintenanceMpResourceScreen
                                                 }
 
                                                 break;
+                                              case "A12":
+                                                if (controller
+                                                        .trx
+                                                        .records![index]
+                                                        .offlineId ==
+                                                    null) {
+                                                  Get.toNamed(
+                                                      '/MaintenanceMpResourceSheet',
+                                                      arguments: {
+                                                        "surveyId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITSurveySheetsID
+                                                            ?.id,
+                                                        "id": controller.trx
+                                                            .records![index].id,
+                                                        "serNo": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serNo ??
+                                                            "",
+                                                        "prodId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.id,
+                                                        "prodName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mProductID
+                                                            ?.identifier,
+                                                        "lot": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lot,
+                                                        "location": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .locationComment,
+                                                        "locationCode":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .value,
+                                                        "manYear": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .manufacturedYear,
+                                                        "userName": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .userName,
+                                                        "serviceDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .serviceDate,
+                                                        "orderedDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "endDate": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .endDate,
+                                                        "manufacturer":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturer,
+                                                        "model": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITProductModel,
+                                                        "manufacturedYear":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .manufacturedYear,
+                                                        "purchaseDate":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .dateOrdered,
+                                                        "note": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .note,
+                                                        "resTypeId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .lITResourceType
+                                                            ?.id,
+                                                        "valid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .isValid,
+                                                        "offlineid": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .offlineId,
+                                                        "index": index,
+                                                        "resourceStatus":
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .resourceStatus
+                                                                    ?.id ??
+                                                                "OUT",
+                                                        "resourceGroup": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .litResourceGroupID
+                                                            ?.id,
+                                                        "dateWorkStart":
+                                                            controller
+                                                                .trx
+                                                                .records![index]
+                                                                .mpDateworkstart,
+                                                        "middlePeriod":
+                                                            int.parse(controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .periodAction ??
+                                                                "1"),
+                                                      });
+                                                }
+
+                                                break;
                                               default:
                                             }
                                             /* Get.to(
