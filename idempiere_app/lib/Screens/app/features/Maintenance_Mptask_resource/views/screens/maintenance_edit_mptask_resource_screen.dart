@@ -725,7 +725,7 @@ class _EditMaintenanceMpResourceState extends State<EditMaintenanceMpResource> {
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return "${option.value}_${option.name}"
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text

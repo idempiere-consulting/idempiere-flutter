@@ -299,6 +299,25 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       }
       GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
       GetStorage().write('postCallList', list);
+      final file2 = File(
+          '${(await getApplicationDocumentsDirectory()).path}/workorderresource.json');
+
+      //print(file.readAsStringSync());
+      //print(GetStorage().read('selectedTaskDocNo'));
+      WorkOrderResourceLocalJson workOrderResourceList =
+          WorkOrderResourceLocalJson.fromJson(
+              jsonDecode(file2.readAsStringSync()));
+
+      for (var i = 0; i < workOrderResourceList.records!.length; i++) {
+        if (workOrderResourceList.records![i].id == args["id"]) {
+          int count = int.parse(
+              workOrderResourceList.records![i].anomaliesCount ?? "0");
+
+          workOrderResourceList.records![i].anomaliesCount =
+              (count + 1).toString();
+        }
+      }
+      file2.writeAsStringSync(jsonEncode(workOrderResourceList.toJson()));
       Get.snackbar(
         "Saved!".tr,
         "The record has been saved locally waiting for internet connection".tr,

@@ -1197,8 +1197,9 @@ class MaintenanceMpResourceController extends GetxController {
         for (var i = 0; i < _trx2.records!.length; i++) {
           //print(res.records![i].prodCode);
           if (_trx2.records![i].prodCode == passwordFieldController.text &&
-              (_trx2.records![i].resourceStatus?.id == 'NEW' ||
-                  _trx2.records![i].resourceStatus?.id == 'REV')) {
+                  (_trx2.records![i].resourceStatus?.id == 'NEW' ||
+                      _trx2.records![i].resourceStatus?.id == 'REV') ||
+              _trx2.records![i].resourceStatus?.id == 'INC') {
             count++;
             var msg = jsonEncode({
               "MP_Maintain_ID": {
