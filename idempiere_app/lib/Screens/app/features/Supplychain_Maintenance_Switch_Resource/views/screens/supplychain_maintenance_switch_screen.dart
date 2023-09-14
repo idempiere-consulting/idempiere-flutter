@@ -241,23 +241,327 @@ class SupplychainMaintenanceSwitchResourceScreen
             tabletBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: FutureBuilder(
+                    future: controller.getAllWarehouseMaintenances(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'From Maintain'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: Obx(
+                                  () => DropdownButton(
+                                    isDense: true,
+                                    underline: const SizedBox(),
+                                    hint: Text("Select a Maintain".tr),
+                                    isExpanded: true,
+                                    value:
+                                        controller.fromMaintainId.value == "0"
+                                            ? null
+                                            : controller.fromMaintainId.value,
+                                    elevation: 16,
+                                    onChanged: (newValue) {
+                                      controller.dataAvailable.value = false;
+                                      controller.fromMaintainId.value =
+                                          newValue as String;
+
+                                      //print(dropdownValue);
+                                    },
+                                    items: snapshot.data!.map((list) {
+                                      return DropdownMenuItem<String>(
+                                        value: list.id.toString(),
+                                        child: Text(
+                                          list.documentNo.toString(),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: FutureBuilder(
+                    future: controller.getAllWarehouseMaintenances(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'To Maintain'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: Obx(
+                                  () => DropdownButton(
+                                    isDense: true,
+                                    underline: const SizedBox(),
+                                    hint: Text("Select a Maintain".tr),
+                                    isExpanded: true,
+                                    value: controller.toMaintainId.value == "0"
+                                        ? null
+                                        : controller.toMaintainId.value,
+                                    elevation: 16,
+                                    onChanged: (newValue) {
+                                      controller.dataAvailable.value = false;
+                                      controller.toMaintainId.value =
+                                          newValue as String;
+
+                                      //print(dropdownValue);
+                                    },
+                                    items: snapshot.data!.map((list) {
+                                      return DropdownMenuItem<String>(
+                                        value: list.id.toString(),
+                                        child: Text(
+                                          list.documentNo.toString(),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: controller.myFocusNode,
+                    onTap: () {
+                      controller.barcodeSearch.text = "";
+                    },
+                    controller: controller.barcodeSearch,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (barcode) {
+                      if (controller.fromMaintainId.value != "0") {
+                        controller.searchMaintainResource(barcode);
+                      }
+                    },
+                  ),
+                ),
+                Divider(),
+                Obx(
+                  () => controller.dataAvailable.value
+                      ? Card(
+                          child: ListTile(
+                          title: Text(controller.maintainResourceList
+                                  .records![0].mProductID?.identifier ??
+                              "N/A"),
+                        ))
+                      : SizedBox(),
+                ),
+                Obx(
+                  () => controller.dataAvailable.value
+                      ? ElevatedButton(
+                          onPressed: () {
+                            if (controller.toMaintainId.value != "0") {
+                              controller.switchMaintainResource(controller
+                                  .maintainResourceList.records![0].id!);
+                            }
+                          },
+                          child: Text('Switch'.tr),
+                        )
+                      : SizedBox(),
+                ),
               ]);
             },
             desktopBuilder: (context, constraints) {
               return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-                _buildHeader(
+                _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: FutureBuilder(
+                    future: controller.getAllWarehouseMaintenances(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'From Maintain'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: Obx(
+                                  () => DropdownButton(
+                                    isDense: true,
+                                    underline: const SizedBox(),
+                                    hint: Text("Select a Maintain".tr),
+                                    isExpanded: true,
+                                    value:
+                                        controller.fromMaintainId.value == "0"
+                                            ? null
+                                            : controller.fromMaintainId.value,
+                                    elevation: 16,
+                                    onChanged: (newValue) {
+                                      controller.dataAvailable.value = false;
+                                      controller.fromMaintainId.value =
+                                          newValue as String;
+
+                                      //print(dropdownValue);
+                                    },
+                                    items: snapshot.data!.map((list) {
+                                      return DropdownMenuItem<String>(
+                                        value: list.id.toString(),
+                                        child: Text(
+                                          list.documentNo.toString(),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                  child: FutureBuilder(
+                    future: controller.getAllWarehouseMaintenances(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<Records>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'To Maintain'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: Obx(
+                                  () => DropdownButton(
+                                    isDense: true,
+                                    underline: const SizedBox(),
+                                    hint: Text("Select a Maintain".tr),
+                                    isExpanded: true,
+                                    value: controller.toMaintainId.value == "0"
+                                        ? null
+                                        : controller.toMaintainId.value,
+                                    elevation: 16,
+                                    onChanged: (newValue) {
+                                      controller.dataAvailable.value = false;
+                                      controller.toMaintainId.value =
+                                          newValue as String;
+
+                                      //print(dropdownValue);
+                                    },
+                                    items: snapshot.data!.map((list) {
+                                      return DropdownMenuItem<String>(
+                                        value: list.id.toString(),
+                                        child: Text(
+                                          list.documentNo.toString(),
+                                        ),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: controller.myFocusNode,
+                    onTap: () {
+                      controller.barcodeSearch.text = "";
+                    },
+                    controller: controller.barcodeSearch,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (barcode) {
+                      if (controller.fromMaintainId.value != "0") {
+                        controller.searchMaintainResource(barcode);
+                      }
+                    },
+                  ),
+                ),
+                Divider(),
+                Obx(
+                  () => controller.dataAvailable.value
+                      ? Card(
+                          child: ListTile(
+                          title: Text(controller.maintainResourceList
+                                  .records![0].mProductID?.identifier ??
+                              "N/A"),
+                        ))
+                      : SizedBox(),
+                ),
+                Obx(
+                  () => controller.dataAvailable.value
+                      ? ElevatedButton(
+                          onPressed: () {
+                            if (controller.toMaintainId.value != "0") {
+                              controller.switchMaintainResource(controller
+                                  .maintainResourceList.records![0].id!);
+                            }
+                          },
+                          child: Text('Switch'.tr),
+                        )
+                      : SizedBox(),
+                ),
               ]);
             },
           ),
