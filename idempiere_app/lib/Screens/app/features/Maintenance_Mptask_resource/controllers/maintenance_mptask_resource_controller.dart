@@ -138,6 +138,10 @@ class MaintenanceMpResourceController extends GetxController {
 
     _tt3.records?.insert(0, RefRecords(id: 0, name: "All Group Locations".tr));
 
+    for (var element in _tt3.records!) {
+      print(element.id);
+    }
+
     filter1Available.value = true;
     filter2Available.value = true;
     filter3Available.value = true;
@@ -2267,8 +2271,8 @@ class MaintenanceMpResourceController extends GetxController {
     late List<RRecords> temp;
     var flag = true;
     var now = DateTime.now();
-    var twentyDaysAgoDate = now.add(const Duration(days: -20));
-    var twentyDaysLater = now.add(const Duration(days: 20));
+    var twentyDaysAgoDate = now.add(const Duration(days: -60));
+    var twentyDaysLater = now.add(const Duration(days: 60));
     //var formatter = DateFormat('yyyy-MM-dd');
     //String formattedDate = formatter.format(now);
     //print(GetStorage().read('workOrderResourceSync'));

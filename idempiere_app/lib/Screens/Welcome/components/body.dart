@@ -50,6 +50,15 @@ class Body extends StatelessWidget {
                 //Navigator.pushNamed(context, '/seturl');
               },
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "build: 1.3.2.1_2023-09-15",
+                  style: TextStyle(fontSize: 9),
+                ),
+              ],
+            ),
           ],
         ),
       ),
