@@ -2327,6 +2327,7 @@ class MaintenanceMpResourceController extends GetxController {
                       .isBefore(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
+              element.isOwned == false &&
               (element.resourceStatus!.id == "INS" ||
                   element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
@@ -2342,6 +2343,7 @@ class MaintenanceMpResourceController extends GetxController {
                       .isAfter(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
+              element.isOwned == false &&
               (element.resourceStatus!.id == "INS" ||
                   element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
