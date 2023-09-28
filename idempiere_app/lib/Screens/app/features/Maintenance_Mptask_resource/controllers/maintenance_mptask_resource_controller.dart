@@ -1577,8 +1577,23 @@ class MaintenanceMpResourceController extends GetxController {
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
-              msg;
+
+          if (calls[
+                  '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] ==
+              null) {
+            calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
+                msg;
+          } else {
+            Map<String, dynamic> json = jsonDecode(calls[
+                '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}']);
+            json.addAll({
+              "AD_User_ID": {"id": GetStorage().read("userId")},
+              "LIT_ResourceActivity": {"id": "CHK"}
+            });
+            json["LIT_Control1DateFrom"] = date;
+            calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
+                jsonEncode(json);
+          }
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
@@ -1712,8 +1727,23 @@ class MaintenanceMpResourceController extends GetxController {
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
-              msg;
+          if (calls[
+                  '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] ==
+              null) {
+            calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
+                msg;
+          } else {
+            Map<String, dynamic> json = jsonDecode(calls[
+                '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}']);
+            json.addAll({
+              "AD_User_ID": {"id": GetStorage().read("userId")},
+              "LIT_ResourceActivity": {"id": "REV"}
+            });
+            json["LIT_Control1DateFrom"] = date;
+            json["LIT_Control2DateFrom"] = date;
+            calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
+                jsonEncode(json);
+          }
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
@@ -1848,8 +1878,24 @@ class MaintenanceMpResourceController extends GetxController {
               msg;
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
-              msg;
+          if (calls[
+                  '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] ==
+              null) {
+            calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
+                msg;
+          } else {
+            Map<String, dynamic> json = jsonDecode(calls[
+                '$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}']);
+            json.addAll({
+              "AD_User_ID": {"id": GetStorage().read("userId")},
+              "LIT_ResourceActivity": {"id": "TST"}
+            });
+            json["LIT_Control1DateFrom"] = date;
+            json["LIT_Control2DateFrom"] = date;
+            json["LIT_Control3DateFrom"] = date;
+            calls['$protocol://$ip/api/v1/windows/maintenance-item/tabs/${"mp-resources".tr}/${_trx.records![index].id}'] =
+                jsonEncode(json);
+          }
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(

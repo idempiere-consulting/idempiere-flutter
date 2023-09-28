@@ -2,6 +2,7 @@ part of dashboard;
 
 class SupplychainMaintenanceSwitchResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
+  RefListResourceTypeJson _tt = RefListResourceTypeJson(records: []);
   WorkOrderResourceLocalJson maintainResourceList =
       WorkOrderResourceLocalJson(records: []);
   // ignore: prefer_final_fields
@@ -48,13 +49,135 @@ class SupplychainMaintenanceSwitchResourceController extends GetxController {
     //print(json.);
   }
 
+  getProductSelected(int id, int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Product?\$filter= M_Product_ID eq $id');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonproduct = ProductJson.fromJson(jsondecoded);
+
+      getProductCategoryEDIType(
+          jsonproduct.records![0].mProductCategoryID!.id!, index);
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to get product category");
+    }
+  }
+
+  getProductCategoryEDIType(int id, int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Product_Category?\$filter= M_Product_Category_ID eq $id');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonprodcat = ProductCategoryJSON.fromJson(jsondecoded);
+
+      Get.to(const EditSupplychainSwitchMpResource(), arguments: {
+        "perm": await getPerm(jsonprodcat.records![0].ediType!.id!),
+        "id": maintainResourceList.records![index].id,
+        "number": maintainResourceList.records![index].number,
+        "lineNo": maintainResourceList.records![index].lineNo.toString(),
+        "cartel": maintainResourceList.records![index].textDetails,
+        "model": maintainResourceList.records![index].lITProductModel,
+        "dateOrder": maintainResourceList.records![index].dateOrdered,
+        "years": maintainResourceList.records![index].useLifeYears != null
+            ? maintainResourceList.records![index].useLifeYears.toString()
+            : "0",
+        "user": maintainResourceList.records![index].userName,
+        "serviceDate": maintainResourceList.records![index].serviceDate,
+        "productName":
+            maintainResourceList.records![index].mProductID!.identifier,
+        "productId": maintainResourceList.records![index].mProductID!.id,
+        "cartelFormatId":
+            maintainResourceList.records![index].litCartelFormID?.id,
+        "subCategoryId":
+            maintainResourceList.records![index].litmProductSubCategoryID?.id,
+        "cartelFormatName":
+            maintainResourceList.records![index].litCartelFormID?.identifier,
+        "location": maintainResourceList.records![index].locationComment,
+        "observation": maintainResourceList.records![index].name,
+        "SerNo": maintainResourceList.records![index].serNo,
+        "barcode": maintainResourceList.records![index].prodCode,
+        "manufacturer": maintainResourceList.records![index].manufacturer,
+        "year": maintainResourceList.records![index].manufacturedYear != null
+            ? maintainResourceList.records![index].manufacturedYear.toString()
+            : "0",
+        "Description": maintainResourceList.records![index].description,
+        "date3": maintainResourceList.records![index].lITControl3DateFrom,
+        "date2": maintainResourceList.records![index].lITControl2DateFrom,
+        "date1": maintainResourceList.records![index].lITControl1DateFrom,
+        "offlineid": maintainResourceList.records![index].offlineId,
+        "length": maintainResourceList.records![index].length,
+        "width": maintainResourceList.records![index].width,
+        "weightAmt": maintainResourceList.records![index].weightAmt,
+        "height": maintainResourceList.records![index].height,
+        "color": maintainResourceList.records![index].color,
+        "resourceStatus":
+            maintainResourceList.records![index].resourceStatus?.id ?? "OUT",
+        "resourceGroup":
+            maintainResourceList.records![index].litResourceGroupID?.id,
+        "note": maintainResourceList.records![index].note,
+        "name": maintainResourceList.records![index].name,
+        "lot": maintainResourceList.records![index].lot,
+      });
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to get product category");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<String> getPerm(String type) async {
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/reflistresourcetypecategory.json');
+    _tt = RefListResourceTypeJson.fromJson(jsonDecode(file.readAsStringSync()));
+    for (var i = 0; i < _tt.records!.length; i++) {
+      if (_tt.records![i].value == type) {
+        return _tt.records![i].parameterValue!;
+      }
+    }
+    return "NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN";
+  }
+
   searchMaintainResource(String barcode) async {
     dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/mp_maintain_resource?\$filter= ProdCode eq \'$barcode\' and MP_Maintain_ID eq $fromMaintainId');
+        '$protocol://$ip/api/v1/models/mp_maintain_resource?\$filter= ProdCode eq \'$barcode\'');
 
     var response = await http.get(
       url,
@@ -65,7 +188,6 @@ class SupplychainMaintenanceSwitchResourceController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(fromMaintainId);
       print(response.body);
       var jsondecoded = jsonDecode(response.body);
 

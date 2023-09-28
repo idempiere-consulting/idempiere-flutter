@@ -4,7 +4,7 @@ class ProductCategoryJSON {
   final int? skiprecords;
   final int? rowcount;
   final int? arraycount;
-  final List<Records>? records;
+  final List<PCRecords>? records;
 
   ProductCategoryJSON({
     this.pagecount,
@@ -22,7 +22,7 @@ class ProductCategoryJSON {
         rowcount = json['row-count'] as int?,
         arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => PCRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -35,7 +35,7 @@ class ProductCategoryJSON {
       };
 }
 
-class Records {
+class PCRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -54,9 +54,10 @@ class Records {
   final bool? lITIsPerishable;
   final bool? isSummary;
   final ParentColumnID? parentColumnID;
+  final EDIType? ediType;
   final String? modelname;
 
-  Records({
+  PCRecords({
     this.id,
     this.uid,
     this.aDClientID,
@@ -75,10 +76,11 @@ class Records {
     this.lITIsPerishable,
     this.isSummary,
     this.parentColumnID,
+    this.ediType,
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  PCRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
@@ -111,6 +113,9 @@ class Records {
                 ? ParentColumnID.fromJson(
                     json['Parent_Column_ID'] as Map<String, dynamic>)
                 : null,
+        ediType = (json['EDIType'] as Map<String, dynamic>?) != null
+            ? EDIType.fromJson(json['EDIType'] as Map<String, dynamic>)
+            : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -287,6 +292,33 @@ class ParentColumnID {
   ParentColumnID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class EDIType {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  EDIType({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  EDIType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
