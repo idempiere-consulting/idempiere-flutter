@@ -221,6 +221,17 @@ class SupplychainMaintenanceSwitchResourceScreen
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"Container".tr}: ${controller.maintainResourceList.records![index].lot ?? "N/A"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -241,6 +252,25 @@ class SupplychainMaintenanceSwitchResourceScreen
                           },
                         )
                       : const SizedBox(),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: controller.containerFieldController,
+                    decoration: InputDecoration(
+                      labelText: 'Container'.tr,
+
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.local_shipping),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
+                  ),
                 ),
                 Container(
                   margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
@@ -297,18 +327,54 @@ class SupplychainMaintenanceSwitchResourceScreen
                 ),
                 Divider(),
                 Obx(
-                  () => controller.dataAvailable.value
-                      ? ElevatedButton(
+                  () => Visibility(
+                    visible: controller.dataAvailable.value,
+                    child: ButtonBar(
+                      alignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ElevatedButton(
                           onPressed: () {
                             if (controller.toMaintainId.value != "0") {
                               controller.switchMaintainResource(controller
                                   .maintainResourceList.records![0].id!);
                             }
                           },
-                          child: Text('Switch'.tr),
-                        )
-                      : SizedBox(),
-                ),
+                          child: Text('Switch Maintenance'.tr),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (controller.containerFieldController.text !=
+                                  "") {
+                                controller.editContainerMaintainResource(
+                                    controller
+                                        .maintainResourceList.records![0].id!,
+                                    "L");
+                              }
+                            },
+                            child: Text('Lock Resource'.tr),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (controller.containerFieldController.text !=
+                                  "") {
+                                controller.editContainerMaintainResource(
+                                    controller
+                                        .maintainResourceList.records![0].id!,
+                                    "U");
+                              }
+                            },
+                            child: Text('Unlock Resource'.tr),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
               ]);
             },
             tabletBuilder: (context, constraints) {
@@ -319,57 +385,187 @@ class SupplychainMaintenanceSwitchResourceScreen
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: FutureBuilder(
-                    future: controller.getAllWarehouseMaintenances(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? InputDecorator(
-                                decoration: InputDecoration(
-                                  labelText: 'From Maintain'.tr,
-                                  //filled: true,
-                                  border: const OutlineInputBorder(
-                                      /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: controller.myFocusNode,
+                    onTap: () {
+                      controller.barcodeSearch.text = "";
+                    },
+                    controller: controller.barcodeSearch,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (barcode) {
+                      controller.searchMaintainResource(barcode);
+                    },
+                  ),
+                ),
+                Divider(),
+                Obx(
+                  () => controller.dataAvailable.value
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount:
+                              controller.maintainResourceList.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
                                       ),
-                                  prefixIcon: const Icon(EvaIcons.list),
-                                  //hintText: "search..",
-                                  isDense: true,
-                                  //fillColor: Theme.of(context).cardColor,
-                                ),
-                                child: Obx(
-                                  () => DropdownButton(
-                                    isDense: true,
-                                    underline: const SizedBox(),
-                                    hint: Text("Select a Maintain".tr),
-                                    isExpanded: true,
-                                    value:
-                                        controller.fromMaintainId.value == "0"
-                                            ? null
-                                            : controller.fromMaintainId.value,
-                                    elevation: 16,
-                                    onChanged: (newValue) {
-                                      controller.dataAvailable.value = false;
-                                      controller.fromMaintainId.value =
-                                          newValue as String;
-
-                                      //print(dropdownValue);
-                                    },
-                                    items: snapshot.data!.map((list) {
-                                      return DropdownMenuItem<String>(
-                                        value: list.id.toString(),
-                                        child: Text(
-                                          list.documentNo.toString(),
-                                        ),
-                                      );
-                                    }).toList(),
+                                      tooltip: 'Edit Resource'.tr,
+                                      onPressed: () {
+                                        controller.getProductSelected(
+                                            controller
+                                                .maintainResourceList
+                                                .records![index]
+                                                .mProductID!
+                                                .id!,
+                                            index);
+                                      },
+                                    ),
                                   ),
+                                  title: Text(
+                                    controller.maintainResourceList
+                                            .records![index].prodCode ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .maintainResourceList
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.handshake,
+                                              color: Colors.white),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .maintainResourceList
+                                                      .records![index]
+                                                      .mpMaintainID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "Status: ${controller.maintainResourceList.records![index].resourceStatus?.identifier ?? "???"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"SerNo".tr}: ${controller.maintainResourceList.records![index].serNo ?? "???"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"Container".tr}: ${controller.maintainResourceList.records![index].lot ?? "N/A"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: const [],
+                                    ),
+                                  ],
                                 ),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
                               ),
+                            );
+                          },
+                        )
+                      : const SizedBox(),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: controller.containerFieldController,
+                    decoration: InputDecoration(
+                      labelText: 'Container'.tr,
+
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.local_shipping),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                   ),
                 ),
                 Container(
@@ -403,7 +599,7 @@ class SupplychainMaintenanceSwitchResourceScreen
                                         : controller.toMaintainId.value,
                                     elevation: 16,
                                     onChanged: (newValue) {
-                                      controller.dataAvailable.value = false;
+                                      //controller.dataAvailable.value = false;
                                       controller.toMaintainId.value =
                                           newValue as String;
 
@@ -425,55 +621,55 @@ class SupplychainMaintenanceSwitchResourceScreen
                               ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    focusNode: controller.myFocusNode,
-                    onTap: () {
-                      controller.barcodeSearch.text = "";
-                    },
-                    controller: controller.barcodeSearch,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                      prefixIcon: const Icon(Icons.text_fields),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Barcode'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    onSubmitted: (barcode) {
-                      if (controller.fromMaintainId.value != "0") {
-                        controller.searchMaintainResource(barcode);
-                      }
-                    },
-                  ),
-                ),
                 Divider(),
-                Obx(
-                  () => controller.dataAvailable.value
-                      ? Card(
-                          child: ListTile(
-                          title: Text(controller.maintainResourceList
-                                  .records![0].mProductID?.identifier ??
-                              "N/A"),
-                        ))
-                      : SizedBox(),
-                ),
-                Obx(
-                  () => controller.dataAvailable.value
-                      ? Padding(
-                          padding: const EdgeInsets.only(top: 8.0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              if (controller.toMaintainId.value != "0") {
-                                controller.switchMaintainResource(controller
-                                    .maintainResourceList.records![0].id!);
-                              }
-                            },
-                            child: Text('Switch'.tr),
-                          ),
-                        )
-                      : SizedBox(),
+                ButtonBar(
+                  children: <Widget>[
+                    Obx(
+                      () => controller.dataAvailable.value
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (controller.toMaintainId.value != "0") {
+                                  controller.switchMaintainResource(controller
+                                      .maintainResourceList.records![0].id!);
+                                }
+                              },
+                              child: Text('Switch Maintenance'.tr),
+                            )
+                          : SizedBox(),
+                    ),
+                    Obx(
+                      () => controller.dataAvailable.value
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (controller.containerFieldController.text !=
+                                    "") {
+                                  controller.editContainerMaintainResource(
+                                      controller
+                                          .maintainResourceList.records![0].id!,
+                                      "L");
+                                }
+                              },
+                              child: Text('Lock Container'.tr),
+                            )
+                          : SizedBox(),
+                    ),
+                    Obx(
+                      () => controller.dataAvailable.value
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (controller.containerFieldController.text !=
+                                    "") {
+                                  controller.editContainerMaintainResource(
+                                      controller
+                                          .maintainResourceList.records![0].id!,
+                                      "U");
+                                }
+                              },
+                              child: Text('Unlock Container'.tr),
+                            )
+                          : SizedBox(),
+                    ),
+                  ],
                 ),
               ]);
             },
@@ -485,57 +681,187 @@ class SupplychainMaintenanceSwitchResourceScreen
                 const SizedBox(height: kSpacing / 2),
                 const Divider(),
                 Container(
-                  margin: const EdgeInsets.only(left: 10, right: 10, top: 10),
-                  child: FutureBuilder(
-                    future: controller.getAllWarehouseMaintenances(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
-                        snapshot.hasData
-                            ? InputDecorator(
-                                decoration: InputDecoration(
-                                  labelText: 'From Maintain'.tr,
-                                  //filled: true,
-                                  border: const OutlineInputBorder(
-                                      /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    focusNode: controller.myFocusNode,
+                    onTap: () {
+                      controller.barcodeSearch.text = "";
+                    },
+                    controller: controller.barcodeSearch,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Barcode'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    onSubmitted: (barcode) {
+                      controller.searchMaintainResource(barcode);
+                    },
+                  ),
+                ),
+                Divider(),
+                Obx(
+                  () => controller.dataAvailable.value
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount:
+                              controller.maintainResourceList.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Card(
+                              elevation: 8.0,
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 10.0, vertical: 6.0),
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(64, 75, 96, .9)),
+                                child: ExpansionTile(
+                                  tilePadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  leading: Container(
+                                    padding: const EdgeInsets.only(right: 12.0),
+                                    decoration: const BoxDecoration(
+                                        border: Border(
+                                            right: BorderSide(
+                                                width: 1.0,
+                                                color: Colors.white24))),
+                                    child: IconButton(
+                                      icon: const Icon(
+                                        Icons.edit,
+                                        color: Colors.green,
                                       ),
-                                  prefixIcon: const Icon(EvaIcons.list),
-                                  //hintText: "search..",
-                                  isDense: true,
-                                  //fillColor: Theme.of(context).cardColor,
-                                ),
-                                child: Obx(
-                                  () => DropdownButton(
-                                    isDense: true,
-                                    underline: const SizedBox(),
-                                    hint: Text("Select a Maintain".tr),
-                                    isExpanded: true,
-                                    value:
-                                        controller.fromMaintainId.value == "0"
-                                            ? null
-                                            : controller.fromMaintainId.value,
-                                    elevation: 16,
-                                    onChanged: (newValue) {
-                                      controller.dataAvailable.value = false;
-                                      controller.fromMaintainId.value =
-                                          newValue as String;
-
-                                      //print(dropdownValue);
-                                    },
-                                    items: snapshot.data!.map((list) {
-                                      return DropdownMenuItem<String>(
-                                        value: list.id.toString(),
-                                        child: Text(
-                                          list.documentNo.toString(),
-                                        ),
-                                      );
-                                    }).toList(),
+                                      tooltip: 'Edit Resource'.tr,
+                                      onPressed: () {
+                                        controller.getProductSelected(
+                                            controller
+                                                .maintainResourceList
+                                                .records![index]
+                                                .mProductID!
+                                                .id!,
+                                            index);
+                                      },
+                                    ),
                                   ),
+                                  title: Text(
+                                    controller.maintainResourceList
+                                            .records![index].prodCode ??
+                                        "???",
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                  subtitle: Column(
+                                    children: [
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .maintainResourceList
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          const Icon(Icons.handshake,
+                                              color: Colors.white),
+                                          Expanded(
+                                            child: Text(
+                                              controller
+                                                      .maintainResourceList
+                                                      .records![index]
+                                                      .mpMaintainID
+                                                      ?.identifier ??
+                                                  "??",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "Status: ${controller.maintainResourceList.records![index].resourceStatus?.identifier ?? "???"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"SerNo".tr}: ${controller.maintainResourceList.records![index].serNo ?? "???"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"Container".tr}: ${controller.maintainResourceList.records![index].lot ?? "N/A"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                  /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                  childrenPadding: const EdgeInsets.symmetric(
+                                      horizontal: 20.0, vertical: 10.0),
+                                  children: [
+                                    Column(
+                                      children: const [],
+                                    ),
+                                  ],
                                 ),
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
                               ),
+                            );
+                          },
+                        )
+                      : const SizedBox(),
+                ),
+                Container(
+                  padding: EdgeInsets.all(10),
+                  child: TextField(
+                    controller: controller.containerFieldController,
+                    decoration: InputDecoration(
+                      labelText: 'Container'.tr,
+
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.local_shipping),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                   ),
                 ),
                 Container(
@@ -569,7 +895,7 @@ class SupplychainMaintenanceSwitchResourceScreen
                                         : controller.toMaintainId.value,
                                     elevation: 16,
                                     onChanged: (newValue) {
-                                      controller.dataAvailable.value = false;
+                                      //controller.dataAvailable.value = false;
                                       controller.toMaintainId.value =
                                           newValue as String;
 
@@ -591,52 +917,55 @@ class SupplychainMaintenanceSwitchResourceScreen
                               ),
                   ),
                 ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    focusNode: controller.myFocusNode,
-                    onTap: () {
-                      controller.barcodeSearch.text = "";
-                    },
-                    controller: controller.barcodeSearch,
-                    decoration: InputDecoration(
-                      isDense: true,
-                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                      prefixIcon: const Icon(Icons.text_fields),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Barcode'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    onSubmitted: (barcode) {
-                      if (controller.fromMaintainId.value != "0") {
-                        controller.searchMaintainResource(barcode);
-                      }
-                    },
-                  ),
-                ),
                 Divider(),
-                Obx(
-                  () => controller.dataAvailable.value
-                      ? Card(
-                          child: ListTile(
-                          title: Text(controller.maintainResourceList
-                                  .records![0].mProductID?.identifier ??
-                              "N/A"),
-                        ))
-                      : SizedBox(),
-                ),
-                Obx(
-                  () => controller.dataAvailable.value
-                      ? ElevatedButton(
-                          onPressed: () {
-                            if (controller.toMaintainId.value != "0") {
-                              controller.switchMaintainResource(controller
-                                  .maintainResourceList.records![0].id!);
-                            }
-                          },
-                          child: Text('Switch'.tr),
-                        )
-                      : SizedBox(),
+                ButtonBar(
+                  children: <Widget>[
+                    Obx(
+                      () => controller.dataAvailable.value
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (controller.toMaintainId.value != "0") {
+                                  controller.switchMaintainResource(controller
+                                      .maintainResourceList.records![0].id!);
+                                }
+                              },
+                              child: Text('Switch Maintenance'.tr),
+                            )
+                          : SizedBox(),
+                    ),
+                    Obx(
+                      () => controller.dataAvailable.value
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (controller.containerFieldController.text !=
+                                    "") {
+                                  controller.editContainerMaintainResource(
+                                      controller
+                                          .maintainResourceList.records![0].id!,
+                                      "L");
+                                }
+                              },
+                              child: Text('Lock Container'.tr),
+                            )
+                          : SizedBox(),
+                    ),
+                    Obx(
+                      () => controller.dataAvailable.value
+                          ? ElevatedButton(
+                              onPressed: () {
+                                if (controller.containerFieldController.text !=
+                                    "") {
+                                  controller.editContainerMaintainResource(
+                                      controller
+                                          .maintainResourceList.records![0].id!,
+                                      "U");
+                                }
+                              },
+                              child: Text('Unlock Container'.tr),
+                            )
+                          : SizedBox(),
+                    ),
+                  ],
                 ),
               ]);
             },

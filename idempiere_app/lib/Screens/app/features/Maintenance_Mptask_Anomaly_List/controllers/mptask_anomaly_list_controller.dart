@@ -25,7 +25,7 @@ class AnomalyListController extends GetxController {
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
-  Future<void> getWarehouseDocType() async {
+  /* Future<void> getWarehouseDocType() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -53,7 +53,7 @@ class AnomalyListController extends GetxController {
       // ignore: unnecessary_null_comparison
       //_dataAvailable.value = _trx != null;
     }
-  }
+  } */
 
   Future<void> createSalesOrderFromAnomaly() async {
     Get.defaultDialog(
@@ -217,7 +217,7 @@ class AnomalyListController extends GetxController {
   void onInit() {
     //dropDownList = getTypes()!;
     super.onInit();
-    getWarehouseDocType();
+    //getWarehouseDocType();
     getAnomalies();
     //getADUserID();
     adUserId = GetStorage().read('userId');
@@ -250,12 +250,16 @@ class AnomalyListController extends GetxController {
     //print(json.records!.length);
 
     json.records!.retainWhere((element) =>
-        element.mPMaintainResourceID?.id == args["id"] &&
-        element.isClosed == false);
+            element.mPMaintainResourceID?.id ==
+            args["id"] /* &&
+        element.isClosed == false */
+        );
 
     if (json.records!.isNotEmpty && await checkConnection()) {
       for (var element in json.records!) {
-        await getRecordAttachments(element.id!);
+        if (element.id != null) {
+          await getRecordAttachments(element.id!);
+        }
       }
     }
 

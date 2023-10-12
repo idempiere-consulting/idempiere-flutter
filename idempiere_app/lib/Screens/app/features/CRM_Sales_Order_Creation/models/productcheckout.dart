@@ -5,6 +5,7 @@ class ProductCheckout {
   final String name;
   int qty;
   final num cost;
+  String? description;
   String? imageData;
   String? imageUrl;
   ADPrintColorID? adPrintColorID;
@@ -16,6 +17,32 @@ class ProductCheckout {
       required this.name,
       required this.qty,
       required this.cost,
+      this.description,
+      this.imageData,
+      this.imageUrl,
+      this.adPrintColorID,
+      this.litProductSizeID,
+      this.datePromised});
+}
+
+class ProductCheckout2 {
+  final int id;
+  final String name;
+  double qty;
+  final num cost;
+  String? description;
+  String? imageData;
+  String? imageUrl;
+  ADPrintColorID? adPrintColorID;
+  LitProductSizeID? litProductSizeID;
+  String? datePromised;
+
+  ProductCheckout2(
+      {required this.id,
+      required this.name,
+      required this.qty,
+      required this.cost,
+      this.description,
       this.imageData,
       this.imageUrl,
       this.adPrintColorID,

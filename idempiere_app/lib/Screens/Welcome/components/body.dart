@@ -52,9 +52,9 @@ class Body extends StatelessWidget {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+              children: const [
                 Text(
-                  "build: 1.3.2.4_2023-09-29",
+                  "build: 1.3.2.8_2023-10-10",
                   style: TextStyle(fontSize: 9),
                 ),
               ],

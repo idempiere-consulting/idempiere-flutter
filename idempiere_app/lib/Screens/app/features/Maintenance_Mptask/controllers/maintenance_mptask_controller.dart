@@ -8,6 +8,7 @@ class MaintenanceMptaskController extends GetxController {
   late WorkOrderLocalJson _trx;
   late WorkOrderLocalJson _trx2;
   var _hasCallSupport = false;
+  var allDevices = true.obs;
   //var _hasMailSupport = false;
 
   // ignore: prefer_typing_uninitialized_variables
@@ -396,7 +397,7 @@ class MaintenanceMptaskController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= ${allDevices.value ? "" : "mp_maintain_documentno neq 'SEDE' and"} (AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null) and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -440,7 +441,7 @@ class MaintenanceMptaskController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= ${allDevices.value ? "" : "mp_maintain_documentno neq 'SEDE' and"} (AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null) and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,

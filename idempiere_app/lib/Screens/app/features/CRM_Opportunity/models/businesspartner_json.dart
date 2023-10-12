@@ -18,7 +18,9 @@ class BusinessPartnerJson {
     recordssize = json['records-size'] as int?;
     skiprecords = json['skip-records'] as int?;
     rowcount = json['row-count'] as int?;
-    records = (json['records'] as List?)?.map((dynamic e) => BPRecords.fromJson(e as Map<String,dynamic>)).toList();
+    records = (json['records'] as List?)
+        ?.map((dynamic e) => BPRecords.fromJson(e as Map<String, dynamic>))
+        .toList();
   }
 
   Map<String, dynamic> toJson() {
@@ -58,6 +60,8 @@ class BPRecords {
   num? acqusitionCost;
   num? potentialLifeTimeValue;
   CPaymentTermID? cPaymentTermID;
+  PaymentRule? paymentRule;
+  SalesRepID? salesRepID;
   num? actualLifeTimeValue;
   int? shareOfCustomer;
   bool? isEmployee;
@@ -115,6 +119,8 @@ class BPRecords {
     this.acqusitionCost,
     this.potentialLifeTimeValue,
     this.cPaymentTermID,
+    this.paymentRule,
+    this.salesRepID,
     this.actualLifeTimeValue,
     this.shareOfCustomer,
     this.isEmployee,
@@ -150,20 +156,30 @@ class BPRecords {
   BPRecords.fromJson(Map<String, dynamic> json) {
     id = json['id'] as int?;
     uid = json['uid'] as String?;
-    aDClientID = (json['AD_Client_ID'] as Map<String,dynamic>?) != null ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String,dynamic>) : null;
-    aDOrgID = (json['AD_Org_ID'] as Map<String,dynamic>?) != null ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String,dynamic>) : null;
+    aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
+        ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
+        : null;
+    aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
+        ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
+        : null;
     isActive = json['IsActive'] as bool?;
     created = json['Created'] as String?;
-    createdBy = (json['CreatedBy'] as Map<String,dynamic>?) != null ? CreatedBy.fromJson(json['CreatedBy'] as Map<String,dynamic>) : null;
+    createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
+        ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
+        : null;
     updated = json['Updated'] as String?;
-    updatedBy = (json['UpdatedBy'] as Map<String,dynamic>?) != null ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String,dynamic>) : null;
+    updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
+        ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
+        : null;
     value = json['Value'] as String?;
     name = json['Name'] as String?;
     salesVolume = json['SalesVolume'] as int?;
     numberEmployees = json['NumberEmployees'] as int?;
     taxID = json['TaxID'] as String?;
     isSummary = json['IsSummary'] as bool?;
-    aDLanguage = (json['AD_Language'] as Map<String,dynamic>?) != null ? ADLanguage.fromJson(json['AD_Language'] as Map<String,dynamic>) : null;
+    aDLanguage = (json['AD_Language'] as Map<String, dynamic>?) != null
+        ? ADLanguage.fromJson(json['AD_Language'] as Map<String, dynamic>)
+        : null;
     isVendor = json['IsVendor'] as bool?;
     isCustomer = json['IsCustomer'] as bool?;
     isProspect = json['IsProspect'] as bool?;
@@ -172,28 +188,52 @@ class BPRecords {
     sOCreditUsed = json['SO_CreditUsed'] as num?;
     acqusitionCost = json['AcqusitionCost'] as num?;
     potentialLifeTimeValue = json['PotentialLifeTimeValue'] as num?;
-    cPaymentTermID = (json['C_PaymentTerm_ID'] as Map<String,dynamic>?) != null ? CPaymentTermID.fromJson(json['C_PaymentTerm_ID'] as Map<String,dynamic>) : null;
+    cPaymentTermID = (json['C_PaymentTerm_ID'] as Map<String, dynamic>?) != null
+        ? CPaymentTermID.fromJson(
+            json['C_PaymentTerm_ID'] as Map<String, dynamic>)
+        : null;
+    paymentRule = (json['PaymentRule'] as Map<String, dynamic>?) != null
+        ? PaymentRule.fromJson(json['PaymentRule'] as Map<String, dynamic>)
+        : null;
+    salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
+        ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
+        : null;
     actualLifeTimeValue = json['ActualLifeTimeValue'] as num?;
     shareOfCustomer = json['ShareOfCustomer'] as int?;
     isEmployee = json['IsEmployee'] as bool?;
     isSalesRep = json['IsSalesRep'] as bool?;
-    mPriceListID = (json['M_PriceList_ID'] as Map<String,dynamic>?) != null ? MPriceListID.fromJson(json['M_PriceList_ID'] as Map<String,dynamic>) : null;
+    mPriceListID = (json['M_PriceList_ID'] as Map<String, dynamic>?) != null
+        ? MPriceListID.fromJson(json['M_PriceList_ID'] as Map<String, dynamic>)
+        : null;
     isOneTime = json['IsOneTime'] as bool?;
     isTaxExempt = json['IsTaxExempt'] as bool?;
     documentCopies = json['DocumentCopies'] as int?;
     isDiscountPrinted = json['IsDiscountPrinted'] as bool?;
-    invoiceRule = (json['InvoiceRule'] as Map<String,dynamic>?) != null ? InvoiceRule.fromJson(json['InvoiceRule'] as Map<String,dynamic>) : null;
-    deliveryRule = (json['DeliveryRule'] as Map<String,dynamic>?) != null ? DeliveryRule.fromJson(json['DeliveryRule'] as Map<String,dynamic>) : null;
-    cBPGroupID = (json['C_BP_Group_ID'] as Map<String,dynamic>?) != null ? CBPGroupID.fromJson(json['C_BP_Group_ID'] as Map<String,dynamic>) : null;
+    invoiceRule = (json['InvoiceRule'] as Map<String, dynamic>?) != null
+        ? InvoiceRule.fromJson(json['InvoiceRule'] as Map<String, dynamic>)
+        : null;
+    deliveryRule = (json['DeliveryRule'] as Map<String, dynamic>?) != null
+        ? DeliveryRule.fromJson(json['DeliveryRule'] as Map<String, dynamic>)
+        : null;
+    cBPGroupID = (json['C_BP_Group_ID'] as Map<String, dynamic>?) != null
+        ? CBPGroupID.fromJson(json['C_BP_Group_ID'] as Map<String, dynamic>)
+        : null;
     sendEMail = json['SendEMail'] as bool?;
-    sOCreditStatus = (json['SOCreditStatus'] as Map<String,dynamic>?) != null ? SOCreditStatus.fromJson(json['SOCreditStatus'] as Map<String,dynamic>) : null;
+    sOCreditStatus = (json['SOCreditStatus'] as Map<String, dynamic>?) != null
+        ? SOCreditStatus.fromJson(
+            json['SOCreditStatus'] as Map<String, dynamic>)
+        : null;
     shelfLifeMinPct = json['ShelfLifeMinPct'] as int?;
     flatDiscount = json['FlatDiscount'] as int?;
     totalOpenBalance = json['TotalOpenBalance'] as num?;
     isPOTaxExempt = json['IsPOTaxExempt'] as bool?;
     isManufacturer = json['IsManufacturer'] as bool?;
     is1099Vendor = json['Is1099Vendor'] as bool?;
-    lITTaxTypeBPPartnerID = (json['LIT_TaxTypeBPPartner_ID'] as Map<String,dynamic>?) != null ? LITTaxTypeBPPartnerID.fromJson(json['LIT_TaxTypeBPPartner_ID'] as Map<String,dynamic>) : null;
+    lITTaxTypeBPPartnerID =
+        (json['LIT_TaxTypeBPPartner_ID'] as Map<String, dynamic>?) != null
+            ? LITTaxTypeBPPartnerID.fromJson(
+                json['LIT_TaxTypeBPPartner_ID'] as Map<String, dynamic>)
+            : null;
     lITTaxID = json['LIT_TaxID'] as String?;
     lITIsPriceListUpdatable = json['LIT_isPriceListUpdatable'] as bool?;
     lITNationalIdNumberID = json['LIT_NationalIdNumber_ID'] as String?;
@@ -201,7 +241,9 @@ class BPRecords {
     lITKm = json['LIT_Km'] as int?;
     lITNoInvoiceXMLVendor = json['LIT_NoInvoiceXMLVendor'] as bool?;
     isValid = json['IsValid'] as bool?;
-    rStatusID = (json['R_Status_ID'] as Map<String,dynamic>?) != null ? RStatusID.fromJson(json['R_Status_ID'] as Map<String,dynamic>) : null;
+    rStatusID = (json['R_Status_ID'] as Map<String, dynamic>?) != null
+        ? RStatusID.fromJson(json['R_Status_ID'] as Map<String, dynamic>)
+        : null;
     modelname = json['model-name'] as String?;
   }
 
@@ -232,6 +274,7 @@ class BPRecords {
     json['AcqusitionCost'] = acqusitionCost;
     json['PotentialLifeTimeValue'] = potentialLifeTimeValue;
     json['C_PaymentTerm_ID'] = cPaymentTermID?.toJson();
+    json['SalesRep_ID'] = salesRepID?.toJson();
     json['ActualLifeTimeValue'] = actualLifeTimeValue;
     json['ShareOfCustomer'] = shareOfCustomer;
     json['IsEmployee'] = isEmployee;
@@ -416,6 +459,36 @@ class ADLanguage {
   }
 }
 
+class SalesRepID {
+  String? propertyLabel;
+  int? id;
+  String? identifier;
+  String? modelname;
+
+  SalesRepID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  SalesRepID.fromJson(Map<String, dynamic> json) {
+    propertyLabel = json['propertyLabel'] as String?;
+    id = json['id'] as int?;
+    identifier = json['identifier'] as String?;
+    modelname = json['model-name'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['propertyLabel'] = propertyLabel;
+    json['id'] = id;
+    json['identifier'] = identifier;
+    json['model-name'] = modelname;
+    return json;
+  }
+}
+
 class CPaymentTermID {
   String? propertyLabel;
   int? id;
@@ -432,6 +505,36 @@ class CPaymentTermID {
   CPaymentTermID.fromJson(Map<String, dynamic> json) {
     propertyLabel = json['propertyLabel'] as String?;
     id = json['id'] as int?;
+    identifier = json['identifier'] as String?;
+    modelname = json['model-name'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['propertyLabel'] = propertyLabel;
+    json['id'] = id;
+    json['identifier'] = identifier;
+    json['model-name'] = modelname;
+    return json;
+  }
+}
+
+class PaymentRule {
+  String? propertyLabel;
+  String? id;
+  String? identifier;
+  String? modelname;
+
+  PaymentRule({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  PaymentRule.fromJson(Map<String, dynamic> json) {
+    propertyLabel = json['propertyLabel'] as String?;
+    id = json['id'] as String?;
     identifier = json['identifier'] as String?;
     modelname = json['model-name'] as String?;
   }

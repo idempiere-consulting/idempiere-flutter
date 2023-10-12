@@ -1623,7 +1623,7 @@ CRUD=1111=F
  70 Carico Scarico
  71 Inventario con Lotto : F3
  72 Manutenzione cambio Dispositivi
- 73
+ 73 Manutenzione Sblocco/Blocco Contenitore
  74
  75
  76

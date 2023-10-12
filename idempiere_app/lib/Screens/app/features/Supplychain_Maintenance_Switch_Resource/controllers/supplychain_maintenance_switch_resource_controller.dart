@@ -5,6 +5,8 @@ class SupplychainMaintenanceSwitchResourceController extends GetxController {
   RefListResourceTypeJson _tt = RefListResourceTypeJson(records: []);
   WorkOrderResourceLocalJson maintainResourceList =
       WorkOrderResourceLocalJson(records: []);
+
+  TextEditingController containerFieldController = TextEditingController();
   // ignore: prefer_final_fields
   var dataAvailable = false.obs;
 
@@ -230,6 +232,46 @@ class SupplychainMaintenanceSwitchResourceController extends GetxController {
       Get.snackbar(
         "Done!".tr,
         "Product Unloaded".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+
+      //print(response.body);
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  editContainerMaintainResource(int id, String character) async {
+    var msg = {"Lot": containerFieldController.text + character};
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/mp_maintain_resource/$id');
+
+    var response = await http.put(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      dataAvailable.value = false;
+      barcodeSearch.text = "";
+      myFocusNode.requestFocus();
+
+      Get.snackbar(
+        "Done!".tr,
+        "Product Assigned to a Container".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,

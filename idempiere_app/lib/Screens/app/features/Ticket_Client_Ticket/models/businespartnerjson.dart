@@ -56,6 +56,7 @@ class BPRecords {
   final num? potentialLifeTimeValue;
   final CPaymentTermID? cPaymentTermID;
   final CPaymentRuleID? cPaymentRuleID;
+  SalesRepID? salesRepID;
   final num? actualLifeTimeValue;
   final num? shareOfCustomer;
   final bool? isEmployee;
@@ -181,6 +182,9 @@ class BPRecords {
             ? CPaymentRuleID.fromJson(
                 json['PaymentRule'] as Map<String, dynamic>)
             : null,
+        salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
+            ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
+            : null,
         actualLifeTimeValue = json['ActualLifeTimeValue'] as num?,
         shareOfCustomer = json['ShareOfCustomer'] as int?,
         isEmployee = json['IsEmployee'] as bool?,
@@ -252,6 +256,7 @@ class BPRecords {
         'AcqusitionCost': acqusitionCost,
         'PotentialLifeTimeValue': potentialLifeTimeValue,
         'C_PaymentTerm_ID': cPaymentTermID?.toJson(),
+        'SalesRep_ID': salesRepID?.toJson(),
         'ActualLifeTimeValue': actualLifeTimeValue,
         'ShareOfCustomer': shareOfCustomer,
         'IsEmployee': isEmployee,
@@ -334,6 +339,36 @@ class ADOrgID {
         'identifier': identifier,
         'model-name': modelname
       };
+}
+
+class SalesRepID {
+  String? propertyLabel;
+  int? id;
+  String? identifier;
+  String? modelname;
+
+  SalesRepID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  SalesRepID.fromJson(Map<String, dynamic> json) {
+    propertyLabel = json['propertyLabel'] as String?;
+    id = json['id'] as int?;
+    identifier = json['identifier'] as String?;
+    modelname = json['model-name'] as String?;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> json = <String, dynamic>{};
+    json['propertyLabel'] = propertyLabel;
+    json['id'] = id;
+    json['identifier'] = identifier;
+    json['model-name'] = modelname;
+    return json;
+  }
 }
 
 class CreatedBy {

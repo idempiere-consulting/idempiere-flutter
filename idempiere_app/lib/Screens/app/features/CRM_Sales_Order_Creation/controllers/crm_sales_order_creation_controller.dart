@@ -186,7 +186,18 @@ class CRMSalesOrderCreationController extends GetxController {
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     var jsondecoded = jsonDecode(file.readAsStringSync());
 
+    final List<dynamic> list = GetStorage().read('permission');
+
     var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    if (int.parse(list[14], radix: 16)
+            .toRadixString(2)
+            .padLeft(4, "0")
+            .toString()[7] !=
+        "1") {
+      jsonbps.records!.removeWhere(
+          (element) => element.salesRepID?.id != GetStorage().read('userId'));
+    }
 
     return jsonbps.records!;
 

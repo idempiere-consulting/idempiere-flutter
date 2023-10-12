@@ -117,6 +117,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.ballot,
+                  icon: Icons.ballot_outlined,
+                  label: "Maintenance Lock/Unlock Container".tr,
+                  visible: int.parse(list[72], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -148,6 +160,10 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 7:
                     Get.offNamed('/SupplychainMaintenanceSwitchResourceScreen');
+                    break;
+                  case 8:
+                    Get.offNamed(
+                        '/SupplychainMaintenanceLockUnlockContainerScreen');
                     break;
                   default:
                 }

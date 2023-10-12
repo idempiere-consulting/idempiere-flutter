@@ -125,6 +125,17 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                         ),
                       ),
                     ),
+                    Tooltip(
+                      message: 'All Devices'.tr,
+                      child: Obx(
+                        () => Checkbox(
+                            activeColor: kPrimaryColor,
+                            value: controller.allDevices.value,
+                            onChanged: (value) {
+                              controller.allDevices.value = value ?? true;
+                            }),
+                      ),
+                    ),
                     Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(

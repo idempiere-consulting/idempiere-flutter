@@ -493,6 +493,11 @@ class LocaleString extends Translations {
           'Paid': 'Paid',
           'Not Paid': 'Not Paid',
           'ORDER': 'order',
+          'New SO \nfrom Price List': 'New SO \nfrom Price List',
+          'Maintenance Lock/Unlock Container':
+              'Maintenance Lock/Unlock Container',
+          'Availability:': 'Availability:',
+          'Lock/Unlock Container': 'Lock/Unlock Container'
         },
 
         //ITALIAN LANGUAGE
@@ -1170,6 +1175,23 @@ class LocaleString extends Translations {
           'Taxed Amount': 'Importo Ivato',
           'Property Maintain': 'Impianto Sede',
           'Select a Property Maintain': 'Seleziona Impianto Sede',
+          'New SO \nfrom Price List': 'Nuovo ODV\nda Listino',
+          'Maintenance Lock/Unlock Container':
+              'Manutenzione Blocca/Sblocca Contenitore',
+          'Availability:': 'Disponibilità:',
+          'Lock/Unlock Container': 'Blocca/Sblocca Contenitore',
+          'Lock Container': 'Blocca Contenitore',
+          'Unlock Container': 'Sblocca Contenitore',
+          'Container': 'Contenitore',
+          'Lock Resource': 'Blocca Risorsa',
+          'Unlock Resource': 'Sblocca Risorsa',
+          'Switch Maintenance': 'Cambia Impianto',
+          'Lock': 'Blocca',
+          'Unlock': 'Sblocca',
+          'proceed': 'procedi',
+          'Container Status Changed': 'Stato del Contenitore cambiato',
+          'INC': 'In Consegna',
+          '.': 'Riga descrittiva'
         },
       };
 }

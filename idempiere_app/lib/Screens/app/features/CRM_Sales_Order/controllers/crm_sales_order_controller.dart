@@ -170,6 +170,8 @@ class CRMSalesOrderController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
   }
 

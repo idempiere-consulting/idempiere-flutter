@@ -202,23 +202,19 @@ class _CreateResAnomalyState extends State<CreateResAnomaly> {
       var json = AnomalyJson.fromJson(jsonDecode(file.readAsStringSync()));
 
       record.offlineId = GetStorage().read('postCallId');
-      record.mPMaintainResourceID = MPMaintainResourceID.fromJson({
-        "MP_Maintain_Resource_ID": {"id": args["id"]}
-      });
-      record.lITNCFaultTypeID = LITNCFaultTypeID.fromJson({
-        "LIT_NCFaultType_ID": {"id": int.parse(dropdownValue)}
-      });
-      record.aDUserID = ADUserID3.fromJson({
-        "AD_User_ID": {"id": GetStorage().read("userId")}
-      });
+      record.mPMaintainResourceID =
+          MPMaintainResourceID.fromJson({"id": args["id"]});
+      record.lITNCFaultTypeID =
+          LITNCFaultTypeID.fromJson({"id": int.parse(dropdownValue)});
+      record.aDUserID = ADUserID3.fromJson({"id": GetStorage().read("userId")});
       record.description = noteFieldController.text;
       record.isInvoiced = isCharged;
       record.lITIsReplaced = isReplacedNow;
-      if (manByCustomer) {
-        record.mProductID = AMProductID.fromJson({
-          "M_Product_ID": {"id": replacementId},
-        });
-      }
+      /* if (manByCustomer) {
+        record.mProductID = AMProductID.fromJson(
+          {"id": replacementId},
+        );
+      } */
 
       record.dateDoc = "${formattedDate}T00:00:00Z";
       record.lITIsManagedByCustomer = manByCustomer;

@@ -233,6 +233,7 @@ class _EditSupplychainSwitchMpResourceState
       {"id": "IRV", "name": "IRV".tr},
       {"id": "IRR", "name": "IRR".tr},
       {"id": "IRX", "name": "IRX".tr},
+      {"id": "INC", "name": "INC".tr},
       {"id": "REV", "name": "REV".tr},
       {"id": "INS", "name": "INS".tr},
       {"id": "DEL", "name": "DEL".tr},
@@ -897,9 +898,9 @@ class _EditSupplychainSwitchMpResourceState
                     child: TextField(
                       controller: lotFieldController,
                       decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.person_pin_outlined),
+                        prefixIcon: const Icon(Icons.local_shipping),
                         border: const OutlineInputBorder(),
-                        labelText: 'Lot'.tr,
+                        labelText: 'Container'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),

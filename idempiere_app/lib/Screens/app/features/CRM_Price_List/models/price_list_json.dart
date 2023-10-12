@@ -52,6 +52,9 @@ class Records {
   final String? name;
   final num? priceList;
   final num? priceStd;
+  final num? qtyOnHand;
+  final String? lastdateOrdered;
+  final String? pricelistdescription;
   final bool? isSelfService;
   final String? imageData;
   final CCurrencyID? cCurrencyID;
@@ -74,6 +77,9 @@ class Records {
     this.name,
     this.priceList,
     this.priceStd,
+    this.qtyOnHand,
+    this.lastdateOrdered,
+    this.pricelistdescription,
     this.isSelfService,
     this.imageData,
     this.cCurrencyID,
@@ -114,6 +120,9 @@ class Records {
         name = json['Name'] as String?,
         priceList = json['PriceList'] as num?,
         priceStd = json['PriceStd'] as num?,
+        qtyOnHand = json['QtyOnHand'] as num?,
+        lastdateOrdered = json['lastdateordered'] as String?,
+        pricelistdescription = json['pricelist_description'] as String?,
         isSelfService = json['IsSelfService'] as bool?,
         imageData = json['imagebase64'] as String?,
         cCurrencyID = (json['C_Currency_ID'] as Map<String, dynamic>?) != null
@@ -136,8 +145,10 @@ class Records {
         'M_Product_ID': mProductID?.toJson(),
         'Value': value,
         'Name': name,
+        'QtyOnHand': qtyOnHand,
         'PriceList': priceList,
         'PriceStd': priceStd,
+        'lastdateordered': lastdateOrdered,
         'IsSelfService': isSelfService,
         'imagebase64': imageData,
         'model-name': modelname

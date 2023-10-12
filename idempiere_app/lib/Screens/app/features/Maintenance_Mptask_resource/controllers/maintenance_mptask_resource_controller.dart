@@ -559,7 +559,7 @@ class MaintenanceMpResourceController extends GetxController {
               }
             }
             getWorkOrders();
-            break;
+            i = _trx2.records!.length;
           }
         }
         if (count == 0) {
@@ -802,7 +802,7 @@ class MaintenanceMpResourceController extends GetxController {
               }
             }
             getWorkOrders();
-            break;
+            i = _trx2.records!.length;
           }
         }
         if (count == 0) {
@@ -1000,7 +1000,7 @@ class MaintenanceMpResourceController extends GetxController {
             }
 
             getWorkOrders();
-            break;
+            i = _trx2.records!.length;
           }
         }
       },
@@ -1123,7 +1123,7 @@ class MaintenanceMpResourceController extends GetxController {
             }
 
             getWorkOrders();
-            break;
+            i = _trx2.records!.length;
           }
         }
       },
@@ -1410,7 +1410,7 @@ class MaintenanceMpResourceController extends GetxController {
             }
             getWorkOrders();
             Get.back();
-            break;
+            i = _trx2.records!.length;
           }
         }
         if (count == 0) {
@@ -2378,7 +2378,6 @@ class MaintenanceMpResourceController extends GetxController {
                       .isBefore(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
-              element.isOwned == false &&
               (element.resourceStatus!.id == "INS" ||
                   element.resourceStatus!.id == "REV"))).toList();
           //print(temp);
@@ -2394,7 +2393,6 @@ class MaintenanceMpResourceController extends GetxController {
                       .isAfter(twentyDaysAgoDate)) &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo') &&
-              element.isOwned == false &&
               (element.resourceStatus!.id == "INS" ||
                   element.resourceStatus!.id == "REV"))).toList();
           //print(temp);

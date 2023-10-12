@@ -67,6 +67,8 @@ class CRMOpenItemsController extends GetxController {
       businessPartnerName.value = args["bpName"] ?? "";
     }
 
+    final List<dynamic> list = GetStorage().read('permission');
+
     //await getBusinessPartner();
     //print(response.body);
     const filename = "businesspartner";
@@ -75,6 +77,18 @@ class CRMOpenItemsController extends GetxController {
     var jsondecoded = jsonDecode(file.readAsStringSync());
 
     var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    if (int.parse(list[14], radix: 16)
+            .toRadixString(2)
+            .padLeft(4, "0")
+            .toString()[7] !=
+        "1") {
+      jsonbps.records!.removeWhere(
+          (element) => element.salesRepID?.id != GetStorage().read('userId'));
+    }
+
+    jsonbps.records!.removeWhere(
+        (element) => element.salesRepID?.id != GetStorage().read('userId'));
 
     return jsonbps.records!;
 
