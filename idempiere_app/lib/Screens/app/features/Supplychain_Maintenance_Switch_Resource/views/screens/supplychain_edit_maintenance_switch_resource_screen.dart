@@ -86,7 +86,8 @@ class _EditSupplychainSwitchMpResourceState
 
       "lit_cartel_format_ID": {
         "id": cartelDropDownValue != "" ? int.parse(cartelDropDownValue) : -1
-      }
+      },
+      "IsOwned": isOwned,
       /* "lit_ResourceGroup_ID": {
         "id": dropdownValue3 == "" ? 1000000 : int.parse(dropdownValue3)
       } */
@@ -147,7 +148,8 @@ class _EditSupplychainSwitchMpResourceState
           "id": subCategoryDropDownValue != ""
               ? int.parse(subCategoryDropDownValue)
               : -1
-        }
+        },
+        "IsOwned": isOwned,
 
         //"IsPrinted": sendWorkOrder,
       });
@@ -329,6 +331,7 @@ class _EditSupplychainSwitchMpResourceState
   String dateOrdered = Get.arguments["dateOrder"] ?? "";
   String firstUseDate = Get.arguments["serviceDate"] ?? "";
   bool isActive = true;
+  bool isOwned = Get.arguments["IsOwned"] ?? false;
   //bool sendWorkOrder = false;
   String dropdownValue = "OUT";
   String dropdownValue3 = "";
@@ -400,6 +403,7 @@ class _EditSupplychainSwitchMpResourceState
         (Get.arguments["subCategoryId"] ?? "").toString();
     //sendWorkOrder = Get.arguments["isPrinted"] ?? false;
     isActive = true;
+    isOwned = Get.arguments["IsOwned"] ?? false;
     //print(Get.arguments["offlineid"]);
 
     //getAllProducts();
@@ -1234,6 +1238,19 @@ class _EditSupplychainSwitchMpResourceState
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Property'.tr),
+                  value: isOwned,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isOwned = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
                 Visibility(
                   visible: (args["perm"])[10] == "Y",
                   child: Container(
@@ -1331,7 +1348,7 @@ class _EditSupplychainSwitchMpResourceState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return "${option.value}_${option.name}"
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -1412,15 +1429,114 @@ class _EditSupplychainSwitchMpResourceState
                 Visibility(
                   visible: (args["perm"])[6] == "Y",
                   child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: cartelFieldController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.person_pin_outlined),
-                        border: const OutlineInputBorder(),
-                        labelText: 'Cartel'.tr,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Cartel".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Typology".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSubCategories(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a typology".tr),
+                                  value: subCategoryDropDownValue == ""
+                                      ? null
+                                      : subCategoryDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      subCategoryDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[6] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllCartelFormats(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a Cartel".tr),
+                                  value: cartelDropDownValue == ""
+                                      ? null
+                                      : cartelDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      cartelDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                 ),
@@ -1604,6 +1720,21 @@ class _EditSupplychainSwitchMpResourceState
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Location'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[26] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lotFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.local_shipping),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Container'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -1937,6 +2068,19 @@ class _EditSupplychainSwitchMpResourceState
                   },
                   controlAffinity: ListTileControlAffinity.leading,
                 ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Property'.tr),
+                  value: isOwned,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isOwned = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
                 Visibility(
                   visible: (args["perm"])[10] == "Y",
                   child: Container(
@@ -2034,7 +2178,7 @@ class _EditSupplychainSwitchMpResourceState
                                     return const Iterable<Records>.empty();
                                   }
                                   return snapshot.data!.where((Records option) {
-                                    return option.name!
+                                    return "${option.value}_${option.name}"
                                         .toString()
                                         .toLowerCase()
                                         .contains(textEditingValue.text
@@ -2115,15 +2259,114 @@ class _EditSupplychainSwitchMpResourceState
                 Visibility(
                   visible: (args["perm"])[6] == "Y",
                   child: Container(
-                    margin: const EdgeInsets.all(10),
-                    child: TextField(
-                      controller: cartelFieldController,
-                      decoration: InputDecoration(
-                        prefixIcon: const Icon(Icons.person_pin_outlined),
-                        border: const OutlineInputBorder(),
-                        labelText: 'Cartel'.tr,
-                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Cartel".tr,
+                        style: const TextStyle(fontSize: 12),
                       ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.only(left: 40),
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        "Typology".tr,
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[24] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllSubCategories(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a typology".tr),
+                                  value: subCategoryDropDownValue == ""
+                                      ? null
+                                      : subCategoryDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      subCategoryDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[6] == "Y",
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    width: size.width,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                      ),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    margin: const EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: getAllCartelFormats(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<Records>> snapshot) =>
+                          snapshot.hasData
+                              ? DropdownButton(
+                                  hint: Text("Select a Cartel".tr),
+                                  value: cartelDropDownValue == ""
+                                      ? null
+                                      : cartelDropDownValue,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      cartelDropDownValue = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                 ),
@@ -2307,6 +2550,21 @@ class _EditSupplychainSwitchMpResourceState
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Location'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: (args["perm"])[26] == "Y",
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: lotFieldController,
+                      decoration: InputDecoration(
+                        prefixIcon: const Icon(Icons.local_shipping),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Container'.tr,
                         floatingLabelBehavior: FloatingLabelBehavior.always,
                       ),
                     ),
@@ -2635,6 +2893,19 @@ class _EditSupplychainSwitchMpResourceState
                   onChanged: (bool? value) {
                     setState(() {
                       isActive = value!;
+                      //GetStorage().write('checkboxLogin', checkboxState);
+                    });
+                  },
+                  controlAffinity: ListTileControlAffinity.leading,
+                ),
+                CheckboxListTile(
+                  contentPadding: const EdgeInsets.only(left: 30),
+                  title: Text('Is Property'.tr),
+                  value: isOwned,
+                  activeColor: kPrimaryColor,
+                  onChanged: (bool? value) {
+                    setState(() {
+                      isOwned = value!;
                       //GetStorage().write('checkboxLogin', checkboxState);
                     });
                   },

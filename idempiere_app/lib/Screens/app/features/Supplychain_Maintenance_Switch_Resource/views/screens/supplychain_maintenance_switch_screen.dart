@@ -232,6 +232,17 @@ class SupplychainMaintenanceSwitchResourceScreen
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"Is Property".tr}: ${controller.maintainResourceList.records![index].isOwned ?? false ? "Yes".tr : "No"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -824,6 +835,17 @@ class SupplychainMaintenanceSwitchResourceScreen
                                           ),
                                         ],
                                       ),
+                                      Row(
+                                        children: <Widget>[
+                                          Expanded(
+                                            child: Text(
+                                              "${"Is Property".tr}: ${controller.maintainResourceList.records![index].isOwned ?? false ? "Yes".tr : "No"}",
+                                              style: const TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -918,55 +940,55 @@ class SupplychainMaintenanceSwitchResourceScreen
                   ),
                 ),
                 Divider(),
-                ButtonBar(
-                  children: <Widget>[
-                    Obx(
-                      () => controller.dataAvailable.value
-                          ? ElevatedButton(
-                              onPressed: () {
-                                if (controller.toMaintainId.value != "0") {
-                                  controller.switchMaintainResource(controller
-                                      .maintainResourceList.records![0].id!);
-                                }
-                              },
-                              child: Text('Switch Maintenance'.tr),
-                            )
-                          : SizedBox(),
+                Obx(
+                  () => Visibility(
+                    visible: controller.dataAvailable.value,
+                    child: ButtonBar(
+                      alignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        ElevatedButton(
+                          onPressed: () {
+                            if (controller.toMaintainId.value != "0") {
+                              controller.switchMaintainResource(controller
+                                  .maintainResourceList.records![0].id!);
+                            }
+                          },
+                          child: Text('Switch Maintenance'.tr),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (controller.containerFieldController.text !=
+                                  "") {
+                                controller.editContainerMaintainResource(
+                                    controller
+                                        .maintainResourceList.records![0].id!,
+                                    "L");
+                              }
+                            },
+                            child: Text('Lock Resource'.tr),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 10),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if (controller.containerFieldController.text !=
+                                  "") {
+                                controller.editContainerMaintainResource(
+                                    controller
+                                        .maintainResourceList.records![0].id!,
+                                    "U");
+                              }
+                            },
+                            child: Text('Unlock Resource'.tr),
+                          ),
+                        ),
+                      ],
                     ),
-                    Obx(
-                      () => controller.dataAvailable.value
-                          ? ElevatedButton(
-                              onPressed: () {
-                                if (controller.containerFieldController.text !=
-                                    "") {
-                                  controller.editContainerMaintainResource(
-                                      controller
-                                          .maintainResourceList.records![0].id!,
-                                      "L");
-                                }
-                              },
-                              child: Text('Lock Container'.tr),
-                            )
-                          : SizedBox(),
-                    ),
-                    Obx(
-                      () => controller.dataAvailable.value
-                          ? ElevatedButton(
-                              onPressed: () {
-                                if (controller.containerFieldController.text !=
-                                    "") {
-                                  controller.editContainerMaintainResource(
-                                      controller
-                                          .maintainResourceList.records![0].id!,
-                                      "U");
-                                }
-                              },
-                              child: Text('Unlock Container'.tr),
-                            )
-                          : SizedBox(),
-                    ),
-                  ],
-                ),
+                  ),
+                )
               ]);
             },
           ),

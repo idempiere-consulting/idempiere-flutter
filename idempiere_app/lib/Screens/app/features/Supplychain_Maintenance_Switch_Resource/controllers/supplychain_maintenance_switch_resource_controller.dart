@@ -148,6 +148,7 @@ class SupplychainMaintenanceSwitchResourceController extends GetxController {
         "note": maintainResourceList.records![index].note,
         "name": maintainResourceList.records![index].name,
         "lot": maintainResourceList.records![index].lot,
+        "IsOwned": maintainResourceList.records![index].isOwned,
       });
     } else {
       if (kDebugMode) {
