@@ -44,6 +44,7 @@ class MaintenanceMpResourceController extends GetxController {
     "Unchecked".tr,
     "Checked".tr,
     'Retired'.tr,
+    'Only Anomalies'.tr
   ];
   var filterCount = 0;
   // ignore: prefer_final_fields
@@ -150,7 +151,7 @@ class MaintenanceMpResourceController extends GetxController {
 
   changeFilter() {
     filterCount++;
-    if (filterCount == 5) {
+    if (filterCount == 6) {
       filterCount = 0;
     }
 
@@ -2404,6 +2405,16 @@ class MaintenanceMpResourceController extends GetxController {
           temp = (_trx.records!.where((element) =>
               (element.resourceStatus?.id == "IRV" ||
                   element.resourceStatus?.id == "IRX") &&
+              element.mpMaintainID?.id ==
+                  GetStorage().read('selectedTaskDocNo'))).toList();
+          //print(temp);
+          _trx.records = temp;
+          _trx.rowcount = _trx.records?.length;
+          flag = false;
+          break;
+        case 5:
+          temp = (_trx.records!.where((element) =>
+              element.anomaliesCount != "0" &&
               element.mpMaintainID?.id ==
                   GetStorage().read('selectedTaskDocNo'))).toList();
           //print(temp);

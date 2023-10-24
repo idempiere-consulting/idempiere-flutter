@@ -169,7 +169,7 @@ class AnomalyReviewController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       _trx = AnomalyJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
       //print(response.body);

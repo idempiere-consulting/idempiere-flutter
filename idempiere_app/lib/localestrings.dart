@@ -1191,7 +1191,8 @@ class LocaleString extends Translations {
           'proceed': 'procedi',
           'Container Status Changed': 'Stato del Contenitore cambiato',
           'INC': 'In Consegna',
-          '.': 'Riga descrittiva'
+          '.': 'Riga descrittiva',
+          'Only Anomalies': 'Solo Anomalie'
         },
       };
 }

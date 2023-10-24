@@ -254,9 +254,10 @@ class AnomalyListController extends GetxController {
             args["id"] /* &&
         element.isClosed == false */
         );
-
+    print('aaaa');
     if (json.records!.isNotEmpty && await checkConnection()) {
       for (var element in json.records!) {
+        print(element.id);
         if (element.id != null) {
           await getRecordAttachments(element.id!);
         }
