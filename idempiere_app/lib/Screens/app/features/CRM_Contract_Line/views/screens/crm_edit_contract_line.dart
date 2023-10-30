@@ -160,7 +160,7 @@ class _EditCRMContractLineState extends State<EditCRMContractLine> {
   }
 
   Future<void> getPriceListVersionID(int id) async {
-    print(id);
+    //print(id);
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -177,7 +177,9 @@ class _EditCRMContractLineState extends State<EditCRMContractLine> {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       var json = jsonDecode(response.body);
 
       priceListVersionID = json["records"][0]["id"];
@@ -263,7 +265,7 @@ class _EditCRMContractLineState extends State<EditCRMContractLine> {
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(
