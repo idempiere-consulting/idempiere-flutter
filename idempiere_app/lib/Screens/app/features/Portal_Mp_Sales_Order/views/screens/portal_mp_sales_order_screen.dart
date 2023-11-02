@@ -228,7 +228,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                 /*  buttonSize: const Size(, 45),
         childrenButtonSize: const Size(45, 45), */
                 children: [
-                  SpeedDialChild(
+                  /* SpeedDialChild(
                       label: 'Filter'.tr,
                       child: Obx(() => Icon(
                             MaterialSymbols.filter_alt_filled,
@@ -250,16 +250,9 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           'businessPartnerName': controller.businessPartnerName,
                           'docNo': controller.docNoValue.value,
                         });
-                      }),
+                      }), */
                   SpeedDialChild(
                       label: 'New'.tr,
-                      child:
-                          const Icon(MaterialSymbols.assignment_add_outlined),
-                      onTap: () {
-                        Get.toNamed('/SalesOrderCreation');
-                      }),
-                  SpeedDialChild(
-                      label: 'New SO \nfrom Price List'.tr,
                       child:
                           const Icon(MaterialSymbols.assignment_add_outlined),
                       onTap: () {
@@ -349,6 +342,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                           onPressed: () {
                                             Get.toNamed('/SalesOrderLine',
                                                 arguments: {
+                                                  'status': 'CO',
                                                   "id": controller
                                                       .trx.records![index].id,
                                                   "bPartner": controller
@@ -513,20 +507,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
-                                                    tooltip: 'Editor HTML',
-                                                    onPressed: () async {
-                                                      controller
-                                                          .getContractArticles(
-                                                              controller
-                                                                  ._trx
-                                                                  .records![
-                                                                      index]
-                                                                  .id!);
-                                                    },
-                                                    icon:
-                                                        const Icon(Icons.html),
-                                                  ),
-                                                  IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -548,144 +528,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                     },
                                                     icon:
                                                         const Icon(Icons.print),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'print POS',
-                                                    onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
-                                                      /* Get.to(
-                                                          const PrintPOSScreen(),
-                                                          arguments: {
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                          }); */
-                                                      controller
-                                                          .getBusinessPartner(
-                                                              index);
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.receipt),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'Sign',
-                                                    onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
-                                                      Get.to(
-                                                          const SignatureSalesOrderScreen(),
-                                                          arguments: {
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                          });
-                                                    },
-                                                    icon: const Icon(
-                                                        EvaIcons.edit2Outline),
-                                                  ),
-                                                  Visibility(
-                                                    visible: controller
-                                                                .trx
-                                                                .records![index]
-                                                                .docStatus
-                                                                ?.id !=
-                                                            'CO' &&
-                                                        int.parse(
-                                                                    controller
-                                                                        .list[8],
-                                                                    radix: 16)
-                                                                .toRadixString(2)
-                                                                .padLeft(8, "0")
-                                                                .toString()[7] ==
-                                                            "1",
-                                                    child: ElevatedButton(
-                                                      style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(Colors
-                                                                    .green),
-                                                      ),
-                                                      onPressed: () async {
-                                                        Get.defaultDialog(
-                                                          title: 'Complete'.tr,
-                                                          content: Text(
-                                                              "Are you sure you want to complete the record?"
-                                                                  .tr),
-                                                          onCancel: () {},
-                                                          onConfirm: () async {
-                                                            /*  final ip =
-                                                                GetStorage()
-                                                                    .read('ip');
-                                                            String
-                                                                authorization =
-                                                                'Bearer ' +
-                                                                    GetStorage()
-                                                                        .read(
-                                                                            'token');
-                                                            final msg =
-                                                                jsonEncode({
-                                                              "DocAction": "CO",
-                                                            });
-                                                            print(msg);
-                                                            final protocol =
-                                                                GetStorage().read(
-                                                                    'protocol');
-                                                            var url = Uri.parse(
-                                                                '$protocol://' +
-                                                                    ip +
-                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                                                            print(url);
-                                                            var response =
-                                                                await http.put(
-                                                              url,
-                                                              body: msg,
-                                                              headers: <String,
-                                                                  String>{
-                                                                'Content-Type':
-                                                                    'application/json',
-                                                                'Authorization':
-                                                                    authorization,
-                                                              },
-                                                            );
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              completeOrder(
-                                                                  index);
-                                                            } else {
-                                                              print(response
-                                                                  .body);
-                                                              Get.snackbar(
-                                                                "Error!".tr,
-                                                                "Record not completed"
-                                                                    .tr,
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                              );
-                                                            } */
-                                                            completeOrder(
-                                                                index);
-                                                          },
-                                                        );
-                                                      },
-                                                      child:
-                                                          Text("Complete".tr),
-                                                    ),
                                                   ),
                                                 ],
                                               ),
@@ -767,6 +609,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                           onPressed: () {
                                             Get.toNamed('/SalesOrderLine',
                                                 arguments: {
+                                                  'status': 'CO',
                                                   "id": controller
                                                       .trx.records![index].id,
                                                   "bPartner": controller
@@ -834,7 +677,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                             tooltip: 'Edit Sales Order'.tr,
                                             onPressed: () {
                                               //log("info button pressed");
-                                              Get.to(const CRMEditSalesOrder(),
+                                              /* Get.to(const CRMEditSalesOrder(),
                                                   arguments: {
                                                     "id": controller
                                                         .trx.records![index].id,
@@ -876,7 +719,7 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                         .records![index]
                                                         .totalLines
                                                         .toString(),
-                                                  });
+                                                  }); */
                                             },
                                           ),
                                         ),
@@ -931,20 +774,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
-                                                    tooltip: 'Editor HTML',
-                                                    onPressed: () async {
-                                                      controller
-                                                          .getContractArticles(
-                                                              controller
-                                                                  ._trx
-                                                                  .records![
-                                                                      index]
-                                                                  .id!);
-                                                    },
-                                                    icon:
-                                                        const Icon(Icons.html),
-                                                  ),
-                                                  IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -966,144 +795,6 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                     },
                                                     icon:
                                                         const Icon(Icons.print),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'print POS',
-                                                    onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
-                                                      /* Get.to(
-                                                          const PrintPOSScreen(),
-                                                          arguments: {
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                          }); */
-                                                      controller
-                                                          .getBusinessPartner(
-                                                              index);
-                                                    },
-                                                    icon: const Icon(
-                                                        Icons.receipt),
-                                                  ),
-                                                  IconButton(
-                                                    tooltip: 'Sign',
-                                                    onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
-                                                      Get.to(
-                                                          const SignatureSalesOrderScreen(),
-                                                          arguments: {
-                                                            "id": controller
-                                                                .trx
-                                                                .records![index]
-                                                                .id,
-                                                          });
-                                                    },
-                                                    icon: const Icon(
-                                                        EvaIcons.edit2Outline),
-                                                  ),
-                                                  Visibility(
-                                                    visible: controller
-                                                                .trx
-                                                                .records![index]
-                                                                .docStatus
-                                                                ?.id !=
-                                                            'CO' &&
-                                                        int.parse(
-                                                                    controller
-                                                                        .list[8],
-                                                                    radix: 16)
-                                                                .toRadixString(2)
-                                                                .padLeft(8, "0")
-                                                                .toString()[7] ==
-                                                            "1",
-                                                    child: ElevatedButton(
-                                                      style: ButtonStyle(
-                                                        backgroundColor:
-                                                            MaterialStateProperty
-                                                                .all(Colors
-                                                                    .green),
-                                                      ),
-                                                      onPressed: () async {
-                                                        Get.defaultDialog(
-                                                          title: 'Complete'.tr,
-                                                          content: Text(
-                                                              "Are you sure you want to complete the record?"
-                                                                  .tr),
-                                                          onCancel: () {},
-                                                          onConfirm: () async {
-                                                            /*  final ip =
-                                                                GetStorage()
-                                                                    .read('ip');
-                                                            String
-                                                                authorization =
-                                                                'Bearer ' +
-                                                                    GetStorage()
-                                                                        .read(
-                                                                            'token');
-                                                            final msg =
-                                                                jsonEncode({
-                                                              "DocAction": "CO",
-                                                            });
-                                                            print(msg);
-                                                            final protocol =
-                                                                GetStorage().read(
-                                                                    'protocol');
-                                                            var url = Uri.parse(
-                                                                '$protocol://' +
-                                                                    ip +
-                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                                                            print(url);
-                                                            var response =
-                                                                await http.put(
-                                                              url,
-                                                              body: msg,
-                                                              headers: <String,
-                                                                  String>{
-                                                                'Content-Type':
-                                                                    'application/json',
-                                                                'Authorization':
-                                                                    authorization,
-                                                              },
-                                                            );
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              completeOrder(
-                                                                  index);
-                                                            } else {
-                                                              print(response
-                                                                  .body);
-                                                              Get.snackbar(
-                                                                "Error!".tr,
-                                                                "Record not completed"
-                                                                    .tr,
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                              );
-                                                            } */
-                                                            completeOrder(
-                                                                index);
-                                                          },
-                                                        );
-                                                      },
-                                                      child:
-                                                          Text("Complete".tr),
-                                                    ),
                                                   ),
                                                 ],
                                               ),

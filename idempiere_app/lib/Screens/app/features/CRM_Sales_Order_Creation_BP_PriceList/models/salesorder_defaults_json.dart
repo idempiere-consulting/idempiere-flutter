@@ -54,9 +54,6 @@ class DEFRecords {
   final CCurrencyID? cCurrencyID;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
-  final CDocTypeTargetID? cDocTypeTargetID;
-  final PaymentRule? paymentRule;
-  final CPaymentTermID? cPaymentTermID;
   final String? modelname;
 
   DEFRecords({
@@ -82,9 +79,6 @@ class DEFRecords {
     this.cCurrencyID,
     this.aDClientID,
     this.aDOrgID,
-    this.cDocTypeTargetID,
-    this.paymentRule,
-    this.cPaymentTermID,
     this.modelname,
   });
 
@@ -154,19 +148,6 @@ class DEFRecords {
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        cDocTypeTargetID =
-            (json['LIT_C_DocTypeODV_ID'] as Map<String, dynamic>?) != null
-                ? CDocTypeTargetID.fromJson(
-                    json['LIT_C_DocTypeODV_ID'] as Map<String, dynamic>)
-                : null,
-        paymentRule = (json['PaymentRule'] as Map<String, dynamic>?) != null
-            ? PaymentRule.fromJson(json['PaymentRule'] as Map<String, dynamic>)
-            : null,
-        cPaymentTermID =
-            (json['C_PaymentTerm_ID'] as Map<String, dynamic>?) != null
-                ? CPaymentTermID.fromJson(
-                    json['C_PaymentTerm_ID'] as Map<String, dynamic>)
-                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -192,7 +173,6 @@ class DEFRecords {
         'C_Currency_ID': cCurrencyID?.toJson(),
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
-        'PaymentRule': paymentRule?.toJson(),
         'model-name': modelname
       };
 }
@@ -251,33 +231,6 @@ class CBPartnerLocationID {
       };
 }
 
-class CDocTypeTargetID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CDocTypeTargetID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CDocTypeTargetID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
 class UpdatedBy {
   final String? propertyLabel;
   final int? id;
@@ -319,33 +272,6 @@ class CreatedBy {
   });
 
   CreatedBy.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CPaymentTermID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CPaymentTermID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CPaymentTermID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -427,33 +353,6 @@ class DeliveryRule {
   });
 
   DeliveryRule.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class PaymentRule {
-  final String? propertyLabel;
-  final String? id;
-  final String? identifier;
-  final String? modelname;
-
-  PaymentRule({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  PaymentRule.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,

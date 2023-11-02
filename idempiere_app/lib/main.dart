@@ -11,6 +11,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/views/screens/crm_pos_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList/views/screens/crm_sales_order_creation_bp_pricelist_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_order_From_Pricelist/views/screens/crm_leads_screen.dart';
@@ -238,6 +239,11 @@ class MyApp extends StatelessWidget {
           name: '/SalesOrderCreation',
           page: () => const CRMSalesOrderCreationScreen(),
           binding: CRMSalesOrderCreationBinding(),
+        ),
+        GetPage(
+          name: '/SalesOrderCreationBPPricelist',
+          page: () => const CRMSalesOrderCreationBPPricelistScreen(),
+          binding: CRMSalesOrderCreationBPPricelistBinding(),
         ),
         GetPage(
           name: '/SalesOrderContractCreation',

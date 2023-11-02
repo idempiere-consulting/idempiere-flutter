@@ -87,9 +87,6 @@ class CRMOpenItemsController extends GetxController {
           (element) => element.salesRepID?.id != GetStorage().read('userId'));
     }
 
-    jsonbps.records!.removeWhere(
-        (element) => element.salesRepID?.id != GetStorage().read('userId'));
-
     return jsonbps.records!;
 
     //print(list[0].eMail);

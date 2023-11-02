@@ -4,6 +4,7 @@ class CRMSalesOrderLineController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late SalesOrderLineJson _trx;
 
+  var args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
 

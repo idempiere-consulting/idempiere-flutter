@@ -199,7 +199,7 @@ class PortalMpSalesOrderFromPriceListScreen
                   controller.isListShown.value = !controller.isListShown.value;
                 }),
             SpeedDialChild(
-                label: 'Search Product\nfrom outside\nthe Price List',
+                label: 'Search Product\nfrom outside\nthe Price List'.tr,
                 child: Obx(
                   () => Icon(
                     controller.allProdToggle.value
@@ -237,6 +237,7 @@ class PortalMpSalesOrderFromPriceListScreen
                             title: "Create Order".tr,
                             content: Text(
                                 "Are you sure you want to create the Order?"
+                                    .tr
                                     .tr),
                             buttonColor: kNotifColor,
                             textConfirm: "Create".tr,
@@ -424,13 +425,391 @@ class PortalMpSalesOrderFromPriceListScreen
                         }),
                   ),
                 ),
+                Obx(() => Visibility(
+                      visible: controller.isListShown.value == false,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                const Text(
+                                  "Total",
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "€ ${controller.total.value}",
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    )),
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: [
+                Visibility(
+                  visible: controller.isListShown.value,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: controller.searchFieldController,
+                      autofocus: true,
+                      onSubmitted: (String? value) {
+                        controller.getPriceListByName();
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(EvaIcons.search),
+                        hintText: "search..".tr,
+                        isDense: true,
+                        fillColor: Theme.of(context).cardColor,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isListShown.value,
+                    child: Obx(
+                      () => controller.dataAvailable.value
+                          ? SizedBox(
+                              height: size.height,
+                              width: double.infinity,
+                              child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller._trx.records?.length ?? 0,
+                                crossAxisCount: 3,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index, context);
+                                },
+                              ))
+                          : const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isListShown.value == false,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller.productList[index]
+                                                          .name ==
+                                                      "."
+                                                  ? "Descriptive Row".tr
+                                                  : controller
+                                                      .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ ${controller.productList[index].cost}",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ]);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: [
+                Visibility(
+                  visible: controller.isListShown.value,
+                  child: Container(
+                    margin: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: controller.searchFieldController,
+                      autofocus: true,
+                      onSubmitted: (String? value) {
+                        controller.getPriceListByName();
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide.none,
+                        ),
+                        prefixIcon: const Icon(EvaIcons.search),
+                        hintText: "search..".tr,
+                        isDense: true,
+                        fillColor: Theme.of(context).cardColor,
+                      ),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isListShown.value,
+                    child: Obx(
+                      () => controller.dataAvailable.value
+                          ? SizedBox(
+                              height: size.height,
+                              width: double.infinity,
+                              child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: controller._trx.records?.length ?? 0,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 8,
+                                crossAxisSpacing: 8,
+                                itemBuilder: (context, index) {
+                                  return buildImageCard(index, context);
+                                },
+                              ))
+                          : const Center(child: CircularProgressIndicator()),
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
+                    visible: controller.isListShown.value == false,
+                    child: ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.productList.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final item =
+                              controller.productList[index].id.toString();
+                          return FadeInDown(
+                            duration: Duration(milliseconds: 350 * index),
+                            child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: Dismissible(
+                                key: Key(item),
+                                onDismissed: (direction) {
+                                  controller.productList.removeWhere(
+                                      (element) =>
+                                          element.id.toString() ==
+                                          controller.productList[index].id
+                                              .toString());
+                                  controller.updateTotal();
+                                  controller.updateCounter();
+                                },
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                          decoration: BoxDecoration(
+                                              color: Colors.grey,
+                                              /* boxShadow: [BoxShadow(
+                                                          spreadRadius: 0.5,
+                                                          color: black.withOpacity(0.1),
+                                                          blurRadius: 1
+                                                        )], */
+                                              borderRadius:
+                                                  BorderRadius.circular(20)),
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 10,
+                                                left: 10,
+                                                right: 10,
+                                                bottom: 10),
+                                            child: Column(
+                                              children: <Widget>[
+                                                Center(
+                                                  child: Container(
+                                                    width: 120,
+                                                    height: 70,
+                                                    decoration: const BoxDecoration(
+                                                        image: DecorationImage(
+                                                            image: AssetImage(
+                                                                "assets/images/404.png"),
+                                                            fit: BoxFit.cover)),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 20,
+                                        ),
+                                        Expanded(
+                                            child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(
+                                              controller.productList[index]
+                                                          .name ==
+                                                      "."
+                                                  ? "Descriptive Row".tr
+                                                  : controller
+                                                      .productList[index].name,
+                                              style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            const SizedBox(
+                                              height: 15,
+                                            ),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: <Widget>[
+                                                Text(
+                                                  "€ ${controller.productList[index].cost}",
+                                                  style: const TextStyle(
+                                                      fontSize: 15,
+                                                      fontWeight:
+                                                          FontWeight.w500),
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "x${controller.productList[index].qty}",
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ))
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
+              ]);
             },
           ),
         ),
@@ -515,7 +894,12 @@ class PortalMpSalesOrderFromPriceListScreen
 
   Widget buildImageCard(int index, BuildContext context) => GestureDetector(
         onTap: () {
-          controller.qtyFieldController.text = '0';
+          controller.qtyMultiplierController.text = "1";
+          controller.qtyMinFieldController.text =
+              controller._trx.records![index].qtyBatchSize.toString();
+          controller.qtyFieldController.text =
+              controller._trx.records![index].qtyBatchSize.toString();
+
           controller.descriptionFieldController.text = '';
           Get.defaultDialog(
               title: controller._trx.records![index].name ?? "N/A",
@@ -531,7 +915,8 @@ class PortalMpSalesOrderFromPriceListScreen
                       //onTap: () {},
                       //onSubmitted: (String? value) {},
                       decoration: InputDecoration(
-                        hintText: 'Description..',
+                        labelText: 'Nota Prodotto',
+                        hintText: 'Description..'.tr,
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -542,22 +927,103 @@ class PortalMpSalesOrderFromPriceListScreen
                       ),
                     ),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 100,
+                        child: TextField(
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                          readOnly: true,
+                          textAlign: TextAlign.center,
+                          controller: controller.qtyMinFieldController,
+                          autofocus: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: false, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                          ],
+                          //onTap: () {},
+                          //onSubmitted: (String? value) {},
+                          decoration: InputDecoration(
+                            prefixText: controller._trx.records![index].uom,
+                            labelStyle: const TextStyle(color: Colors.white),
+                            labelText: "${"Qty".tr} Min.",
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            isDense: true,
+                            fillColor: Theme.of(context).cardColor,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: 100,
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          controller: controller.qtyMultiplierController,
+                          autofocus: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: false, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                          ],
+                          onChanged: (value) {
+                            if (double.tryParse(value) != null) {
+                              controller.qtyFieldController.text =
+                                  (double.parse(controller
+                                              .qtyMinFieldController.text) *
+                                          double.parse(controller
+                                              .qtyMultiplierController.text))
+                                      .toString();
+                            } else {
+                              controller.qtyFieldController.text = controller
+                                  ._trx.records![index].qtyBatchSize
+                                  .toString();
+                            }
+                          },
+                          decoration: InputDecoration(
+                            labelStyle: const TextStyle(color: Colors.white),
+                            labelText: "${"Qty".tr} Acq.",
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            isDense: true,
+                            fillColor: Theme.of(context).cardColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Container(
-                    margin: const EdgeInsets.only(right: 70, left: 70),
+                    margin: EdgeInsets.only(top: 10),
+                    width: 180,
                     child: TextField(
+                      style: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      readOnly: true,
                       textAlign: TextAlign.center,
                       controller: controller.qtyFieldController,
                       autofocus: true,
                       keyboardType: const TextInputType.numberWithOptions(
                           signed: false, decimal: true),
                       inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                        FilteringTextInputFormatter.allow(RegExp("[0-9]"))
                       ],
                       //onTap: () {},
                       //onSubmitted: (String? value) {},
                       decoration: InputDecoration(
-                        labelStyle: TextStyle(color: Colors.white),
-                        labelText: 'Qty'.tr,
+                        prefixText: controller._trx.records![index].uom,
+                        labelStyle: const TextStyle(color: Colors.white),
+                        labelText: "Tot Qty".tr,
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -584,7 +1050,10 @@ class PortalMpSalesOrderFromPriceListScreen
                           controller.descriptionFieldController.text != ''
                               ? controller.descriptionFieldController.text
                               : null));
+                  controller.updateCounter();
+                  controller.updateTotal();
                 }
+
                 Get.back();
               });
         },
@@ -610,25 +1079,22 @@ class PortalMpSalesOrderFromPriceListScreen
                       : controller._trx.records![index].imageUrl != null
                           ? Image.network(
                               controller._trx.records![index].imageUrl!)
-                          : const Text('no image'),
+                          : const SizedBox(),
                 ),
               ),
               ListTile(
                 title: Text(
-                  "  ${controller._trx.records![index].cCurrencyID?.identifier ?? "?"} ${controller._trx.records![index].priceList}",
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
+                  controller._trx.records![index].name!.tr,
                 ),
                 subtitle: Column(
                   children: [
                     Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Text(
-                            controller._trx.records![index].name!.tr,
-                            style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
+                      children: [
+                        Text(
+                          "  ${controller._trx.records![index].cCurrencyID?.identifier ?? "?"} ${controller._trx.records![index].priceList}",
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                        )
                       ],
                     ),
                     Divider(),
@@ -636,26 +1102,8 @@ class PortalMpSalesOrderFromPriceListScreen
                       children: <Widget>[
                         Expanded(
                           child: Text(
-                            "${"Last Order".tr}: ${controller._trx.records![index].lastdateOrdered ?? "None".tr}",
+                            "${"Last Order".tr}: ${controller._trx.records![index].lastdateOrdered ?? "N/A".tr}",
                             style: const TextStyle(color: Colors.white),
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            "${controller._trx.records![index].qtyOnHand == null || controller._trx.records![index].qtyOnHand == 0 ? "" : "Availability:".tr} ${controller._trx.records![index].qtyOnHand == null || controller._trx.records![index].qtyOnHand == 0 ? "Not Available".tr : controller._trx.records![index].qtyOnHand}",
-                            style: TextStyle(
-                                color:
-                                    controller._trx.records![index].qtyOnHand ==
-                                                null ||
-                                            controller._trx.records![index]
-                                                    .qtyOnHand ==
-                                                0
-                                        ? Colors.red
-                                        : Colors.white),
                           ),
                         ),
                       ],

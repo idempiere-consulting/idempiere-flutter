@@ -84,30 +84,6 @@ class PortalMpScreen extends GetView<PortalMpController> {
             const SizedBox(height: kSpacing / 2),
             const Divider(),
             _buildProfile(data: controller.getProfil()),
-            const SizedBox(height: kSpacing),
-            _buildProgress(axis: Axis.vertical),
-            const SizedBox(height: kSpacing),
-            _buildTeamMember(data: controller.getMember()),
-            const SizedBox(height: kSpacing),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-              child: GetPremiumCard(onPressed: () {}),
-            ),
-            /* const SizedBox(height: kSpacing * 2),
-            _buildTaskOverview(
-              data: controller.getAllTask(),
-              headerAxis: Axis.vertical,
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ),
-            const SizedBox(height: kSpacing * 2),
-            _buildActiveProject(
-              data: controller.getActiveProject(),
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ), */
-            const SizedBox(height: kSpacing),
-            _buildRecentMessages(data: controller.getChatting()),
           ]);
         },
         tabletBuilder: (context, constraints) {
@@ -118,37 +94,13 @@ class PortalMpScreen extends GetView<PortalMpController> {
             const SizedBox(height: kSpacing / 2),
             const Divider(),
             _buildProfile(data: controller.getProfil()),
-            const SizedBox(height: kSpacing),
-            _buildProgress(axis: Axis.vertical),
-            const SizedBox(height: kSpacing),
-            _buildTeamMember(data: controller.getMember()),
-            const SizedBox(height: kSpacing),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-              child: GetPremiumCard(onPressed: () {}),
-            ),
-            /* const SizedBox(height: kSpacing * 2),
-            _buildTaskOverview(
-              data: controller.getAllTask(),
-              headerAxis: Axis.vertical,
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ),
-            const SizedBox(height: kSpacing * 2),
-            _buildActiveProject(
-              data: controller.getActiveProject(),
-              crossAxisCount: 6,
-              crossAxisCellCount: 6,
-            ), */
-            const SizedBox(height: kSpacing),
-            _buildRecentMessages(data: controller.getChatting()),
           ]);
         },
         desktopBuilder: (context, constraints) {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Flexible(
+              /* Flexible(
                 flex: (constraints.maxWidth < 1360) ? 4 : 3,
                 child: ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -1346,7 +1298,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                         child: _buildDayEvents())), */
                   ],
                 ),
-              )
+              ) */
             ],
           );
 

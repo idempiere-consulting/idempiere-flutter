@@ -160,18 +160,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                           ),
                         ),
                       ),
-                      /* Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getTasks();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ), */
                     ],
                   )
                 ],
@@ -250,6 +238,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                 child: const Icon(MaterialSymbols.assignment_add_outlined),
                 onTap: () {
                   Get.toNamed('/SalesOrderCreation');
+                }),
+            SpeedDialChild(
+                label: 'New SO \nfrom Price List'.tr,
+                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                onTap: () {
+                  Get.toNamed('/SalesOrderCreationBPPricelist');
                 })
           ],
         ),

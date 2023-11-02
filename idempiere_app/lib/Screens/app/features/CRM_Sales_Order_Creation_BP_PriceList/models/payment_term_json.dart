@@ -1,28 +1,25 @@
-class PriceListJson {
+class PaymentTermsJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final int? arraycount;
-  final List<Records>? records;
+  final List<PTRecords>? records;
 
-  PriceListJson({
+  PaymentTermsJson({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
-    this.arraycount,
     this.records,
   });
 
-  PriceListJson.fromJson(Map<String, dynamic> json)
+  PaymentTermsJson.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
-        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => PTRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -30,76 +27,86 @@ class PriceListJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
-        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
 
-class Records {
+class PTRecords {
   final int? id;
+  final String? uid;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
+  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
   final String? updated;
-  final String? imageUrl;
   final UpdatedBy? updatedBy;
-  final bool? isActive;
-  final MPriceListID? mPriceListID;
-  final MPriceListVersionID? mPriceListVersionID;
-  final MProductID? mProductID;
-  final String? value;
   final String? name;
-  final num? priceList;
-  final num? priceStd;
-  final num? qtyOnHand;
-  final String? lastdateOrdered;
-  final String? pricelistdescription;
-  final bool? isSelfService;
-  final String? imageData;
-  final CCurrencyID? cCurrencyID;
-  final num? qtyBatchSize;
-  final String? uom;
+  final String? description;
+  final bool? afterDelivery;
+  final int? netDays;
+  final int? discount;
+  final int? discountDays;
+  final bool? isDueFixed;
+  final int? fixMonthCutoff;
+  final int? fixMonthDay;
+  final int? fixMonthOffset;
+  final int? discountDays2;
+  final int? discount2;
+  final bool? isNextBusinessDay;
+  final bool? isDefault;
+  final int? graceDays;
+  final String? value;
+  final bool? isValid;
+  final PaymentTermUsage? paymentTermUsage;
+  final bool? afterOrder;
+  final bool? lITVAT1;
   final String? modelname;
 
-  Records({
+  PTRecords({
     this.id,
+    this.uid,
     this.aDClientID,
     this.aDOrgID,
+    this.isActive,
     this.created,
-    this.imageUrl,
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.isActive,
-    this.mPriceListID,
-    this.mPriceListVersionID,
-    this.mProductID,
-    this.value,
     this.name,
-    this.priceList,
-    this.priceStd,
-    this.qtyOnHand,
-    this.lastdateOrdered,
-    this.pricelistdescription,
-    this.isSelfService,
-    this.imageData,
-    this.cCurrencyID,
-    this.qtyBatchSize,
-    this.uom,
+    this.description,
+    this.afterDelivery,
+    this.netDays,
+    this.discount,
+    this.discountDays,
+    this.isDueFixed,
+    this.fixMonthCutoff,
+    this.fixMonthDay,
+    this.fixMonthOffset,
+    this.discountDays2,
+    this.discount2,
+    this.isNextBusinessDay,
+    this.isDefault,
+    this.graceDays,
+    this.value,
+    this.isValid,
+    this.paymentTermUsage,
+    this.afterOrder,
+    this.lITVAT1,
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  PTRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
+        uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
+        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
-        imageUrl = json['ImageURL'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
@@ -107,58 +114,62 @@ class Records {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
-        mPriceListID = (json['M_PriceList_ID'] as Map<String, dynamic>?) != null
-            ? MPriceListID.fromJson(
-                json['M_PriceList_ID'] as Map<String, dynamic>)
-            : null,
-        mPriceListVersionID =
-            (json['M_PriceList_Version_ID'] as Map<String, dynamic>?) != null
-                ? MPriceListVersionID.fromJson(
-                    json['M_PriceList_Version_ID'] as Map<String, dynamic>)
-                : null,
-        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
-            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
-            : null,
-        value = json['Value'] as String?,
         name = json['Name'] as String?,
-        priceList = json['PriceList'] as num?,
-        priceStd = json['PriceStd'] as num?,
-        qtyOnHand = json['QtyOnHand'] as num?,
-        lastdateOrdered = json['lastdateordered'] as String?,
-        pricelistdescription = json['pricelist_description'] as String?,
-        isSelfService = json['IsSelfService'] as bool?,
-        imageData = json['imagebase64'] as String?,
-        cCurrencyID = (json['C_Currency_ID'] as Map<String, dynamic>?) != null
-            ? CCurrencyID.fromJson(
-                json['C_Currency_ID'] as Map<String, dynamic>)
-            : null,
-        qtyBatchSize = json['QtyBatchSize'] as num?,
-        uom = json['uom'] as String?,
+        description = json['Description'] as String?,
+        afterDelivery = json['AfterDelivery'] as bool?,
+        netDays = json['NetDays'] as int?,
+        discount = json['Discount'] as int?,
+        discountDays = json['DiscountDays'] as int?,
+        isDueFixed = json['IsDueFixed'] as bool?,
+        fixMonthCutoff = json['FixMonthCutoff'] as int?,
+        fixMonthDay = json['FixMonthDay'] as int?,
+        fixMonthOffset = json['FixMonthOffset'] as int?,
+        discountDays2 = json['DiscountDays2'] as int?,
+        discount2 = json['Discount2'] as int?,
+        isNextBusinessDay = json['IsNextBusinessDay'] as bool?,
+        isDefault = json['IsDefault'] as bool?,
+        graceDays = json['GraceDays'] as int?,
+        value = json['Value'] as String?,
+        isValid = json['IsValid'] as bool?,
+        paymentTermUsage =
+            (json['PaymentTermUsage'] as Map<String, dynamic>?) != null
+                ? PaymentTermUsage.fromJson(
+                    json['PaymentTermUsage'] as Map<String, dynamic>)
+                : null,
+        afterOrder = json['AfterOrder'] as bool?,
+        lITVAT1 = json['LIT_VAT1'] as bool?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
+        'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'IsActive': isActive,
-        'M_PriceList_ID': mPriceListID?.toJson(),
-        'M_PriceList_Version_ID': mPriceListVersionID?.toJson(),
-        'M_Product_ID': mProductID?.toJson(),
-        'Value': value,
         'Name': name,
-        'QtyOnHand': qtyOnHand,
-        'PriceList': priceList,
-        'PriceStd': priceStd,
-        'lastdateordered': lastdateOrdered,
-        'IsSelfService': isSelfService,
-        'imagebase64': imageData,
-        'QtyBatchSize': qtyBatchSize,
-        'uom': uom,
+        'Description': description,
+        'AfterDelivery': afterDelivery,
+        'NetDays': netDays,
+        'Discount': discount,
+        'DiscountDays': discountDays,
+        'IsDueFixed': isDueFixed,
+        'FixMonthCutoff': fixMonthCutoff,
+        'FixMonthDay': fixMonthDay,
+        'FixMonthOffset': fixMonthOffset,
+        'DiscountDays2': discountDays2,
+        'Discount2': discount2,
+        'IsNextBusinessDay': isNextBusinessDay,
+        'IsDefault': isDefault,
+        'GraceDays': graceDays,
+        'Value': value,
+        'IsValid': isValid,
+        'PaymentTermUsage': paymentTermUsage?.toJson(),
+        'AfterOrder': afterOrder,
+        'LIT_VAT1': lITVAT1,
         'model-name': modelname
       };
 }
@@ -204,33 +215,6 @@ class ADOrgID {
   });
 
   ADOrgID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CCurrencyID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CCurrencyID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CCurrencyID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -298,76 +282,22 @@ class UpdatedBy {
       };
 }
 
-class MPriceListID {
+class PaymentTermUsage {
   final String? propertyLabel;
-  final int? id;
+  final String? id;
   final String? identifier;
   final String? modelname;
 
-  MPriceListID({
+  PaymentTermUsage({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MPriceListID.fromJson(Map<String, dynamic> json)
+  PaymentTermUsage.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MPriceListVersionID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MPriceListVersionID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MPriceListVersionID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MProductID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MProductID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MProductID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

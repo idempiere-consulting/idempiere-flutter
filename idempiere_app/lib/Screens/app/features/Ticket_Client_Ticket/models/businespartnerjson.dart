@@ -84,6 +84,7 @@ class BPRecords {
   final bool? lITNoInvoiceXMLVendor;
   final bool? isValid;
   final String? litTaxID;
+  final CDocTypeTargetID? cDocTypeTargetID;
   final String? modelname;
 
   BPRecords(
@@ -138,6 +139,7 @@ class BPRecords {
       this.isValid,
       this.litTaxID,
       this.modelname,
+      this.cDocTypeTargetID,
       this.cPaymentRuleID});
 
   BPRecords.fromJson(Map<String, dynamic> json)
@@ -230,6 +232,11 @@ class BPRecords {
         lITNoInvoiceXMLVendor = json['LIT_NoInvoiceXMLVendor'] as bool?,
         isValid = json['IsValid'] as bool?,
         litTaxID = json['LIT_TaxID'] as String?,
+        cDocTypeTargetID =
+            (json['LIT_C_DocTypeODV_ID'] as Map<String, dynamic>?) != null
+                ? CDocTypeTargetID.fromJson(
+                    json['LIT_C_DocTypeODV_ID'] as Map<String, dynamic>)
+                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -328,6 +335,33 @@ class ADOrgID {
   });
 
   ADOrgID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CDocTypeTargetID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CDocTypeTargetID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CDocTypeTargetID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

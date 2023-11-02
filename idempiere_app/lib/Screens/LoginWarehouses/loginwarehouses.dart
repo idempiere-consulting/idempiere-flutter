@@ -192,6 +192,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       index += 1;
       var pageJson = BusinessPartnerJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
+      print(pageJson.records?.length);
       for (var element in pageJson.records!) {
         json.records!.add(element);
       }
@@ -200,6 +201,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         syncBusinessPartnerPages(json, index);
       } else {
         if (kDebugMode) {
+          print("pages done $index");
           print(json.records!.length);
         }
         const filename = "businesspartner";
@@ -261,6 +263,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
+      //print(response.body);
       var json =
           ProductJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {

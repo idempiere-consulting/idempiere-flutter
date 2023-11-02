@@ -1192,7 +1192,13 @@ class LocaleString extends Translations {
           'Container Status Changed': 'Stato del Contenitore cambiato',
           'INC': 'In Consegna',
           '.': 'Riga descrittiva',
-          'Only Anomalies': 'Solo Anomalie'
+          'Only Anomalies': 'Solo Anomalie',
+          'Last Order': 'Ultimo Ordine',
+          'Are you sure you want to create the Order?':
+              'Sicuro di voler creare l\'Ordine?',
+          'New': 'Nuovo',
+          'Search Product\nfrom outside\nthe Price List':
+              'Cerca Prodotto\nfuori Listino',
         },
       };
 }

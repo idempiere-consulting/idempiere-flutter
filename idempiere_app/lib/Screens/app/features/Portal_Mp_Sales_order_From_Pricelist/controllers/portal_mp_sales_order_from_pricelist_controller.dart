@@ -23,6 +23,8 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
 
   var searchFieldController = TextEditingController();
   var qtyFieldController = TextEditingController(text: '0');
+  var qtyMinFieldController = TextEditingController(text: '0');
+  var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
 
   var valueFilter = "";
@@ -40,7 +42,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
   void onInit() {
     super.onInit();
     getPriceListID();
-    getSalesOrderDefaultValues();
     getLocationFromBP();
     getBPValues();
     getDocType();
@@ -105,7 +106,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq ${args["businessPartnerId"]} or Value eq \'.\') ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq ${args["businessPartnerId"]} or Value eq \'.\') ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -145,7 +146,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq ${args["businessPartnerId"]} or Value eq \'.\') ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq ${args["businessPartnerId"]} or Value eq \'.\') ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -390,6 +391,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
         print(response.body);
       }
     }
+    getSalesOrderDefaultValues();
   }
 
   /* void openDrawer() {

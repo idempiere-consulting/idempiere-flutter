@@ -1,26 +1,23 @@
-class PriceListJson {
+class ContactsJson {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final int? arraycount;
   final List<Records>? records;
 
-  PriceListJson({
+  ContactsJson({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
-    this.arraycount,
     this.records,
   });
 
-  PriceListJson.fromJson(Map<String, dynamic> json)
+  ContactsJson.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
-        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
             ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
@@ -30,76 +27,107 @@ class PriceListJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
-        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
 
 class Records {
   final int? id;
+  final String? uid;
+  final String? name;
+  final String? description;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
+  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
   final String? updated;
-  final String? imageUrl;
   final UpdatedBy? updatedBy;
-  final bool? isActive;
-  final MPriceListID? mPriceListID;
-  final MPriceListVersionID? mPriceListVersionID;
-  final MProductID? mProductID;
+  final String? eMail;
+  final SupervisorID? supervisorID;
+  final NotificationType? notificationType;
+  final bool? isFullBPAccess;
   final String? value;
-  final String? name;
-  final num? priceList;
-  final num? priceStd;
-  final num? qtyOnHand;
-  final String? lastdateOrdered;
-  final String? pricelistdescription;
-  final bool? isSelfService;
-  final String? imageData;
-  final CCurrencyID? cCurrencyID;
-  final num? qtyBatchSize;
-  final String? uom;
+  final bool? isInPayroll;
+  final bool? isSalesLead;
+  final bool? isLocked;
+  final int? failedLoginCount;
+  final String? dateLastLogin;
+  final bool? isNoPasswordReset;
+  final bool? isExpired;
+  final bool? isAddMailTextAutomatically;
+  final bool? isNoExpire;
+  final bool? isSupportUser;
+  final bool? isShipTo;
+  final bool? isBillTo;
+  final bool? isVendorLead;
+  final bool? isLegalUser;
+  final bool? lITIsWebTicket;
+  final bool? lITIsMailReader;
+  final bool? lITIsPartner;
+  final bool? isPublic;
+  final bool? isFavourite;
   final String? modelname;
+  final CBPartnerID? cbPartnerID;
 
   Records({
     this.id,
+    this.uid,
+    this.name,
+    this.description,
     this.aDClientID,
     this.aDOrgID,
+    this.isActive,
     this.created,
-    this.imageUrl,
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.isActive,
-    this.mPriceListID,
-    this.mPriceListVersionID,
-    this.mProductID,
+    this.eMail,
+    this.supervisorID,
+    this.notificationType,
+    this.isFullBPAccess,
     this.value,
-    this.name,
-    this.priceList,
-    this.priceStd,
-    this.qtyOnHand,
-    this.lastdateOrdered,
-    this.pricelistdescription,
-    this.isSelfService,
-    this.imageData,
-    this.cCurrencyID,
-    this.qtyBatchSize,
-    this.uom,
+    this.isInPayroll,
+    this.isSalesLead,
+    this.isLocked,
+    this.failedLoginCount,
+    this.dateLastLogin,
+    this.isNoPasswordReset,
+    this.isExpired,
+    this.isAddMailTextAutomatically,
+    this.isNoExpire,
+    this.isSupportUser,
+    this.isShipTo,
+    this.isBillTo,
+    this.isVendorLead,
+    this.isLegalUser,
+    this.lITIsWebTicket,
+    this.lITIsMailReader,
+    this.lITIsPartner,
+    this.isPublic,
+    this.isFavourite,
     this.modelname,
+    this.cbPartnerID,
   });
+
+  String get getname => name as String;
+
+  /*  @override
+  int get hashCode => hashValues(name); */
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
+        uid = json['uid'] as String?,
+        name = json['Name'] as String?,
+        description = json['Description'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
+        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
-        imageUrl = json['ImageURL'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
@@ -107,58 +135,79 @@ class Records {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
-        mPriceListID = (json['M_PriceList_ID'] as Map<String, dynamic>?) != null
-            ? MPriceListID.fromJson(
-                json['M_PriceList_ID'] as Map<String, dynamic>)
+        eMail = json['EMail'] as String?,
+        supervisorID = (json['Supervisor_ID'] as Map<String, dynamic>?) != null
+            ? SupervisorID.fromJson(
+                json['Supervisor_ID'] as Map<String, dynamic>)
             : null,
-        mPriceListVersionID =
-            (json['M_PriceList_Version_ID'] as Map<String, dynamic>?) != null
-                ? MPriceListVersionID.fromJson(
-                    json['M_PriceList_Version_ID'] as Map<String, dynamic>)
+        notificationType =
+            (json['NotificationType'] as Map<String, dynamic>?) != null
+                ? NotificationType.fromJson(
+                    json['NotificationType'] as Map<String, dynamic>)
                 : null,
-        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
-            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
-            : null,
+        isFullBPAccess = json['IsFullBPAccess'] as bool?,
         value = json['Value'] as String?,
-        name = json['Name'] as String?,
-        priceList = json['PriceList'] as num?,
-        priceStd = json['PriceStd'] as num?,
-        qtyOnHand = json['QtyOnHand'] as num?,
-        lastdateOrdered = json['lastdateordered'] as String?,
-        pricelistdescription = json['pricelist_description'] as String?,
-        isSelfService = json['IsSelfService'] as bool?,
-        imageData = json['imagebase64'] as String?,
-        cCurrencyID = (json['C_Currency_ID'] as Map<String, dynamic>?) != null
-            ? CCurrencyID.fromJson(
-                json['C_Currency_ID'] as Map<String, dynamic>)
+        isInPayroll = json['IsInPayroll'] as bool?,
+        isSalesLead = json['IsSalesLead'] as bool?,
+        isLocked = json['IsLocked'] as bool?,
+        failedLoginCount = json['FailedLoginCount'] as int?,
+        dateLastLogin = json['DateLastLogin'] as String?,
+        isNoPasswordReset = json['IsNoPasswordReset'] as bool?,
+        isExpired = json['IsExpired'] as bool?,
+        isAddMailTextAutomatically =
+            json['IsAddMailTextAutomatically'] as bool?,
+        isNoExpire = json['IsNoExpire'] as bool?,
+        isSupportUser = json['IsSupportUser'] as bool?,
+        isShipTo = json['IsShipTo'] as bool?,
+        isBillTo = json['IsBillTo'] as bool?,
+        isVendorLead = json['IsVendorLead'] as bool?,
+        isLegalUser = json['isLegalUser'] as bool?,
+        lITIsWebTicket = json['LIT_isWebTicket'] as bool?,
+        lITIsMailReader = json['LIT_isMailReader'] as bool?,
+        lITIsPartner = json['LIT_IsPartner'] as bool?,
+        isPublic = json['IsPublic'] as bool?,
+        isFavourite = json['IsFavourite'] as bool?,
+        cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? CBPartnerID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        qtyBatchSize = json['QtyBatchSize'] as num?,
-        uom = json['uom'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'uid': uid,
+        'Name': name,
+        'Description': description,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
+        'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'IsActive': isActive,
-        'M_PriceList_ID': mPriceListID?.toJson(),
-        'M_PriceList_Version_ID': mPriceListVersionID?.toJson(),
-        'M_Product_ID': mProductID?.toJson(),
+        'EMail': eMail,
+        'Supervisor_ID': supervisorID?.toJson(),
+        'NotificationType': notificationType?.toJson(),
+        'IsFullBPAccess': isFullBPAccess,
         'Value': value,
-        'Name': name,
-        'QtyOnHand': qtyOnHand,
-        'PriceList': priceList,
-        'PriceStd': priceStd,
-        'lastdateordered': lastdateOrdered,
-        'IsSelfService': isSelfService,
-        'imagebase64': imageData,
-        'QtyBatchSize': qtyBatchSize,
-        'uom': uom,
+        'IsInPayroll': isInPayroll,
+        'IsSalesLead': isSalesLead,
+        'IsLocked': isLocked,
+        'FailedLoginCount': failedLoginCount,
+        'DateLastLogin': dateLastLogin,
+        'IsNoPasswordReset': isNoPasswordReset,
+        'IsExpired': isExpired,
+        'IsAddMailTextAutomatically': isAddMailTextAutomatically,
+        'IsNoExpire': isNoExpire,
+        'IsSupportUser': isSupportUser,
+        'IsShipTo': isShipTo,
+        'IsBillTo': isBillTo,
+        'IsVendorLead': isVendorLead,
+        'isLegalUser': isLegalUser,
+        'LIT_isWebTicket': lITIsWebTicket,
+        'LIT_isMailReader': lITIsMailReader,
+        'LIT_IsPartner': lITIsPartner,
+        'IsPublic': isPublic,
+        'IsFavourite': isFavourite,
         'model-name': modelname
       };
 }
@@ -204,33 +253,6 @@ class ADOrgID {
   });
 
   ADOrgID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CCurrencyID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CCurrencyID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CCurrencyID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -298,20 +320,20 @@ class UpdatedBy {
       };
 }
 
-class MPriceListID {
+class SupervisorID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  MPriceListID({
+  SupervisorID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MPriceListID.fromJson(Map<String, dynamic> json)
+  SupervisorID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -325,22 +347,22 @@ class MPriceListID {
       };
 }
 
-class MPriceListVersionID {
+class NotificationType {
   final String? propertyLabel;
-  final int? id;
+  final String? id;
   final String? identifier;
   final String? modelname;
 
-  MPriceListVersionID({
+  NotificationType({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MPriceListVersionID.fromJson(Map<String, dynamic> json)
+  NotificationType.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
@@ -352,20 +374,20 @@ class MPriceListVersionID {
       };
 }
 
-class MProductID {
+class CBPartnerID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  MProductID({
+  CBPartnerID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MProductID.fromJson(Map<String, dynamic> json)
+  CBPartnerID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

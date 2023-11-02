@@ -71,26 +71,29 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
             },
           ),
           actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: IconButton(
-                onPressed: () {
-                  /* Get.to(const CreateSupplychainLoadUnloadLine(), arguments: {
-                    "id": Get.arguments["id"],
-                  }); */
-                  Get.to(const CreateSalesOrderLine(), arguments: {
-                    "id": Get.arguments["id"],
-                    "priceListId": Get.arguments["priceListId"],
-                    "dateOrdered": Get.arguments["dateOrdered"],
-                    "activityId": Get.arguments["activityId"] ?? 0,
-                    "bPartnerId": Get.arguments["bPartnerId"],
-                    "cLocationBPartner": Get.arguments["cLocationBPartner"],
-                    "warehouseId": Get.arguments["warehouseId"],
-                    "currencyId": Get.arguments["currencyId"],
-                  });
-                },
-                icon: const Icon(
-                  Icons.add,
+            Visibility(
+              visible: controller.args['status'] != 'CO',
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: IconButton(
+                  onPressed: () {
+                    /* Get.to(const CreateSupplychainLoadUnloadLine(), arguments: {
+                      "id": Get.arguments["id"],
+                    }); */
+                    Get.to(const CreateSalesOrderLine(), arguments: {
+                      "id": Get.arguments["id"],
+                      "priceListId": Get.arguments["priceListId"],
+                      "dateOrdered": Get.arguments["dateOrdered"],
+                      "activityId": Get.arguments["activityId"] ?? 0,
+                      "bPartnerId": Get.arguments["bPartnerId"],
+                      "cLocationBPartner": Get.arguments["cLocationBPartner"],
+                      "warehouseId": Get.arguments["warehouseId"],
+                      "currencyId": Get.arguments["currencyId"],
+                    });
+                  },
+                  icon: const Icon(
+                    Icons.add,
+                  ),
                 ),
               ),
             ),
@@ -155,28 +158,36 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.edit,
-                                        color: Colors.green,
+                                        color: controller.args['status'] != 'CO'
+                                            ? Colors.green
+                                            : Colors.grey,
                                       ),
                                       tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
-                                        Get.to(const EditSalesOrderLine(),
-                                            arguments: {
-                                              "ID": controller
-                                                  .trx.records![index].id,
-                                              "qty": controller.trx
-                                                  .records![index].qtyEntered,
-                                              "date": controller.trx
-                                                  .records![index].datePromised,
-                                              "price": controller.trx
-                                                  .records![index].priceEntered,
-                                              "businessPartnerId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.id,
-                                            });
+                                        if (controller.args['status'] != 'CO') {
+                                          Get.to(const EditSalesOrderLine(),
+                                              arguments: {
+                                                "ID": controller
+                                                    .trx.records![index].id,
+                                                "qty": controller.trx
+                                                    .records![index].qtyEntered,
+                                                "date": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .datePromised,
+                                                "price": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .priceEntered,
+                                                "businessPartnerId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id,
+                                              });
+                                        }
                                       },
                                     ),
                                   ),
