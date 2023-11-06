@@ -77,7 +77,7 @@ class OARecords {
   final double? processedOn;
   final SalesRepID? salesRepID;
   final bool? sendEMail;
-  final double? totalLines;
+  final num? totalLines;
   final String? updated;
   final UpdatedBy? updatedBy;
   final String? modelname;
@@ -221,7 +221,7 @@ class OARecords {
             ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
             : null,
         sendEMail = json['SendEMail'] as bool?,
-        totalLines = json['TotalLines'] as double?,
+        totalLines = json['TotalLines'] as num?,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)

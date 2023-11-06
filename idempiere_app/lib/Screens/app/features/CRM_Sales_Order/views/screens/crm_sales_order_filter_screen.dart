@@ -26,6 +26,7 @@ class CRMFilterSalesOrder extends StatefulWidget {
 }
 
 class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
+  final List<dynamic> list = GetStorage().read('permission');
   applyFilters() {
     if (selectedUserRadioTile > 0) {
       if (selectedUserRadioTile == 2 && salesRepId > 0) {
@@ -166,7 +167,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
   }
 
   dynamic args = Get.arguments;
-  int selectedUserRadioTile = 0;
+  int selectedUserRadioTile = 1;
   late TextEditingController salesRepFieldController;
   int salesRepId = 0;
 
@@ -182,7 +183,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
     salesRepFieldController =
         TextEditingController(text: args['salesRepName'] ?? "");
     salesRepId = args['salesRepId'] ?? 0;
-    selectedUserRadioTile = args['selectedUserRadioTile'] ?? 0;
+    selectedUserRadioTile = args['selectedUserRadioTile'] ?? 1;
     businessPartnerId = args['businessPartnerId'] ?? 0;
     docNoFieldController = TextEditingController(text: args['docNo'] ?? "");
     //getAllDocType();
@@ -203,7 +204,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
               tooltip: 'reset filters',
               onPressed: () {
                 setState(() {
-                  selectedUserRadioTile = 0;
+                  selectedUserRadioTile = 1;
                   salesRepId = 0;
                   salesRepFieldController.text = "";
                   businessPartnerId = 0;
@@ -241,113 +242,125 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text(
-                    'SalesRep Filter'.tr,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  childrenPadding:
-                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                  children: [
-                    RadioListTile(
-                      value: 0,
-                      groupValue: selectedUserRadioTile,
-                      title: Text("All".tr),
-                      //subtitle: Text("Radio 1 Subtitle"),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      activeColor: Theme.of(context).primaryColor,
-
-                      //selected: true,
+                Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: ExpansionTile(
+                    initiallyExpanded: true,
+                    title: Text(
+                      'SalesRep Filter'.tr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
-                    RadioListTile(
-                      value: 1,
-                      groupValue: selectedUserRadioTile,
-                      title: Text("Mine Only".tr),
-                      subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
+                    childrenPadding:
+                        const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                    children: [
+                      RadioListTile(
+                        value: 0,
+                        groupValue: selectedUserRadioTile,
+                        title: Text("All".tr),
+                        //subtitle: Text("Radio 1 Subtitle"),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        activeColor: Theme.of(context).primaryColor,
 
-                      selected: false,
-                    ),
-                    RadioListTile(
-                      value: 2,
-                      groupValue: selectedUserRadioTile,
-                      title: FutureBuilder(
-                        future: getAllSalesRep(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
-                            snapshot.hasData
-                                ? TypeAheadField<Records>(
-                                    direction: AxisDirection.up,
-                                    //getImmediateSuggestions: true,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      onChanged: (value) {
-                                        if (value == "") {
-                                          setState(() {
-                                            salesRepId = 0;
-                                          });
-                                        }
-                                      },
-                                      controller: salesRepFieldController,
-                                      //autofocus: true,
-
-                                      decoration: InputDecoration(
-                                        labelText: 'SalesRep'.tr,
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        prefixIcon: const Icon(EvaIcons.search),
-                                        hintText: "search..",
-                                        isDense: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                      ),
-                                    ),
-                                    suggestionsCallback: (pattern) async {
-                                      return snapshot.data!.where((element) =>
-                                          (element.name ?? "")
-                                              .toLowerCase()
-                                              .contains(pattern.toLowerCase()));
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return ListTile(
-                                        //leading: Icon(Icons.shopping_cart),
-                                        title: Text(suggestion.name ?? ""),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      salesRepFieldController.text =
-                                          suggestion.name!;
-                                      salesRepId = suggestion.id!;
-                                    },
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                        //selected: true,
                       ),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
+                      RadioListTile(
+                        value: 1,
+                        groupValue: selectedUserRadioTile,
+                        title: Text("Mine Only".tr),
+                        subtitle: Text(GetStorage().read('user')),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        //activeColor: Colors.red,
+                        activeColor: Theme.of(context).primaryColor,
 
-                      selected: false,
-                    )
-                  ],
+                        selected: false,
+                      ),
+                      RadioListTile(
+                        value: 2,
+                        groupValue: selectedUserRadioTile,
+                        title: FutureBuilder(
+                          future: getAllSalesRep(),
+                          builder: (BuildContext ctx,
+                                  AsyncSnapshot<List<Records>> snapshot) =>
+                              snapshot.hasData
+                                  ? TypeAheadField<Records>(
+                                      direction: AxisDirection.up,
+                                      //getImmediateSuggestions: true,
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        onChanged: (value) {
+                                          if (value == "") {
+                                            setState(() {
+                                              salesRepId = 0;
+                                            });
+                                          }
+                                        },
+                                        controller: salesRepFieldController,
+                                        //autofocus: true,
+
+                                        decoration: InputDecoration(
+                                          labelText: 'SalesRep'.tr,
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          prefixIcon:
+                                              const Icon(EvaIcons.search),
+                                          hintText: "search..",
+                                          isDense: true,
+                                          fillColor:
+                                              Theme.of(context).cardColor,
+                                        ),
+                                      ),
+                                      suggestionsCallback: (pattern) async {
+                                        return snapshot.data!.where((element) =>
+                                            (element.name ?? "")
+                                                .toLowerCase()
+                                                .contains(
+                                                    pattern.toLowerCase()));
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return ListTile(
+                                          //leading: Icon(Icons.shopping_cart),
+                                          title: Text(suggestion.name ?? ""),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        salesRepFieldController.text =
+                                            suggestion.name!;
+                                        salesRepId = suggestion.id!;
+                                      },
+                                    )
+                                  : const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                        ),
+                        //subtitle: Text(GetStorage().read('user')),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        //activeColor: Colors.red,
+                        activeColor: Theme.of(context).primaryColor,
+
+                        selected: false,
+                      )
+                    ],
+                  ),
                 ),
                 ExpansionTile(
                   initiallyExpanded: true,

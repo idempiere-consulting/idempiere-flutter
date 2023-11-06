@@ -1199,6 +1199,12 @@ class LocaleString extends Translations {
           'New': 'Nuovo',
           'Search Product\nfrom outside\nthe Price List':
               'Cerca Prodotto\nfuori Listino',
+          'Confirm Order': 'Conferma Ordine',
+          'Add': 'Aggiungi',
+          'Description..': 'Descrizione..',
+          'Tot Qty': 'Tot Qtà',
+          'Total row': 'Totale riga',
+          'Create': 'Crea'
         },
       };
 }

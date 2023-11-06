@@ -30,24 +30,28 @@ class ProductCheckout2 {
   final String name;
   double qty;
   final num cost;
+  num? tot;
   String? description;
   String? imageData;
   String? imageUrl;
   ADPrintColorID? adPrintColorID;
   LitProductSizeID? litProductSizeID;
   String? datePromised;
+  String? uom;
 
   ProductCheckout2(
       {required this.id,
       required this.name,
       required this.qty,
       required this.cost,
+      this.tot,
       this.description,
       this.imageData,
       this.imageUrl,
       this.adPrintColorID,
       this.litProductSizeID,
-      this.datePromised});
+      this.datePromised,
+      this.uom});
 }
 
 /* class ADPrintColorID {

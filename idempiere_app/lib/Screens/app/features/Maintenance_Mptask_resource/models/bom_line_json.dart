@@ -49,9 +49,9 @@ class BMLRecords {
   final int? line;
   final MProductID? mProductID;
   final PPProductBOMID? pPProductBOMID;
-  final int? qtyBOM;
+  final num? qtyBOM;
   final int? qtyBatch;
-  final int? scrap;
+  final num? scrap;
   final String? updated;
   final UpdatedBy? updatedBy;
   final String? validFrom;
@@ -125,9 +125,9 @@ class BMLRecords {
                 ? PPProductBOMID.fromJson(
                     json['PP_Product_BOM_ID'] as Map<String, dynamic>)
                 : null,
-        qtyBOM = json['QtyBOM'] as int?,
+        qtyBOM = json['QtyBOM'] as num?,
         qtyBatch = json['QtyBatch'] as int?,
-        scrap = json['Scrap'] as int?,
+        scrap = json['Scrap'] as num?,
         updated = json['Updated'] as String?,
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)

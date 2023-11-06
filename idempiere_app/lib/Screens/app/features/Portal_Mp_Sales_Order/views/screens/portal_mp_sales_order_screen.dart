@@ -128,41 +128,42 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
         return false;
       },
       child: Scaffold(
-        bottomNavigationBar: (ResponsiveBuilder.isDesktop(context))
+        bottomNavigationBar: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : BottomAppBar(
-                shape: const AutomaticNotchedShape(
-                    RoundedRectangleBorder(), StadiumBorder()),
-                //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
-                color: Theme.of(context).cardColor,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            Container(
-                              margin: const EdgeInsets.only(left: 10),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  controller.getSalesOrders();
-                                },
-                                child: Row(
-                                  children: [
-                                    //Icon(Icons.filter_alt),
-                                    Obx(() => controller.dataAvailable
-                                        ? Text("SALES ORDERS: ".tr +
-                                            controller.trx.rowcount.toString())
-                                        : Text("SALES ORDERS: ".tr)),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            /* Container(
+            : */
+            BottomAppBar(
+          shape: const AutomaticNotchedShape(
+              RoundedRectangleBorder(), StadiumBorder()),
+          //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
+          color: Theme.of(context).cardColor,
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(left: 10),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            controller.getSalesOrders();
+                          },
+                          child: Row(
+                            children: [
+                              //Icon(Icons.filter_alt),
+                              Obx(() => controller.dataAvailable
+                                  ? Text("SALES ORDERS: ".tr +
+                                      controller.trx.rowcount.toString())
+                                  : Text("SALES ORDERS: ".tr)),
+                            ],
+                          ),
+                        ),
+                      ),
+                      /* Container(
                       margin: const EdgeInsets.only(left: 20),
                       child: IconButton(
                         onPressed: () {
@@ -174,61 +175,62 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                         ),
                       ),
                     ), */
-                          ],
+                    ],
+                  )
+                ],
+              ),
+              Flexible(
+                fit: FlexFit.tight,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount > 1) {
+                              controller.pagesCount.value -= 1;
+                              controller.getSalesOrders();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_previous),
+                        ),
+                        Obx(() => Text(
+                            "${controller.pagesCount.value}/${controller.pagesTot.value}")),
+                        IconButton(
+                          onPressed: () {
+                            if (controller.pagesCount <
+                                controller.pagesTot.value) {
+                              controller.pagesCount.value += 1;
+                              controller.getSalesOrders();
+                            }
+                          },
+                          icon: const Icon(Icons.skip_next),
                         )
                       ],
-                    ),
-                    Flexible(
-                      fit: FlexFit.tight,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              IconButton(
-                                onPressed: () {
-                                  if (controller.pagesCount > 1) {
-                                    controller.pagesCount.value -= 1;
-                                    controller.getSalesOrders();
-                                  }
-                                },
-                                icon: const Icon(Icons.skip_previous),
-                              ),
-                              Obx(() => Text(
-                                  "${controller.pagesCount.value}/${controller.pagesTot.value}")),
-                              IconButton(
-                                onPressed: () {
-                                  if (controller.pagesCount <
-                                      controller.pagesTot.value) {
-                                    controller.pagesCount.value += 1;
-                                    controller.getSalesOrders();
-                                  }
-                                },
-                                icon: const Icon(Icons.skip_next),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
                     ),
                   ],
                 ),
               ),
+            ],
+          ),
+        ),
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
-        floatingActionButton: (ResponsiveBuilder.isDesktop(context))
+        floatingActionButton: /* (ResponsiveBuilder.isDesktop(context))
             ? null
-            : SpeedDial(
-                animatedIcon: AnimatedIcons.home_menu,
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
-                /*  buttonSize: const Size(, 45),
+            : */
+            SpeedDial(
+          animatedIcon: AnimatedIcons.home_menu,
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          /*  buttonSize: const Size(, 45),
         childrenButtonSize: const Size(45, 45), */
-                children: [
-                  /* SpeedDialChild(
+          children: [
+            /* SpeedDialChild(
                       label: 'Filter'.tr,
                       child: Obx(() => Icon(
                             MaterialSymbols.filter_alt_filled,
@@ -251,19 +253,17 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                           'docNo': controller.docNoValue.value,
                         });
                       }), */
-                  SpeedDialChild(
-                      label: 'New'.tr,
-                      child:
-                          const Icon(MaterialSymbols.assignment_add_outlined),
-                      onTap: () {
-                        Get.toNamed('/PortalMpCreateSalesOrderFromPriceList',
-                            arguments: {
-                              "businessPartnerId":
-                                  controller.businessPartnerId.value,
-                            });
-                      })
-                ],
-              ),
+            SpeedDialChild(
+                label: 'New'.tr,
+                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                onTap: () {
+                  Get.toNamed('/PortalMpCreateSalesOrderFromPriceList',
+                      arguments: {
+                        "businessPartnerId": controller.businessPartnerId.value,
+                      });
+                })
+          ],
+        ),
 
         //key: controller.scaffoldKey,
         drawer: /* (ResponsiveBuilder.isDesktop(context))
@@ -812,557 +812,271 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
               ]);
             },
             desktopBuilder: (context, constraints) {
-              return Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Flexible(
-                    flex: (constraints.maxWidth < 1360) ? 4 : 3,
-                    child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topRight: Radius.circular(kBorderRadius),
-                          bottomRight: Radius.circular(kBorderRadius),
-                        ),
-                        child: _Sidebar(data: controller.getSelectedProject())),
-                  ),
-                  Flexible(
-                    flex: 10,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: kSpacing),
-                          _buildHeader(),
-                          //const SizedBox(height: kSpacing * 2),
-                          Container(
-                            margin: const EdgeInsets.only(
-                                left: 10, right: 10, top: 10),
-                            child: Row(
-                              children: [
-                                Obx(
-                                  () => Visibility(
-                                    visible: controller.showLines.value,
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                          controller.showLines.value = false;
-                                          controller.showHeader.value = true;
-                                        },
-                                        child: Row(
-                                          children: [
-                                            const Icon(Icons.chevron_left),
-                                            Text('Back'.tr),
+              return Column(children: [
+                const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
+                _buildHeader2(
+                    onPressedMenu: () => Scaffold.of(context).openDrawer()),
+                const SizedBox(height: kSpacing / 2),
+                const Divider(),
+                Obx(
+                  () => controller.dataAvailable
+                      ? ListView.builder(
+                          primary: false,
+                          scrollDirection: Axis.vertical,
+                          shrinkWrap: true,
+                          itemCount: controller.trx.records!.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return Obx(() => Visibility(
+                                  visible: controller.searchFilterValue.value ==
+                                          ""
+                                      ? true
+                                      : controller.dropdownValue.value == "1"
+                                          ? controller
+                                              .trx.records![index].documentNo
+                                              .toString()
+                                              .toLowerCase()
+                                              .contains(controller
+                                                  .searchFilterValue.value
+                                                  .toLowerCase())
+                                          : controller.dropdownValue.value ==
+                                                  "2"
+                                              ? (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier ??
+                                                      "")
+                                                  .toString()
+                                                  .toLowerCase()
+                                                  .contains(controller
+                                                      .searchFilterValue.value
+                                                      .toLowerCase())
+                                              : true,
+                                  child: Card(
+                                    elevation: 8.0,
+                                    margin: const EdgeInsets.symmetric(
+                                        horizontal: 10.0, vertical: 6.0),
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                          color:
+                                              Color.fromRGBO(64, 75, 96, .9)),
+                                      child: ExpansionTile(
+                                        trailing: IconButton(
+                                          icon: Icon(
+                                            Icons.article,
+                                            color: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .docStatus
+                                                        ?.id ==
+                                                    "CO"
+                                                ? Colors.green
+                                                : Colors.yellow,
+                                          ),
+                                          onPressed: () {
+                                            Get.toNamed('/SalesOrderLine',
+                                                arguments: {
+                                                  'status': 'CO',
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "bPartner": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.identifier,
+                                                  "bPartnerId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBPartnerID
+                                                      ?.id,
+                                                  "cLocationBPartner":
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerLocationID
+                                                          ?.id,
+                                                  "dateOrdered": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .dateOrdered,
+                                                  "warehouseId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mWarehouseID
+                                                      ?.id,
+                                                  "currencyId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cCurrencyID
+                                                      ?.id,
+                                                  "docNo": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .documentNo,
+                                                  "priceListId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .mPriceListID
+                                                      ?.id,
+                                                  "activityId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cActivityID
+                                                          ?.id ??
+                                                      0,
+                                                });
+                                          },
+                                        ),
+                                        tilePadding: const EdgeInsets.symmetric(
+                                            horizontal: 20.0, vertical: 10.0),
+                                        leading: Container(
+                                          padding: const EdgeInsets.only(
+                                              right: 12.0),
+                                          decoration: const BoxDecoration(
+                                              border: Border(
+                                                  right: BorderSide(
+                                                      width: 1.0,
+                                                      color: Colors.white24))),
+                                          child: IconButton(
+                                            icon: const Icon(
+                                              Icons.edit,
+                                            ),
+                                            tooltip: 'Edit Sales Order'.tr,
+                                            onPressed: () {
+                                              //log("info button pressed");
+                                              /* Get.to(const CRMEditSalesOrder(),
+                                                  arguments: {
+                                                    "id": controller
+                                                        .trx.records![index].id,
+                                                    "docNo": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .documentNo,
+                                                    "docTypeTargetId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cDocTypeTargetID!
+                                                            .id,
+                                                    "BPartnerLocationId":
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBPartnerLocationID!
+                                                            .id,
+                                                    "bPartnerId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.id,
+                                                    "bPartnerName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID
+                                                        ?.identifier,
+                                                    "isPaid": controller.trx
+                                                        .records![index].isPaid,
+                                                    "pRuleId": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.id,
+                                                    "amt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .totalLines
+                                                        .toString(),
+                                                  }); */
+                                            },
+                                          ),
+                                        ),
+                                        title: Text(
+                                          "Nr ${controller.trx.records![index].documentNo} Dt ${controller.trx.records![index].dateOrdered}",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                        subtitle: Row(
+                                          children: <Widget>[
+                                            const Icon(Icons.handshake,
+                                                color: Colors.yellowAccent),
+                                            Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cBPartnerID!
+                                                        .identifier ??
+                                                    "??",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
                                           ],
-                                        )),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Obx(
-                            () => Visibility(
-                              visible: controller.showHeader.value,
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                child: StaggeredGrid.count(
-                                  crossAxisCount: 9,
-                                  mainAxisSpacing: 3,
-                                  crossAxisSpacing: 2,
-                                  children: [
-                                    StaggeredGridTile.count(
-                                      crossAxisCellCount: 9,
-                                      mainAxisCellCount: 1,
-                                      child: Row(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.center,
+                                        ),
+
+                                        childrenPadding:
+                                            const EdgeInsets.symmetric(
+                                                horizontal: 20.0,
+                                                vertical: 10.0),
                                         children: [
                                           Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceAround,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
                                             children: [
                                               Row(
                                                 children: [
-                                                  Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 10),
-                                                    child: ElevatedButton(
-                                                      onPressed: () {
-                                                        controller
-                                                            .getSalesOrdersDesktop();
-                                                      },
-                                                      child: Row(
-                                                        children: [
-                                                          //Icon(Icons.filter_alt),
-                                                          Obx(() => controller
-                                                                  ._desktopDataAvailable
-                                                                  .value
-                                                              ? Text("OFFERS: "
-                                                                      .tr +
-                                                                  controller
-                                                                      ._trxDesktop
-                                                                      .rowcount
-                                                                      .toString())
-                                                              : Text("OFFERS: "
-                                                                  .tr)),
-                                                        ],
-                                                      ),
-                                                    ),
+                                                  Text(
+                                                    "Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
                                                   ),
-                                                  Container(
-                                                    width: 200,
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            left: 20),
-                                                    child: TextField(
-                                                      controller: controller
-                                                          .desktopDocNosearchFieldController,
-                                                      onSubmitted: (value) {
+                                                  Text(
+                                                      "€${controller.trx.records![index].grandTotal}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
+                                                  IconButton(
+                                                    tooltip: 'print Document',
+                                                    onPressed: () async {
+                                                      /* var isConnected =
+                                                            await checkConnection();
                                                         controller
-                                                            .getSalesOrdersDesktop();
-                                                      },
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText:
-                                                            'Document N°'.tr,
-                                                        //filled: true,
-                                                        border:
-                                                            const OutlineInputBorder(),
-                                                        prefixIcon: const Icon(
-                                                            EvaIcons.search),
-                                                        isDense: true,
-                                                      ),
-                                                      minLines: 1,
-                                                      maxLines: 1,
-                                                    ),
+                                                            .editWorkOrderResourceDateTesting(
+                                                                isConnected,
+                                                                index); */
+                                                      controller
+                                                          .getDocument(index);
+                                                      /* Get.to(
+                                                          const PrintDocumentScreen(),
+                                                          arguments: {
+                                                            "id": controller
+                                                                .trx
+                                                                .records![index]
+                                                                .id,
+                                                          }); */
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.print),
                                                   ),
                                                 ],
-                                              )
+                                              ),
                                             ],
                                           ),
-                                          Flexible(
-                                            fit: FlexFit.tight,
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.spaceAround,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.end,
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        if (controller
-                                                                .desktopPagesCount >
-                                                            1) {
-                                                          controller
-                                                              .desktopPagesCount
-                                                              .value -= 1;
-                                                          controller
-                                                              .getSalesOrdersDesktop();
-                                                        }
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.skip_previous),
-                                                    ),
-                                                    Obx(() => Text(
-                                                        "${controller.desktopPagesCount.value}/${controller.desktopPagesTot.value}")),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        if (controller
-                                                                .desktopPagesCount <
-                                                            controller
-                                                                .desktopPagesTot
-                                                                .value) {
-                                                          controller
-                                                              .desktopPagesCount
-                                                              .value += 1;
-                                                          controller
-                                                              .getSalesOrdersDesktop();
-                                                        }
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.skip_next),
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
                                         ],
                                       ),
                                     ),
-                                    StaggeredGridTile.count(
-                                      crossAxisCellCount: 9,
-                                      mainAxisCellCount: 5,
-                                      child: SingleChildScrollView(
-                                        scrollDirection: Axis.vertical,
-                                        child: Obx(
-                                          () => controller
-                                                  ._desktopDataAvailable.value
-                                              ? DataTable(
-                                                  columns: <DataColumn>[
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Document N°'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Document Type'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Date'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Payment Rule'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Payment Term'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Charge Amount'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Print'.tr,
-                                                          style: const TextStyle(
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                  rows: controller.headerRows,
-                                                )
-                                              : const SizedBox(),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          Obx(
-                            () => Visibility(
-                              visible: controller.linesDataAvailable.value &&
-                                  controller.showLines.value,
-                              child: Container(
-                                margin: const EdgeInsets.all(10),
-                                child: StaggeredGrid.count(
-                                  crossAxisCount: 9,
-                                  mainAxisSpacing: 3,
-                                  crossAxisSpacing: 2,
-                                  children: [
-                                    StaggeredGridTile.count(
-                                      crossAxisCellCount: 3,
-                                      mainAxisCellCount: 3,
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              controller: controller
-                                                  .desktopDocNoFieldController,
-                                              decoration: InputDecoration(
-                                                //isDense: true,
-                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                                                prefixIcon: const Icon(
-                                                    Icons.text_fields),
-                                                border:
-                                                    const OutlineInputBorder(),
-                                                labelText: 'Document N°'.tr,
-                                                floatingLabelBehavior:
-                                                    FloatingLabelBehavior
-                                                        .always,
-                                              ),
-                                              minLines: 1,
-                                              maxLines: 4,
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              controller: controller
-                                                  .desktopDocTypeFieldController,
-                                              decoration: InputDecoration(
-                                                //isDense: true,
-                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                                                prefixIcon: const Icon(
-                                                    Icons.text_fields),
-                                                border:
-                                                    const OutlineInputBorder(),
-                                                labelText: 'Document Type'.tr,
-                                                floatingLabelBehavior:
-                                                    FloatingLabelBehavior
-                                                        .always,
-                                              ),
-                                              minLines: 1,
-                                              maxLines: 4,
-                                            ),
-                                          ),
-                                          Container(
-                                            margin: const EdgeInsets.all(10),
-                                            child: TextField(
-                                              controller: controller
-                                                  .desktopBusinessPartnerFieldController,
-                                              decoration: InputDecoration(
-                                                //isDense: true,
-                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                                                prefixIcon:
-                                                    const Icon(Icons.handshake),
-                                                border:
-                                                    const OutlineInputBorder(),
-                                                labelText:
-                                                    'Business Partner'.tr,
-                                                floatingLabelBehavior:
-                                                    FloatingLabelBehavior
-                                                        .always,
-                                              ),
-                                              minLines: 1,
-                                              maxLines: 4,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    StaggeredGridTile.count(
-                                      crossAxisCellCount: 3,
-                                      mainAxisCellCount: 3,
-                                      child: Column(
-                                        children: const [],
-                                      ),
-                                    ),
-                                    StaggeredGridTile.count(
-                                      crossAxisCellCount: 3,
-                                      mainAxisCellCount: 3,
-                                      child: Column(
-                                        children: [
-                                          Flexible(
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        if (controller
-                                                                .desktopLinePagesCount >
-                                                            1) {
-                                                          controller
-                                                              .desktopLinePagesCount
-                                                              .value -= 1;
-                                                          controller
-                                                              .getSalesOrderLinesDesktop();
-                                                        }
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.skip_previous),
-                                                    ),
-                                                    Obx(() => Text(
-                                                        "${controller.desktopLinePagesCount.value}/${controller.desktopLinePagesTot.value}")),
-                                                    IconButton(
-                                                      onPressed: () {
-                                                        if (controller
-                                                                .desktopLinePagesCount <
-                                                            controller
-                                                                .desktopLinePagesTot
-                                                                .value) {
-                                                          controller
-                                                              .desktopLinePagesCount
-                                                              .value += 1;
-                                                          controller
-                                                              .getSalesOrderLinesDesktop();
-                                                        }
-                                                      },
-                                                      icon: const Icon(
-                                                          Icons.skip_next),
-                                                    )
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    StaggeredGridTile.count(
-                                      crossAxisCellCount: 9,
-                                      mainAxisCellCount: 4,
-                                      child: Obx(
-                                        () => controller
-                                                ._desktopDataAvailable.value
-                                            ? DataTable(
-                                                columns: <DataColumn>[
-                                                  DataColumn(
-                                                    label: Expanded(
-                                                      child: Text(
-                                                        'Product'.tr,
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Expanded(
-                                                      child: Text(
-                                                        'Description'.tr,
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Expanded(
-                                                      child: Text(
-                                                        'U.o.M'.tr,
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Expanded(
-                                                      child: Text(
-                                                        'Quantity'.tr,
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Expanded(
-                                                      child: Text(
-                                                        'Price List'.tr,
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  DataColumn(
-                                                    label: Expanded(
-                                                      child: Text(
-                                                        'Price'.tr,
-                                                        style: const TextStyle(
-                                                            fontStyle: FontStyle
-                                                                .italic),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                                rows: controller.lineRows,
-                                              )
-                                            : const SizedBox(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          /*_buildProgress(),
-                      const SizedBox(height: kSpacing * 2),
-                      const SizedBox(height: kSpacing * 2),
-                      const SizedBox(height: kSpacing), */
-                        ],
-                      ),
-                    ),
-                  ),
-                  Flexible(
-                    flex: 3,
-                    child: Column(
-                      children: [
-                        const SizedBox(height: kSpacing / 2),
-                        _buildProfile(data: controller.getProfil()),
-                        const Divider(thickness: 1),
-                        const SizedBox(height: kSpacing),
-                      ],
-                    ),
-                  )
-                ],
-              );
+                                  ),
+                                ));
+                          },
+                        )
+                      : const Center(child: CircularProgressIndicator()),
+                ),
+              ]);
             },
           ),
         ),

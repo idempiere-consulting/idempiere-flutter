@@ -161,9 +161,10 @@ class CRMOpenItemsController extends GetxController {
       } else {
         for (var record in json.records!) {
           opentot.value += record.openAmt!;
-          tot.value = record.grandTotal!;
+          tot.value += record.grandTotal!;
           currency.value = record.cCurrencyID!.identifier!;
         }
+
         _trx = json;
         _dataAvailable.value = true;
       }
@@ -209,7 +210,8 @@ class CRMOpenItemsController extends GetxController {
       } else {
         for (var record in json.records!) {
           opentot.value += record.openAmt!;
-          tot.value = record.grandTotal!;
+          tot.value += record.grandTotal!;
+
           currency.value = record.cCurrencyID!.identifier!;
         }
         _trx = json;

@@ -562,8 +562,12 @@ class CRMSalesOrderCreationBPPricelistScreen
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              controller
-                                                  .productList[index].name,
+                                              controller.productList[index]
+                                                          .name ==
+                                                      "."
+                                                  ? "Descriptive Row".tr
+                                                  : controller
+                                                      .productList[index].name,
                                               style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600),
@@ -573,30 +577,52 @@ class CRMSalesOrderCreationBPPricelistScreen
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Text(
-                                                  "€ ${controller.productList[index].cost}",
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   child: Text(
-                                                    "x${controller.productList[index].qty}",
+                                                    "${controller.productList[index].qty} ${controller.productList[index].uom}   *",
                                                     style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "€ ${controller.productList[index].cost}",
+                                                    style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
                                               ],
-                                            )
+                                            ),
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    '${"Total row".tr} € ${controller.productList[index].qty * controller.productList[index].cost}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ))
                                       ],
@@ -1287,8 +1313,12 @@ class CRMSalesOrderCreationBPPricelistScreen
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              controller
-                                                  .productList[index].name,
+                                              controller.productList[index]
+                                                          .name ==
+                                                      "."
+                                                  ? "Descriptive Row".tr
+                                                  : controller
+                                                      .productList[index].name,
                                               style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600),
@@ -1298,30 +1328,52 @@ class CRMSalesOrderCreationBPPricelistScreen
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Text(
-                                                  "€ ${controller.productList[index].cost}",
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   child: Text(
-                                                    "x${controller.productList[index].qty}",
+                                                    "${controller.productList[index].qty} ${controller.productList[index].uom}   *",
                                                     style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "€ ${controller.productList[index].cost}",
+                                                    style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
                                               ],
-                                            )
+                                            ),
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    '${"Total row".tr} € ${controller.productList[index].qty * controller.productList[index].cost}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ))
                                       ],
@@ -1540,7 +1592,6 @@ class CRMSalesOrderCreationBPPricelistScreen
                               title: "Create Order".tr,
                               content: Text(
                                   "Are you sure you want to create the Order?"
-                                      .tr
                                       .tr),
                               buttonColor: kNotifColor,
                               textConfirm: "Create".tr,
@@ -1927,7 +1978,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                             width: double.infinity,
                             child: MasonryGridView.count(
                               shrinkWrap: true,
-                              crossAxisCount: 2,
+                              crossAxisCount: 4,
                               itemCount: controller.trx.records?.length ?? 0,
                               crossAxisSpacing: 8,
                               mainAxisSpacing: 8,
@@ -2013,8 +2064,12 @@ class CRMSalesOrderCreationBPPricelistScreen
                                               CrossAxisAlignment.start,
                                           children: <Widget>[
                                             Text(
-                                              controller
-                                                  .productList[index].name,
+                                              controller.productList[index]
+                                                          .name ==
+                                                      "."
+                                                  ? "Descriptive Row".tr
+                                                  : controller
+                                                      .productList[index].name,
                                               style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.w600),
@@ -2024,30 +2079,52 @@ class CRMSalesOrderCreationBPPricelistScreen
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Text(
-                                                  "€ ${controller.productList[index].cost}",
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   child: Text(
-                                                    "x${controller.productList[index].qty}",
+                                                    "${controller.productList[index].qty} ${controller.productList[index].uom}   *",
                                                     style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "€ ${controller.productList[index].cost}",
+                                                    style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
                                               ],
-                                            )
+                                            ),
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    '${"Total row".tr} € ${controller.productList[index].qty * controller.productList[index].cost}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ))
                                       ],
@@ -2489,7 +2566,9 @@ class CRMSalesOrderCreationBPPricelistScreen
                       //onTap: () {},
                       //onSubmitted: (String? value) {},
                       decoration: InputDecoration(
-                        hintText: 'Description..'.tr,
+                        labelText: 'Nota Prodotto',
+                        labelStyle: TextStyle(color: Colors.white),
+                        //hintText: 'Description..'.tr,
                         filled: true,
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -2622,7 +2701,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                       description:
                           controller.descriptionFieldController.text != ''
                               ? controller.descriptionFieldController.text
-                              : null));
+                              : null,
+                      uom: controller._trx.records![index].uom));
                   controller.updateCounter();
                   controller.updateTotal();
                 }

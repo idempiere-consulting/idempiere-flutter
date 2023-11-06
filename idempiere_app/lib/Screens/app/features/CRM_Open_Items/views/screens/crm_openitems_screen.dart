@@ -111,6 +111,13 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                 const SizedBox(height: kSpacing),
                 Obx(
                   () => Visibility(
+                    visible: controller._dataAvailable.value &&
+                        controller._trx.records!.isNotEmpty,
+                    child: Text(controller.businessPartnerName.value),
+                  ),
+                ),
+                Obx(
+                  () => Visibility(
                       visible: controller._dataAvailable.value &&
                           controller._trx.records!.isNotEmpty,
                       child: Container(
@@ -206,6 +213,8 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                     onSelected: (BPRecords selection) {
                                       controller.businessPartnerId.value =
                                           selection.id!;
+                                      controller.businessPartnerName.value =
+                                          selection.name!;
                                     },
                                   )
                                 : const Center(
@@ -335,6 +344,21 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                       subtitle: Column(
                                         children: [
                                           Row(
+                                            children: [
+                                              Text(
+                                                "${"Document Type".tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.white),
+                                              ),
+                                              Text(
+                                                "${controller._trx.records![index].cDocTypeID?.identifier}",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
                                             children: <Widget>[
                                               Text(
                                                 "${"Total".tr}: ",
@@ -397,19 +421,6 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                       children: [
                                         Column(
                                           children: [
-                                            Row(
-                                              children: [
-                                                Text(
-                                                  "${"Document Type".tr}: ",
-                                                  style: const TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                                Text(
-                                                    "${controller._trx.records![index].cDocTypeID?.identifier}"),
-                                              ],
-                                            ),
-
                                             /* Row(
                                               children: [
                                                 IconButton(

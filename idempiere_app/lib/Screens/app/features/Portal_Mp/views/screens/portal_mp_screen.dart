@@ -100,7 +100,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /* Flexible(
+              Flexible(
                 flex: (constraints.maxWidth < 1360) ? 4 : 3,
                 child: ClipRRect(
                     borderRadius: const BorderRadius.only(
@@ -122,7 +122,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                       const SizedBox(height: kSpacing * 2),
                       const SizedBox(height: kSpacing * 2),
                       const SizedBox(height: kSpacing), */
-                      StaggeredGrid.count(
+                      /* StaggeredGrid.count(
                         crossAxisCount: 10,
                         mainAxisSpacing: 10,
                         crossAxisSpacing: 10,
@@ -1232,7 +1232,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                                 child: _buildDayEvents())),
                           ),
                         ],
-                      )
+                      ) */
                     ],
                   ),
                 ),
@@ -1298,7 +1298,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                         child: _buildDayEvents())), */
                   ],
                 ),
-              ) */
+              )
             ],
           );
 

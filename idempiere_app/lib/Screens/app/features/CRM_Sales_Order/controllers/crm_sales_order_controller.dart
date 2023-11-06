@@ -21,14 +21,15 @@ class CRMSalesOrderController extends GetxController {
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
 
-  var userFilter = GetStorage().read('SalesOrder_userFilter') ?? "";
+  var userFilter = GetStorage().read('SalesOrder_userFilter') ??
+      " and SalesRep_ID eq ${GetStorage().read('userId')}";
   var businessPartnerFilter =
       GetStorage().read('SalesOrder_businessPartnerFilter') ?? "";
   var docNoFilter = GetStorage().read('SalesOrder_docNoFilter') ?? "";
 
   var businessPartnerId = 0.obs;
   String businessPartnerName = "";
-  var selectedUserRadioTile = 0.obs;
+  var selectedUserRadioTile = 1.obs;
   var salesRepId = 0;
   var salesRepName = "";
   var docNoValue = "".obs;
@@ -60,7 +61,7 @@ class CRMSalesOrderController extends GetxController {
     dropDownList = getTypes()!;
     super.onInit();
     selectedUserRadioTile.value =
-        GetStorage().read('SalesOrder_selectedUserRadioTile') ?? 0;
+        GetStorage().read('SalesOrder_selectedUserRadioTile') ?? 1;
     businessPartnerName =
         GetStorage().read('SalesOrder_businessPartnerName') ?? "";
     businessPartnerId.value =

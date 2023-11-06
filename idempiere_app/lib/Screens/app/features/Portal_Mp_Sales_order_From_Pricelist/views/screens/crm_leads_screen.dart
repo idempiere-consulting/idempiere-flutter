@@ -389,30 +389,52 @@ class PortalMpSalesOrderFromPriceListScreen
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Text(
-                                                  "€ ${controller.productList[index].cost}",
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   child: Text(
-                                                    "x${controller.productList[index].qty}",
+                                                    "${controller.productList[index].qty} ${controller.productList[index].uom}   *",
                                                     style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "€ ${controller.productList[index].cost}",
+                                                    style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
                                               ],
-                                            )
+                                            ),
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    '${"Total row".tr} € ${controller.productList[index].qty * controller.productList[index].cost}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ))
                                       ],
@@ -437,8 +459,8 @@ class PortalMpSalesOrderFromPriceListScreen
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: <Widget>[
-                                const Text(
-                                  "Total",
+                                Text(
+                                  "Total".tr,
                                   style: TextStyle(
                                       fontSize: 22,
                                       color: Colors.white,
@@ -599,30 +621,52 @@ class PortalMpSalesOrderFromPriceListScreen
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Text(
-                                                  "€ ${controller.productList[index].cost}",
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   child: Text(
-                                                    "x${controller.productList[index].qty}",
+                                                    "${controller.productList[index].qty} ${controller.productList[index].uom}   *",
                                                     style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "€ ${controller.productList[index].cost}",
+                                                    style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
                                               ],
-                                            )
+                                            ),
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    '${"Total row".tr} € ${controller.productList[index].qty * controller.productList[index].cost}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ))
                                       ],
@@ -635,6 +679,42 @@ class PortalMpSalesOrderFromPriceListScreen
                         }),
                   ),
                 ),
+                Obx(() => Visibility(
+                      visible: controller.isListShown.value == false,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  "Total".tr,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "€ ${controller.total.value}",
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    )),
               ]);
             },
             desktopBuilder: (context, constraints) {
@@ -674,7 +754,7 @@ class PortalMpSalesOrderFromPriceListScreen
                               child: MasonryGridView.count(
                                 shrinkWrap: true,
                                 itemCount: controller._trx.records?.length ?? 0,
-                                crossAxisCount: 2,
+                                crossAxisCount: 4,
                                 mainAxisSpacing: 8,
                                 crossAxisSpacing: 8,
                                 itemBuilder: (context, index) {
@@ -773,30 +853,52 @@ class PortalMpSalesOrderFromPriceListScreen
                                             ),
                                             Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.end,
                                               children: <Widget>[
-                                                Text(
-                                                  "€ ${controller.productList[index].cost}",
-                                                  style: const TextStyle(
-                                                      fontSize: 15,
-                                                      fontWeight:
-                                                          FontWeight.w500),
-                                                ),
                                                 Container(
                                                   margin: const EdgeInsets.only(
                                                       right: 10),
                                                   child: Text(
-                                                    "x${controller.productList[index].qty}",
+                                                    "${controller.productList[index].qty} ${controller.productList[index].uom}   *",
                                                     style: const TextStyle(
                                                         fontSize: 14,
                                                         color: Colors.white,
                                                         fontWeight:
                                                             FontWeight.w500),
                                                   ),
-                                                )
+                                                ),
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    "€ ${controller.productList[index].cost}",
+                                                    style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontWeight:
+                                                            FontWeight.w500),
+                                                  ),
+                                                ),
                                               ],
-                                            )
+                                            ),
+                                            Divider(),
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                Container(
+                                                  margin: const EdgeInsets.only(
+                                                      right: 10),
+                                                  child: Text(
+                                                    '${"Total row".tr} € ${controller.productList[index].qty * controller.productList[index].cost}',
+                                                    style: const TextStyle(
+                                                        fontSize: 14,
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ],
                                         ))
                                       ],
@@ -809,6 +911,42 @@ class PortalMpSalesOrderFromPriceListScreen
                         }),
                   ),
                 ),
+                Obx(() => Visibility(
+                      visible: controller.isListShown.value == false,
+                      child: Column(
+                        children: [
+                          const SizedBox(
+                            height: 50,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 30, right: 30),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Text(
+                                  "Total".tr,
+                                  style: TextStyle(
+                                      fontSize: 22,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Obx(
+                                  () => Text(
+                                    "€ ${controller.total.value}",
+                                    style: const TextStyle(
+                                        fontSize: 22,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 30,
+                          ),
+                        ],
+                      ),
+                    )),
               ]);
             },
           ),
@@ -1049,7 +1187,8 @@ class PortalMpSalesOrderFromPriceListScreen
                       description:
                           controller.descriptionFieldController.text != ''
                               ? controller.descriptionFieldController.text
-                              : null));
+                              : null,
+                      uom: controller._trx.records![index].uom));
                   controller.updateCounter();
                   controller.updateTotal();
                 }

@@ -233,14 +233,14 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                     'docNo': controller.docNoValue.value,
                   });
                 }),
-            SpeedDialChild(
+            /* SpeedDialChild(
                 label: 'New'.tr,
                 child: const Icon(MaterialSymbols.assignment_add_outlined),
                 onTap: () {
                   Get.toNamed('/SalesOrderCreation');
-                }),
+                }), */
             SpeedDialChild(
-                label: 'New SO \nfrom Price List'.tr,
+                label: 'New'.tr,
                 child: const Icon(MaterialSymbols.assignment_add_outlined),
                 onTap: () {
                   Get.toNamed('/SalesOrderCreationBPPricelist');
@@ -547,7 +547,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  IconButton(
+                                                  /* IconButton(
                                                     tooltip: 'Editor HTML',
                                                     onPressed: () async {
                                                       controller
@@ -560,7 +560,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon:
                                                         const Icon(Icons.html),
-                                                  ),
+                                                  ), */
                                                   IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
@@ -584,7 +584,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     icon:
                                                         const Icon(Icons.print),
                                                   ),
-                                                  IconButton(
+                                                  /* IconButton(
                                                     tooltip: 'print POS',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -607,7 +607,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon: const Icon(
                                                         Icons.receipt),
-                                                  ),
+                                                  ), */
                                                   IconButton(
                                                     tooltip: 'Sign',
                                                     onPressed: () async {
@@ -659,60 +659,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                   .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
-                                                            /*  final ip =
-                                                                GetStorage()
-                                                                    .read('ip');
-                                                            String
-                                                                authorization =
-                                                                'Bearer ' +
-                                                                    GetStorage()
-                                                                        .read(
-                                                                            'token');
-                                                            final msg =
-                                                                jsonEncode({
-                                                              "DocAction": "CO",
-                                                            });
-                                                            print(msg);
-                                                            final protocol =
-                                                                GetStorage().read(
-                                                                    'protocol');
-                                                            var url = Uri.parse(
-                                                                '$protocol://' +
-                                                                    ip +
-                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                                                            print(url);
-                                                            var response =
-                                                                await http.put(
-                                                              url,
-                                                              body: msg,
-                                                              headers: <String,
-                                                                  String>{
-                                                                'Content-Type':
-                                                                    'application/json',
-                                                                'Authorization':
-                                                                    authorization,
-                                                              },
-                                                            );
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              completeOrder(
-                                                                  index);
-                                                            } else {
-                                                              print(response
-                                                                  .body);
-                                                              Get.snackbar(
-                                                                "Error!".tr,
-                                                                "Record not completed"
-                                                                    .tr,
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                              );
-                                                            } */
                                                             completeOrder(
                                                                 index);
                                                           },
@@ -911,6 +857,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         .records![index]
                                                         .totalLines
                                                         .toString(),
+                                                    "taxedAmt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .grandTotal
+                                                        .toString(),
                                                   });
                                             },
                                           ),
@@ -952,7 +903,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "Amount: ".tr,
+                                                    "Net Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                      "€${controller.trx.records![index].totalLines}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Taxed Amount: ".tr,
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -961,11 +924,53 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Visibility(
+                                                visible: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mpotid !=
+                                                    null,
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "Work Order: ".tr,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Get.offNamed(
+                                                              '/MaintenanceMptask',
+                                                              arguments: {
+                                                                'notificationId':
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mpotid
+                                                                        ?.id
+                                                              });
+                                                        },
+                                                        child: Text(
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mpotid
+                                                                    ?.identifier ??
+                                                                'N/A',
+                                                            style: const TextStyle(
+                                                                color:
+                                                                    kNotifColor))),
+                                                  ],
+                                                ),
+                                              ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  IconButton(
+                                                  /* IconButton(
                                                     tooltip: 'Editor HTML',
                                                     onPressed: () async {
                                                       controller
@@ -978,7 +983,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon:
                                                         const Icon(Icons.html),
-                                                  ),
+                                                  ), */
                                                   IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
@@ -1002,7 +1007,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     icon:
                                                         const Icon(Icons.print),
                                                   ),
-                                                  IconButton(
+                                                  /* IconButton(
                                                     tooltip: 'print POS',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -1025,7 +1030,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon: const Icon(
                                                         Icons.receipt),
-                                                  ),
+                                                  ), */
                                                   IconButton(
                                                     tooltip: 'Sign',
                                                     onPressed: () async {
@@ -1077,60 +1082,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                   .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
-                                                            /*  final ip =
-                                                                GetStorage()
-                                                                    .read('ip');
-                                                            String
-                                                                authorization =
-                                                                'Bearer ' +
-                                                                    GetStorage()
-                                                                        .read(
-                                                                            'token');
-                                                            final msg =
-                                                                jsonEncode({
-                                                              "DocAction": "CO",
-                                                            });
-                                                            print(msg);
-                                                            final protocol =
-                                                                GetStorage().read(
-                                                                    'protocol');
-                                                            var url = Uri.parse(
-                                                                '$protocol://' +
-                                                                    ip +
-                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                                                            print(url);
-                                                            var response =
-                                                                await http.put(
-                                                              url,
-                                                              body: msg,
-                                                              headers: <String,
-                                                                  String>{
-                                                                'Content-Type':
-                                                                    'application/json',
-                                                                'Authorization':
-                                                                    authorization,
-                                                              },
-                                                            );
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              completeOrder(
-                                                                  index);
-                                                            } else {
-                                                              print(response
-                                                                  .body);
-                                                              Get.snackbar(
-                                                                "Error!".tr,
-                                                                "Record not completed"
-                                                                    .tr,
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                              );
-                                                            } */
                                                             completeOrder(
                                                                 index);
                                                           },
@@ -1329,6 +1280,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         .records![index]
                                                         .totalLines
                                                         .toString(),
+                                                    "taxedAmt": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .grandTotal
+                                                        .toString(),
                                                   });
                                             },
                                           ),
@@ -1370,7 +1326,19 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                               Row(
                                                 children: [
                                                   Text(
-                                                    "Amount: ".tr,
+                                                    "Net Amount: ".tr,
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                      "€${controller.trx.records![index].totalLines}"),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text(
+                                                    "Taxed Amount: ".tr,
                                                     style: const TextStyle(
                                                         fontWeight:
                                                             FontWeight.bold),
@@ -1379,11 +1347,53 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Visibility(
+                                                visible: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mpotid !=
+                                                    null,
+                                                child: Row(
+                                                  children: [
+                                                    Text(
+                                                      "Work Order: ".tr,
+                                                      style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    TextButton(
+                                                        onPressed: () {
+                                                          Get.offNamed(
+                                                              '/MaintenanceMptask',
+                                                              arguments: {
+                                                                'notificationId':
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mpotid
+                                                                        ?.id
+                                                              });
+                                                        },
+                                                        child: Text(
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mpotid
+                                                                    ?.identifier ??
+                                                                'N/A',
+                                                            style: const TextStyle(
+                                                                color:
+                                                                    kNotifColor))),
+                                                  ],
+                                                ),
+                                              ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
-                                                  IconButton(
+                                                  /* IconButton(
                                                     tooltip: 'Editor HTML',
                                                     onPressed: () async {
                                                       controller
@@ -1396,7 +1406,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon:
                                                         const Icon(Icons.html),
-                                                  ),
+                                                  ), */
                                                   IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
@@ -1420,7 +1430,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     icon:
                                                         const Icon(Icons.print),
                                                   ),
-                                                  IconButton(
+                                                  /* IconButton(
                                                     tooltip: 'print POS',
                                                     onPressed: () async {
                                                       /* var isConnected =
@@ -1443,7 +1453,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon: const Icon(
                                                         Icons.receipt),
-                                                  ),
+                                                  ), */
                                                   IconButton(
                                                     tooltip: 'Sign',
                                                     onPressed: () async {
@@ -1495,60 +1505,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                   .tr),
                                                           onCancel: () {},
                                                           onConfirm: () async {
-                                                            /*  final ip =
-                                                                GetStorage()
-                                                                    .read('ip');
-                                                            String
-                                                                authorization =
-                                                                'Bearer ' +
-                                                                    GetStorage()
-                                                                        .read(
-                                                                            'token');
-                                                            final msg =
-                                                                jsonEncode({
-                                                              "DocAction": "CO",
-                                                            });
-                                                            print(msg);
-                                                            final protocol =
-                                                                GetStorage().read(
-                                                                    'protocol');
-                                                            var url = Uri.parse(
-                                                                '$protocol://' +
-                                                                    ip +
-                                                                    '/api/v1/models/c_order/${controller.trx.records![index].id}');
-                                                            print(url);
-                                                            var response =
-                                                                await http.put(
-                                                              url,
-                                                              body: msg,
-                                                              headers: <String,
-                                                                  String>{
-                                                                'Content-Type':
-                                                                    'application/json',
-                                                                'Authorization':
-                                                                    authorization,
-                                                              },
-                                                            );
-                                                            if (response
-                                                                    .statusCode ==
-                                                                200) {
-                                                              completeOrder(
-                                                                  index);
-                                                            } else {
-                                                              print(response
-                                                                  .body);
-                                                              Get.snackbar(
-                                                                "Error!".tr,
-                                                                "Record not completed"
-                                                                    .tr,
-                                                                icon:
-                                                                    const Icon(
-                                                                  Icons.error,
-                                                                  color: Colors
-                                                                      .red,
-                                                                ),
-                                                              );
-                                                            } */
                                                             completeOrder(
                                                                 index);
                                                           },
