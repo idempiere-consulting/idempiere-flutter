@@ -213,6 +213,12 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.logOut,
+                  icon: EvaIcons.logOutOutline,
+                  label: "Log Out",
+                  visible: true,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -266,7 +272,9 @@ class _Sidebar extends StatelessWidget {
                   case 15:
                     Get.offNamed('/POS');
                     break;
-
+                  case 16:
+                    Get.offNamed('/');
+                    break;
                   default:
                 }
               },

@@ -47,6 +47,7 @@ class Records {
   final bool? isActive;
   final MPriceListID? mPriceListID;
   final MPriceListVersionID? mPriceListVersionID;
+  final num? lITDefaultQty;
   final MProductID? mProductID;
   final String? value;
   final String? name;
@@ -60,6 +61,8 @@ class Records {
   final CCurrencyID? cCurrencyID;
   final num? qtyBatchSize;
   final String? uom;
+  final MProductCategoryID? mProductCategoryID;
+  final LITMProductCategoryID? litmProductCategoryID;
   final String? modelname;
 
   Records({
@@ -75,6 +78,7 @@ class Records {
     this.mPriceListID,
     this.mPriceListVersionID,
     this.mProductID,
+    this.lITDefaultQty,
     this.value,
     this.name,
     this.priceList,
@@ -87,6 +91,8 @@ class Records {
     this.cCurrencyID,
     this.qtyBatchSize,
     this.uom,
+    this.mProductCategoryID,
+    this.litmProductCategoryID,
     this.modelname,
   });
 
@@ -125,6 +131,7 @@ class Records {
         priceList = json['PriceList'] as num?,
         priceStd = json['PriceStd'] as num?,
         qtyOnHand = json['QtyOnHand'] as num?,
+        lITDefaultQty = json['LIT_DefaultQty'] as num?,
         lastdateOrdered = json['lastdateordered'] as String?,
         pricelistdescription = json['pricelist_description'] as String?,
         isSelfService = json['IsSelfService'] as bool?,
@@ -135,6 +142,16 @@ class Records {
             : null,
         qtyBatchSize = json['QtyBatchSize'] as num?,
         uom = json['uom'] as String?,
+        mProductCategoryID =
+            (json['M_Product_Category_ID'] as Map<String, dynamic>?) != null
+                ? MProductCategoryID.fromJson(
+                    json['M_Product_Category_ID'] as Map<String, dynamic>)
+                : null,
+        litmProductCategoryID =
+            (json['LIT_M_Product_Category_ID'] as Map<String, dynamic>?) != null
+                ? LITMProductCategoryID.fromJson(
+                    json['LIT_M_Product_Category_ID'] as Map<String, dynamic>)
+                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -154,11 +171,14 @@ class Records {
         'QtyOnHand': qtyOnHand,
         'PriceList': priceList,
         'PriceStd': priceStd,
+        'LIT_DefaultQty': lITDefaultQty,
         'lastdateordered': lastdateOrdered,
         'IsSelfService': isSelfService,
         'imagebase64': imageData,
         'QtyBatchSize': qtyBatchSize,
         'uom': uom,
+        'M_Product_Category_ID': mProductCategoryID?.toJson(),
+        'LIT_M_Product_Category_ID': litmProductCategoryID?.toJson(),
         'model-name': modelname
       };
 }
@@ -366,6 +386,60 @@ class MProductID {
   });
 
   MProductID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MProductCategoryID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductCategoryID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductCategoryID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITMProductCategoryID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITMProductCategoryID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITMProductCategoryID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

@@ -192,38 +192,62 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
 
   @override
   Widget build(BuildContext context) {
-    //Size size = MediaQuery.of(context).size;
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: ElevatedButton(
-          onPressed: applyFilters, child: Text('Apply Filters'.tr)),
+      floatingActionButton: int.parse(list[8], radix: 16)
+                  .toRadixString(2)
+                  .padLeft(4, "0")
+                  .toString()[7] ==
+              "1"
+          ? ElevatedButton(
+              onPressed: applyFilters, child: Text('Apply Filters'.tr))
+          : SizedBox(),
       appBar: AppBar(
         actions: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              tooltip: 'reset filters',
-              onPressed: () {
-                setState(() {
-                  selectedUserRadioTile = 1;
-                  salesRepId = 0;
-                  salesRepFieldController.text = "";
-                  businessPartnerId = 0;
-                  bpSearchFieldController.text = "";
-                  docNoFieldController.text = "";
-                });
-              },
-              icon: const Icon(
-                MaterialSymbols.filter_alt_off,
+          Visibility(
+            visible: int.parse(list[8], radix: 16)
+                        .toRadixString(2)
+                        .padLeft(4, "0")
+                        .toString()[7] ==
+                    "1"
+                ? true
+                : false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: IconButton(
+                tooltip: 'reset filters',
+                onPressed: () {
+                  setState(() {
+                    selectedUserRadioTile = 1;
+                    salesRepId = 0;
+                    salesRepFieldController.text = "";
+                    businessPartnerId = 0;
+                    bpSearchFieldController.text = "";
+                    docNoFieldController.text = "";
+                  });
+                },
+                icon: const Icon(
+                  MaterialSymbols.filter_alt_off,
+                ),
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: IconButton(
-              tooltip: 'save filters',
-              onPressed: saveFilters,
-              icon: const Icon(
-                MaterialSymbols.bookmark,
+          Visibility(
+            visible: int.parse(list[8], radix: 16)
+                        .toRadixString(2)
+                        .padLeft(4, "0")
+                        .toString()[7] ==
+                    "1"
+                ? true
+                : false,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: IconButton(
+                tooltip: 'save filters',
+                onPressed: saveFilters,
+                icon: const Icon(
+                  MaterialSymbols.bookmark,
+                ),
               ),
             ),
           ),
@@ -362,92 +386,122 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ],
                   ),
                 ),
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text(
-                    'Fields Filter'.tr,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  childrenPadding: const EdgeInsets.only(
-                      bottom: 10, right: 10, left: 10, top: 10),
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(
-                          left: 10, right: 10, bottom: 10),
-                      child: FutureBuilder(
-                        future: getAllBPs(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<BPRecords>> snapshot) =>
-                            snapshot.hasData
-                                ? TypeAheadField<BPRecords>(
-                                    direction: AxisDirection.up,
-                                    //getImmediateSuggestions: true,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      onChanged: (value) {
-                                        if (value == "") {
-                                          setState(() {
-                                            businessPartnerId = 0;
-                                          });
-                                        }
-                                      },
-                                      controller: bpSearchFieldController,
-                                      //autofocus: true,
+                Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: ExpansionTile(
+                    initiallyExpanded: true,
+                    title: Text(
+                      'Fields Filter'.tr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
+                    ),
+                    childrenPadding: const EdgeInsets.only(
+                        bottom: 10, right: 10, left: 10, top: 10),
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(
+                            left: 10, right: 10, bottom: 10),
+                        child: FutureBuilder(
+                          future: getAllBPs(),
+                          builder: (BuildContext ctx,
+                                  AsyncSnapshot<List<BPRecords>> snapshot) =>
+                              snapshot.hasData
+                                  ? TypeAheadField<BPRecords>(
+                                      direction: AxisDirection.up,
+                                      //getImmediateSuggestions: true,
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        onChanged: (value) {
+                                          if (value == "") {
+                                            setState(() {
+                                              businessPartnerId = 0;
+                                            });
+                                          }
+                                        },
+                                        controller: bpSearchFieldController,
+                                        //autofocus: true,
 
-                                      decoration: InputDecoration(
-                                        labelText: 'Business Partner'.tr,
-                                        //filled: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.search),
-                                        //hintText: "search..",
-                                        isDense: true,
-                                        //fillColor: Theme.of(context).cardColor,
+                                        decoration: InputDecoration(
+                                          labelText: 'Business Partner'.tr,
+                                          //filled: true,
+                                          border: const OutlineInputBorder(
+                                              /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                              ),
+                                          prefixIcon:
+                                              const Icon(EvaIcons.search),
+                                          //hintText: "search..",
+                                          isDense: true,
+                                          //fillColor: Theme.of(context).cardColor,
+                                        ),
                                       ),
+                                      suggestionsCallback: (pattern) async {
+                                        return snapshot.data!.where((element) =>
+                                            (element.name ?? "")
+                                                .toLowerCase()
+                                                .contains(
+                                                    pattern.toLowerCase()));
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return ListTile(
+                                          //leading: Icon(Icons.shopping_cart),
+                                          title: Text(suggestion.name ?? ""),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        bpSearchFieldController.text =
+                                            suggestion.name!;
+                                        businessPartnerId = suggestion.id!;
+                                      },
+                                    )
+                                  : const Center(
+                                      child: CircularProgressIndicator(),
                                     ),
-                                    suggestionsCallback: (pattern) async {
-                                      return snapshot.data!.where((element) =>
-                                          (element.name ?? "")
-                                              .toLowerCase()
-                                              .contains(pattern.toLowerCase()));
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return ListTile(
-                                        //leading: Icon(Icons.shopping_cart),
-                                        title: Text(suggestion.name ?? ""),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      bpSearchFieldController.text =
-                                          suggestion.name!;
-                                      businessPartnerId = suggestion.id!;
-                                    },
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: TextField(
-                        controller: docNoFieldController,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                          prefixIcon: const Icon(Icons.text_fields),
-                          border: const OutlineInputBorder(),
-                          labelText: 'DocumentNo'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
                         ),
-                        minLines: 1,
-                        maxLines: 4,
                       ),
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        child: TextField(
+                          controller: docNoFieldController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                            prefixIcon: const Icon(Icons.text_fields),
+                            border: const OutlineInputBorder(),
+                            labelText: 'DocumentNo'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                          minLines: 1,
+                          maxLines: 4,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] !=
+                          "1"
+                      ? true
+                      : false,
+                  child: SizedBox(
+                    width: size.width,
+                    height: size.height * 0.9,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Non hai il permesso per modificare il filtro'),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
                 const SizedBox(
                   height: 100,

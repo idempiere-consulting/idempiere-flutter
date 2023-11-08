@@ -1204,7 +1204,9 @@ class LocaleString extends Translations {
           'Description..': 'Descrizione..',
           'Tot Qty': 'Tot Qtà',
           'Total row': 'Totale riga',
-          'Create': 'Crea'
+          'Create': 'Crea',
+          'Product Category': 'Categoria Prodotto',
+          'Product Note': 'Nota Prodotto'
         },
       };
 }

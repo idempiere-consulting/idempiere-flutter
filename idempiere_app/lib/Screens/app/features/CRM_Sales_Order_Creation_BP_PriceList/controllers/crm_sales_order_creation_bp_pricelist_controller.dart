@@ -7,6 +7,8 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
   late PaymentRuleJson pRules;
   late BusinessPartnerLocationJson bpLocation;
   late SalesOrderDefaultsJson defValues;
+
+  var allProdToggle = false.obs;
   //var _hasMailSupport = false;
 
   var searchFieldController = TextEditingController();
@@ -14,6 +16,16 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
   var qtyMinFieldController = TextEditingController(text: '0');
   var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
+
+  var addressFieldController = TextEditingController();
+
+  var noteFieldController = TextEditingController();
+
+  TextEditingController bpFieldController = TextEditingController();
+
+  TextEditingController dateStartFieldController = TextEditingController(
+      text: DateFormat('dd/MM/yyyy')
+          .format(DateTime.now().add(const Duration(days: 1))));
 
   var nameFilter = "";
   // ignore: prefer_typing_uninitialized_variables
@@ -29,6 +41,9 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
   int priceListVersionID = 0;
 
   List<ProductCheckout2> productList = [];
+
+  var prodCategoryFilterID = "0".obs;
+  var litprodCategoryFilterID = "0".obs;
 
   var counter = 0.obs;
 
@@ -146,6 +161,76 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
 
   static String _displayStringForOption(BPRecords option) => option.name!;
 
+  Future<List<PCRecords>> getAllProdCategories() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Product_Category?\$filter= M_Product_Category_Parent_ID eq null and IsSelfService eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby= Name');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = ProductCategoryJSON.fromJson(jsondecoded);
+
+      jsonsectors.records!.insert(0, PCRecords(id: 0, name: 'All'.tr));
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load prod categories");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<PCRecords>> getAllLITProdCategories() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_M_Product_Category?\$filter= M_Product_Category_Parent_ID eq null and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby= Name');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonsectors = ProductCategoryJSON.fromJson(jsondecoded);
+
+      jsonsectors.records!.insert(0, PCRecords(id: 0, name: 'All'.tr));
+
+      return jsonsectors.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load lit prod categories");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   Future<void> getBusinessPartner() async {
     var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
@@ -173,6 +258,8 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
 
       try {
         businessPartnerName.value =
+            json["records"][0]["C_BPartner_ID"]["identifier"];
+        bpFieldController.text =
             json["records"][0]["C_BPartner_ID"]["identifier"];
       } catch (e) {
         if (kDebugMode) {
@@ -255,12 +342,12 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     }
   }
 
-  Future<void> getProductLists(int priceListId) async {
+  Future<void> getProductLists() async {
     _dataAvailable.value = false;
 
     if (searchFieldController.text != "") {
       nameFilter =
-          " and contains(tolower(Name),'${searchFieldController.text}')";
+          " and (contains(tolower(Name),'${searchFieldController.text}') or contains(tolower(Value),'${searchFieldController.text}'))";
     } else {
       nameFilter = "";
     }
@@ -268,7 +355,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -297,7 +384,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     _dataAvailable.value = false;
     if (searchFieldController.text != "") {
       nameFilter =
-          " and contains(tolower(Name),'${searchFieldController.text}')";
+          " and (contains(tolower(Name),'${searchFieldController.text}') or contains(tolower(Value),'${searchFieldController.text}'))";
     } else {
       nameFilter = "";
     }
@@ -305,7 +392,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -417,6 +504,8 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       if (bpLocation.rowcount! > 0) {
         if (bpLocation.records![0].id != null) {
           bpLocationId.value = bpLocation.records![0].id.toString();
+          addressFieldController.text =
+              bpLocation.records![0].cLocationID?.identifier ?? "N/A";
         }
       }
       //print(trx.rowcount);
@@ -584,6 +673,22 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       });
     }
 
+    var inputFormat = DateFormat('dd/MM/yyyy');
+
+    var dateMovement = "";
+
+    if (dateStartFieldController.text != "") {
+      try {
+        var date = inputFormat.parse(dateStartFieldController.text);
+
+        dateMovement = DateFormat('yyyy-MM-dd').format(date);
+      } catch (e) {
+        if (kDebugMode) {
+          print(e);
+        }
+      }
+    }
+
     var msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -596,7 +701,8 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       "AD_User_ID": defValues.records![0].aDUserID!.id,
       "Bill_User_ID": defValues.records![0].billUserID!.id,
       "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
-      "DateOrdered": "${formattedDate}T00:00:00Z",
+      "DateOrdered": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
+      "Note": noteFieldController.text,
       "DatePromised": "${formattedDate}T00:00:00Z",
       "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
       "DeliveryRule": defValues.records![0].deliveryRule!.id,

@@ -72,7 +72,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "SalesOrder".tr,
+                  label: "Purchase Order".tr,
                   visible: int.parse(list[50], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")
@@ -142,6 +142,12 @@ class _Sidebar extends StatelessWidget {
                           .toString()[1] ==
                       "1",
                 ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.logOut,
+                  icon: EvaIcons.logOutOutline,
+                  label: "Log Out",
+                  visible: true,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -194,6 +200,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 10:
                     Get.offNamed('/PortalMpSalesOrderB2B');
+                    break;
+                  case 11:
+                    Get.offAllNamed("/");
                     break;
 
                   default:

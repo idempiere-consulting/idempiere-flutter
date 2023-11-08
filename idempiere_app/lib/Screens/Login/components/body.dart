@@ -8,6 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:idempiere_app/Json_Classes/Authentication/get_1st_token_json.dart';
 import 'package:idempiere_app/Screens/Login/components/background.dart';
 import 'package:idempiere_app/Screens/LoginClient/loginclient_screen.dart';
+import 'package:idempiere_app/Screens/LoginOrganizations/loginorganizations_screen.dart';
+import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
+import 'package:idempiere_app/Screens/LoginWarehouses/loginwarehouses.dart';
 //import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
 import 'package:idempiere_app/components/rounded_input_field.dart';
@@ -1420,6 +1423,86 @@ class _BodyState extends State<Body> {
 
   //END SYNC
 
+  getRolesList() async {
+    String ip = GetStorage().read('ip');
+    String clientid = GetStorage().read('clientid');
+    String authorization = 'Bearer ' + GetStorage().read('token1');
+    final protocol = GetStorage().read('protocol');
+    // ignore: unused_local_variable
+    List posts = [];
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/auth/roles?client=' + clientid);
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      var json = jsonDecode(response.body);
+      List<dynamic> rolelist = json['roles'];
+      if (rolelist.length == 1) {
+        GetStorage().write('roleid', rolelist[0]['id'].toString());
+        GetStorage().write('rolename', rolelist[0]['name'].toString());
+        getOrganizationsList();
+      } else {
+        Get.to(() => const LoginRoles());
+      }
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load role');
+    }
+  }
+
+  getOrganizationsList() async {
+    String ip = GetStorage().read('ip');
+    String clientid = GetStorage().read('clientid');
+    String roleid = GetStorage().read('roleid');
+    String authorization = 'Bearer ' + GetStorage().read('token1');
+    final protocol = GetStorage().read('protocol');
+    // ignore: unused_local_variable
+    List posts = [];
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/auth/organizations?client=' +
+        clientid +
+        '&role=' +
+        roleid);
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      //print(response.body);
+      var json = jsonDecode(response.body);
+      List<dynamic> organizationlist = json['organizations'];
+      if (organizationlist.length == 1) {
+        GetStorage()
+            .write('organizationid', organizationlist[0]['id'].toString());
+        GetStorage()
+            .write('organizationname', organizationlist[0]['name'].toString());
+        Get.to(() => const LoginWarehouses());
+      } else {
+        Get.to(() => const LoginOrganizations());
+      }
+    } else {
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load role');
+    }
+  }
+
   getLoginPermission() async {
     String ip = GetStorage().read('ip');
     var userId = GetStorage().read('userId');
@@ -1601,9 +1684,17 @@ class _BodyState extends State<Body> {
           context,
           '/loginroles',
         ); */
-          GetStorage().write('checkboxLogin', checkboxState);
-          GetStorage().write('clientlist', response.body);
-          Get.to(() => const LoginClient());
+          var json = jsonDecode(GetStorage().read('clientlist'));
+          List<dynamic> clientlist = json['clients'];
+          if (clientlist.length == 1) {
+            GetStorage().write('clientid', clientlist[0]['id'].toString());
+            GetStorage().write('clientname', clientlist[0]['name'].toString());
+            getRolesList();
+          } else {
+            GetStorage().write('checkboxLogin', checkboxState);
+            GetStorage().write('clientlist', response.body);
+            Get.to(() => const LoginClient());
+          }
         }
       } else {
         if (kDebugMode) {
