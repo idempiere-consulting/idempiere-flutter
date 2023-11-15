@@ -153,7 +153,7 @@ class CRMSalesOrderController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_salesorder_v?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\' and DocStatus neq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$orderby= DateOrdered desc');
+        '$protocol://$ip/api/v1/models/lit_mobile_salesorder_v?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -174,6 +174,140 @@ class CRMSalesOrderController extends GetxController {
     } else {
       if (kDebugMode) {
         print(response.body);
+      }
+    }
+  }
+
+  getSelectedSalesOrder(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_Order_ID eq ${_trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      getSelectedSalesOrderLines(index, json);
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  getSelectedSalesOrderLines(int index, SalesOrderJson header) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_orderline?\$filter= C_Order_ID eq ${_trx.records![index].id} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      var rowList = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      duplicateDocument(header, rowList);
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  duplicateDocument(SalesOrderJson header, SalesOrderLineJson rowList) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/sales-order');
+    List<Map<String, Object>> prodlist = [];
+
+    for (var element in rowList.records!) {
+      prodlist.add({
+        "M_Product_ID": {"id": element.mProductID?.id},
+        "qtyEntered": element.qtyEntered ?? 1.0
+      });
+    }
+
+    var msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+      "C_BPartner_ID": {"id": header.records![0].cBPartnerID?.id ?? -1},
+      "C_BPartner_Location_ID": {
+        "id": header.records![0].cBPartnerLocationID?.id ?? -1
+      },
+      "Bill_BPartner_ID": {"id": header.records![0].billBPartnerID?.id ?? -1},
+      "Bill_Location_ID": {"id": header.records![0].billLocationID?.id ?? -1},
+      "Revision": '1.0',
+      "AD_User_ID": header.records![0].adUserID?.id ?? -1,
+      "Bill_User_ID": header.records![0].billUserID!.id,
+      "C_DocTypeTarget_ID": {
+        "id": header.records![0].cDocTypeTargetID?.id ?? -1
+      },
+      "DateOrdered": "${header.records![0].dateOrdered}T00:00:00Z",
+      "Note": header.records![0].note ?? "",
+      "DatePromised": "${header.records![0].datePromised}T00:00:00Z",
+      "LIT_Revision_Date": "${header.records![0].dateOrdered}T00:00:00Z",
+      "DeliveryRule": header.records![0].deliveryRule!.id,
+      "DeliveryViaRule": header.records![0].deliveryViaRule!.id,
+      "FreightCostRule": header.records![0].freightCostRule!.id,
+      "PriorityRule": header.records![0].priorityRule!.id,
+      "InvoiceRule": header.records![0].invoiceRule!.id,
+      "M_PriceList_ID": header.records![0].mPriceListID!.id,
+      "SalesRep_ID": header.records![0].salesRepID!.id,
+      "C_Currency_ID": header.records![0].cCurrencyID!.id,
+      "C_PaymentTerm_ID": {"id": header.records![0].cPaymentTermID?.id ?? -1},
+      "PaymentRule": {"id": header.records![0].paymentRule?.id ?? -1},
+      "order-line".tr: prodlist,
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      getSalesOrders();
+      //Get.back();
+      //print("done!");
+      Get.snackbar(
+        "${json["DocumentNo"]}",
+        "The record has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+        Get.snackbar(
+          "Error!".tr,
+          "Record not created".tr,
+          icon: const Icon(
+            Icons.error,
+            color: Colors.red,
+          ),
+        );
       }
     }
   }

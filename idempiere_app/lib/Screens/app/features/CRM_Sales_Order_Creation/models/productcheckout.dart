@@ -28,9 +28,13 @@ class ProductCheckout {
 class ProductCheckout2 {
   final int id;
   final String name;
+  num? lITDefaultQty;
+  num? qtyBatchSize;
   double qty;
-  final num cost;
+  num cost;
+  num? discountedCost;
   num? tot;
+  num? discount;
   String? description;
   String? imageData;
   String? imageUrl;
@@ -38,34 +42,24 @@ class ProductCheckout2 {
   LitProductSizeID? litProductSizeID;
   String? datePromised;
   String? uom;
+  int? orderLineID;
 
   ProductCheckout2(
       {required this.id,
       required this.name,
       required this.qty,
       required this.cost,
+      this.discountedCost,
+      this.lITDefaultQty,
+      this.qtyBatchSize,
       this.tot,
+      this.discount,
       this.description,
       this.imageData,
       this.imageUrl,
       this.adPrintColorID,
       this.litProductSizeID,
       this.datePromised,
-      this.uom});
+      this.uom,
+      this.orderLineID});
 }
-
-/* class ADPrintColorID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  ADPrintColorID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-} */
-
-

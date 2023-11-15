@@ -314,11 +314,17 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                           icon: Icon(
                                             Icons.article,
                                             color: controller
-                                                        .trx
-                                                        .records![index]
-                                                        .docStatus
-                                                        ?.id ==
-                                                    "CO"
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id ==
+                                                        "CO" ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id ==
+                                                        "CL"
                                                 ? Colors.green
                                                 : Colors.yellow,
                                           ),
@@ -391,55 +397,65 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                             ),
                                             tooltip: 'Edit Sales Order'.tr,
                                             onPressed: () {
+                                              if (controller.trx.records![index]
+                                                          .docStatus?.id !=
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .docStatus?.id !=
+                                                      "CL") {
+                                                Get.to(
+                                                    const CRMEditSalesOrder(),
+                                                    arguments: {
+                                                      "id": controller.trx
+                                                          .records![index].id,
+                                                      "docNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .documentNo,
+                                                      "docTypeTargetId":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeTargetID!
+                                                              .id,
+                                                      "BPartnerLocationId":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerLocationID!
+                                                              .id,
+                                                      "bPartnerId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.id,
+                                                      "bPartnerName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier,
+                                                      "isPaid": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .isPaid,
+                                                      "pRuleId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .paymentRule
+                                                          ?.id,
+                                                      "amt": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .totalLines
+                                                          .toString(),
+                                                      "taxedAmt": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .grandTotal
+                                                          .toString(),
+                                                    });
+                                              }
                                               //log("info button pressed");
-                                              Get.to(const CRMEditSalesOrder(),
-                                                  arguments: {
-                                                    "id": controller
-                                                        .trx.records![index].id,
-                                                    "docNo": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .documentNo,
-                                                    "docTypeTargetId":
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cDocTypeTargetID!
-                                                            .id,
-                                                    "BPartnerLocationId":
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cBPartnerLocationID!
-                                                            .id,
-                                                    "bPartnerId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.id,
-                                                    "bPartnerName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.identifier,
-                                                    "isPaid": controller.trx
-                                                        .records![index].isPaid,
-                                                    "pRuleId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .paymentRule
-                                                        ?.id,
-                                                    "amt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .totalLines
-                                                        .toString(),
-                                                    "taxedAmt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .grandTotal
-                                                        .toString(),
-                                                  });
                                             },
                                           ),
                                         ),
@@ -561,8 +577,139 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     icon:
                                                         const Icon(Icons.html),
                                                   ), */
+                                                  Visibility(
+                                                    visible: controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CO" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CL",
+                                                    child: IconButton(
+                                                      tooltip:
+                                                          'Edit Sales Order'.tr,
+                                                      onPressed: () async {
+                                                        Get.toNamed(
+                                                            '/SalesOrderCreationBPPricelistEdit',
+                                                            arguments: {
+                                                              "orderId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id,
+                                                              "docNo": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .documentNo,
+                                                              "priceListId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mPriceListID
+                                                                      ?.id,
+                                                              "businessPartnerId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.id,
+                                                              "businessPartnerName":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.identifier,
+                                                              "dateOrdered":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "datePromised": controller
+                                                                          ._trx
+                                                                          .records![
+                                                                              index]
+                                                                          .datePromised !=
+                                                                      null
+                                                                  ? DateFormat(
+                                                                          'dd/MM/yyyy')
+                                                                      .format(DateTime.parse(controller
+                                                                          ._trx
+                                                                          .records![
+                                                                              index]
+                                                                          .datePromised!))
+                                                                  : DateFormat(
+                                                                          'dd/MM/yyyy')
+                                                                      .format(DateTime
+                                                                              .now()
+                                                                          .add(const Duration(days: 1))),
+                                                              "documentTypeId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cDocTypeTargetID
+                                                                      ?.id,
+                                                              "paymentTermId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cPaymentTermID
+                                                                      ?.id,
+                                                              "paymentRuleId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .paymentRule
+                                                                      ?.id,
+                                                              "bpLocationId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerLocationID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit_document),
+                                                    ),
+                                                  ),
                                                   IconButton(
-                                                    tooltip: 'print Document',
+                                                    tooltip: 'Duplicate'.tr,
+                                                    onPressed: () async {
+                                                      Get.defaultDialog(
+                                                        title: 'Duplicate'.tr,
+                                                        content: Text(
+                                                            "Are you sure you want to duplicate the record?"
+                                                                .tr),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          controller
+                                                              .getSelectedSalesOrder(
+                                                                  index);
+                                                          Get.back();
+                                                        },
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.copy),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip:
+                                                        'print Document'.tr,
                                                     onPressed: () async {
                                                       /* var isConnected =
                                                             await checkConnection();
@@ -609,14 +756,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         Icons.receipt),
                                                   ), */
                                                   IconButton(
-                                                    tooltip: 'Sign',
+                                                    tooltip: 'Sign'.tr,
                                                     onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
                                                       Get.to(
                                                           const SignatureSalesOrderScreen(),
                                                           arguments: {
@@ -737,11 +878,17 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                           icon: Icon(
                                             Icons.article,
                                             color: controller
-                                                        .trx
-                                                        .records![index]
-                                                        .docStatus
-                                                        ?.id ==
-                                                    "CO"
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id ==
+                                                        "CO" ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id ==
+                                                        "CL"
                                                 ? Colors.green
                                                 : Colors.yellow,
                                           ),
@@ -815,54 +962,64 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                             tooltip: 'Edit Sales Order'.tr,
                                             onPressed: () {
                                               //log("info button pressed");
-                                              Get.to(const CRMEditSalesOrder(),
-                                                  arguments: {
-                                                    "id": controller
-                                                        .trx.records![index].id,
-                                                    "docNo": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .documentNo,
-                                                    "docTypeTargetId":
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cDocTypeTargetID!
-                                                            .id,
-                                                    "BPartnerLocationId":
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cBPartnerLocationID!
-                                                            .id,
-                                                    "bPartnerId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.id,
-                                                    "bPartnerName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.identifier,
-                                                    "isPaid": controller.trx
-                                                        .records![index].isPaid,
-                                                    "pRuleId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .paymentRule
-                                                        ?.id,
-                                                    "amt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .totalLines
-                                                        .toString(),
-                                                    "taxedAmt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .grandTotal
-                                                        .toString(),
-                                                  });
+                                              if (controller.trx.records![index]
+                                                          .docStatus?.id !=
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .docStatus?.id !=
+                                                      "CL") {
+                                                Get.to(
+                                                    const CRMEditSalesOrder(),
+                                                    arguments: {
+                                                      "id": controller.trx
+                                                          .records![index].id,
+                                                      "docNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .documentNo,
+                                                      "docTypeTargetId":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeTargetID!
+                                                              .id,
+                                                      "BPartnerLocationId":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerLocationID!
+                                                              .id,
+                                                      "bPartnerId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.id,
+                                                      "bPartnerName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier,
+                                                      "isPaid": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .isPaid,
+                                                      "pRuleId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .paymentRule
+                                                          ?.id,
+                                                      "amt": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .totalLines
+                                                          .toString(),
+                                                      "taxedAmt": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .grandTotal
+                                                          .toString(),
+                                                    });
+                                              }
                                             },
                                           ),
                                         ),
@@ -984,8 +1141,139 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     icon:
                                                         const Icon(Icons.html),
                                                   ), */
+                                                  Visibility(
+                                                    visible: controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CO" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CL",
+                                                    child: IconButton(
+                                                      tooltip:
+                                                          'Edit Sales Order'.tr,
+                                                      onPressed: () async {
+                                                        Get.toNamed(
+                                                            '/SalesOrderCreationBPPricelistEdit',
+                                                            arguments: {
+                                                              "orderId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id,
+                                                              "docNo": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .documentNo,
+                                                              "priceListId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mPriceListID
+                                                                      ?.id,
+                                                              "businessPartnerId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.id,
+                                                              "businessPartnerName":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.identifier,
+                                                              "dateOrdered":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "datePromised": controller
+                                                                          ._trx
+                                                                          .records![
+                                                                              index]
+                                                                          .datePromised !=
+                                                                      null
+                                                                  ? DateFormat(
+                                                                          'dd/MM/yyyy')
+                                                                      .format(DateTime.parse(controller
+                                                                          ._trx
+                                                                          .records![
+                                                                              index]
+                                                                          .datePromised!))
+                                                                  : DateFormat(
+                                                                          'dd/MM/yyyy')
+                                                                      .format(DateTime
+                                                                              .now()
+                                                                          .add(const Duration(days: 1))),
+                                                              "documentTypeId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cDocTypeTargetID
+                                                                      ?.id,
+                                                              "paymentTermId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cPaymentTermID
+                                                                      ?.id,
+                                                              "paymentRuleId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .paymentRule
+                                                                      ?.id,
+                                                              "bpLocationId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerLocationID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit_document),
+                                                    ),
+                                                  ),
                                                   IconButton(
-                                                    tooltip: 'print Document',
+                                                    tooltip: 'Duplicate'.tr,
+                                                    onPressed: () async {
+                                                      Get.defaultDialog(
+                                                        title: 'Duplicate'.tr,
+                                                        content: Text(
+                                                            "Are you sure you want to duplicate the record?"
+                                                                .tr),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          controller
+                                                              .getSelectedSalesOrder(
+                                                                  index);
+                                                          Get.back();
+                                                        },
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.copy),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip:
+                                                        'print Document'.tr,
                                                     onPressed: () async {
                                                       /* var isConnected =
                                                             await checkConnection();
@@ -1032,14 +1320,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         Icons.receipt),
                                                   ), */
                                                   IconButton(
-                                                    tooltip: 'Sign',
+                                                    tooltip: 'Sign'.tr,
                                                     onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
                                                       Get.to(
                                                           const SignatureSalesOrderScreen(),
                                                           arguments: {
@@ -1160,11 +1442,17 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                           icon: Icon(
                                             Icons.article,
                                             color: controller
-                                                        .trx
-                                                        .records![index]
-                                                        .docStatus
-                                                        ?.id ==
-                                                    "CO"
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id ==
+                                                        "CO" ||
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id ==
+                                                        "CL"
                                                 ? Colors.green
                                                 : Colors.yellow,
                                           ),
@@ -1238,54 +1526,64 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                             tooltip: 'Edit Sales Order'.tr,
                                             onPressed: () {
                                               //log("info button pressed");
-                                              Get.to(const CRMEditSalesOrder(),
-                                                  arguments: {
-                                                    "id": controller
-                                                        .trx.records![index].id,
-                                                    "docNo": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .documentNo,
-                                                    "docTypeTargetId":
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cDocTypeTargetID!
-                                                            .id,
-                                                    "BPartnerLocationId":
-                                                        controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cBPartnerLocationID!
-                                                            .id,
-                                                    "bPartnerId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.id,
-                                                    "bPartnerName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .cBPartnerID
-                                                        ?.identifier,
-                                                    "isPaid": controller.trx
-                                                        .records![index].isPaid,
-                                                    "pRuleId": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .paymentRule
-                                                        ?.id,
-                                                    "amt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .totalLines
-                                                        .toString(),
-                                                    "taxedAmt": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .grandTotal
-                                                        .toString(),
-                                                  });
+                                              if (controller.trx.records![index]
+                                                          .docStatus?.id !=
+                                                      "CO" &&
+                                                  controller.trx.records![index]
+                                                          .docStatus?.id !=
+                                                      "CL") {
+                                                Get.to(
+                                                    const CRMEditSalesOrder(),
+                                                    arguments: {
+                                                      "id": controller.trx
+                                                          .records![index].id,
+                                                      "docNo": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .documentNo,
+                                                      "docTypeTargetId":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeTargetID!
+                                                              .id,
+                                                      "BPartnerLocationId":
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cBPartnerLocationID!
+                                                              .id,
+                                                      "bPartnerId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.id,
+                                                      "bPartnerName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBPartnerID
+                                                          ?.identifier,
+                                                      "isPaid": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .isPaid,
+                                                      "pRuleId": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .paymentRule
+                                                          ?.id,
+                                                      "amt": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .totalLines
+                                                          .toString(),
+                                                      "taxedAmt": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .grandTotal
+                                                          .toString(),
+                                                    });
+                                              }
                                             },
                                           ),
                                         ),
@@ -1407,8 +1705,151 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     icon:
                                                         const Icon(Icons.html),
                                                   ), */
+                                                  Visibility(
+                                                    visible: controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CO" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CL",
+                                                    child: IconButton(
+                                                      tooltip:
+                                                          'Edit Sales Order'.tr,
+                                                      onPressed: () async {
+                                                        if (controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .docStatus
+                                                                    ?.id !=
+                                                                "CO" &&
+                                                            controller
+                                                                    .trx
+                                                                    .records![
+                                                                        index]
+                                                                    .docStatus
+                                                                    ?.id !=
+                                                                "CL") {
+                                                          Get.toNamed(
+                                                              '/SalesOrderCreationBPPricelistEdit',
+                                                              arguments: {
+                                                                "orderId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .id,
+                                                                "docNo": controller
+                                                                    ._trx
+                                                                    .records![
+                                                                        index]
+                                                                    .documentNo,
+                                                                "priceListId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .mPriceListID
+                                                                        ?.id,
+                                                                "businessPartnerId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .cBPartnerID
+                                                                        ?.id,
+                                                                "businessPartnerName": controller
+                                                                    ._trx
+                                                                    .records![
+                                                                        index]
+                                                                    .cBPartnerID
+                                                                    ?.identifier,
+                                                                "dateOrdered":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .dateOrdered,
+                                                                "datePromised": controller
+                                                                            ._trx
+                                                                            .records![
+                                                                                index]
+                                                                            .datePromised !=
+                                                                        null
+                                                                    ? DateFormat('dd/MM/yyyy').format(DateTime.parse(controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .datePromised!))
+                                                                    : DateFormat(
+                                                                            'dd/MM/yyyy')
+                                                                        .format(DateTime.now().add(const Duration(
+                                                                            days:
+                                                                                1))),
+                                                                "documentTypeId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .cDocTypeTargetID
+                                                                        ?.id,
+                                                                "paymentTermId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .cPaymentTermID
+                                                                        ?.id,
+                                                                "paymentRuleId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .paymentRule
+                                                                        ?.id,
+                                                                "bpLocationId":
+                                                                    controller
+                                                                        ._trx
+                                                                        .records![
+                                                                            index]
+                                                                        .cBPartnerLocationID
+                                                                        ?.id,
+                                                              });
+                                                        }
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit_document),
+                                                    ),
+                                                  ),
                                                   IconButton(
-                                                    tooltip: 'print Document',
+                                                    tooltip: 'Duplicate'.tr,
+                                                    onPressed: () async {
+                                                      Get.defaultDialog(
+                                                        title: 'Duplicate'.tr,
+                                                        content: Text(
+                                                            "Are you sure you want to duplicate the record?"
+                                                                .tr),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          controller
+                                                              .getSelectedSalesOrder(
+                                                                  index);
+                                                          Get.back();
+                                                        },
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.copy),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip:
+                                                        'print Document'.tr,
                                                     onPressed: () async {
                                                       /* var isConnected =
                                                             await checkConnection();
@@ -1455,14 +1896,8 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                         Icons.receipt),
                                                   ), */
                                                   IconButton(
-                                                    tooltip: 'Sign',
+                                                    tooltip: 'Sign'.tr,
                                                     onPressed: () async {
-                                                      /* var isConnected =
-                                                            await checkConnection();
-                                                        controller
-                                                            .editWorkOrderResourceDateTesting(
-                                                                isConnected,
-                                                                index); */
                                                       Get.to(
                                                           const SignatureSalesOrderScreen(),
                                                           arguments: {

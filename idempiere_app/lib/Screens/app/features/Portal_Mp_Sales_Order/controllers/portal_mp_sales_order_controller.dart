@@ -232,7 +232,7 @@ class PortalMpSalesOrderController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_order?\$filter= C_BPartner_ID eq $businessPartnerId and IsSoTrx eq Y and DocStatus eq \'CO\' and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$orderby= DateOrdered desc');
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_BPartner_ID eq $businessPartnerId and IsSoTrx eq Y and (DocStatus eq \'CO\' or (DocStatus eq \'CO\' and IsSelfService eq Y)) and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$orderby= DateOrdered desc');
     var response = await http.get(
       url,
       headers: <String, String>{

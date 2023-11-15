@@ -52,6 +52,7 @@ class Records {
   final bool? isInvoiced;
   final bool? isPrinted;
   final bool? isTransferred;
+  final String? note;
   final String? dateOrdered;
   final String? datePromised;
   final String? dateAcct;
@@ -81,6 +82,7 @@ class Records {
   final bool? sendEMail;
   final BillBPartnerID? billBPartnerID;
   final BillLocationID? billLocationID;
+  final BillUserID? billUserID;
   final bool? isSelfService;
   final bool? isDropShip;
   final num? volume;
@@ -97,6 +99,7 @@ class Records {
   final bool? lITIsDisplaySuppProduct;
   final num? qtyToInvoice;
   final bool? lITIsAdvancedView;
+  final ADUserID? adUserID;
   final String? modelname;
   final bool? isPaid;
 
@@ -125,6 +128,7 @@ class Records {
     this.dateAcct,
     this.salesRepID,
     this.cPaymentTermID,
+    this.note,
     this.mpotid,
     this.cCurrencyID,
     this.invoiceRule,
@@ -150,6 +154,7 @@ class Records {
     this.sendEMail,
     this.billBPartnerID,
     this.billLocationID,
+    this.billUserID,
     this.isSelfService,
     this.isDropShip,
     this.volume,
@@ -166,6 +171,7 @@ class Records {
     this.lITIsDisplaySuppProduct,
     this.qtyToInvoice,
     this.lITIsAdvancedView,
+    this.adUserID,
     this.modelname,
     this.isPaid,
   });
@@ -208,6 +214,7 @@ class Records {
         isTransferred = json['IsTransferred'] as bool?,
         dateOrdered = json['DateOrdered'] as String?,
         datePromised = json['DatePromised'] as String?,
+        note = json['Note'] as String?,
         dateAcct = json['DateAcct'] as String?,
         salesRepID = (json['SalesRep_ID'] as Map<String, dynamic>?) != null
             ? SalesRepID.fromJson(json['SalesRep_ID'] as Map<String, dynamic>)
@@ -289,6 +296,9 @@ class Records {
                 ? BillLocationID.fromJson(
                     json['Bill_Location_ID'] as Map<String, dynamic>)
                 : null,
+        billUserID = (json['Bill_User_ID'] as Map<String, dynamic>?) != null
+            ? BillUserID.fromJson(json['Bill_User_ID'] as Map<String, dynamic>)
+            : null,
         isSelfService = json['IsSelfService'] as bool?,
         isDropShip = json['IsDropShip'] as bool?,
         volume = json['Volume'] as num?,
@@ -311,6 +321,9 @@ class Records {
         lITIsDisplaySuppProduct = json['LIT_IsDisplaySuppProduct'] as bool?,
         qtyToInvoice = json['QtyToInvoice'] as num?,
         lITIsAdvancedView = json['LIT_IsAdvancedView'] as bool?,
+        adUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+            : null,
         isPaid = json['IsPaid'] as bool?,
         modelname = json['model-name'] as String?;
 
@@ -379,6 +392,7 @@ class Records {
         'LIT_IsDisplaySuppProduct': lITIsDisplaySuppProduct,
         'QtyToInvoice': qtyToInvoice,
         'LIT_IsAdvancedView': lITIsAdvancedView,
+        'AD_User_ID': adUserID?.toJson(),
         'model-name': modelname,
         'IsPaid': isPaid,
       };
@@ -884,6 +898,60 @@ class CBPartnerLocationID {
   });
 
   CBPartnerLocationID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUserID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUserID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUserID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class BillUserID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  BillUserID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  BillUserID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

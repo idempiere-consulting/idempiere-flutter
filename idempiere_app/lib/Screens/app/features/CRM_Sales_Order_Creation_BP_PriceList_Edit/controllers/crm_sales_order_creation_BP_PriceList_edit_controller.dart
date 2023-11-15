@@ -1,6 +1,6 @@
 part of dashboard;
 
-class PortalMpSalesOrderFromPriceListController extends GetxController {
+class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late PriceListJson _trx;
   late PaymentTermsJson pTerms;
@@ -21,26 +21,28 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
 
   var noteFieldController = TextEditingController();
 
-  TextEditingController bpFieldController = TextEditingController();
+  TextEditingController bpFieldController =
+      TextEditingController(text: Get.arguments["businessPartnerName"]);
 
-  TextEditingController dateStartFieldController = TextEditingController(
-      text: DateFormat('dd/MM/yyyy')
-          .format(DateTime.now().add(const Duration(days: 1))));
+  TextEditingController dateStartFieldController =
+      TextEditingController(text: Get.arguments["datePromised"]);
 
   var nameFilter = "";
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
   var docTypeFlag = false.obs;
-  int businessPartnerId = 0;
-  int priceListID = 0;
-  var bpLocationId = "0".obs;
-  var paymentTermId = "0".obs;
-  var paymentRuleId = "K".obs;
+  int businessPartnerId = Get.arguments["businessPartnerId"];
+  int priceListID = Get.arguments["priceListId"];
+  var bpLocationId = "${Get.arguments["bpLocationId"]}".obs;
+  var paymentTermId = "${Get.arguments["paymentTermId"]}".obs;
+  var paymentRuleId = "${Get.arguments["paymentRuleId"]}".obs;
   var businessPartnerName = "".obs;
-  int cOrderId = 0;
+  int cOrderId = Get.arguments["orderId"];
   int priceListVersionID = 0;
 
   List<ProductCheckout2> productList = [];
+  var prodListAvailable = true.obs;
+  List<int> deletedSOLinesWithID = [];
 
   var prodCategoryFilterID = "0".obs;
   var litprodCategoryFilterID = "0".obs;
@@ -68,7 +70,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
   var searchFilterValue = "".obs;
 
   late List<DTRecords> dropDownList;
-  var dropdownValue = "1".obs;
+  var dropdownValue = "${Get.arguments["documentTypeId"]}".obs;
 
   final json = {
     "types": [
@@ -143,13 +145,13 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
   void onInit() {
     //dropDownList = getTypes()!;
     super.onInit();
-    getBusinessPartner();
-    //getProductLists();
-
-    //getTabs();
-    //getLeads();
-    //getADUserID();
-    //adUserId = GetStorage().read('userId');
+    getProductLists();
+    getProdLines();
+    getSalesOrderDefaultValues();
+    getLocationFromBP();
+    getPaymentTerms();
+    getPaymentRules();
+    getDocTypes();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -157,6 +159,42 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
   //String get value => _value.toString();
 
   static String _displayStringForOption(BPRecords option) => option.name!;
+
+  getProdLines() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_orderline?\$filter= C_Order_ID eq $cOrderId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      var rowList = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in rowList.records!) {
+        productList.add(ProductCheckout2(
+            id: element.mProductID!.id!,
+            name: element.mProductID!.identifier!,
+            qty: element.qtyEntered!.toDouble(),
+            cost: element.priceEntered ?? 0.0,
+            description: element.description,
+            uom: element.cUOMID?.identifier,
+            orderLineID: element.id));
+        updateCounter();
+        updateTotal();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
 
   Future<List<PCRecords>> getAllProdCategories() async {
     final ip = GetStorage().read('ip');
@@ -228,66 +266,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     //print(json.);
   }
 
-  Future<void> getBusinessPartner() async {
-    var userId = GetStorage().read("userId");
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-
-      try {
-        businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"];
-        getSalesOrderDefaultValues();
-        getLocationFromBP();
-        getPaymentTerms();
-        getPaymentRules();
-        //getProductLists();
-        getDocTypes();
-        const filename = "businesspartner";
-        final file = File(
-            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        var jsondecoded = jsonDecode(file.readAsStringSync());
-        var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
-        for (var element in jsonbps.records!) {
-          if (element.id == businessPartnerId) {
-            priceListID = element.mPriceListID!.id!;
-            getProductLists();
-          }
-        }
-      } catch (e) {
-        if (kDebugMode) {
-          print("no bp");
-        }
-      }
-
-      try {
-        businessPartnerName.value =
-            json["records"][0]["C_BPartner_ID"]["identifier"];
-        bpFieldController.text =
-            json["records"][0]["C_BPartner_ID"]["identifier"];
-      } catch (e) {
-        if (kDebugMode) {
-          print("no bp");
-        }
-      }
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  }
-
   Future<List<BPRecords>> getAllBPs() async {
     //await getBusinessPartner();
     //print(response.body);
@@ -335,10 +313,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
         }
       }
 
-      if (check) {
-        dropdownValue.value = json.records![0].id.toString();
-      }
-
       dropDownList = json.records!;
       //print(trx.rowcount);
       //print(response.body);
@@ -361,7 +335,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ${allProdToggle.value ? 'pricelist_description eq \'Listino Generale\'' : '(M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId)'}  ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -370,9 +344,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(response.body);
-      }
       _trx =
           PriceListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -398,7 +369,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ${allProdToggle.value ? 'pricelist_description eq \'Listino Generale\'' : '(M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId)'}  ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -407,9 +378,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(response.body);
-      }
       _trx =
           PriceListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -473,11 +441,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
         pTerms = PaymentTermsJson.fromJson(
             jsonDecode(utf8.decode(response.bodyBytes)));
 
-        for (var element in pTerms.records!) {
-          if (element.isDefault == true) {
-            paymentTermId.value = element.id!.toString();
-          }
-        }
         getDefaultPaymentTermsFromBP();
       } else {
         if (kDebugMode) {
@@ -507,13 +470,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       bpLocation = BusinessPartnerLocationJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
-      if (bpLocation.rowcount! > 0) {
-        if (bpLocation.records![0].id != null) {
-          bpLocationId.value = bpLocation.records![0].id.toString();
-          addressFieldController.text =
-              bpLocation.records![0].cLocationID?.identifier ?? "N/A";
-        }
-      }
       //print(trx.rowcount);
       //print(response.body);
       //print(paymentTermId);
@@ -546,19 +502,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       var json = BusinessPartnerJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
-      if (json.rowcount! > 0) {
-        if (json.records![0].cPaymentTermID != null) {
-          paymentTermId.value = json.records![0].cPaymentTermID!.id!.toString();
-        }
-        if (json.records![0].cPaymentRuleID != null) {
-          paymentRuleId.value = json.records![0].cPaymentRuleID!.id!;
-        }
-
-        if (json.records![0].cDocTypeTargetID != null) {
-          dropdownValue.value =
-              json.records![0].cDocTypeTargetID!.id!.toString();
-        }
-      }
       //print(trx.rowcount);
       //print(response.body);
       //print(paymentTermId);
@@ -659,25 +602,10 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     }
   } */
 
-  Future<void> createSalesOrder() async {
+  Future<void> editSalesOrder() async {
     Get.back();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/windows/sales-order');
-
-    var now = DateTime.now();
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    //print(formattedDate);
-    List<Map<String, Object>> list = [];
-
-    for (var element in productList) {
-      list.add({
-        "M_Product_ID": {"id": element.id},
-        "qtyEntered": element.qty
-      });
-    }
 
     var inputFormat = DateFormat('dd/MM/yyyy');
 
@@ -695,34 +623,96 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       }
     }
 
-    var msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
-      "C_BPartner_ID": {"id": businessPartnerId},
-      "C_BPartner_Location_ID": {"id": bpLocationId.value},
-      "Bill_BPartner_ID": {"id": businessPartnerId},
-      "Bill_Location_ID": {"id": defValues.records![0].cBPartnerLocationID!.id},
-      "Revision": defValues.records![0].revision,
-      "AD_User_ID": defValues.records![0].aDUserID!.id,
-      "Bill_User_ID": defValues.records![0].billUserID!.id,
-      "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
-      "DateOrdered": "${formattedDate}T00:00:00Z",
-      "Note": noteFieldController.text,
-      "DatePromised": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
-      "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
-      "DeliveryRule": defValues.records![0].deliveryRule!.id,
-      "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
-      "FreightCostRule": defValues.records![0].freightCostRule!.id,
-      "PriorityRule": defValues.records![0].priorityRule!.id,
-      "InvoiceRule": defValues.records![0].invoiceRule!.id,
-      "M_PriceList_ID": defValues.records![0].mPriceListID!.id,
-      "SalesRep_ID": defValues.records![0].salesRepID!.id,
-      "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
+    final msg = jsonEncode({
+      "C_DocTypeTarget_ID": {'id': int.parse(dropdownValue.value)},
+      'C_BPartner_Location_ID': {'id': int.parse(bpLocationId.value)},
+      'PaymentRule': paymentRuleId.value,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
-      "PaymentRule": {"id": paymentRuleId.value},
-      "IsSelfService": true,
-      "order-line".tr: list,
+      "DatePromised": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/C_Order/$cOrderId');
+    //print(msg);
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<CRMSalesOrderController>().getSalesOrders();
+
+      for (var element in deletedSOLinesWithID) {
+        deleteSalesOrderLines(element);
+      }
+
+      for (var element in productList) {
+        if (element.orderLineID == null) {
+          createSalesOrderLines(element.id, element.qty);
+        } else {
+          editSalesOrderLines(element.orderLineID!, element.qty);
+        }
+      }
+      Get.back();
+      //print("done!");
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record not updated (Header)".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  deleteSalesOrderLines(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_orderline/$id');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print("done!");
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record not deleted".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  createSalesOrderLines(int id, double qty) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/sales-order/tabs/${"order".tr}/$cOrderId/${"order-line".tr}');
+
+    final msg = jsonEncode({
+      "M_Product_ID": {"id": id},
+      "qtyEntered": qty
     });
 
     var response = await http.post(
@@ -734,36 +724,53 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       },
     );
     if (response.statusCode == 201) {
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      Get.find<CRMSalesOrderController>().getSalesOrders();
-      Get.back();
       //print("done!");
-      Get.snackbar(
-        "${json["DocumentNo"]}",
-        "The record has been created".tr,
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
-      );
-
-      /* cOrderId = json["id"];
-      if (cOrderId != 0) {
-        createSalesOrderLine();
-      } */
     } else {
       if (kDebugMode) {
         print(response.body);
-        Get.snackbar(
-          "Error!".tr,
-          "Record not updated".tr,
-          icon: const Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-        );
       }
+      Get.snackbar(
+        "Error!".tr,
+        "Record not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  editSalesOrderLines(int id, double qty) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/sales-order/tabs/${"order-line".tr}/$id');
+
+    final msg = jsonEncode({"qtyEntered": qty});
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print("done!");
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record not edited".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
     }
   }
 

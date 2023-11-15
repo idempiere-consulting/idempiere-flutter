@@ -1206,7 +1206,21 @@ class LocaleString extends Translations {
           'Total row': 'Totale riga',
           'Create': 'Crea',
           'Product Category': 'Categoria Prodotto',
-          'Product Note': 'Nota Prodotto'
+          'Product Note': 'Nota Prodotto',
+          'Purchase Order Creation': 'Creazione ODA',
+          'print Document': 'Stampa Documento',
+          'Copy': 'Copia',
+          'Duplicate': 'Duplica',
+          'Are you sure you want to duplicate the record?':
+              'Sicuro di voler duplicare il record?',
+          'order': 'ordine-odv00',
+          'Edit Order': 'Modifica Ordine',
+          'Are you sure you want to edit the Order?':
+              'Sicuro di voler modificare l\'Ordine?',
+          'Edit Price': 'Modifica Prezzo',
+          'Discount': 'Sconto',
+          'Discounted': 'Scontato',
+          'Tot Row': 'Tot Riga'
         },
       };
 }

@@ -11,11 +11,17 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
   var allProdToggle = false.obs;
   //var _hasMailSupport = false;
 
+  var prodListAvailable = true.obs;
+
   var searchFieldController = TextEditingController();
   var qtyFieldController = TextEditingController(text: '0');
   var qtyMinFieldController = TextEditingController(text: '0');
   var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
+  var priceFieldController = TextEditingController(text: '0.0');
+  var discountFieldController = TextEditingController(text: '0.0');
+  var discountedPriceFieldController = TextEditingController(text: '0.0');
+  var totalRowPriceFieldController = TextEditingController(text: '0.0');
 
   var addressFieldController = TextEditingController();
 
@@ -355,7 +361,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter=  ${allProdToggle.value ? 'pricelist_description eq \'Listino Generale\'' : '(M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId)'} ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -392,7 +398,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ${allProdToggle.value ? 'pricelist_description eq \'Listino Generale\'' : '(M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId)'} ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -669,7 +675,9 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     for (var element in productList) {
       list.add({
         "M_Product_ID": {"id": element.id},
-        "qtyEntered": element.qty
+        "qtyEntered": element.qty,
+        "PriceList": element.cost,
+        "PriceEntered": element.discountedCost ?? element.cost,
       });
     }
 
@@ -701,9 +709,9 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       "AD_User_ID": defValues.records![0].aDUserID!.id,
       "Bill_User_ID": defValues.records![0].billUserID!.id,
       "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
-      "DateOrdered": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
+      "DateOrdered": "${formattedDate}T00:00:00Z",
       "Note": noteFieldController.text,
-      "DatePromised": "${formattedDate}T00:00:00Z",
+      "DatePromised": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
       "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
       "DeliveryRule": defValues.records![0].deliveryRule!.id,
       "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
