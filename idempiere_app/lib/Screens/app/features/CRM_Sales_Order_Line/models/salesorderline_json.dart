@@ -78,6 +78,9 @@ class Records {
   final num? lITStockInTrade;
   final num? lITGeneralPriceLimit;
   final String? modelname;
+  final num? lITDefaultQty;
+  final num? qtyBatchSize;
+  final String? uom;
   num? qtyRegistered;
 
   Records({
@@ -126,7 +129,10 @@ class Records {
     this.vendorProductNo,
     this.lITStockInTrade,
     this.lITGeneralPriceLimit,
+    this.lITDefaultQty,
+    this.qtyBatchSize,
     this.modelname,
+    this.uom,
     this.qtyRegistered,
   });
 
@@ -212,6 +218,9 @@ class Records {
         vendorProductNo = json['VendorProductNo'] as String?,
         lITStockInTrade = json['LIT_StockInTrade'] as num?,
         lITGeneralPriceLimit = json['LIT_GeneralPriceLimit'] as num?,
+        qtyBatchSize = json['QtyBatchSize'] as num?,
+        lITDefaultQty = json['LIT_DefaultQty'] as num?,
+        uom = json['uom'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

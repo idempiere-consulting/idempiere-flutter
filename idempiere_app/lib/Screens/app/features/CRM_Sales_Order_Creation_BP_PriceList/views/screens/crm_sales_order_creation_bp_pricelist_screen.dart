@@ -1484,7 +1484,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                         const EdgeInsets.only(
                                                             right: 10),
                                                     child: Text(
-                                                      '${"Total row".tr} € ${(controller.productList[index].qty * (controller.productList[index].cost - (controller.productList[index].cost / 100) * (controller.productList[index].discount == 0.0 || controller.productList[index].discount == null ? 100 : controller.productList[index].discount!))).toStringAsFixed(2)}',
+                                                      '${"Total row".tr} € ${(controller.productList[index].qty * (controller.productList[index].cost - (controller.productList[index].cost / 100) * (controller.productList[index].discount == null ? 100 : controller.productList[index].discount!))).toStringAsFixed(2)}',
                                                       style: const TextStyle(
                                                           fontSize: 14,
                                                           color: Colors.white,

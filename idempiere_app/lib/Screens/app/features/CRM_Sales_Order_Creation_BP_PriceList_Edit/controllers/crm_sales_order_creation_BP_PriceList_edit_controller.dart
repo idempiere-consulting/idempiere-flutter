@@ -10,12 +10,17 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
 
   var allProdToggle = false.obs;
   //var _hasMailSupport = false;
+  var prodListAvailable = true.obs;
 
   var searchFieldController = TextEditingController();
   var qtyFieldController = TextEditingController(text: '0');
   var qtyMinFieldController = TextEditingController(text: '0');
   var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
+  var priceFieldController = TextEditingController(text: '0.0');
+  var discountFieldController = TextEditingController(text: '0.0');
+  var discountedPriceFieldController = TextEditingController(text: '0.0');
+  var totalRowPriceFieldController = TextEditingController(text: '0.0');
 
   var addressFieldController = TextEditingController();
 
@@ -41,7 +46,6 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
   int priceListVersionID = 0;
 
   List<ProductCheckout2> productList = [];
-  var prodListAvailable = true.obs;
   List<int> deletedSOLinesWithID = [];
 
   var prodCategoryFilterID = "0".obs;
@@ -165,7 +169,7 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_orderline?\$filter= C_Order_ID eq $cOrderId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_mobile_salesorderline_v?\$filter= C_Order_ID eq $cOrderId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -182,9 +186,13 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
             id: element.mProductID!.id!,
             name: element.mProductID!.identifier!,
             qty: element.qtyEntered!.toDouble(),
-            cost: element.priceEntered ?? 0.0,
+            cost: element.priceList ?? 0.0,
+            lITDefaultQty: element.lITDefaultQty,
+            qtyBatchSize: element.qtyBatchSize,
+            discountedCost: element.priceEntered,
             description: element.description,
-            uom: element.cUOMID?.identifier,
+            discount: element.discount,
+            uom: element.uom,
             orderLineID: element.id));
         updateCounter();
         updateTotal();
@@ -650,9 +658,11 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
 
       for (var element in productList) {
         if (element.orderLineID == null) {
-          createSalesOrderLines(element.id, element.qty);
+          createSalesOrderLines(
+              element.id, element.qty, element.cost, element.discountedCost);
         } else {
-          editSalesOrderLines(element.orderLineID!, element.qty);
+          editSalesOrderLines(element.orderLineID!, element.qty, element.cost,
+              element.discountedCost);
         }
       }
       Get.back();
@@ -703,7 +713,8 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
     }
   }
 
-  createSalesOrderLines(int id, double qty) async {
+  createSalesOrderLines(
+      int id, double qty, num cost, num? discountedCost) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -712,7 +723,9 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
 
     final msg = jsonEncode({
       "M_Product_ID": {"id": id},
-      "qtyEntered": qty
+      "qtyEntered": qty,
+      "PriceList": cost,
+      "PriceEntered": discountedCost ?? cost,
     });
 
     var response = await http.post(
@@ -740,14 +753,18 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
     }
   }
 
-  editSalesOrderLines(int id, double qty) async {
+  editSalesOrderLines(int id, double qty, num cost, num? discountedCost) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
         '$protocol://$ip/api/v1/windows/sales-order/tabs/${"order-line".tr}/$id');
 
-    final msg = jsonEncode({"qtyEntered": qty});
+    final msg = jsonEncode({
+      "qtyEntered": qty,
+      "PriceList": cost,
+      "PriceEntered": discountedCost ?? cost,
+    });
 
     var response = await http.put(
       url,

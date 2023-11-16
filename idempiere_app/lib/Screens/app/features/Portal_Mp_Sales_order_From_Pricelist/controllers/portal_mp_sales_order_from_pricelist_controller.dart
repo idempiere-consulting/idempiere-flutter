@@ -10,12 +10,17 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
 
   var allProdToggle = false.obs;
   //var _hasMailSupport = false;
+  var prodListAvailable = true.obs;
 
   var searchFieldController = TextEditingController();
   var qtyFieldController = TextEditingController(text: '0');
   var qtyMinFieldController = TextEditingController(text: '0');
   var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
+  var priceFieldController = TextEditingController(text: '0.0');
+  var discountFieldController = TextEditingController(text: '0.0');
+  var discountedPriceFieldController = TextEditingController(text: '0.0');
+  var totalRowPriceFieldController = TextEditingController(text: '0.0');
 
   var addressFieldController = TextEditingController();
 
@@ -361,7 +366,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter=  ${allProdToggle.value ? 'pricelist_description eq \'Listino Generale\'' : '(M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId)'} ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -370,9 +375,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(response.body);
-      }
       _trx =
           PriceListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);
@@ -398,7 +400,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter= ((M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId) ${allProdToggle.value ? 'or pricelist_description eq \'Listino Generale\'' : ''}) ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/lit_pricelist_v?\$filter=  ${allProdToggle.value ? 'pricelist_description eq \'Listino Generale\'' : '(M_PriceList_ID eq $priceListID and C_BPartner_ID eq $businessPartnerId)'} ${prodCategoryFilterID.value != "0" ? "and M_Product_Category_ID eq ${prodCategoryFilterID.value}" : ""} ${litprodCategoryFilterID.value != "0" ? "and LIT_M_Product_Category_ID eq ${litprodCategoryFilterID.value}" : ""} and AD_Client_ID eq ${GetStorage().read("clientid")}$nameFilter&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -407,9 +409,6 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(response.body);
-      }
       _trx =
           PriceListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       //print(trx.rowcount);

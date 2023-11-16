@@ -507,6 +507,27 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                     MainAxisAlignment.end,
                                                 children: [
                                                   IconButton(
+                                                    tooltip: 'Duplicate'.tr,
+                                                    onPressed: () async {
+                                                      Get.defaultDialog(
+                                                        title: 'Duplicate'.tr,
+                                                        content: Text(
+                                                            "Are you sure you want to duplicate the record?"
+                                                                .tr
+                                                                .tr),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          controller
+                                                              .getSelectedSalesOrder(
+                                                                  index);
+                                                          Get.back();
+                                                        },
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.copy),
+                                                  ),
+                                                  IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
                                                       /* var isConnected =
