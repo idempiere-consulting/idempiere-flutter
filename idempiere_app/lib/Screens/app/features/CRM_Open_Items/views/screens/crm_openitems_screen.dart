@@ -74,7 +74,22 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                 if (controller._dataAvailable.value) {
                   controller._dataAvailable.value = false;
                 } else {
-                  controller.getOpenItem();
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (BuildContext context) {
+                      return Dialog(
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("Fetching Records..".tr),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                  controller.getOpenItem(context);
                 }
               },
               child: Obx(

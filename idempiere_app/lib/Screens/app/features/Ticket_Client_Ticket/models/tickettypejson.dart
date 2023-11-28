@@ -43,6 +43,7 @@ class TTRecords {
   final String? updated;
   final bool? isActive;
   final ADClientID? aDClientID;
+  final COrderID? cOrderID;
   final bool? isDefault;
   final bool? isSelfService;
   final int? dueDateTolerance;
@@ -70,6 +71,7 @@ class TTRecords {
     this.updated,
     this.isActive,
     this.aDClientID,
+    this.cOrderID,
     this.isDefault,
     this.isSelfService,
     this.dueDateTolerance,
@@ -105,6 +107,9 @@ class TTRecords {
         isActive = json['IsActive'] as bool?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
+            : null,
+        cOrderID = (json['C_Order_ID'] as Map<String, dynamic>?) != null
+            ? COrderID.fromJson(json['C_Order_ID'] as Map<String, dynamic>)
             : null,
         isDefault = json['IsDefault'] as bool?,
         isSelfService = json['IsSelfService'] as bool?,
@@ -203,6 +208,33 @@ class ADOrgID {
   });
 
   ADOrgID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class COrderID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  COrderID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  COrderID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

@@ -495,6 +495,7 @@ class MaintenanceMptaskController extends GetxController {
         var msg = jsonEncode({
           "record-id": _trx.records![index].id,
           "C_DocType_ID": _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
+          "DocAction": "PR"
         });
 
         if (_trx.records![index].cOrderID != null) {
@@ -504,6 +505,7 @@ class MaintenanceMptaskController extends GetxController {
                 _trx.records![index].litcDocTypeODVID?.id ?? 1000033,
             "C_Order_ID": _trx.records![index].cOrderID?.id,
             "IsExistingOrder": true,
+            "DocAction": "PR"
           });
         }
         //print(msg);

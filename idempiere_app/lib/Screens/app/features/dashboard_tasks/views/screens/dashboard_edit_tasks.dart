@@ -435,32 +435,53 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     ),
                   ),
                 ),
-                /* Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    readOnly: true,
-                    maxLines: 4,
-                    controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      //prefixIcon: Icon(Icons.list),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                  ),
-                ), */
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   child: DateTimePicker(
-                    //locale: Locale('languageCalendar'.tr),
+                    readOnly: true,
+                    locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'Date'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.event),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
+                    type: DateTimePickerType.date,
+                    initialValue: DateTime.now().toString(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    //dateLabelText: 'Ship Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {},
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: DateTimePicker(
+                    decoration: InputDecoration(
+                      labelText: 'Start Time'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
@@ -483,16 +504,20 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   child: DateTimePicker(
                     //locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'End Time'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: endTime.substring(0, 5),

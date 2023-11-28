@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:file_picker/file_picker.dart';
@@ -15,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/sc
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../CRM_Contact_BP/models/contact.dart';
 
@@ -71,9 +73,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "R_RequestType_ID": Get.arguments["id"],
+      "AD_Org_ID": {"id": int.parse(GetStorage().read("organizationid"))},
+      "AD_Client_ID": {"id": int.parse(GetStorage().read("clientid"))},
+      "R_RequestType_ID": int.parse(Get.arguments["id"]),
       "DueType": {"id": 5},
       "R_Status_ID": {"id": rStatusId},
       "PriorityUser": {"id": dropdownValue},
@@ -83,12 +85,12 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "ConfidentialTypeEntry": {"id": "C"},
       "Name": titleFieldController.text,
       "Summary": nameFieldController.text,
-      "AD_User_ID": userId, //GetStorage().read('userid'),
+      "AD_User_ID": userId,
       "C_BPartner_ID": {"id": businessPartnerId}
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/R_Request');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/request');
     //print(msg);
     var response = await http.post(
       url,
@@ -211,8 +213,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<void> getBusinessPartner() async {
     var userId = GetStorage().read("userId");
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/ad_user?\$filter= AD_User_ID eq $userId and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -241,7 +244,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<List<BPRecords>> getAllBPs() async {
     //await getBusinessPartner();
     //print(response.body);
-    var jsondecoded = jsonDecode(GetStorage().read('businessPartnerSync'));
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
 
     var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
 
@@ -255,8 +261,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<void> getRStatus() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/R_Status?\$filter= Value eq \'R00\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -281,8 +288,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   Future<void> getSalesRep() async {
     //var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('http://' +
+    var url = Uri.parse('$protocol://' +
         ip +
         '/api/v1/models/AD_User?\$filter= Value eq \'tba\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
@@ -340,9 +348,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_resourcefreeslot_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://' + ip + '/api/v1/models/lit_resourcefreeslot_v');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -351,7 +358,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       var slots = FreeSlotJson.fromJson(jsonDecode(response.body));
 
       for (var i = 0; i < slots.rowcount!; i++) {
@@ -361,7 +368,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
         DateTime slot = DateTime.parse(slots.records![i].dateSlot!);
 
         //print(slots.records![i].dateSlot);
-        for (var j = 0; j < eventJson.rowcount!; j++) {
+        /* for (var j = 0; j < eventJson.rowcount!; j++) {
           DateTime dateTimeStart = DateTime.parse(
               '${eventJson.records![j].jPToDoScheduledStartDate}T${eventJson.records![j].jPToDoScheduledStartTime}');
           DateTime dateTimeEnd = DateTime.parse(
@@ -374,7 +381,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
             flag = false;
             break;
           }
-        }
+        } */
 
         if (true) {
           //flag
@@ -398,7 +405,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     }
   }
 
-  Future<List<Types>> getAllScheduledEvents() async {
+  /* Future<List<Types>> getAllScheduledEvents() async {
     var now = DateTime.now();
     DateTime fourteenDayslater = now.add(const Duration(days: 14));
     var formatter = DateFormat('yyyy-MM-dd');
@@ -436,7 +443,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     //print(list[0].eMail);
 
     //print(json.);
-  }
+  } */
 
   Future<List<Records>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
@@ -526,8 +533,6 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     image64 = "";
     imageName = "";
     dropDownList = getTypes()!;
-
-    getAllScheduledEvents();
     getTicketTypeInfo();
     getRStatus();
     getSalesRep();
@@ -853,12 +858,12 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     ),
                     margin: const EdgeInsets.all(10),
                     child: FutureBuilder(
-                      future: getAllScheduledEvents(),
+                      future: getFreeSlots(),
                       builder: (BuildContext ctx,
                               AsyncSnapshot<List<Types>> snapshot) =>
                           snapshot.hasData
                               ? DropdownButton(
-                                  value: snapshot.data![0].id,
+                                  //value: null,
                                   elevation: 16,
                                   onChanged: (String? newValue) {
                                     setState(() {
@@ -1171,7 +1176,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     ),
                     margin: const EdgeInsets.all(10),
                     child: FutureBuilder(
-                      future: getAllScheduledEvents(),
+                      future: getFreeSlots(),
                       builder: (BuildContext ctx,
                               AsyncSnapshot<List<Types>> snapshot) =>
                           snapshot.hasData
@@ -1489,7 +1494,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     ),
                     margin: const EdgeInsets.all(10),
                     child: FutureBuilder(
-                      future: getAllScheduledEvents(),
+                      future: getFreeSlots(),
                       builder: (BuildContext ctx,
                               AsyncSnapshot<List<Types>> snapshot) =>
                           snapshot.hasData

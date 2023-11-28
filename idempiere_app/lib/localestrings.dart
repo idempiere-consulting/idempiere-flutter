@@ -198,7 +198,7 @@ class LocaleString extends Translations {
           'Today': 'Today',
           'language': 'en',
           'LANGUAGE': 'US',
-          'languageCalendar': 'en_EN',
+          'languageCalendar': 'en',
           'Add Event': 'Add Event',
           'Edit Event': 'Edit Event',
           'Accept': 'Accept',
@@ -700,7 +700,7 @@ class LocaleString extends Translations {
           'Today': 'Oggi',
           'language': 'it',
           'LANGUAGE': 'IT',
-          'languageCalendar': 'it_IT',
+          'languageCalendar': 'it',
           'Add Event': 'Aggiungi Evento',
           'Edit Event': 'Modifica Evento',
           'Accept': 'Continua',
@@ -1220,7 +1220,9 @@ class LocaleString extends Translations {
           'Edit Price': 'Modifica Prezzo',
           'Discount': 'Sconto',
           'Discounted': 'Scontato',
-          'Tot Row': 'Tot Riga'
+          'Tot Row': 'Tot Riga',
+          'Net Price': 'Prezzo Netto',
+          'Sales Order not finished': 'ODV non finito',
         },
       };
 }

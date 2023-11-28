@@ -9,11 +9,14 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
   late SalesOrderDefaultsJson defValues;
 
   var allProdToggle = false.obs;
+
+  var isWIP = false.obs;
   //var _hasMailSupport = false;
   var prodListAvailable = true.obs;
 
   var searchFieldController = TextEditingController();
   var qtyFieldController = TextEditingController(text: '0');
+  var isQtyModule = true.obs;
   var qtyMinFieldController = TextEditingController(text: '0');
   var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
@@ -29,7 +32,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
   TextEditingController bpFieldController = TextEditingController();
 
   TextEditingController dateStartFieldController = TextEditingController(
-      text: DateFormat('dd/MM/yyyy')
+      text: DateFormat('yyyy-MM-dd')
           .format(DateTime.now().add(const Duration(days: 1))));
 
   var nameFilter = "";
@@ -708,7 +711,8 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
       "DateOrdered": "${formattedDate}T00:00:00Z",
       "Note": noteFieldController.text,
-      "DatePromised": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
+      "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T00:00:00Z",
       "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
       "DeliveryRule": defValues.records![0].deliveryRule!.id,
       "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
@@ -721,6 +725,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
       "PaymentRule": {"id": paymentRuleId.value},
       "IsSelfService": true,
+      "IsLocked": isWIP.value,
       "order-line".tr: list,
     });
 

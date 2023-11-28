@@ -8,6 +8,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:animate_do/animate_do.dart';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -45,6 +46,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
+import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
@@ -471,7 +473,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                   ),
                 ),
               ),
-              Obx(
+              /* Obx(
                 () => Visibility(
                   visible: controller.filterCount.value == 0,
                   child: Container(
@@ -494,6 +496,50 @@ class CRMSalesOrderCreationBPPricelistScreen
                         LengthLimitingTextInputFormatter(10),
                         _DateFormatterCustom(),
                       ],
+                    ),
+                  ),
+                ),
+              ), */
+              Obx(
+                () => Visibility(
+                  visible: controller.filterCount.value == 0,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+                    child: DateTimePicker(
+                      locale: Locale('languageCalendar'.tr),
+                      decoration: InputDecoration(
+                        labelText: 'Data Consegna'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.event),
+                        //hintText: "search..",
+                        isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
+                      type: DateTimePickerType.date,
+                      initialValue: controller.dateStartFieldController.text,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      //dateLabelText: 'Ship Date'.tr,
+                      //icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+
+                        controller.dateStartFieldController.text =
+                            val.substring(0, 10);
+
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
                     ),
                   ),
                 ),
@@ -819,6 +865,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                   IconButton(
                                                       tooltip: 'Edit Row'.tr,
                                                       onPressed: () {
+                                                        controller.isQtyModule
+                                                            .value = true;
                                                         controller
                                                             .qtyMultiplierController
                                                             .text = (controller
@@ -875,8 +923,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                             .toStringAsFixed(2);
 
                                                         controller
-                                                            .discountedPriceFieldController
-                                                            .text = (double.parse(
+                                                                .discountedPriceFieldController
+                                                                .text = /* (double.parse(
                                                                     controller
                                                                         .priceFieldController
                                                                         .text) -
@@ -887,7 +935,14 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     double.parse(controller
                                                                         .discountFieldController
                                                                         .text)))
-                                                            .toStringAsFixed(2);
+                                                            .toStringAsFixed(2); */
+                                                            (controller
+                                                                        .productList[
+                                                                            index]
+                                                                        .discountedCost ??
+                                                                    0.0)
+                                                                .toStringAsFixed(
+                                                                    2);
                                                         controller
                                                             .totalRowPriceFieldController
                                                             .text = (double.parse(
@@ -991,7 +1046,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "${"Qty".tr} Min.",
+                                                                              "${"Qty".tr} 1 Conf.",
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -1049,7 +1104,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "${"Qty".tr} Acq.",
+                                                                              "${"Qty".tr} Conf. Acq.",
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -1084,53 +1139,62 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       width:
                                                                           100,
                                                                       child:
-                                                                          TextField(
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        readOnly:
-                                                                            true,
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        controller:
-                                                                            controller.qtyFieldController,
-                                                                        autofocus:
-                                                                            true,
-                                                                        keyboardType: const TextInputType.numberWithOptions(
-                                                                            signed:
-                                                                                false,
-                                                                            decimal:
-                                                                                true),
-                                                                        inputFormatters: [
-                                                                          FilteringTextInputFormatter.allow(
-                                                                              RegExp("[0-9]"))
-                                                                        ],
-                                                                        //onTap: () {},
-                                                                        //onSubmitted: (String? value) {},
-                                                                        decoration:
-                                                                            InputDecoration(
-                                                                          prefixText: controller
-                                                                              .productList[index]
-                                                                              .uom,
-                                                                          labelStyle:
-                                                                              const TextStyle(color: Colors.white),
-                                                                          labelText:
-                                                                              "Tot Qty".tr,
-                                                                          filled:
-                                                                              true,
-                                                                          border:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                            borderSide:
-                                                                                BorderSide.none,
+                                                                          Obx(
+                                                                        () =>
+                                                                            TextField(
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color: controller.isQtyModule.value
+                                                                                ? Colors.white
+                                                                                : Colors.red,
                                                                           ),
-                                                                          isDense:
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          controller:
+                                                                              controller.qtyFieldController,
+                                                                          autofocus:
                                                                               true,
-                                                                          fillColor:
-                                                                              Theme.of(context).cardColor,
+                                                                          keyboardType: const TextInputType.numberWithOptions(
+                                                                              signed: false,
+                                                                              decimal: true),
+                                                                          inputFormatters: [
+                                                                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                                                                          ],
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            if (double.tryParse(value) !=
+                                                                                null) {
+                                                                              if ((num.parse(value) / num.parse(controller.qtyMinFieldController.text)) % 1 == 0) {
+                                                                                controller.qtyMultiplierController.text = (num.parse(value) ~/ num.parse(controller.qtyMinFieldController.text)).toString();
+                                                                                controller.totalRowPriceFieldController.text = (double.parse(value) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                                controller.isQtyModule.value = true;
+                                                                              } else {
+                                                                                controller.isQtyModule.value = false;
+                                                                              }
+                                                                            } else {
+                                                                              controller.isQtyModule.value = false;
+                                                                            }
+                                                                          },
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            prefixText:
+                                                                                controller.productList[index].uom,
+                                                                            labelStyle:
+                                                                                const TextStyle(color: Colors.white),
+                                                                            labelText:
+                                                                                "Tot Qty".tr,
+                                                                            filled:
+                                                                                true,
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                              borderSide: BorderSide.none,
+                                                                            ),
+                                                                            isDense:
+                                                                                true,
+                                                                            fillColor:
+                                                                                Theme.of(context).cardColor,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -1182,7 +1246,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Price".tr,
+                                                                              "Prezzo List.".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -1200,6 +1264,19 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       ),
                                                                     ),
                                                                   ],
+                                                                ),
+                                                                Obx(
+                                                                  () => Visibility(
+                                                                      visible: controller.isQtyModule.value == false,
+                                                                      child: Text(
+                                                                        'Qtà sbagliata ...',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: controller.isQtyModule.value
+                                                                              ? Colors.white
+                                                                              : Colors.red,
+                                                                        ),
+                                                                      )),
                                                                 ),
                                                                 Divider(),
                                                                 Row(
@@ -1309,7 +1386,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Discounted".tr,
+                                                                              "Net Price".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -1409,7 +1486,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                   controller
                                                                           .qtyFieldController
                                                                           .text !=
-                                                                      '') {
+                                                                      '' &&
+                                                                  controller
+                                                                          .isQtyModule
+                                                                          .value ==
+                                                                      true) {
                                                                 controller
                                                                     .prodListAvailable
                                                                     .value = false;
@@ -1457,9 +1538,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     .updateCounter();
                                                                 controller
                                                                     .updateTotal();
+                                                                Get.back();
                                                               }
-
-                                                              Get.back();
                                                             });
                                                       },
                                                       icon: const Icon(
@@ -1663,9 +1743,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                               isExpanded: true,
                               value: controller.paymentTermId.value,
                               elevation: 16,
-                              onChanged: (String? newValue) {
+                              onChanged:
+                                  null /* (String? newValue) {
                                 controller.paymentTermId.value = newValue!;
-                              },
+                              } */
+                              ,
                               items: controller.pTerms.records!.map((list) {
                                 return DropdownMenuItem<String>(
                                   value: list.id.toString(),
@@ -1702,11 +1784,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                               isExpanded: true,
                               value: controller.paymentRuleId.value,
                               elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.paymentRuleId.value = newValue!;
-
-                                //print(dropdownValue);
-                              },
+                              onChanged: null,
                               items: controller.pRules.records!.map((list) {
                                 return DropdownMenuItem<String>(
                                   value: list.value,
@@ -1720,6 +1798,20 @@ class CRMSalesOrderCreationBPPricelistScreen
                         : const Center(
                             child: CircularProgressIndicator(),
                           ),
+                  ),
+                ),
+              ),
+              Obx(
+                () => Visibility(
+                  visible: controller.filterCount.value == 3,
+                  child: CheckboxListTile(
+                    title: Text('Sales Order not finished'.tr),
+                    value: controller.isWIP.value,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      controller.isWIP.value = value!;
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
                 ),
               ),
@@ -2132,7 +2224,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                   ),
                 ),
               ),
-              Obx(
+              /* Obx(
                 () => Visibility(
                   visible: controller.filterCount.value == 0,
                   child: Container(
@@ -2155,6 +2247,50 @@ class CRMSalesOrderCreationBPPricelistScreen
                         LengthLimitingTextInputFormatter(10),
                         _DateFormatterCustom(),
                       ],
+                    ),
+                  ),
+                ),
+              ), */
+              Obx(
+                () => Visibility(
+                  visible: controller.filterCount.value == 0,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+                    child: DateTimePicker(
+                      locale: Locale('languageCalendar'.tr),
+                      decoration: InputDecoration(
+                        labelText: 'Data Consegna'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.event),
+                        //hintText: "search..",
+                        isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
+                      type: DateTimePickerType.date,
+                      initialValue: controller.dateStartFieldController.text,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      //dateLabelText: 'Ship Date'.tr,
+                      //icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+
+                        controller.dateStartFieldController.text =
+                            val.substring(0, 10);
+
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
                     ),
                   ),
                 ),
@@ -2352,7 +2488,8 @@ class CRMSalesOrderCreationBPPricelistScreen
               ),
               Obx(
                 () => Visibility(
-                  visible: controller.filterCount.value == 2,
+                  visible: controller.filterCount.value == 2 &&
+                      controller.prodListAvailable.value,
                   child: Flexible(
                     child: SizedBox(
                       child: ListView.builder(
@@ -2370,11 +2507,17 @@ class CRMSalesOrderCreationBPPricelistScreen
                                 child: Dismissible(
                                   key: Key(item),
                                   onDismissed: (direction) {
-                                    controller.productList.removeWhere(
-                                        (element) =>
-                                            element.id.toString() ==
-                                            controller.productList[index].id
-                                                .toString());
+                                    controller.prodListAvailable.value = false;
+
+                                    for (var i = 0;
+                                        i < controller.productList.length;
+                                        i++) {
+                                      if (controller.productList[i].id ==
+                                          controller.productList[index].id) {
+                                        controller.productList.removeAt(index);
+                                      }
+                                    }
+                                    controller.prodListAvailable.value = true;
                                     controller.updateTotal();
                                     controller.updateCounter();
                                   },
@@ -2473,6 +2616,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                   IconButton(
                                                       tooltip: 'Edit Row'.tr,
                                                       onPressed: () {
+                                                        controller.isQtyModule
+                                                            .value = true;
                                                         controller
                                                             .qtyMultiplierController
                                                             .text = (controller
@@ -2526,11 +2671,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         index]
                                                                     .discount ??
                                                                 0.0)
-                                                            .toStringAsFixed(1);
+                                                            .toStringAsFixed(2);
 
                                                         controller
-                                                            .discountedPriceFieldController
-                                                            .text = (double.parse(
+                                                                .discountedPriceFieldController
+                                                                .text = /* (double.parse(
                                                                     controller
                                                                         .priceFieldController
                                                                         .text) -
@@ -2541,6 +2686,24 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     double.parse(controller
                                                                         .discountFieldController
                                                                         .text)))
+                                                            .toStringAsFixed(2); */
+                                                            (controller
+                                                                        .productList[
+                                                                            index]
+                                                                        .discountedCost ??
+                                                                    0.0)
+                                                                .toStringAsFixed(
+                                                                    2);
+                                                        controller
+                                                            .totalRowPriceFieldController
+                                                            .text = (double.parse(
+                                                                    controller
+                                                                        .qtyFieldController
+                                                                        .text) *
+                                                                double.parse(
+                                                                    controller
+                                                                        .discountedPriceFieldController
+                                                                        .text))
                                                             .toStringAsFixed(2);
                                                         Get.defaultDialog(
                                                             title: controller
@@ -2634,7 +2797,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "${"Qty".tr} Min.",
+                                                                              "${"Qty".tr} 1 Conf.",
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -2681,13 +2844,18 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                             controller.qtyFieldController.text =
                                                                                 controller.productList[index].qtyBatchSize.toString();
                                                                           }
+                                                                          controller
+                                                                              .totalRowPriceFieldController
+                                                                              .text = (double.parse(controller.qtyFieldController.text) *
+                                                                                  double.parse(controller.discountedPriceFieldController.text))
+                                                                              .toStringAsFixed(2);
                                                                         },
                                                                         decoration:
                                                                             InputDecoration(
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "${"Qty".tr} Acq.",
+                                                                              "${"Qty".tr} Conf. Acq.",
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -2722,53 +2890,62 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       width:
                                                                           100,
                                                                       child:
-                                                                          TextField(
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        readOnly:
-                                                                            true,
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        controller:
-                                                                            controller.qtyFieldController,
-                                                                        autofocus:
-                                                                            true,
-                                                                        keyboardType: const TextInputType.numberWithOptions(
-                                                                            signed:
-                                                                                false,
-                                                                            decimal:
-                                                                                true),
-                                                                        inputFormatters: [
-                                                                          FilteringTextInputFormatter.allow(
-                                                                              RegExp("[0-9]"))
-                                                                        ],
-                                                                        //onTap: () {},
-                                                                        //onSubmitted: (String? value) {},
-                                                                        decoration:
-                                                                            InputDecoration(
-                                                                          prefixText: controller
-                                                                              .productList[index]
-                                                                              .uom,
-                                                                          labelStyle:
-                                                                              const TextStyle(color: Colors.white),
-                                                                          labelText:
-                                                                              "Tot Qty".tr,
-                                                                          filled:
-                                                                              true,
-                                                                          border:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                            borderSide:
-                                                                                BorderSide.none,
+                                                                          Obx(
+                                                                        () =>
+                                                                            TextField(
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color: controller.isQtyModule.value
+                                                                                ? Colors.white
+                                                                                : Colors.red,
                                                                           ),
-                                                                          isDense:
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          controller:
+                                                                              controller.qtyFieldController,
+                                                                          autofocus:
                                                                               true,
-                                                                          fillColor:
-                                                                              Theme.of(context).cardColor,
+                                                                          keyboardType: const TextInputType.numberWithOptions(
+                                                                              signed: false,
+                                                                              decimal: true),
+                                                                          inputFormatters: [
+                                                                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                                                                          ],
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            if (double.tryParse(value) !=
+                                                                                null) {
+                                                                              if ((num.parse(value) / num.parse(controller.qtyMinFieldController.text)) % 1 == 0) {
+                                                                                controller.qtyMultiplierController.text = (num.parse(value) ~/ num.parse(controller.qtyMinFieldController.text)).toString();
+                                                                                controller.totalRowPriceFieldController.text = (double.parse(value) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                                controller.isQtyModule.value = true;
+                                                                              } else {
+                                                                                controller.isQtyModule.value = false;
+                                                                              }
+                                                                            } else {
+                                                                              controller.isQtyModule.value = false;
+                                                                            }
+                                                                          },
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            prefixText:
+                                                                                controller.productList[index].uom,
+                                                                            labelStyle:
+                                                                                const TextStyle(color: Colors.white),
+                                                                            labelText:
+                                                                                "Tot Qty".tr,
+                                                                            filled:
+                                                                                true,
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                              borderSide: BorderSide.none,
+                                                                            ),
+                                                                            isDense:
+                                                                                true,
+                                                                            fillColor:
+                                                                                Theme.of(context).cardColor,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -2783,12 +2960,17 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           100,
                                                                       child:
                                                                           TextField(
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                        readOnly:
+                                                                            true,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         controller:
                                                                             controller.priceFieldController,
-                                                                        autofocus:
-                                                                            true,
                                                                         keyboardType: const TextInputType.numberWithOptions(
                                                                             signed:
                                                                                 false,
@@ -2804,6 +2986,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                               null) {
                                                                             controller.discountedPriceFieldController.text =
                                                                                 (double.parse(value) - ((double.parse(value) / 100) * double.parse(controller.discountFieldController.text))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
                                                                           }
                                                                         },
                                                                         decoration:
@@ -2813,7 +2997,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Price".tr,
+                                                                              "Prezzo List.".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -2831,6 +3015,19 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       ),
                                                                     ),
                                                                   ],
+                                                                ),
+                                                                Obx(
+                                                                  () => Visibility(
+                                                                      visible: controller.isQtyModule.value == false,
+                                                                      child: Text(
+                                                                        'Qtà sbagliata ...',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: controller.isQtyModule.value
+                                                                              ? Colors.white
+                                                                              : Colors.red,
+                                                                        ),
+                                                                      )),
                                                                 ),
                                                                 Divider(),
                                                                 Row(
@@ -2871,6 +3068,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                               null) {
                                                                             controller.discountedPriceFieldController.text =
                                                                                 (double.parse(controller.priceFieldController.text) - ((double.parse(controller.priceFieldController.text) / 100) * double.parse(value))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
                                                                           }
                                                                         },
                                                                         decoration:
@@ -2926,7 +3125,9 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           if (double.tryParse(value) !=
                                                                               null) {
                                                                             controller.discountFieldController.text =
-                                                                                ((double.parse(controller.discountedPriceFieldController.text) / double.parse(controller.priceFieldController.text)) * 100).toStringAsFixed(2);
+                                                                                (100.00 - ((double.parse(value) / double.parse(controller.priceFieldController.text)) * 100)).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
                                                                           }
                                                                         },
                                                                         decoration:
@@ -2936,7 +3137,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Discounted".tr,
+                                                                              "Net Price".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -3036,7 +3237,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                   controller
                                                                           .qtyFieldController
                                                                           .text !=
-                                                                      '') {
+                                                                      '' &&
+                                                                  controller
+                                                                          .isQtyModule
+                                                                          .value ==
+                                                                      true) {
                                                                 controller
                                                                     .prodListAvailable
                                                                     .value = false;
@@ -3058,6 +3263,13 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                 controller
                                                                         .productList[
                                                                             index]
+                                                                        .discountedCost =
+                                                                    num.parse(controller
+                                                                        .discountedPriceFieldController
+                                                                        .text);
+                                                                controller
+                                                                        .productList[
+                                                                            index]
                                                                         .description =
                                                                     controller
                                                                         .descriptionFieldController
@@ -3069,6 +3281,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     num.parse(controller
                                                                         .discountFieldController
                                                                         .text);
+
                                                                 controller
                                                                     .prodListAvailable
                                                                     .value = true;
@@ -3103,7 +3316,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                         const EdgeInsets.only(
                                                             right: 10),
                                                     child: Text(
-                                                      '${"Total row".tr} € ${(controller.productList[index].qty * (controller.productList[index].cost - (controller.productList[index].cost / 100) * (controller.productList[index].discount == 0.0 || controller.productList[index].discount == null ? 100 : controller.productList[index].discount!))).toStringAsFixed(2)}',
+                                                      '${"Total row".tr} € ${(controller.productList[index].qty * (controller.productList[index].cost - (controller.productList[index].cost / 100) * (controller.productList[index].discount == null ? 100 : controller.productList[index].discount!))).toStringAsFixed(2)}',
                                                       style: const TextStyle(
                                                           fontSize: 14,
                                                           color: Colors.white,
@@ -3282,9 +3495,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                               isExpanded: true,
                               value: controller.paymentTermId.value,
                               elevation: 16,
-                              onChanged: (String? newValue) {
+                              onChanged:
+                                  null /* (String? newValue) {
                                 controller.paymentTermId.value = newValue!;
-                              },
+                              } */
+                              ,
                               items: controller.pTerms.records!.map((list) {
                                 return DropdownMenuItem<String>(
                                   value: list.id.toString(),
@@ -3321,11 +3536,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                               isExpanded: true,
                               value: controller.paymentRuleId.value,
                               elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.paymentRuleId.value = newValue!;
-
-                                //print(dropdownValue);
-                              },
+                              onChanged: null,
                               items: controller.pRules.records!.map((list) {
                                 return DropdownMenuItem<String>(
                                   value: list.value,
@@ -3339,6 +3550,20 @@ class CRMSalesOrderCreationBPPricelistScreen
                         : const Center(
                             child: CircularProgressIndicator(),
                           ),
+                  ),
+                ),
+              ),
+              Obx(
+                () => Visibility(
+                  visible: controller.filterCount.value == 3,
+                  child: CheckboxListTile(
+                    title: Text('Sales Order not finished'.tr),
+                    value: controller.isWIP.value,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      controller.isWIP.value = value!;
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
                 ),
               ),
@@ -3751,7 +3976,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                   ),
                 ),
               ),
-              Obx(
+              /* Obx(
                 () => Visibility(
                   visible: controller.filterCount.value == 0,
                   child: Container(
@@ -3774,6 +3999,50 @@ class CRMSalesOrderCreationBPPricelistScreen
                         LengthLimitingTextInputFormatter(10),
                         _DateFormatterCustom(),
                       ],
+                    ),
+                  ),
+                ),
+              ), */
+              Obx(
+                () => Visibility(
+                  visible: controller.filterCount.value == 0,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 10, right: 10, top: 20),
+                    child: DateTimePicker(
+                      locale: Locale('languageCalendar'.tr),
+                      decoration: InputDecoration(
+                        labelText: 'Data Consegna'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.event),
+                        //hintText: "search..",
+                        isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
+                      type: DateTimePickerType.date,
+                      initialValue: controller.dateStartFieldController.text,
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                      //dateLabelText: 'Ship Date'.tr,
+                      //icon: const Icon(Icons.event),
+                      onChanged: (val) {
+                        //print(DateTime.parse(val));
+                        //print(val);
+
+                        controller.dateStartFieldController.text =
+                            val.substring(0, 10);
+
+                        //print(date);
+                      },
+                      validator: (val) {
+                        //print(val);
+                        return null;
+                      },
+                      // ignore: avoid_print
+                      onSaved: (val) => print(val),
                     ),
                   ),
                 ),
@@ -3971,7 +4240,8 @@ class CRMSalesOrderCreationBPPricelistScreen
               ),
               Obx(
                 () => Visibility(
-                  visible: controller.filterCount.value == 2,
+                  visible: controller.filterCount.value == 2 &&
+                      controller.prodListAvailable.value,
                   child: Flexible(
                     child: SizedBox(
                       child: ListView.builder(
@@ -3989,11 +4259,17 @@ class CRMSalesOrderCreationBPPricelistScreen
                                 child: Dismissible(
                                   key: Key(item),
                                   onDismissed: (direction) {
-                                    controller.productList.removeWhere(
-                                        (element) =>
-                                            element.id.toString() ==
-                                            controller.productList[index].id
-                                                .toString());
+                                    controller.prodListAvailable.value = false;
+
+                                    for (var i = 0;
+                                        i < controller.productList.length;
+                                        i++) {
+                                      if (controller.productList[i].id ==
+                                          controller.productList[index].id) {
+                                        controller.productList.removeAt(index);
+                                      }
+                                    }
+                                    controller.prodListAvailable.value = true;
                                     controller.updateTotal();
                                     controller.updateCounter();
                                   },
@@ -4092,6 +4368,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                   IconButton(
                                                       tooltip: 'Edit Row'.tr,
                                                       onPressed: () {
+                                                        controller.isQtyModule
+                                                            .value = true;
                                                         controller
                                                             .qtyMultiplierController
                                                             .text = (controller
@@ -4145,11 +4423,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         index]
                                                                     .discount ??
                                                                 0.0)
-                                                            .toStringAsFixed(1);
+                                                            .toStringAsFixed(2);
 
                                                         controller
-                                                            .discountedPriceFieldController
-                                                            .text = (double.parse(
+                                                                .discountedPriceFieldController
+                                                                .text = /* (double.parse(
                                                                     controller
                                                                         .priceFieldController
                                                                         .text) -
@@ -4160,6 +4438,24 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     double.parse(controller
                                                                         .discountFieldController
                                                                         .text)))
+                                                            .toStringAsFixed(2); */
+                                                            (controller
+                                                                        .productList[
+                                                                            index]
+                                                                        .discountedCost ??
+                                                                    0.0)
+                                                                .toStringAsFixed(
+                                                                    2);
+                                                        controller
+                                                            .totalRowPriceFieldController
+                                                            .text = (double.parse(
+                                                                    controller
+                                                                        .qtyFieldController
+                                                                        .text) *
+                                                                double.parse(
+                                                                    controller
+                                                                        .discountedPriceFieldController
+                                                                        .text))
                                                             .toStringAsFixed(2);
                                                         Get.defaultDialog(
                                                             title: controller
@@ -4253,7 +4549,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "${"Qty".tr} Min.",
+                                                                              "${"Qty".tr} 1 Conf.",
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -4300,13 +4596,18 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                             controller.qtyFieldController.text =
                                                                                 controller.productList[index].qtyBatchSize.toString();
                                                                           }
+                                                                          controller
+                                                                              .totalRowPriceFieldController
+                                                                              .text = (double.parse(controller.qtyFieldController.text) *
+                                                                                  double.parse(controller.discountedPriceFieldController.text))
+                                                                              .toStringAsFixed(2);
                                                                         },
                                                                         decoration:
                                                                             InputDecoration(
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "${"Qty".tr} Acq.",
+                                                                              "${"Qty".tr} Conf. Acq.",
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -4341,53 +4642,62 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       width:
                                                                           100,
                                                                       child:
-                                                                          TextField(
-                                                                        style:
-                                                                            TextStyle(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        readOnly:
-                                                                            true,
-                                                                        textAlign:
-                                                                            TextAlign.center,
-                                                                        controller:
-                                                                            controller.qtyFieldController,
-                                                                        autofocus:
-                                                                            true,
-                                                                        keyboardType: const TextInputType.numberWithOptions(
-                                                                            signed:
-                                                                                false,
-                                                                            decimal:
-                                                                                true),
-                                                                        inputFormatters: [
-                                                                          FilteringTextInputFormatter.allow(
-                                                                              RegExp("[0-9]"))
-                                                                        ],
-                                                                        //onTap: () {},
-                                                                        //onSubmitted: (String? value) {},
-                                                                        decoration:
-                                                                            InputDecoration(
-                                                                          prefixText: controller
-                                                                              .productList[index]
-                                                                              .uom,
-                                                                          labelStyle:
-                                                                              const TextStyle(color: Colors.white),
-                                                                          labelText:
-                                                                              "Tot Qty".tr,
-                                                                          filled:
-                                                                              true,
-                                                                          border:
-                                                                              OutlineInputBorder(
-                                                                            borderRadius:
-                                                                                BorderRadius.circular(10),
-                                                                            borderSide:
-                                                                                BorderSide.none,
+                                                                          Obx(
+                                                                        () =>
+                                                                            TextField(
+                                                                          style:
+                                                                              TextStyle(
+                                                                            color: controller.isQtyModule.value
+                                                                                ? Colors.white
+                                                                                : Colors.red,
                                                                           ),
-                                                                          isDense:
+                                                                          textAlign:
+                                                                              TextAlign.center,
+                                                                          controller:
+                                                                              controller.qtyFieldController,
+                                                                          autofocus:
                                                                               true,
-                                                                          fillColor:
-                                                                              Theme.of(context).cardColor,
+                                                                          keyboardType: const TextInputType.numberWithOptions(
+                                                                              signed: false,
+                                                                              decimal: true),
+                                                                          inputFormatters: [
+                                                                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                                                                          ],
+                                                                          onChanged:
+                                                                              (value) {
+                                                                            if (double.tryParse(value) !=
+                                                                                null) {
+                                                                              if ((num.parse(value) / num.parse(controller.qtyMinFieldController.text)) % 1 == 0) {
+                                                                                controller.qtyMultiplierController.text = (num.parse(value) ~/ num.parse(controller.qtyMinFieldController.text)).toString();
+                                                                                controller.totalRowPriceFieldController.text = (double.parse(value) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                                controller.isQtyModule.value = true;
+                                                                              } else {
+                                                                                controller.isQtyModule.value = false;
+                                                                              }
+                                                                            } else {
+                                                                              controller.isQtyModule.value = false;
+                                                                            }
+                                                                          },
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            prefixText:
+                                                                                controller.productList[index].uom,
+                                                                            labelStyle:
+                                                                                const TextStyle(color: Colors.white),
+                                                                            labelText:
+                                                                                "Tot Qty".tr,
+                                                                            filled:
+                                                                                true,
+                                                                            border:
+                                                                                OutlineInputBorder(
+                                                                              borderRadius: BorderRadius.circular(10),
+                                                                              borderSide: BorderSide.none,
+                                                                            ),
+                                                                            isDense:
+                                                                                true,
+                                                                            fillColor:
+                                                                                Theme.of(context).cardColor,
+                                                                          ),
                                                                         ),
                                                                       ),
                                                                     ),
@@ -4402,12 +4712,17 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           100,
                                                                       child:
                                                                           TextField(
+                                                                        style:
+                                                                            const TextStyle(
+                                                                          color:
+                                                                              Colors.grey,
+                                                                        ),
+                                                                        readOnly:
+                                                                            true,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         controller:
                                                                             controller.priceFieldController,
-                                                                        autofocus:
-                                                                            true,
                                                                         keyboardType: const TextInputType.numberWithOptions(
                                                                             signed:
                                                                                 false,
@@ -4423,6 +4738,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                               null) {
                                                                             controller.discountedPriceFieldController.text =
                                                                                 (double.parse(value) - ((double.parse(value) / 100) * double.parse(controller.discountFieldController.text))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
                                                                           }
                                                                         },
                                                                         decoration:
@@ -4432,7 +4749,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Price".tr,
+                                                                              "Prezzo List.".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -4450,6 +4767,19 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       ),
                                                                     ),
                                                                   ],
+                                                                ),
+                                                                Obx(
+                                                                  () => Visibility(
+                                                                      visible: controller.isQtyModule.value == false,
+                                                                      child: Text(
+                                                                        'Qtà sbagliata ...',
+                                                                        style:
+                                                                            TextStyle(
+                                                                          color: controller.isQtyModule.value
+                                                                              ? Colors.white
+                                                                              : Colors.red,
+                                                                        ),
+                                                                      )),
                                                                 ),
                                                                 Divider(),
                                                                 Row(
@@ -4490,6 +4820,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                               null) {
                                                                             controller.discountedPriceFieldController.text =
                                                                                 (double.parse(controller.priceFieldController.text) - ((double.parse(controller.priceFieldController.text) / 100) * double.parse(value))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
                                                                           }
                                                                         },
                                                                         decoration:
@@ -4525,13 +4857,6 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           100,
                                                                       child:
                                                                           TextField(
-                                                                        style:
-                                                                            const TextStyle(
-                                                                          color:
-                                                                              Colors.grey,
-                                                                        ),
-                                                                        readOnly:
-                                                                            true,
                                                                         textAlign:
                                                                             TextAlign.center,
                                                                         controller:
@@ -4547,8 +4872,16 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           FilteringTextInputFormatter.allow(
                                                                               RegExp("[0-9.]"))
                                                                         ],
-                                                                        //onTap: () {},
-                                                                        //onSubmitted: (String? value) {},
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountFieldController.text =
+                                                                                (100.00 - ((double.parse(value) / double.parse(controller.priceFieldController.text)) * 100)).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
                                                                         decoration:
                                                                             InputDecoration(
                                                                           prefixText:
@@ -4556,7 +4889,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Discounted".tr,
+                                                                              "Net Price".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -4656,7 +4989,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                   controller
                                                                           .qtyFieldController
                                                                           .text !=
-                                                                      '') {
+                                                                      '' &&
+                                                                  controller
+                                                                          .isQtyModule
+                                                                          .value ==
+                                                                      true) {
                                                                 controller
                                                                     .prodListAvailable
                                                                     .value = false;
@@ -4678,6 +5015,13 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                 controller
                                                                         .productList[
                                                                             index]
+                                                                        .discountedCost =
+                                                                    num.parse(controller
+                                                                        .discountedPriceFieldController
+                                                                        .text);
+                                                                controller
+                                                                        .productList[
+                                                                            index]
                                                                         .description =
                                                                     controller
                                                                         .descriptionFieldController
@@ -4689,6 +5033,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     num.parse(controller
                                                                         .discountFieldController
                                                                         .text);
+
                                                                 controller
                                                                     .prodListAvailable
                                                                     .value = true;
@@ -4723,7 +5068,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                         const EdgeInsets.only(
                                                             right: 10),
                                                     child: Text(
-                                                      '${"Total row".tr} € ${(controller.productList[index].qty * (controller.productList[index].cost - (controller.productList[index].cost / 100) * (controller.productList[index].discount == 0.0 || controller.productList[index].discount == null ? 100 : controller.productList[index].discount!))).toStringAsFixed(2)}',
+                                                      '${"Total row".tr} € ${(controller.productList[index].qty * (controller.productList[index].cost - (controller.productList[index].cost / 100) * (controller.productList[index].discount == null ? 100 : controller.productList[index].discount!))).toStringAsFixed(2)}',
                                                       style: const TextStyle(
                                                           fontSize: 14,
                                                           color: Colors.white,
@@ -4902,9 +5247,11 @@ class CRMSalesOrderCreationBPPricelistScreen
                               isExpanded: true,
                               value: controller.paymentTermId.value,
                               elevation: 16,
-                              onChanged: (String? newValue) {
+                              onChanged:
+                                  null /* (String? newValue) {
                                 controller.paymentTermId.value = newValue!;
-                              },
+                              } */
+                              ,
                               items: controller.pTerms.records!.map((list) {
                                 return DropdownMenuItem<String>(
                                   value: list.id.toString(),
@@ -4941,11 +5288,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                               isExpanded: true,
                               value: controller.paymentRuleId.value,
                               elevation: 16,
-                              onChanged: (String? newValue) {
-                                controller.paymentRuleId.value = newValue!;
-
-                                //print(dropdownValue);
-                              },
+                              onChanged: null,
                               items: controller.pRules.records!.map((list) {
                                 return DropdownMenuItem<String>(
                                   value: list.value,
@@ -4959,6 +5302,20 @@ class CRMSalesOrderCreationBPPricelistScreen
                         : const Center(
                             child: CircularProgressIndicator(),
                           ),
+                  ),
+                ),
+              ),
+              Obx(
+                () => Visibility(
+                  visible: controller.filterCount.value == 3,
+                  child: CheckboxListTile(
+                    title: Text('Sales Order not finished'.tr),
+                    value: controller.isWIP.value,
+                    activeColor: kPrimaryColor,
+                    onChanged: (bool? value) {
+                      controller.isWIP.value = value!;
+                    },
+                    controlAffinity: ListTileControlAffinity.leading,
                   ),
                 ),
               ),
@@ -5193,6 +5550,7 @@ class CRMSalesOrderCreationBPPricelistScreen
 
   Widget buildImageCard(int index, BuildContext context) => GestureDetector(
         onTap: () {
+          controller.isQtyModule.value = true;
           controller.qtyMultiplierController.text =
               ((controller._trx.records![index].lITDefaultQty ?? 1) ~/
                       (controller._trx.records![index].qtyBatchSize ?? 1))
@@ -5204,11 +5562,18 @@ class CRMSalesOrderCreationBPPricelistScreen
 
           controller.descriptionFieldController.text = '';
           controller.priceFieldController.text =
+              (controller._trx.records![index].priceList ?? 0.0)
+                  .toStringAsFixed(2);
+
+          controller.discountedPriceFieldController.text =
               (controller._trx.records![index].priceStd ?? 0.0)
                   .toStringAsFixed(2);
-          controller.discountFieldController.text = '0.0';
-          controller.discountedPriceFieldController.text =
-              controller.priceFieldController.text;
+          controller.discountFieldController.text = (100.00 -
+                  ((double.parse(
+                              controller.discountedPriceFieldController.text) /
+                          double.parse(controller.priceFieldController.text)) *
+                      100))
+              .toStringAsFixed(2);
           controller.totalRowPriceFieldController
               .text = (double.parse(controller.qtyFieldController.text) *
                   double.parse(controller.discountedPriceFieldController.text))
@@ -5264,7 +5629,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                           decoration: InputDecoration(
                             prefixText: controller._trx.records![index].uom,
                             labelStyle: const TextStyle(color: Colors.white),
-                            labelText: "${"Qty".tr} Min.",
+                            labelText: "${"Qty".tr} 1 Conf.",
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -5276,7 +5641,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                         ),
                       ),
                       Container(
-                        width: 100,
+                        width: 120,
                         child: TextField(
                           textAlign: TextAlign.center,
                           controller: controller.qtyMultiplierController,
@@ -5310,7 +5675,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                           },
                           decoration: InputDecoration(
                             labelStyle: const TextStyle(color: Colors.white),
-                            labelText: "${"Qty".tr} Acq.",
+                            labelText: "${"Qty".tr} Conf. Acq.",
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -5331,32 +5696,61 @@ class CRMSalesOrderCreationBPPricelistScreen
                       Container(
                         margin: const EdgeInsets.only(top: 10),
                         width: 100,
-                        child: TextField(
-                          style: const TextStyle(
-                            color: Colors.grey,
-                          ),
-                          readOnly: true,
-                          textAlign: TextAlign.center,
-                          controller: controller.qtyFieldController,
-                          autofocus: true,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: false, decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                          ],
-                          //onTap: () {},
-                          //onSubmitted: (String? value) {},
-                          decoration: InputDecoration(
-                            prefixText: controller._trx.records![index].uom,
-                            labelStyle: const TextStyle(color: Colors.white),
-                            labelText: "Tot Qty".tr,
-                            filled: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: BorderSide.none,
+                        child: Obx(
+                          () => TextField(
+                            style: TextStyle(
+                              color: controller.isQtyModule.value
+                                  ? Colors.white
+                                  : Colors.red,
                             ),
-                            isDense: true,
-                            fillColor: Theme.of(context).cardColor,
+                            //readOnly: true,
+                            textAlign: TextAlign.center,
+                            controller: controller.qtyFieldController,
+                            autofocus: true,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                signed: false, decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp("[0-9.]"))
+                            ],
+                            onChanged: (value) {
+                              if (double.tryParse(value) != null) {
+                                if ((num.parse(value) /
+                                            num.parse(controller
+                                                .qtyMinFieldController.text)) %
+                                        1 ==
+                                    0) {
+                                  controller.qtyMultiplierController.text =
+                                      (num.parse(value) ~/
+                                              num.parse(controller
+                                                  .qtyMinFieldController.text))
+                                          .toString();
+                                  controller.totalRowPriceFieldController
+                                      .text = (double.parse(value) *
+                                          double.parse(controller
+                                              .discountedPriceFieldController
+                                              .text))
+                                      .toStringAsFixed(2);
+                                  controller.isQtyModule.value = true;
+                                } else {
+                                  controller.isQtyModule.value = false;
+                                }
+                              } else {
+                                controller.isQtyModule.value = false;
+                              }
+                            },
+                            decoration: InputDecoration(
+                              prefixText: controller._trx.records![index].uom,
+                              labelStyle: const TextStyle(color: Colors.white),
+                              labelText: "Tot Qty".tr,
+                              filled: true,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: BorderSide.none,
+                              ),
+                              isDense: true,
+                              fillColor: Theme.of(context).cardColor,
+                            ),
                           ),
                         ),
                       ),
@@ -5396,7 +5790,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                           decoration: InputDecoration(
                             prefixText: '€',
                             labelStyle: const TextStyle(color: Colors.white),
-                            labelText: "Price".tr,
+                            labelText: "Prezzo List.".tr,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -5409,7 +5803,19 @@ class CRMSalesOrderCreationBPPricelistScreen
                       ),
                     ],
                   ),
-                  Divider(),
+                  Obx(
+                    () => Visibility(
+                        visible: controller.isQtyModule.value == false,
+                        child: Text(
+                          'Qtà sbagliata ...',
+                          style: TextStyle(
+                            color: controller.isQtyModule.value
+                                ? Colors.white
+                                : Colors.red,
+                          ),
+                        )),
+                  ),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -5492,7 +5898,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                           decoration: InputDecoration(
                             prefixText: '€',
                             labelStyle: const TextStyle(color: Colors.white),
-                            labelText: "Discounted".tr,
+                            labelText: "Net Price".tr,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -5510,7 +5916,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(width: 100),
+                      SizedBox(width: 120),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
                         width: 100,
@@ -5548,7 +5954,8 @@ class CRMSalesOrderCreationBPPricelistScreen
               textConfirm: 'Add'.tr,
               onConfirm: () {
                 if (controller.qtyFieldController.text != '0' &&
-                    controller.qtyFieldController.text != '') {
+                    controller.qtyFieldController.text != '' &&
+                    controller.isQtyModule.value == true) {
                   controller.productList.add(ProductCheckout2(
                     id: controller._trx.records![index].mProductID!.id!,
                     name:
@@ -5571,9 +5978,8 @@ class CRMSalesOrderCreationBPPricelistScreen
                   ));
                   controller.updateCounter();
                   controller.updateTotal();
+                  Get.back();
                 }
-
-                Get.back();
               });
         },
         child: Card(

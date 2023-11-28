@@ -124,6 +124,15 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
 
     var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
 
+    if (int.parse(list[14], radix: 16)
+            .toRadixString(2)
+            .padLeft(4, "0")
+            .toString()[7] !=
+        "1") {
+      jsonbps.records!.removeWhere(
+          (element) => element.salesRepID?.id != GetStorage().read('userId'));
+    }
+
     return jsonbps.records!;
 
     //print(list[0].eMail);
@@ -194,60 +203,36 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      floatingActionButton: int.parse(list[8], radix: 16)
-                  .toRadixString(2)
-                  .padLeft(4, "0")
-                  .toString()[7] ==
-              "1"
-          ? ElevatedButton(
-              onPressed: applyFilters, child: Text('Apply Filters'.tr))
-          : SizedBox(),
+      floatingActionButton: ElevatedButton(
+          onPressed: applyFilters, child: Text('Apply Filters'.tr)),
       appBar: AppBar(
         actions: [
-          Visibility(
-            visible: int.parse(list[8], radix: 16)
-                        .toRadixString(2)
-                        .padLeft(4, "0")
-                        .toString()[7] ==
-                    "1"
-                ? true
-                : false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: IconButton(
-                tooltip: 'reset filters',
-                onPressed: () {
-                  setState(() {
-                    selectedUserRadioTile = 1;
-                    salesRepId = 0;
-                    salesRepFieldController.text = "";
-                    businessPartnerId = 0;
-                    bpSearchFieldController.text = "";
-                    docNoFieldController.text = "";
-                  });
-                },
-                icon: const Icon(
-                  MaterialSymbols.filter_alt_off,
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              tooltip: 'reset filters',
+              onPressed: () {
+                setState(() {
+                  selectedUserRadioTile = 1;
+                  salesRepId = 0;
+                  salesRepFieldController.text = "";
+                  businessPartnerId = 0;
+                  bpSearchFieldController.text = "";
+                  docNoFieldController.text = "";
+                });
+              },
+              icon: const Icon(
+                MaterialSymbols.filter_alt_off,
               ),
             ),
           ),
-          Visibility(
-            visible: int.parse(list[8], radix: 16)
-                        .toRadixString(2)
-                        .padLeft(4, "0")
-                        .toString()[7] ==
-                    "1"
-                ? true
-                : false,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: IconButton(
-                tooltip: 'save filters',
-                onPressed: saveFilters,
-                icon: const Icon(
-                  MaterialSymbols.bookmark,
-                ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: IconButton(
+              tooltip: 'save filters',
+              onPressed: saveFilters,
+              icon: const Icon(
+                MaterialSymbols.bookmark,
               ),
             ),
           ),
@@ -386,105 +371,94 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ],
                   ),
                 ),
-                Visibility(
-                  visible: int.parse(list[8], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[7] ==
-                          "1"
-                      ? true
-                      : false,
-                  child: ExpansionTile(
-                    initiallyExpanded: true,
-                    title: Text(
-                      'Fields Filter'.tr,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.bold, color: Colors.white),
-                    ),
-                    childrenPadding: const EdgeInsets.only(
-                        bottom: 10, right: 10, left: 10, top: 10),
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: FutureBuilder(
-                          future: getAllBPs(),
-                          builder: (BuildContext ctx,
-                                  AsyncSnapshot<List<BPRecords>> snapshot) =>
-                              snapshot.hasData
-                                  ? TypeAheadField<BPRecords>(
-                                      direction: AxisDirection.up,
-                                      //getImmediateSuggestions: true,
-                                      textFieldConfiguration:
-                                          TextFieldConfiguration(
-                                        onChanged: (value) {
-                                          if (value == "") {
-                                            setState(() {
-                                              businessPartnerId = 0;
-                                            });
-                                          }
-                                        },
-                                        controller: bpSearchFieldController,
-                                        //autofocus: true,
-
-                                        decoration: InputDecoration(
-                                          labelText: 'Business Partner'.tr,
-                                          //filled: true,
-                                          border: const OutlineInputBorder(
-                                              /* borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide.none, */
-                                              ),
-                                          prefixIcon:
-                                              const Icon(EvaIcons.search),
-                                          //hintText: "search..",
-                                          isDense: true,
-                                          //fillColor: Theme.of(context).cardColor,
-                                        ),
-                                      ),
-                                      suggestionsCallback: (pattern) async {
-                                        return snapshot.data!.where((element) =>
-                                            (element.name ?? "")
-                                                .toLowerCase()
-                                                .contains(
-                                                    pattern.toLowerCase()));
-                                      },
-                                      itemBuilder: (context, suggestion) {
-                                        return ListTile(
-                                          //leading: Icon(Icons.shopping_cart),
-                                          title: Text(suggestion.name ?? ""),
-                                        );
-                                      },
-                                      onSuggestionSelected: (suggestion) {
-                                        bpSearchFieldController.text =
-                                            suggestion.name!;
-                                        businessPartnerId = suggestion.id!;
-                                      },
-                                    )
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(10),
-                        child: TextField(
-                          controller: docNoFieldController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            prefixIcon: const Icon(Icons.text_fields),
-                            border: const OutlineInputBorder(),
-                            labelText: 'DocumentNo'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          minLines: 1,
-                          maxLines: 4,
-                        ),
-                      ),
-                    ],
+                ExpansionTile(
+                  initiallyExpanded: true,
+                  title: Text(
+                    'Fields Filter'.tr,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.bold, color: Colors.white),
                   ),
+                  childrenPadding: const EdgeInsets.only(
+                      bottom: 10, right: 10, left: 10, top: 10),
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(
+                          left: 10, right: 10, bottom: 10),
+                      child: FutureBuilder(
+                        future: getAllBPs(),
+                        builder: (BuildContext ctx,
+                                AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            snapshot.hasData
+                                ? TypeAheadField<BPRecords>(
+                                    direction: AxisDirection.up,
+                                    //getImmediateSuggestions: true,
+                                    textFieldConfiguration:
+                                        TextFieldConfiguration(
+                                      onChanged: (value) {
+                                        if (value == "") {
+                                          setState(() {
+                                            businessPartnerId = 0;
+                                          });
+                                        }
+                                      },
+                                      controller: bpSearchFieldController,
+                                      //autofocus: true,
+
+                                      decoration: InputDecoration(
+                                        labelText: 'Business Partner'.tr,
+                                        //filled: true,
+                                        border: const OutlineInputBorder(
+                                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                            ),
+                                        prefixIcon: const Icon(EvaIcons.search),
+                                        //hintText: "search..",
+                                        isDense: true,
+                                        //fillColor: Theme.of(context).cardColor,
+                                      ),
+                                    ),
+                                    suggestionsCallback: (pattern) async {
+                                      return snapshot.data!.where((element) =>
+                                          (element.name ?? "")
+                                              .toLowerCase()
+                                              .contains(pattern.toLowerCase()));
+                                    },
+                                    itemBuilder: (context, suggestion) {
+                                      return ListTile(
+                                        //leading: Icon(Icons.shopping_cart),
+                                        title: Text(suggestion.name ?? ""),
+                                      );
+                                    },
+                                    onSuggestionSelected: (suggestion) {
+                                      bpSearchFieldController.text =
+                                          suggestion.name!;
+                                      businessPartnerId = suggestion.id!;
+                                    },
+                                  )
+                                : const Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                      ),
+                    ),
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        controller: docNoFieldController,
+                        decoration: InputDecoration(
+                          isDense: true,
+                          //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                          prefixIcon: const Icon(Icons.text_fields),
+                          border: const OutlineInputBorder(),
+                          labelText: 'DocumentNo'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                        minLines: 1,
+                        maxLines: 4,
+                      ),
+                    ),
+                  ],
                 ),
-                Visibility(
+                /* Visibility(
                   visible: int.parse(list[8], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -502,7 +476,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                       ],
                     ),
                   ),
-                ),
+                ), */
                 const SizedBox(
                   height: 100,
                 )
@@ -513,113 +487,125 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text(
-                    'SalesRep Filter'.tr,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  childrenPadding:
-                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                  children: [
-                    RadioListTile(
-                      value: 0,
-                      groupValue: selectedUserRadioTile,
-                      title: Text("All".tr),
-                      //subtitle: Text("Radio 1 Subtitle"),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      activeColor: Theme.of(context).primaryColor,
-
-                      //selected: true,
+                Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: ExpansionTile(
+                    initiallyExpanded: true,
+                    title: Text(
+                      'SalesRep Filter'.tr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
-                    RadioListTile(
-                      value: 1,
-                      groupValue: selectedUserRadioTile,
-                      title: Text("Mine Only".tr),
-                      subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
+                    childrenPadding:
+                        const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                    children: [
+                      RadioListTile(
+                        value: 0,
+                        groupValue: selectedUserRadioTile,
+                        title: Text("All".tr),
+                        //subtitle: Text("Radio 1 Subtitle"),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        activeColor: Theme.of(context).primaryColor,
 
-                      selected: false,
-                    ),
-                    RadioListTile(
-                      value: 2,
-                      groupValue: selectedUserRadioTile,
-                      title: FutureBuilder(
-                        future: getAllSalesRep(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
-                            snapshot.hasData
-                                ? TypeAheadField<Records>(
-                                    direction: AxisDirection.up,
-                                    //getImmediateSuggestions: true,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      onChanged: (value) {
-                                        if (value == "") {
-                                          setState(() {
-                                            salesRepId = 0;
-                                          });
-                                        }
-                                      },
-                                      controller: salesRepFieldController,
-                                      //autofocus: true,
-
-                                      decoration: InputDecoration(
-                                        labelText: 'SalesRep'.tr,
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        prefixIcon: const Icon(EvaIcons.search),
-                                        hintText: "search..",
-                                        isDense: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                      ),
-                                    ),
-                                    suggestionsCallback: (pattern) async {
-                                      return snapshot.data!.where((element) =>
-                                          (element.name ?? "")
-                                              .toLowerCase()
-                                              .contains(pattern.toLowerCase()));
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return ListTile(
-                                        //leading: Icon(Icons.shopping_cart),
-                                        title: Text(suggestion.name ?? ""),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      salesRepFieldController.text =
-                                          suggestion.name!;
-                                      salesRepId = suggestion.id!;
-                                    },
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                        //selected: true,
                       ),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
+                      RadioListTile(
+                        value: 1,
+                        groupValue: selectedUserRadioTile,
+                        title: Text("Mine Only".tr),
+                        subtitle: Text(GetStorage().read('user')),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        //activeColor: Colors.red,
+                        activeColor: Theme.of(context).primaryColor,
 
-                      selected: false,
-                    )
-                  ],
+                        selected: false,
+                      ),
+                      RadioListTile(
+                        value: 2,
+                        groupValue: selectedUserRadioTile,
+                        title: FutureBuilder(
+                          future: getAllSalesRep(),
+                          builder: (BuildContext ctx,
+                                  AsyncSnapshot<List<Records>> snapshot) =>
+                              snapshot.hasData
+                                  ? TypeAheadField<Records>(
+                                      direction: AxisDirection.up,
+                                      //getImmediateSuggestions: true,
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        onChanged: (value) {
+                                          if (value == "") {
+                                            setState(() {
+                                              salesRepId = 0;
+                                            });
+                                          }
+                                        },
+                                        controller: salesRepFieldController,
+                                        //autofocus: true,
+
+                                        decoration: InputDecoration(
+                                          labelText: 'SalesRep'.tr,
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          prefixIcon:
+                                              const Icon(EvaIcons.search),
+                                          hintText: "search..",
+                                          isDense: true,
+                                          fillColor:
+                                              Theme.of(context).cardColor,
+                                        ),
+                                      ),
+                                      suggestionsCallback: (pattern) async {
+                                        return snapshot.data!.where((element) =>
+                                            (element.name ?? "")
+                                                .toLowerCase()
+                                                .contains(
+                                                    pattern.toLowerCase()));
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return ListTile(
+                                          //leading: Icon(Icons.shopping_cart),
+                                          title: Text(suggestion.name ?? ""),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        salesRepFieldController.text =
+                                            suggestion.name!;
+                                        salesRepId = suggestion.id!;
+                                      },
+                                    )
+                                  : const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                        ),
+                        //subtitle: Text(GetStorage().read('user')),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        //activeColor: Colors.red,
+                        activeColor: Theme.of(context).primaryColor,
+
+                        selected: false,
+                      )
+                    ],
+                  ),
                 ),
                 ExpansionTile(
                   initiallyExpanded: true,
@@ -708,6 +694,25 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ),
                   ],
                 ),
+                /* Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] !=
+                          "1"
+                      ? true
+                      : false,
+                  child: SizedBox(
+                    width: size.width,
+                    height: size.height * 0.9,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Non hai il permesso per modificare il filtro'),
+                      ],
+                    ),
+                  ),
+                ), */
                 const SizedBox(
                   height: 100,
                 )
@@ -718,113 +723,125 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                ExpansionTile(
-                  initiallyExpanded: true,
-                  title: Text(
-                    'SalesRep Filter'.tr,
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                  childrenPadding:
-                      const EdgeInsets.only(bottom: 10, right: 10, left: 10),
-                  children: [
-                    RadioListTile(
-                      value: 0,
-                      groupValue: selectedUserRadioTile,
-                      title: Text("All".tr),
-                      //subtitle: Text("Radio 1 Subtitle"),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      activeColor: Theme.of(context).primaryColor,
-
-                      //selected: true,
+                Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] ==
+                          "1"
+                      ? true
+                      : false,
+                  child: ExpansionTile(
+                    initiallyExpanded: true,
+                    title: Text(
+                      'SalesRep Filter'.tr,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.white),
                     ),
-                    RadioListTile(
-                      value: 1,
-                      groupValue: selectedUserRadioTile,
-                      title: Text("Mine Only".tr),
-                      subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
+                    childrenPadding:
+                        const EdgeInsets.only(bottom: 10, right: 10, left: 10),
+                    children: [
+                      RadioListTile(
+                        value: 0,
+                        groupValue: selectedUserRadioTile,
+                        title: Text("All".tr),
+                        //subtitle: Text("Radio 1 Subtitle"),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        activeColor: Theme.of(context).primaryColor,
 
-                      selected: false,
-                    ),
-                    RadioListTile(
-                      value: 2,
-                      groupValue: selectedUserRadioTile,
-                      title: FutureBuilder(
-                        future: getAllSalesRep(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
-                            snapshot.hasData
-                                ? TypeAheadField<Records>(
-                                    direction: AxisDirection.up,
-                                    //getImmediateSuggestions: true,
-                                    textFieldConfiguration:
-                                        TextFieldConfiguration(
-                                      onChanged: (value) {
-                                        if (value == "") {
-                                          setState(() {
-                                            salesRepId = 0;
-                                          });
-                                        }
-                                      },
-                                      controller: salesRepFieldController,
-                                      //autofocus: true,
-
-                                      decoration: InputDecoration(
-                                        labelText: 'SalesRep'.tr,
-                                        filled: true,
-                                        border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          borderSide: BorderSide.none,
-                                        ),
-                                        prefixIcon: const Icon(EvaIcons.search),
-                                        hintText: "search..",
-                                        isDense: true,
-                                        fillColor: Theme.of(context).cardColor,
-                                      ),
-                                    ),
-                                    suggestionsCallback: (pattern) async {
-                                      return snapshot.data!.where((element) =>
-                                          (element.name ?? "")
-                                              .toLowerCase()
-                                              .contains(pattern.toLowerCase()));
-                                    },
-                                    itemBuilder: (context, suggestion) {
-                                      return ListTile(
-                                        //leading: Icon(Icons.shopping_cart),
-                                        title: Text(suggestion.name ?? ""),
-                                      );
-                                    },
-                                    onSuggestionSelected: (suggestion) {
-                                      salesRepFieldController.text =
-                                          suggestion.name!;
-                                      salesRepId = suggestion.id!;
-                                    },
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                        //selected: true,
                       ),
-                      //subtitle: Text(GetStorage().read('user')),
-                      onChanged: (val) {
-                        //print("Radio Tile pressed $val");
-                        setSelectedUserRadioTile(val as int);
-                      },
-                      //activeColor: Colors.red,
-                      activeColor: Theme.of(context).primaryColor,
+                      RadioListTile(
+                        value: 1,
+                        groupValue: selectedUserRadioTile,
+                        title: Text("Mine Only".tr),
+                        subtitle: Text(GetStorage().read('user')),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        //activeColor: Colors.red,
+                        activeColor: Theme.of(context).primaryColor,
 
-                      selected: false,
-                    )
-                  ],
+                        selected: false,
+                      ),
+                      RadioListTile(
+                        value: 2,
+                        groupValue: selectedUserRadioTile,
+                        title: FutureBuilder(
+                          future: getAllSalesRep(),
+                          builder: (BuildContext ctx,
+                                  AsyncSnapshot<List<Records>> snapshot) =>
+                              snapshot.hasData
+                                  ? TypeAheadField<Records>(
+                                      direction: AxisDirection.up,
+                                      //getImmediateSuggestions: true,
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        onChanged: (value) {
+                                          if (value == "") {
+                                            setState(() {
+                                              salesRepId = 0;
+                                            });
+                                          }
+                                        },
+                                        controller: salesRepFieldController,
+                                        //autofocus: true,
+
+                                        decoration: InputDecoration(
+                                          labelText: 'SalesRep'.tr,
+                                          filled: true,
+                                          border: OutlineInputBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                            borderSide: BorderSide.none,
+                                          ),
+                                          prefixIcon:
+                                              const Icon(EvaIcons.search),
+                                          hintText: "search..",
+                                          isDense: true,
+                                          fillColor:
+                                              Theme.of(context).cardColor,
+                                        ),
+                                      ),
+                                      suggestionsCallback: (pattern) async {
+                                        return snapshot.data!.where((element) =>
+                                            (element.name ?? "")
+                                                .toLowerCase()
+                                                .contains(
+                                                    pattern.toLowerCase()));
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return ListTile(
+                                          //leading: Icon(Icons.shopping_cart),
+                                          title: Text(suggestion.name ?? ""),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        salesRepFieldController.text =
+                                            suggestion.name!;
+                                        salesRepId = suggestion.id!;
+                                      },
+                                    )
+                                  : const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
+                        ),
+                        //subtitle: Text(GetStorage().read('user')),
+                        onChanged: (val) {
+                          //print("Radio Tile pressed $val");
+                          setSelectedUserRadioTile(val as int);
+                        },
+                        //activeColor: Colors.red,
+                        activeColor: Theme.of(context).primaryColor,
+
+                        selected: false,
+                      )
+                    ],
+                  ),
                 ),
                 ExpansionTile(
                   initiallyExpanded: true,
@@ -913,6 +930,25 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                     ),
                   ],
                 ),
+                /* Visibility(
+                  visible: int.parse(list[8], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[7] !=
+                          "1"
+                      ? true
+                      : false,
+                  child: SizedBox(
+                    width: size.width,
+                    height: size.height * 0.9,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Non hai il permesso per modificare il filtro'),
+                      ],
+                    ),
+                  ),
+                ), */
                 const SizedBox(
                   height: 100,
                 )

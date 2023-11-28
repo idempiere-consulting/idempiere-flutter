@@ -3,12 +3,15 @@ part of dashboard;
 class TicketClientTicketController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late TicketsJson _trx;
-  late TicketTypeJson _tt;
+  TicketTypeJson _tt = TicketTypeJson(records: []);
   var _hasCallSupport = false;
 
   String dropdownValue = "";
   //var _hasMailSupport = false;
   String ticketFilter = "";
+
+  var pagesCount = 1.obs;
+  var pagesTot = 1.obs;
 
   // ignore: prefer_typing_uninitialized_variables
   var adUserId;
@@ -293,7 +296,7 @@ class TicketClientTicketController extends GetxController {
         '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)'); */
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -304,6 +307,7 @@ class TicketClientTicketController extends GetxController {
     if (response.statusCode == 200) {
       //print(response.body);
       _trx = TicketsJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      pagesTot.value = _trx.pagecount!;
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison

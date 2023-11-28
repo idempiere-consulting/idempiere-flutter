@@ -14,6 +14,9 @@ class Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
     Size size = MediaQuery.of(context).size;
     if (GetStorage().read('protocol') == null) {
       GetStorage().write('protocol', 'http');
@@ -29,8 +32,8 @@ class Body extends StatelessWidget {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             SizedBox(height: size.height * 0.05),
-            SvgPicture.asset(
-              "assets/icons/chat2.svg",
+            SvgPicture.network(
+              "$protocol://$ip/resources/templates/black/images/M_WELCOMELOGO.svg",
               height: size.height * 0.45,
             ),
             SizedBox(height: size.height * 0.05),
@@ -38,7 +41,6 @@ class Body extends StatelessWidget {
               text: "LOGIN".tr,
               press: () {
                 Get.to(() => const LoginScreen());
-                //Navigator.pushNamed(context, '/loginscreen');
               },
             ),
             RoundedButton(
@@ -54,7 +56,7 @@ class Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  "build: 1.3.3.3_2023-11-10",
+                  "build: 1.3.3.5_2023-11-23",
                   style: TextStyle(fontSize: 9),
                 ),
               ],

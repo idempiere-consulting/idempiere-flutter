@@ -128,7 +128,7 @@ class CRMOpenItemsController extends GetxController {
   static String _displayStringOrgForOption(Records option) => option.name!;
   get displayStringOrgForOption => _displayStringOrgForOption;
 
-  getOpenItem() async {
+  getOpenItem(BuildContext context) async {
     _dataAvailable.value = false;
     opentot.value = 0.0;
     tot.value = 0.0;
@@ -150,11 +150,32 @@ class CRMOpenItemsController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
+      Get.back();
       if (kDebugMode) {
         print(response.body);
       }
+
       var json =
           OpenItemJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.records!.isEmpty) {
+        showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (BuildContext context) {
+            return Dialog(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("No Open Items".tr),
+                ],
+              ),
+            );
+          },
+        );
+      }
+
       if (json.pagecount! > 1) {
         int index = 1;
         getOpenItemPages(json, index, filter);

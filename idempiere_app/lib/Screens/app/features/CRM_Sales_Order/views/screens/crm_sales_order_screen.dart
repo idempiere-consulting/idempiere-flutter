@@ -635,24 +635,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .dateOrdered,
-                                                              "datePromised": controller
-                                                                          ._trx
-                                                                          .records![
-                                                                              index]
-                                                                          .datePromised !=
-                                                                      null
-                                                                  ? DateFormat(
-                                                                          'dd/MM/yyyy')
-                                                                      .format(DateTime.parse(controller
-                                                                          ._trx
-                                                                          .records![
-                                                                              index]
-                                                                          .datePromised!))
-                                                                  : DateFormat(
-                                                                          'dd/MM/yyyy')
-                                                                      .format(DateTime
-                                                                              .now()
-                                                                          .add(const Duration(days: 1))),
+                                                              "datePromised":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .datePromised,
                                                               "documentTypeId":
                                                                   controller
                                                                       ._trx
@@ -1199,24 +1187,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .dateOrdered,
-                                                              "datePromised": controller
-                                                                          ._trx
-                                                                          .records![
-                                                                              index]
-                                                                          .datePromised !=
-                                                                      null
-                                                                  ? DateFormat(
-                                                                          'dd/MM/yyyy')
-                                                                      .format(DateTime.parse(controller
-                                                                          ._trx
-                                                                          .records![
-                                                                              index]
-                                                                          .datePromised!))
-                                                                  : DateFormat(
-                                                                          'dd/MM/yyyy')
-                                                                      .format(DateTime
-                                                                              .now()
-                                                                          .add(const Duration(days: 1))),
+                                                              "datePromised":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .datePromised,
                                                               "documentTypeId":
                                                                   controller
                                                                       ._trx
@@ -1776,22 +1752,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                         .records![
                                                                             index]
                                                                         .dateOrdered,
-                                                                "datePromised": controller
-                                                                            ._trx
-                                                                            .records![
-                                                                                index]
-                                                                            .datePromised !=
-                                                                        null
-                                                                    ? DateFormat('dd/MM/yyyy').format(DateTime.parse(controller
+                                                                "datePromised":
+                                                                    controller
                                                                         ._trx
                                                                         .records![
                                                                             index]
-                                                                        .datePromised!))
-                                                                    : DateFormat(
-                                                                            'dd/MM/yyyy')
-                                                                        .format(DateTime.now().add(const Duration(
-                                                                            days:
-                                                                                1))),
+                                                                        .datePromised,
                                                                 "documentTypeId":
                                                                     controller
                                                                         ._trx

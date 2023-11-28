@@ -9,11 +9,14 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
   late SalesOrderDefaultsJson defValues;
 
   var allProdToggle = false.obs;
+
+  var isWIP = false.obs;
   //var _hasMailSupport = false;
   var prodListAvailable = true.obs;
 
   var searchFieldController = TextEditingController();
   var qtyFieldController = TextEditingController(text: '0');
+  var isQtyModule = true.obs;
   var qtyMinFieldController = TextEditingController(text: '0');
   var qtyMultiplierController = TextEditingController(text: '1');
   var descriptionFieldController = TextEditingController(text: '');
@@ -178,7 +181,7 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var rowList = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (var element in rowList.records!) {
@@ -615,28 +618,14 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
-    var inputFormat = DateFormat('dd/MM/yyyy');
-
-    var dateMovement = "";
-
-    if (dateStartFieldController.text != "") {
-      try {
-        var date = inputFormat.parse(dateStartFieldController.text);
-
-        dateMovement = DateFormat('yyyy-MM-dd').format(date);
-      } catch (e) {
-        if (kDebugMode) {
-          print(e);
-        }
-      }
-    }
-
     final msg = jsonEncode({
       "C_DocTypeTarget_ID": {'id': int.parse(dropdownValue.value)},
       'C_BPartner_Location_ID': {'id': int.parse(bpLocationId.value)},
       'PaymentRule': paymentRuleId.value,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
-      "DatePromised": dateMovement != "" ? "${dateMovement}T00:00:00Z" : "",
+      "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T00:00:00Z",
+      "IsLocked": isWIP.value,
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://$ip/api/v1/models/C_Order/$cOrderId');

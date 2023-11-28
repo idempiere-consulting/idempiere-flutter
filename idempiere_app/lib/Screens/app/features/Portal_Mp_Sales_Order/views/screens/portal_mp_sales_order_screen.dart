@@ -506,6 +506,104 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CO" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CL",
+                                                    child: IconButton(
+                                                      tooltip:
+                                                          'Edit Sales Order'.tr,
+                                                      onPressed: () async {
+                                                        Get.toNamed(
+                                                            '/PortalMpCreationBPPricelistEdit',
+                                                            arguments: {
+                                                              "orderId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id,
+                                                              "docNo": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .documentNo,
+                                                              "priceListId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mPriceListID
+                                                                      ?.id,
+                                                              "businessPartnerId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.id,
+                                                              "businessPartnerName":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.identifier,
+                                                              "dateOrdered":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "datePromised":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .datePromised,
+                                                              "documentTypeId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cDocTypeTargetID
+                                                                      ?.id,
+                                                              "paymentTermId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cPaymentTermID
+                                                                      ?.id,
+                                                              "paymentRuleId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .paymentRule
+                                                                      ?.id,
+                                                              "bpLocationId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerLocationID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit_document),
+                                                    ),
+                                                  ),
                                                   IconButton(
                                                     tooltip: 'Duplicate'.tr,
                                                     onPressed: () async {
@@ -794,6 +892,125 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CO" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CL",
+                                                    child: IconButton(
+                                                      tooltip:
+                                                          'Edit Sales Order'.tr,
+                                                      onPressed: () async {
+                                                        Get.toNamed(
+                                                            '/PortalMpCreationBPPricelistEdit',
+                                                            arguments: {
+                                                              "orderId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id,
+                                                              "docNo": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .documentNo,
+                                                              "priceListId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mPriceListID
+                                                                      ?.id,
+                                                              "businessPartnerId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.id,
+                                                              "businessPartnerName":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.identifier,
+                                                              "dateOrdered":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "datePromised":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .datePromised,
+                                                              "documentTypeId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cDocTypeTargetID
+                                                                      ?.id,
+                                                              "paymentTermId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cPaymentTermID
+                                                                      ?.id,
+                                                              "paymentRuleId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .paymentRule
+                                                                      ?.id,
+                                                              "bpLocationId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerLocationID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit_document),
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'Duplicate'.tr,
+                                                    onPressed: () async {
+                                                      Get.defaultDialog(
+                                                        title: 'Duplicate'.tr,
+                                                        content: Text(
+                                                            "Are you sure you want to duplicate the record?"
+                                                                .tr
+                                                                .tr),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          controller
+                                                              .getSelectedSalesOrder(
+                                                                  index);
+                                                          Get.back();
+                                                        },
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.copy),
+                                                  ),
                                                   IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
@@ -1061,6 +1278,125 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
                                                 children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CO" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            "CL",
+                                                    child: IconButton(
+                                                      tooltip:
+                                                          'Edit Sales Order'.tr,
+                                                      onPressed: () async {
+                                                        Get.toNamed(
+                                                            '/PortalMpCreationBPPricelistEdit',
+                                                            arguments: {
+                                                              "orderId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id,
+                                                              "docNo": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .documentNo,
+                                                              "priceListId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mPriceListID
+                                                                      ?.id,
+                                                              "businessPartnerId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.id,
+                                                              "businessPartnerName":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.identifier,
+                                                              "dateOrdered":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "datePromised":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .datePromised,
+                                                              "documentTypeId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cDocTypeTargetID
+                                                                      ?.id,
+                                                              "paymentTermId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cPaymentTermID
+                                                                      ?.id,
+                                                              "paymentRuleId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .paymentRule
+                                                                      ?.id,
+                                                              "bpLocationId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerLocationID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          Icons.edit_document),
+                                                    ),
+                                                  ),
+                                                  IconButton(
+                                                    tooltip: 'Duplicate'.tr,
+                                                    onPressed: () async {
+                                                      Get.defaultDialog(
+                                                        title: 'Duplicate'.tr,
+                                                        content: Text(
+                                                            "Are you sure you want to duplicate the record?"
+                                                                .tr
+                                                                .tr),
+                                                        onCancel: () {},
+                                                        onConfirm: () async {
+                                                          controller
+                                                              .getSelectedSalesOrder(
+                                                                  index);
+                                                          Get.back();
+                                                        },
+                                                      );
+                                                    },
+                                                    icon:
+                                                        const Icon(Icons.copy),
+                                                  ),
                                                   IconButton(
                                                     tooltip: 'print Document',
                                                     onPressed: () async {
