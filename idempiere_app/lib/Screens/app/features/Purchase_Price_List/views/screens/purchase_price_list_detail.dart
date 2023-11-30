@@ -48,7 +48,7 @@ class _PriceListDetailState extends State<PriceListDetail>
       valueFieldController.text = json.records![0].value;
       nameFieldController.text = json.records![0].name;
       descriptionFieldController.text = json.records![0].description ?? "";
-      helpFieldController.text = json.records![0].documentNote ?? "";
+      helpFieldController.text = json.records![0].documentNote;
       if (json.records![0].discontinued != true) {
         setState(() {
           flagAvailable = true;

@@ -17,6 +17,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/busine
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/models/price_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_detail.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/views/screens/crm_price_list_filter_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Price_List/views/screens/purchase_price_list_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -37,10 +38,10 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:path_provider/path_provider.dart';
 
 // binding
-part '../../bindings/crm_price_list_binding.dart';
+part '../../bindings/purchase_price_list_binding.dart';
 
 // controller
-part '../../controllers/crm_price_list_controller.dart';
+part '../../controllers/purchase_price_list_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -54,8 +55,8 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class CRMPriceListScreen extends GetView<CRMPriceListController> {
-  const CRMPriceListScreen({Key? key}) : super(key: key);
+class PurchasePriceListScreen extends GetView<PurchasePriceListController> {
+  const PurchasePriceListScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +183,7 @@ class CRMPriceListScreen extends GetView<CRMPriceListController> {
                     ),
                     onTap: () {
                       if (controller._isListShown.value) {
-                        Get.to(const CRMFilterPriceList(), arguments: {
+                        Get.to(const PurchaseFilterPriceList(), arguments: {
                           'value': controller.value.value,
                           'name': controller.name.value,
                           'description': controller.description.value,

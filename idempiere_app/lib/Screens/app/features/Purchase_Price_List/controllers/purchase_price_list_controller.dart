@@ -1,6 +1,6 @@
 part of dashboard;
 
-class CRMPriceListController extends GetxController {
+class PurchasePriceListController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
   late PriceListJson _trx;
   //var _hasMailSupport = false;
@@ -82,7 +82,7 @@ class CRMPriceListController extends GetxController {
           (element) => element.salesRepID?.id != GetStorage().read('userId'));
     }
 
-    jsonbps.records!.removeWhere((element) => element.isCustomer == false);
+    jsonbps.records!.removeWhere((element) => element.isVendor == false);
 
     return jsonbps.records!;
 

@@ -502,6 +502,43 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Visibility(
+                                                visible: controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .rRequestID !=
+                                                    null,
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: TextButton(
+                                                          onPressed: () {
+                                                            Get.offNamed(
+                                                                '/TicketClientTicket',
+                                                                arguments: {
+                                                                  'notificationId': controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .rRequestID
+                                                                      ?.id
+                                                                });
+                                                          },
+                                                          child: Text(
+                                                              controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .rRequestID
+                                                                      ?.identifier ??
+                                                                  'N/A',
+                                                              style: const TextStyle(
+                                                                  color:
+                                                                      kNotifColor))),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
@@ -888,6 +925,43 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
                                               ),
+                                              Visibility(
+                                                visible: controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .rRequestID !=
+                                                    null,
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: TextButton(
+                                                          onPressed: () {
+                                                            Get.offNamed(
+                                                                '/TicketClientTicket',
+                                                                arguments: {
+                                                                  'notificationId': controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .rRequestID
+                                                                      ?.id
+                                                                });
+                                                          },
+                                                          child: Text(
+                                                              controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .rRequestID
+                                                                      ?.identifier ??
+                                                                  'N/A',
+                                                              style: const TextStyle(
+                                                                  color:
+                                                                      kNotifColor))),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                               Row(
                                                 mainAxisAlignment:
                                                     MainAxisAlignment.end,
@@ -1273,6 +1347,43 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                   Text(
                                                       "€${controller.trx.records![index].grandTotal}"),
                                                 ],
+                                              ),
+                                              Visibility(
+                                                visible: controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .rRequestID !=
+                                                    null,
+                                                child: Row(
+                                                  children: [
+                                                    Flexible(
+                                                      child: TextButton(
+                                                          onPressed: () {
+                                                            Get.offNamed(
+                                                                '/TicketClientTicket',
+                                                                arguments: {
+                                                                  'notificationId': controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .rRequestID
+                                                                      ?.id
+                                                                });
+                                                          },
+                                                          child: Text(
+                                                              controller
+                                                                      .trx
+                                                                      .records![
+                                                                          index]
+                                                                      .rRequestID
+                                                                      ?.identifier ??
+                                                                  'N/A',
+                                                              style: const TextStyle(
+                                                                  color:
+                                                                      kNotifColor))),
+                                                    ),
+                                                  ],
+                                                ),
                                               ),
                                               Row(
                                                 mainAxisAlignment:

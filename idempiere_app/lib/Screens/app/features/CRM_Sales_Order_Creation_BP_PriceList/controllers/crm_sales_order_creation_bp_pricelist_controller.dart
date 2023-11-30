@@ -97,7 +97,9 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     num tot = 0;
     if (productList.isNotEmpty) {
       for (var i = 0; i < productList.length; i++) {
-        tot = tot + (productList[i].cost * productList[i].qty);
+        tot = tot +
+            ((productList[i].discountedCost ?? productList[i].cost) *
+                productList[i].qty);
       }
     }
 

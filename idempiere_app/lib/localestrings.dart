@@ -524,7 +524,7 @@ class LocaleString extends Translations {
           'TicketTicketNew': 'Ticket',
           'TicketTaskToDo': 'Task',
           'TicketResourceAssignment': 'Ore',
-          'Maintenance': 'Impianto',
+          'Maintenance': 'Manutenzione',
           'MaintenanceCalendar': 'Calendario',
           'MaintenanceMptask': 'Ordini di Lavoro',
           'MaintenanceMpanomaly': 'Anomalia',
@@ -1223,6 +1223,15 @@ class LocaleString extends Translations {
           'Tot Row': 'Tot Riga',
           'Net Price': 'Prezzo Netto',
           'Sales Order not finished': 'ODV non finito',
+          'Pending Confirm': 'In Attesa di Conferma',
+          'Confirm Pending Action': 'Conferma Azione di Avanzamento Ticket',
+          'S. Order: ': 'Ordine di V.:',
+          'Work Done': 'Lavoro Svolto',
+          'Are you sure you want to close the Ticket?':
+              'Sicuro di voler chiudere il Ticket?',
+          'DETAILS': 'DETTAGLIO',
+          'Off': 'Sconto',
+          'PriceList': 'Listino Prezzi'
         },
       };
 }

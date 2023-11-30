@@ -20,6 +20,8 @@ class TicketClientTicketController extends GetxController {
   // ignore: prefer_typing_uninitialized_variables
   var closedTicketId;
 
+  var confirmCheckBoxValue = false.obs;
+
   var value = "Tutti".obs;
 
   var filters = ["Tutti", "Miei" /* , "Team" */];
@@ -47,6 +49,42 @@ class TicketClientTicketController extends GetxController {
   TicketsJson get trx => _trx;
   TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
+
+  Future<void> confirmTicket(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final msg = jsonEncode({
+      "R_Status_ID": {"id": 1000042},
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request/${_trx.records![index].id}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getTickets();
+      //print("done!");
+      //completeOrder(index);
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Il Ticket non è stato confermato",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
 
   getAllticketTypeID() async {
     final ip = GetStorage().read('ip');
@@ -194,7 +232,7 @@ class TicketClientTicketController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R99\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_Status?\$filter= Value eq \'CLOSE99\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -283,7 +321,7 @@ class TicketClientTicketController extends GetxController {
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
         notificationFilter =
-            " and AD_User_ID eq ${Get.arguments['notificationId']}";
+            " and R_Request_ID eq ${Get.arguments['notificationId']}";
         Get.arguments['notificationId'] = null;
       }
     }
@@ -296,7 +334,7 @@ class TicketClientTicketController extends GetxController {
         '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)'); */
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}');
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Created desc, DocumentNo desc');
     var response = await http.get(
       url,
       headers: <String, String>{

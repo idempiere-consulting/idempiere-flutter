@@ -12,6 +12,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_create_ticket.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_ticket_calendar.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketcliet_chat_ticket.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_image_ticket.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -28,6 +29,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:idempiere_app/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -267,19 +269,69 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        controller.trx.records![index].documentNo ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
+                                      Icon(Icons.linear_scale,
+                                          color: controller.trx.records![index]
+                                                  .rStatusID!.identifier!
+                                                  .contains('NEW')
+                                              ? Colors.yellow
+                                              : controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('ODV') ||
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('CONF') ||
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('OK')
+                                                  ? Colors.orange
+                                                  : controller
+                                                              .trx
+                                                              .records![index]
+                                                              .rStatusID!
+                                                              .identifier!
+                                                              .contains(
+                                                                  'ASSIGN') ||
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .rStatusID!
+                                                              .identifier!
+                                                              .contains('WORKING')
+                                                      ? kNotifColor
+                                                      : controller.trx.records![index].rStatusID!.identifier!.contains('CLOSE99') || controller.trx.records![index].rStatusID!.identifier!.contains('CLOSE')
+                                                          ? Colors.lightBlue
+                                                          : Colors.white),
                                       Expanded(
                                         child: Text(
                                           controller.trx.records![index]
@@ -351,16 +403,284 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                             ),
                                           ],
                                         ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].mProductID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Product: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].cOrderID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "S. Order: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Flexible(
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed(
+                                                        '/PortalMpSalesOrder',
+                                                        arguments: {
+                                                          'notificationId':
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cOrderID
+                                                                  ?.id
+                                                        });
+                                                  },
+                                                  child: Text(
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cOrderID
+                                                            ?.identifier ??
+                                                        "N/A",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
-                                            IconButton(
-                                              icon: const Icon(
-                                                Icons.pending_actions,
-                                                color: Colors.yellow,
+                                            Visibility(
+                                              visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .rStatusID!
+                                                  .identifier!
+                                                  .contains('CONF'),
+                                              child: IconButton(
+                                                tooltip: 'Pending Confirm'.tr,
+                                                icon: const Icon(
+                                                  Icons.pending_actions,
+                                                  color: Colors.yellow,
+                                                ),
+                                                onPressed: () {
+                                                  controller
+                                                      .confirmCheckBoxValue
+                                                      .value = false;
+                                                  Get.defaultDialog(
+                                                    title: 'Pending Confirm'.tr,
+                                                    textConfirm: 'Proceed'.tr,
+                                                    onCancel: () {},
+                                                    onConfirm: () {
+                                                      if (controller
+                                                              .confirmCheckBoxValue
+                                                              .value ==
+                                                          true) {
+                                                        controller
+                                                            .confirmTicket(
+                                                                index);
+                                                        Get.back();
+                                                      }
+                                                    },
+                                                    content: Column(
+                                                      children: [
+                                                        Visibility(
+                                                          visible: controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cOrderID !=
+                                                              null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Sales Order'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Product'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .requestAmt
+                                                                      .toString()),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Amount'.tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const Divider(),
+                                                        Obx(
+                                                          () =>
+                                                              CheckboxListTile(
+                                                            title: Text(
+                                                                'Confirm Pending Action'
+                                                                    .tr),
+                                                            value: controller
+                                                                .confirmCheckBoxValue
+                                                                .value,
+                                                            activeColor:
+                                                                kPrimaryColor,
+                                                            onChanged:
+                                                                (bool? value) {
+                                                              controller
+                                                                  .confirmCheckBoxValue
+                                                                  .value = value!;
+                                                            },
+                                                            controlAffinity:
+                                                                ListTileControlAffinity
+                                                                    .leading,
+                                                          ),
+                                                        ),
+                                                        Divider(),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
                                               ),
-                                              onPressed: () {},
+                                            ),
+                                            IconButton(
+                                              icon:
+                                                  const Icon(Icons.event_note),
+                                              onPressed: () {
+                                                Get.to(
+                                                    () =>
+                                                        const TicketClientTicketCalendar(),
+                                                    arguments: {
+                                                      "requestId": controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .id
+                                                    });
+                                              },
                                             ),
                                             IconButton(
                                               icon:
@@ -469,14 +789,55 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index].rStatusID
-                                                ?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Icon(Icons.linear_scale,
+                                          color: controller.trx.records![index]
+                                                  .rStatusID!.identifier!
+                                                  .contains('NEW')
+                                              ? Colors.yellow
+                                              : controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('ODV') ||
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('CONF') ||
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('OK')
+                                                  ? Colors.orange
+                                                  : controller
+                                                              .trx
+                                                              .records![index]
+                                                              .rStatusID!
+                                                              .identifier!
+                                                              .contains(
+                                                                  'ASSIGN') ||
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .rStatusID!
+                                                              .identifier!
+                                                              .contains('WORKING')
+                                                      ? kNotifColor
+                                                      : controller.trx.records![index].rStatusID!.identifier!.contains('CLOSE99') || controller.trx.records![index].rStatusID!.identifier!.contains('CLOSE')
+                                                          ? Colors.lightBlue
+                                                          : Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .rStatusID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -540,10 +901,285 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                             ),
                                           ],
                                         ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].mProductID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Product: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].cOrderID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "S. Order: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Flexible(
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed(
+                                                        '/PortalMpSalesOrder',
+                                                        arguments: {
+                                                          'notificationId':
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cOrderID
+                                                                  ?.id
+                                                        });
+                                                  },
+                                                  child: Text(
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cOrderID
+                                                            ?.identifier ??
+                                                        "N/A",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
+                                            Visibility(
+                                              visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .rStatusID!
+                                                  .identifier!
+                                                  .contains('CONF'),
+                                              child: IconButton(
+                                                tooltip: 'Pending Confirm'.tr,
+                                                icon: const Icon(
+                                                  Icons.pending_actions,
+                                                  color: Colors.yellow,
+                                                ),
+                                                onPressed: () {
+                                                  controller
+                                                      .confirmCheckBoxValue
+                                                      .value = false;
+                                                  Get.defaultDialog(
+                                                    title: 'Pending Confirm'.tr,
+                                                    textConfirm: 'Proceed'.tr,
+                                                    onCancel: () {},
+                                                    onConfirm: () {
+                                                      if (controller
+                                                              .confirmCheckBoxValue
+                                                              .value ==
+                                                          true) {
+                                                        controller
+                                                            .confirmTicket(
+                                                                index);
+                                                        Get.back();
+                                                      }
+                                                    },
+                                                    content: Column(
+                                                      children: [
+                                                        Visibility(
+                                                          visible: controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cOrderID !=
+                                                              null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Sales Order'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Product'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .requestAmt
+                                                                      .toString()),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Amount'.tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const Divider(),
+                                                        Obx(
+                                                          () =>
+                                                              CheckboxListTile(
+                                                            title: Text(
+                                                                'Confirm Pending Action'
+                                                                    .tr),
+                                                            value: controller
+                                                                .confirmCheckBoxValue
+                                                                .value,
+                                                            activeColor:
+                                                                kPrimaryColor,
+                                                            onChanged:
+                                                                (bool? value) {
+                                                              controller
+                                                                  .confirmCheckBoxValue
+                                                                  .value = value!;
+                                                            },
+                                                            controlAffinity:
+                                                                ListTileControlAffinity
+                                                                    .leading,
+                                                          ),
+                                                        ),
+                                                        Divider(),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon:
+                                                  const Icon(Icons.event_note),
+                                              onPressed: () {
+                                                Get.to(
+                                                    () =>
+                                                        const TicketClientTicketCalendar(),
+                                                    arguments: {
+                                                      "requestId": controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .id
+                                                    });
+                                              },
+                                            ),
                                             IconButton(
                                               icon:
                                                   const Icon(Icons.attach_file),
@@ -572,57 +1208,6 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                 _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
                 const SizedBox(height: kSpacing / 2),
-                const Divider(),
-                _buildProfile(data: controller.getProfil()),
-                const SizedBox(height: kSpacing),
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 15),
-                      child: Obx(() => controller.dataAvailable
-                          ? Text("TICKET: ".tr + "${controller.trx.rowcount}")
-                          : Text("TICKET: ".tr)),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 40),
-                      child: IconButton(
-                        onPressed: () {
-                          //Get.to(const CreateTicketClientTicket());
-                          controller.openTicketType();
-                        },
-                        icon: const Icon(
-                          Icons.bookmark_add_outlined,
-                          color: Colors.lightBlue,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getTickets();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.only(left: 30),
-                      child: Obx(
-                        () => TextButton(
-                          onPressed: () {
-                            controller.changeFilter();
-                            //print("hello");
-                          },
-                          child: Text(controller.value.value),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: kSpacing),
                 Obx(
                   () => controller.dataAvailable
                       ? ListView.builder(
@@ -702,14 +1287,55 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
 
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale,
-                                          color: Colors.yellowAccent),
-                                      Text(
-                                        controller.trx.records![index].rStatusID
-                                                ?.identifier ??
-                                            "??",
-                                        style: const TextStyle(
-                                            color: Colors.white),
+                                      Icon(Icons.linear_scale,
+                                          color: controller.trx.records![index]
+                                                  .rStatusID!.identifier!
+                                                  .contains('NEW')
+                                              ? Colors.yellow
+                                              : controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('ODV') ||
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('CONF') ||
+                                                      controller
+                                                          .trx
+                                                          .records![index]
+                                                          .rStatusID!
+                                                          .identifier!
+                                                          .contains('OK')
+                                                  ? Colors.orange
+                                                  : controller
+                                                              .trx
+                                                              .records![index]
+                                                              .rStatusID!
+                                                              .identifier!
+                                                              .contains(
+                                                                  'ASSIGN') ||
+                                                          controller
+                                                              .trx
+                                                              .records![index]
+                                                              .rStatusID!
+                                                              .identifier!
+                                                              .contains('WORKING')
+                                                      ? kNotifColor
+                                                      : controller.trx.records![index].rStatusID!.identifier!.contains('CLOSE99') || controller.trx.records![index].rStatusID!.identifier!.contains('CLOSE')
+                                                          ? Colors.lightBlue
+                                                          : Colors.white),
+                                      Expanded(
+                                        child: Text(
+                                          controller.trx.records![index]
+                                                  .rStatusID?.identifier ??
+                                              "??",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -773,10 +1399,285 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                             ),
                                           ],
                                         ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].mProductID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Product: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier ??
+                                                    ""),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                  .records![index].cOrderID !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "S. Order: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Flexible(
+                                                child: TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed(
+                                                        '/PortalMpSalesOrder',
+                                                        arguments: {
+                                                          'notificationId':
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cOrderID
+                                                                  ?.id
+                                                        });
+                                                  },
+                                                  child: Text(
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cOrderID
+                                                            ?.identifier ??
+                                                        "N/A",
+                                                    style: const TextStyle(
+                                                        color: kNotifColor),
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
                                         Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.end,
                                           children: [
+                                            Visibility(
+                                              visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .rStatusID!
+                                                  .identifier!
+                                                  .contains('CONF'),
+                                              child: IconButton(
+                                                tooltip: 'Pending Confirm'.tr,
+                                                icon: const Icon(
+                                                  Icons.pending_actions,
+                                                  color: Colors.yellow,
+                                                ),
+                                                onPressed: () {
+                                                  controller
+                                                      .confirmCheckBoxValue
+                                                      .value = false;
+                                                  Get.defaultDialog(
+                                                    title: 'Pending Confirm'.tr,
+                                                    textConfirm: 'Proceed'.tr,
+                                                    onCancel: () {},
+                                                    onConfirm: () {
+                                                      if (controller
+                                                              .confirmCheckBoxValue
+                                                              .value ==
+                                                          true) {
+                                                        controller
+                                                            .confirmTicket(
+                                                                index);
+                                                        Get.back();
+                                                      }
+                                                    },
+                                                    content: Column(
+                                                      children: [
+                                                        Visibility(
+                                                          visible: controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cOrderID !=
+                                                              null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Sales Order'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Product'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .requestAmt
+                                                                      .toString()),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Amount'.tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        const Divider(),
+                                                        Obx(
+                                                          () =>
+                                                              CheckboxListTile(
+                                                            title: Text(
+                                                                'Confirm Pending Action'
+                                                                    .tr),
+                                                            value: controller
+                                                                .confirmCheckBoxValue
+                                                                .value,
+                                                            activeColor:
+                                                                kPrimaryColor,
+                                                            onChanged:
+                                                                (bool? value) {
+                                                              controller
+                                                                  .confirmCheckBoxValue
+                                                                  .value = value!;
+                                                            },
+                                                            controlAffinity:
+                                                                ListTileControlAffinity
+                                                                    .leading,
+                                                          ),
+                                                        ),
+                                                        Divider(),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon:
+                                                  const Icon(Icons.event_note),
+                                              onPressed: () {
+                                                Get.to(
+                                                    () =>
+                                                        const TicketClientTicketCalendar(),
+                                                    arguments: {
+                                                      "requestId": controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .id
+                                                    });
+                                              },
+                                            ),
                                             IconButton(
                                               icon:
                                                   const Icon(Icons.attach_file),

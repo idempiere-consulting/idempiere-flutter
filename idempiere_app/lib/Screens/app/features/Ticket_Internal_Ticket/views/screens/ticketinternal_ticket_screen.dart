@@ -241,13 +241,25 @@ class TicketInternalTicketScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index]
-                                            .rRequestTypeID?.identifier ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        controller.trx.records![index]
+                                                .documentNo ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        controller.trx.records![index]
+                                                .rRequestTypeID?.identifier ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 

@@ -128,8 +128,8 @@ class TicketInternalTicketController extends GetxController {
 
   checkcloseTicket(int index) {
     Get.defaultDialog(
-        title: "Close Ticket",
-        middleText: "Are you sure you want to close the Ticket?",
+        title: "Close Ticket".tr,
+        middleText: "Are you sure you want to close the Ticket?".tr,
         //contentPadding: const EdgeInsets.all(2.0),
         barrierDismissible: true,
         textCancel: "Cancel",
@@ -187,7 +187,7 @@ class TicketInternalTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R98\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_Status?\$filter= Value eq \'CLOSE\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

@@ -265,7 +265,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/R_Status?\$filter= Value eq \'R00\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '/api/v1/models/R_Status?\$filter= Value eq \'NEW\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

@@ -49,6 +49,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.arrowBack,
                   icon: EvaIcons.arrowBackOutline,
                   label: "PurchaseProductwarehouseprice".tr,
+                  visible: false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.ballot,
@@ -101,8 +102,20 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.payments,
                   icon: Icons.payments_outlined,
-                  label: "Receipt".tr,
+                  label: "Payment".tr,
                   visible: int.parse(list[12], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.ballot,
+                  icon: Icons.ballot_outlined,
+                  label: "PriceList".tr,
+                  visible: int.parse(list[9], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==
@@ -140,6 +153,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 7:
                     Get.offNamed('/PurchasePayment');
+                    break;
+                  case 8:
+                    Get.offNamed('/PurchasePriceList');
                     break;
 
                   default:

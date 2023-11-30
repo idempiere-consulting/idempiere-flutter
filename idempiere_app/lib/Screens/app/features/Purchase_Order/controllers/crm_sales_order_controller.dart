@@ -763,7 +763,7 @@ class PurchaseOrderController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "CRM",
+      projectName: "Acquisti",
       releaseTime: DateTime.now(),
     );
   }

@@ -55,6 +55,11 @@ class Records {
   final MProductCategoryID? mProductCategoryID;
   final CTaxCategoryID? cTaxCategoryID;
   final String? sKU;
+  final String? descriptionURL;
+  final String? imageURL;
+  final String? lITImageUrl;
+  final String? lITProductUrl;
+  final String? documentNote;
   final int? shelfWidth;
   final int? shelfHeight;
   final int? shelfDepth;
@@ -102,6 +107,11 @@ class Records {
     this.updatedBy,
     this.name,
     this.description,
+    this.descriptionURL,
+    this.imageURL,
+    this.lITImageUrl,
+    this.lITProductUrl,
+    this.documentNote,
     this.help,
     this.isSummary,
     this.cUOMID,
@@ -170,6 +180,11 @@ class Records {
             : null,
         name = json['Name'] as String?,
         description = json['Description'] as String?,
+        descriptionURL = json['DescriptionURL'] as String?,
+        imageURL = json['ImageURL'] as String?,
+        lITImageUrl = json['LIT_ImageUrl'] as String?,
+        lITProductUrl = json['LIT_ProductUrl'] as String?,
+        documentNote = json['DocumentNote'] as String?,
         help = json['Help'] as String?,
         isSummary = json['IsSummary'] as bool?,
         cUOMID = (json['C_UOM_ID'] as Map<String, dynamic>?) != null

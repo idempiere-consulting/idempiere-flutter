@@ -81,6 +81,7 @@ import 'package:idempiere_app/Screens/app/features/Production_Order/views/screen
 import 'package:idempiere_app/Screens/app/features/Purchase/views/screens/purchase_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Payment/views/screens/crm_payment_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Price_List/views/screens/purchase_price_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settings_screen.dart';
@@ -571,6 +572,11 @@ class MyApp extends StatelessWidget {
           name: '/PurchaseProductList',
           page: () => const PurchaseProductListScreen(),
           binding: PurchaseProductListBinding(),
+        ),
+        GetPage(
+          name: '/PurchasePriceList',
+          page: () => const PurchasePriceListScreen(),
+          binding: PurchasePriceListBinding(),
         ),
         GetPage(
           name: '/PurchaseOrder',
