@@ -898,7 +898,7 @@ class LocaleString extends Translations {
           'Erase': 'Cancella',
           'Send Quiz': 'Invia Quiz',
           'Wrong Username or Password': 'Nome Utente e/o Password errati',
-          'inventory-count-line': 'dettaglio-inventario-fisico',
+          'inventory-count-line': 'linea-del-conteggio-inventario',
           'mp-resources': 'dispositivo-di-manutenzione',
           'maintenance': 'impianto-manutenzione-dispositivi',
           'Check Date: ': 'Controllo: ',
@@ -1244,6 +1244,8 @@ class LocaleString extends Translations {
           'Asset': 'Cespite',
           'ASSET': 'CESPITE',
           'Creating record..': 'Creazione record..',
+          'PURCH. REQ.: ': 'RICH. ACQ,: ',
+          'Purchase Request': 'Richiesta di Acquisto'
         },
       };
 }

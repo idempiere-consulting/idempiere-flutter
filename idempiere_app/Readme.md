@@ -1613,7 +1613,7 @@ CRUD=1111=F
  60 Lead Fornitore       : F
  61 Prodotto             : R
  62 Prodotti Sottoscarta : R
- 63 
+ 63 Richiesta di Acquisto
  64 Logistica ***********: 1 *** 7 Logistica
  65 Prodotto             : F
  66 Spedizione Prodotti  :

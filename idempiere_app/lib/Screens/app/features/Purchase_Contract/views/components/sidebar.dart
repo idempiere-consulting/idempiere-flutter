@@ -123,6 +123,18 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Icons.description,
+                  icon: Icons.description_outlined,
+                  label: "Purchase Request".tr,
+                  visible: int.parse(list[64], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -156,6 +168,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 8:
                     Get.offNamed('/PurchasePriceList');
+                    break;
+                  case 9:
+                    Get.offNamed('/PurchaseRequest');
                     break;
 
                   default:

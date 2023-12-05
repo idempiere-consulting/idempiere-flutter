@@ -87,6 +87,8 @@ import 'package:idempiere_app/Screens/app/features/Purchase_Payment/views/screen
 import 'package:idempiere_app/Screens/app/features/Purchase_Price_List/views/screens/purchase_price_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Product_List/views/screens/crm_product_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Request/views/screens/purchase_request_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Request_Creation/views/screens/purchase_request_creation_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settings_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
@@ -595,6 +597,16 @@ class MyApp extends StatelessWidget {
           name: '/PurchaseOrder',
           page: () => const PurchaseOrderScreen(),
           binding: PurchaseOrderBinding(),
+        ),
+        GetPage(
+          name: '/PurchaseRequest',
+          page: () => const PurchaseRequestScreen(),
+          binding: PurchaseRequestBinding(),
+        ),
+        GetPage(
+          name: '/PurchaseRequestCreation',
+          page: () => const PurchaseRequestCreationScreen(),
+          binding: PurchaseRequestCreationBinding(),
         ),
         GetPage(
           name: '/PurchaseInvoice',
