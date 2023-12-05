@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -16,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 //models
@@ -230,7 +230,7 @@ class _TicketInternalFilterTicketState
                 });
               },
               icon: const Icon(
-                MaterialSymbols.filter_alt_off,
+                Symbols.filter_alt_off,
               ),
             ),
           ),
@@ -240,7 +240,7 @@ class _TicketInternalFilterTicketState
               tooltip: 'save filters',
               onPressed: saveFilters,
               icon: const Icon(
-                MaterialSymbols.bookmark,
+                Symbols.bookmark,
               ),
             ),
           ),

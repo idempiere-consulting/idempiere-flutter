@@ -10,7 +10,6 @@ import 'package:data_table_2/data_table_2.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_barcode_listener/flutter_barcode_listener.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';

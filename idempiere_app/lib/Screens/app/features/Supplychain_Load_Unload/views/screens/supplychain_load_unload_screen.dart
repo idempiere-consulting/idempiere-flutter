@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -32,6 +31,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:material_symbols_icons/symbols.dart';
 
 // binding
 part '../../bindings/supplychain_load_unload_binding.dart';
@@ -210,7 +210,7 @@ class SupplychainLoadUnloadScreen
             SpeedDialChild(
                 label: 'Filter'.tr,
                 child: Obx(() => Icon(
-                      MaterialSymbols.filter_alt_filled,
+                      Symbols.filter_alt,
                       color: controller.businessPartnerId.value == 0 &&
                               controller.selectedUserRadioTile.value == 0 &&
                               controller.docNoValue.value == "" &&
@@ -236,7 +236,7 @@ class SupplychainLoadUnloadScreen
                 }),
             SpeedDialChild(
                 label: 'New'.tr,
-                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                child: const Icon(Symbols.assignment_add),
                 onTap: () {
                   Get.to(const CreateSupplychainLoadUnload(), arguments: {
                     "idDoc": controller.idDoc,

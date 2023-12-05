@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,6 +11,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/busine
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 //models
@@ -224,7 +224,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                 });
               },
               icon: const Icon(
-                MaterialSymbols.filter_alt_off,
+                Symbols.filter_alt_off,
               ),
             ),
           ),
@@ -234,7 +234,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
               tooltip: 'save filters',
               onPressed: saveFilters,
               icon: const Icon(
-                MaterialSymbols.bookmark,
+                Symbols.bookmark,
               ),
             ),
           ),

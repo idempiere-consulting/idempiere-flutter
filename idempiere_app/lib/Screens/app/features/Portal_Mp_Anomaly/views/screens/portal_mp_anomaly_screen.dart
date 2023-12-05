@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -38,6 +37,7 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 //model for sales_order_controller
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -173,7 +173,7 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                   SpeedDialChild(
                       label: 'Filter'.tr,
                       child: Obx(() => Icon(
-                            MaterialSymbols.filter_alt_filled,
+                            Symbols.filter_alt,
                             color: controller.docNoValue.value == "" &&
                                     controller.docTypeId.value == "0"
                                 ? Colors.white
@@ -370,7 +370,7 @@ class PortalMpAnomalyScreen extends GetView<PortalMpAnomalyController> {
                                         children: [
                                           Row(
                                             children: <Widget>[
-                                              const Icon(MaterialSymbols.topic,
+                                              const Icon(Symbols.topic,
                                                   color: Colors.white),
                                               Expanded(
                                                 child: Text(

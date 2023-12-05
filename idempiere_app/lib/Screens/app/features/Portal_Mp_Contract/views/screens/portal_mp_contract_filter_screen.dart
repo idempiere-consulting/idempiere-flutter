@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -12,6 +11,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/busine
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PortalMPFilterContract extends StatefulWidget {
@@ -146,7 +146,7 @@ class _PortalMPFilterContractState extends State<PortalMPFilterContract> {
                 });
               },
               icon: const Icon(
-                MaterialSymbols.filter_alt_off,
+                Symbols.filter_alt_off,
               ),
             ),
           ),
@@ -156,7 +156,7 @@ class _PortalMPFilterContractState extends State<PortalMPFilterContract> {
               tooltip: 'save filters',
               onPressed: saveFilters,
               icon: const Icon(
-                MaterialSymbols.bookmark,
+                Symbols.bookmark,
               ),
             ),
           ),

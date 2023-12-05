@@ -6,7 +6,6 @@ library dashboard;
 import 'dart:convert';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -35,6 +34,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 //model for sales_order_controller
@@ -215,7 +215,7 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
                   SpeedDialChild(
                       label: 'Filter'.tr,
                       child: Obx(() => Icon(
-                            MaterialSymbols.filter_alt_filled,
+                            Symbols.filter_alt,
                             color: controller.docNoValue.value == "" &&
                                     controller.docTypeId.value == "0"
                                 ? Colors.white
@@ -412,7 +412,7 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
                                         children: [
                                           Row(
                                             children: <Widget>[
-                                              const Icon(MaterialSymbols.topic,
+                                              const Icon(Symbols.topic,
                                                   color: Colors.white),
                                               Expanded(
                                                 child: Text(

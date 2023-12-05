@@ -379,14 +379,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.2.0+2"
-  flutter_material_symbols:
-    dependency: "direct main"
-    description:
-      name: flutter_material_symbols
-      sha256: "14845fb68cfb4ec264de5a49e0f3e7bc7c8f1b61898605162a378b17a06a80a0"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.4"
   flutter_parsed_text:
     dependency: transitive
     description:
@@ -653,6 +645,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  material_symbols_icons:
+    dependency: "direct main"
+    description:
+      name: material_symbols_icons
+      sha256: "16463f7bbd312404f21e6dd8bd35af9ae16d34571fdd5894a71c2b9052c278ef"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2711.0"
   meta:
     dependency: transitive
     description:

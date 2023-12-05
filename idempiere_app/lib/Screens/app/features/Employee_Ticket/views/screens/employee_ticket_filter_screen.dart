@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +12,7 @@ import 'package:idempiere_app/Screens/app/features/Employee_Ticket/views/screens
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 //models
 
@@ -202,7 +202,7 @@ class _EmployeeFilterTicketState extends State<EmployeeFilterTicket> {
                 });
               },
               icon: const Icon(
-                MaterialSymbols.filter_alt_off,
+                Symbols.filter_alt_off,
               ),
             ),
           ),
@@ -212,7 +212,7 @@ class _EmployeeFilterTicketState extends State<EmployeeFilterTicket> {
               tooltip: 'save filters',
               onPressed: saveFilters,
               icon: const Icon(
-                MaterialSymbols.bookmark,
+                Symbols.bookmark,
               ),
             ),
           ),

@@ -8,7 +8,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -30,6 +29,7 @@ import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 // ignore: depend_on_referenced_packages
@@ -123,7 +123,7 @@ class SupplychainMaterialreceiptCreationScreen
                               ? Container(
                                   color: color,
                                   child: const Icon(
-                                    MaterialSymbols.playlist_add,
+                                    Symbols.playlist_add,
                                     color: Colors.white,
                                   ),
                                 )
@@ -169,7 +169,7 @@ class SupplychainMaterialreceiptCreationScreen
                               ? Container(
                                   color: color,
                                   child: const Icon(
-                                    MaterialSymbols.playlist_add,
+                                    Symbols.playlist_add,
                                     color: Colors.white,
                                   ),
                                 )

@@ -5,7 +5,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -30,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:idempiere_app/constants.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -177,7 +177,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                 }), */
             SpeedDialChild(
                 label: 'New'.tr,
-                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                child: const Icon(Symbols.assignment_add),
                 onTap: () {
                   controller.openTicketType();
                 }),

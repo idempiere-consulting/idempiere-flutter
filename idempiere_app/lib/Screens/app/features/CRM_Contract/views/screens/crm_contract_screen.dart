@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -33,6 +32,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -164,7 +164,7 @@ class CRMContractScreen extends GetView<CRMContractController> {
             SpeedDialChild(
                 label: 'Filter'.tr,
                 child: Obx(() => Icon(
-                      MaterialSymbols.filter_alt_filled,
+                      Symbols.filter_alt,
                       color: controller.businessPartnerId.value == 0 &&
                               controller.docNoValue.value == "" &&
                               controller.docTypeId.value == "0"
@@ -361,7 +361,7 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                         children: [
                                           Row(
                                             children: <Widget>[
-                                              const Icon(MaterialSymbols.topic,
+                                              const Icon(Symbols.topic,
                                                   color: Colors.white),
                                               Expanded(
                                                 child: Text(
@@ -679,7 +679,7 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                         children: [
                                           Row(
                                             children: <Widget>[
-                                              const Icon(MaterialSymbols.topic,
+                                              const Icon(Symbols.topic,
                                                   color: Colors.white),
                                               Expanded(
                                                 child: Text(
@@ -827,7 +827,7 @@ class CRMContractScreen extends GetView<CRMContractController> {
               ]);
             },
             desktopBuilder: (context, constraints) {
-             return Column(children: [
+              return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                 _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -997,7 +997,7 @@ class CRMContractScreen extends GetView<CRMContractController> {
                                         children: [
                                           Row(
                                             children: <Widget>[
-                                              const Icon(MaterialSymbols.topic,
+                                              const Icon(Symbols.topic,
                                                   color: Colors.white),
                                               Expanded(
                                                 child: Text(

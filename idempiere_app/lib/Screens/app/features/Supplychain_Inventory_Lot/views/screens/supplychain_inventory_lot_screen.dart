@@ -7,7 +7,6 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -35,6 +34,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // binding
 part '../../bindings/supplychain_inventory_lot_binding.dart';
@@ -159,7 +159,7 @@ class SupplychainInventoryLotScreen
         children: [
           SpeedDialChild(
               label: 'New'.tr,
-              child: const Icon(MaterialSymbols.assignment_add_outlined),
+              child: const Icon(Symbols.assignment_add),
               onTap: () {
                 Get.to(const CreateSupplychainInventoryLot(), arguments: {
                   "idDoc": controller.idDoc,
@@ -169,7 +169,7 @@ class SupplychainInventoryLotScreen
           SpeedDialChild(
               label: 'Filter'.tr,
               child: Obx(() => Icon(
-                    MaterialSymbols.filter_alt_filled,
+                    Symbols.filter_alt,
                     color: controller.docTypeId.value == "0" &&
                             controller.warehouseId.value == "0" &&
                             controller.docNoValue.value == "" &&

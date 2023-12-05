@@ -11,7 +11,6 @@ import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -40,6 +39,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edit_sales_order.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 
 // ignore: depend_on_referenced_packages
 import 'package:pdf/pdf.dart';
@@ -217,7 +217,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
             SpeedDialChild(
                 label: 'Filter'.tr,
                 child: Obx(() => Icon(
-                      MaterialSymbols.filter_alt_filled,
+                      Symbols.filter_alt,
                       color: controller.businessPartnerId.value == 0 &&
                               controller.selectedUserRadioTile.value == 0 &&
                               controller.docNoValue.value == ""
@@ -243,7 +243,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                 }), */
             SpeedDialChild(
                 label: 'New'.tr,
-                child: const Icon(MaterialSymbols.assignment_add_outlined),
+                child: const Icon(Symbols.assignment_add),
                 onTap: () {
                   Get.toNamed('/SalesOrderCreationBPPricelist');
                 })
@@ -882,8 +882,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             });
                                                       },
                                                       icon: const Icon(
-                                                          MaterialSymbols
-                                                              .build),
+                                                          Symbols.build),
                                                     ),
                                                   ),
                                                   Visibility(
@@ -1560,8 +1559,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             });
                                                       },
                                                       icon: const Icon(
-                                                          MaterialSymbols
-                                                              .build),
+                                                          Symbols.build),
                                                     ),
                                                   ),
                                                   Visibility(
@@ -2238,8 +2236,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                             });
                                                       },
                                                       icon: const Icon(
-                                                          MaterialSymbols
-                                                              .build),
+                                                          Symbols.build),
                                                     ),
                                                   ),
                                                   Visibility(

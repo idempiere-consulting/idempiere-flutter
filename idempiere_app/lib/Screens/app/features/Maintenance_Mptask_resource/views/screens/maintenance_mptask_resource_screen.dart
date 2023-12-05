@@ -8,7 +8,6 @@ import 'dart:io';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -37,6 +36,7 @@ import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 //import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 // binding
@@ -3192,8 +3192,7 @@ class MaintenanceMpResourceScreen
                                                     }
                                                   },
                                                   icon: const Icon(
-                                                      MaterialSymbols
-                                                          .place_item),
+                                                      Symbols.place_item),
                                                 ),
                                               ],
                                             )

@@ -10,7 +10,6 @@ import 'dart:typed_data';
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
@@ -43,6 +42,7 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
 // ignore: depend_on_referenced_packages
@@ -177,7 +177,7 @@ class PurchaseInvoiceScreen extends GetView<PurchaseInvoiceController> {
             SpeedDialChild(
                 label: 'Filter'.tr,
                 child: Obx(() => Icon(
-                      MaterialSymbols.filter_alt_filled,
+                      Symbols.filter_alt,
                       color: controller.businessPartnerId.value == 0 &&
                               controller.selectedUserRadioTile.value == 0 &&
                               controller.docNoValue.value == "" &&
