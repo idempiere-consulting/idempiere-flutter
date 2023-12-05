@@ -497,7 +497,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= IsShipTo eq Y and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -512,10 +512,18 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
           jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (bpLocation.rowcount! > 0) {
-        if (bpLocation.records![0].id != null) {
+        /* if (bpLocation.records![0].id != null) {
           bpLocationId.value = bpLocation.records![0].id.toString();
           addressFieldController.text =
               bpLocation.records![0].cLocationID?.identifier ?? "N/A";
+        } */
+
+        for (var element in bpLocation.records!) {
+          if (element.isShipTo == true) {
+            bpLocationId.value = element.id.toString();
+            addressFieldController.text =
+                element.cLocationID?.identifier ?? "N/A";
+          }
         }
       }
       //print(trx.rowcount);
@@ -663,7 +671,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
     }
   } */
 
-  Future<void> createSalesOrder() async {
+  Future<void> createSalesOrder(BuildContext context) async {
     Get.back();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -714,7 +722,7 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       "DateOrdered": "${formattedDate}T00:00:00Z",
       "Note": noteFieldController.text,
       "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
-      "ShipDate": "${dateStartFieldController.text}T00:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T07:00:00Z",
       "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
       "DeliveryRule": defValues.records![0].deliveryRule!.id,
       "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
@@ -731,6 +739,22 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
       "order-line".tr: list,
     });
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Creating record..".tr),
+            ],
+          ),
+        );
+      },
+    );
+
     var response = await http.post(
       url,
       body: msg,
@@ -739,10 +763,11 @@ class PortalMpSalesOrderFromPriceListController extends GetxController {
         'Authorization': authorization,
       },
     );
+    Get.back();
     if (response.statusCode == 201) {
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
-      Get.find<CRMSalesOrderController>().getSalesOrders();
+      Get.find<PortalMpSalesOrderController>().getSalesOrders();
       Get.back();
       //print("done!");
       Get.snackbar(

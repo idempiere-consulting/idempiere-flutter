@@ -304,6 +304,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       jsonbps.records!.removeWhere(
           (element) => element.salesRepID?.id != GetStorage().read('userId'));
     }
+    jsonbps.records!.removeWhere((element) => element.isCustomer == false);
 
     return jsonbps.records!;
 
@@ -498,7 +499,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= IsShipTo eq Y and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -664,7 +665,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     }
   } */
 
-  Future<void> createSalesOrder() async {
+  Future<void> createSalesOrder(BuildContext context) async {
     Get.back();
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -677,12 +678,29 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
     //print(formattedDate);
     List<Map<String, Object>> list = [];
 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return Dialog(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Creating record..".tr),
+            ],
+          ),
+        );
+      },
+    );
+
     for (var element in productList) {
       list.add({
         "M_Product_ID": {"id": element.id},
         "qtyEntered": element.qty,
         "PriceList": element.cost,
         "PriceEntered": element.discountedCost ?? element.cost,
+        "Description": element.description ?? '',
       });
     }
 
@@ -701,7 +719,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       "DateOrdered": "${formattedDate}T00:00:00Z",
       "Note": noteFieldController.text,
       "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
-      "ShipDate": "${dateStartFieldController.text}T00:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T70:00:00Z",
       "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
       "DeliveryRule": defValues.records![0].deliveryRule!.id,
       "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
@@ -725,6 +743,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
         'Authorization': authorization,
       },
     );
+    Get.back();
     if (response.statusCode == 201) {
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 

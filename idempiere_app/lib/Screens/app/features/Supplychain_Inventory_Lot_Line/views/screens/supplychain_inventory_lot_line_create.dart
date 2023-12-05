@@ -55,6 +55,7 @@ class _CreateSupplychainInventoryLotLineState
       },
     );
     if (response.statusCode == 200) {
+      print(response.body);
       setState(() {
         attrFieldAvailable = false;
         attrFieldVisible = false;

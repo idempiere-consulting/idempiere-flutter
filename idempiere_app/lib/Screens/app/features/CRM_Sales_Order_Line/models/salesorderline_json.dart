@@ -82,6 +82,7 @@ class Records {
   final num? qtyBatchSize;
   final String? uom;
   num? qtyRegistered;
+  String? lotNo;
 
   Records({
     this.id,
@@ -134,6 +135,7 @@ class Records {
     this.modelname,
     this.uom,
     this.qtyRegistered,
+    this.lotNo,
   });
 
   Records.fromJson(Map<String, dynamic> json)

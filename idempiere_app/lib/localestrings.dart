@@ -1231,7 +1231,19 @@ class LocaleString extends Translations {
               'Sicuro di voler chiudere il Ticket?',
           'DETAILS': 'DETTAGLIO',
           'Off': 'Sconto',
-          'PriceList': 'Listino Prezzi'
+          'PriceList': 'Listino Prezzi',
+          'Order Lines': 'Linee Ordine',
+          'inventory-count': 'inventario-fisico-inf00',
+          'Number': 'Numero',
+          'Inventory N°': 'N° Inventario',
+          'Target Frame': 'Telaio',
+          'SerNo Year': 'Anno Immatricolazione',
+          'Is Owned': 'Di Proprietà',
+          'License Plate': 'Targa',
+          'Accounting': 'Contabilità',
+          'Asset': 'Cespite',
+          'ASSET': 'CESPITE',
+          'Creating record..': 'Creazione record..',
         },
       };
 }

@@ -28,7 +28,8 @@ class PortalMpSalesOrderCreationBPPriceListEditController
 
   var addressFieldController = TextEditingController();
 
-  var noteFieldController = TextEditingController();
+  var noteFieldController =
+      TextEditingController(text: Get.arguments['note'] ?? '');
 
   TextEditingController bpFieldController =
       TextEditingController(text: Get.arguments["businessPartnerName"]);
@@ -627,7 +628,8 @@ class PortalMpSalesOrderCreationBPPriceListEditController
       'PaymentRule': paymentRuleId.value,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
       "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
-      "ShipDate": "${dateStartFieldController.text}T00:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T07:00:00Z",
+      'Note': noteFieldController.text,
       "IsLocked": isWIP.value,
     });
     final protocol = GetStorage().read('protocol');

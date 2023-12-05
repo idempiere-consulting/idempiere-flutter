@@ -27,7 +27,7 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
 
   var addressFieldController = TextEditingController();
 
-  var noteFieldController = TextEditingController();
+  var noteFieldController = TextEditingController(text: Get.arguments["note"]);
 
   TextEditingController bpFieldController =
       TextEditingController(text: Get.arguments["businessPartnerName"]);
@@ -626,7 +626,8 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
       'PaymentRule': paymentRuleId.value,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
       "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
-      "ShipDate": "${dateStartFieldController.text}T00:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T07:00:00Z",
+      "Note": noteFieldController.text,
       "IsLocked": isWIP.value,
     });
     final protocol = GetStorage().read('protocol');
@@ -649,8 +650,8 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
 
       for (var element in productList) {
         if (element.orderLineID == null) {
-          createSalesOrderLines(
-              element.id, element.qty, element.cost, element.discountedCost);
+          createSalesOrderLines(element.id, element.qty, element.cost,
+              element.discountedCost, element.description);
         } else {
           editSalesOrderLines(element.orderLineID!, element.qty, element.cost,
               element.discountedCost);
@@ -704,8 +705,8 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
     }
   }
 
-  createSalesOrderLines(
-      int id, double qty, num cost, num? discountedCost) async {
+  createSalesOrderLines(int id, double qty, num cost, num? discountedCost,
+      String? description) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -717,6 +718,7 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
       "qtyEntered": qty,
       "PriceList": cost,
       "PriceEntered": discountedCost ?? cost,
+      "Description": description ?? '',
     });
 
     var response = await http.post(

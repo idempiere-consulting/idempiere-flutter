@@ -32,7 +32,7 @@ class VehicleEquipmentVehicleController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/A_Asset?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/A_Asset?\$filter= lit_assettype eq \'VEH\' and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{

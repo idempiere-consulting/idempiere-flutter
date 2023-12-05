@@ -1678,6 +1678,11 @@ CRUD=1111=F
  125 Presa in Carico/Spostamento
  126 Scadenze
  127 POS *****************: *** POS
+ 128
+ 129
+ 130
+ 131 Contabilità ************* *: *** Contabilità
+ 132 Cespiti
 
 
 

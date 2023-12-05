@@ -212,6 +212,19 @@ class _Sidebar extends StatelessWidget {
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
+                  icon: EvaIcons.bookOpenOutline,
+                  label: "Accounting".tr,
+                  visible: int.parse(list[132], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
                   visible:
@@ -281,12 +294,15 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/TrainingCourse');
                     break;
                   case 15:
-                    Get.offNamed('/Profil');
+                    Get.offNamed('/Accounting');
                     break;
                   case 16:
-                    Get.offNamed('/Settings');
+                    Get.offNamed('/Profil');
                     break;
                   case 17:
+                    Get.offNamed('/Settings');
+                    break;
+                  case 18:
                     Get.offAllNamed("/");
                     break;
                   default:

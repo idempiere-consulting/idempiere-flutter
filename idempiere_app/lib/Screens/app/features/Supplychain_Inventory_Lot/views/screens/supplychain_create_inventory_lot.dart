@@ -33,7 +33,7 @@ class _CreateSupplychainInventoryLotState
         "M_Warehouse_ID": {"id": int.parse(warehouseId)},
         "MovementDate": formatter.format(DateTime.now()),
         "Description": descriptionFieldController.text,
-        "DocAction": "CO",
+        //"DocAction": "CO",
       });
     } else {
       msg = jsonEncode({
@@ -44,7 +44,7 @@ class _CreateSupplychainInventoryLotState
         "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
         "MovementDate": formatter.format(DateTime.now()),
         "Description": descriptionFieldController.text,
-        "DocAction": "CO",
+        //"DocAction": "CO",
       });
     }
 

@@ -569,6 +569,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .id,
+                                                              "note": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .note,
                                                               "docNo": controller
                                                                   ._trx
                                                                   .records![
@@ -992,6 +997,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .id,
+                                                              "note": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .note,
                                                               "docNo": controller
                                                                   ._trx
                                                                   .records![
@@ -1415,6 +1425,11 @@ class PortalMpSalesOrderScreen extends GetView<PortalMpSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .id,
+                                                              "note": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .note,
                                                               "docNo": controller
                                                                   ._trx
                                                                   .records![

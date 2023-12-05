@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/Login/login_screen.dart';
 import 'package:idempiere_app/Screens/app/config/themes/app_theme.dart';
+import 'package:idempiere_app/Screens/app/features/Accounting/views/screens/accounting_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Accounting_Asset/views/screens/accounting_asset_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM/views/screens/crm_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Commission/views/screens/crm_commission_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/views/screens/crm_contact_bp_screen.dart';
@@ -13,6 +15,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/cr
 import 'package:idempiere_app/Screens/app/features/CRM_POS/views/screens/crm_pos_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList/views/screens/crm_sales_order_creation_bp_pricelist_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList_Edit/views/screens/crm_sales_order_creation_bp_priceList_edit_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Employee_Resource/views/screens/employee_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_Creation_BP_PriceList_Edit/views/screens/portal_mp_sales_order_creation_BP_PriceList_edit_screen.dart';
@@ -181,6 +184,16 @@ class MyApp extends StatelessWidget {
           name: '/Notification',
           page: () => const NotificationScreen(),
           binding: NotificationBinding(),
+        ),
+        GetPage(
+          name: '/Accounting',
+          page: () => const AccountingScreen(),
+          binding: AccountingBinding(),
+        ),
+        GetPage(
+          name: '/AccountingAsset',
+          page: () => const AccountingAssetScreen(),
+          binding: AccountingAssetBinding(),
         ),
         GetPage(
           name: '/CRM',
@@ -716,6 +729,11 @@ class MyApp extends StatelessWidget {
           name: '/Employee',
           page: () => const EmployeeScreen(),
           binding: EmployeeBinding(),
+        ),
+        GetPage(
+          name: '/EmployeeResource',
+          page: () => const EmployeeResourceScreen(),
+          binding: EmployeeResourceBinding(),
         ),
         GetPage(
           name: '/EmployeeTicket',

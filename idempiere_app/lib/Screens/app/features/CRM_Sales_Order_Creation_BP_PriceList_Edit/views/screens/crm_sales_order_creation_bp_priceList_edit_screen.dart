@@ -847,8 +847,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                             .toStringAsFixed(2);
 
                                                         controller
-                                                            .discountedPriceFieldController
-                                                            .text = (double.parse(
+                                                                .discountedPriceFieldController
+                                                                .text = /* (double.parse(
                                                                     controller
                                                                         .priceFieldController
                                                                         .text) -
@@ -859,7 +859,14 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                     double.parse(controller
                                                                         .discountFieldController
                                                                         .text)))
-                                                            .toStringAsFixed(2);
+                                                            .toStringAsFixed(2); */
+                                                            (controller
+                                                                        .productList[
+                                                                            index]
+                                                                        .discountedCost ??
+                                                                    0.0)
+                                                                .toStringAsFixed(
+                                                                    2);
                                                         controller
                                                             .totalRowPriceFieldController
                                                             .text = (double.parse(
@@ -1135,10 +1142,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                             true,
                                                                         textAlign:
                                                                             TextAlign.center,
-                                                                        controller: controller._trx.records![index].pricelistdescription ==
-                                                                                "Listino Generale"
-                                                                            ? controller.priceFieldController
-                                                                            : controller.discountedPriceFieldController,
+                                                                        controller:
+                                                                            controller.priceFieldController,
                                                                         keyboardType: const TextInputType.numberWithOptions(
                                                                             signed:
                                                                                 false,
@@ -1165,7 +1170,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Price".tr,
+                                                                              "Prezzo List.".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -1196,6 +1201,133 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                               : Colors.red,
                                                                         ),
                                                                       )),
+                                                                ),
+                                                                Divider(),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
+                                                                      width:
+                                                                          100,
+                                                                      child:
+                                                                          TextField(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        controller:
+                                                                            controller.discountFieldController,
+                                                                        autofocus:
+                                                                            true,
+                                                                        keyboardType: const TextInputType.numberWithOptions(
+                                                                            signed:
+                                                                                false,
+                                                                            decimal:
+                                                                                true),
+                                                                        inputFormatters: [
+                                                                          FilteringTextInputFormatter.allow(
+                                                                              RegExp("[0-9.]"))
+                                                                        ],
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountedPriceFieldController.text =
+                                                                                (double.parse(controller.priceFieldController.text) - ((double.parse(controller.priceFieldController.text) / 100) * double.parse(value))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          prefixText:
+                                                                              '%',
+                                                                          labelStyle:
+                                                                              const TextStyle(color: Colors.white),
+                                                                          labelText:
+                                                                              "Discount".tr,
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
+                                                                      width:
+                                                                          100,
+                                                                      child:
+                                                                          TextField(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        controller:
+                                                                            controller.discountedPriceFieldController,
+                                                                        autofocus:
+                                                                            true,
+                                                                        keyboardType: const TextInputType.numberWithOptions(
+                                                                            signed:
+                                                                                false,
+                                                                            decimal:
+                                                                                true),
+                                                                        inputFormatters: [
+                                                                          FilteringTextInputFormatter.allow(
+                                                                              RegExp("[0-9.]"))
+                                                                        ],
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountFieldController.text =
+                                                                                (100.00 - ((double.parse(value) / double.parse(controller.priceFieldController.text)) * 100)).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          prefixText:
+                                                                              '€',
+                                                                          labelStyle:
+                                                                              const TextStyle(color: Colors.white),
+                                                                          labelText:
+                                                                              "Net Price".tr,
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                                 Divider(),
                                                                 Row(
@@ -1330,9 +1462,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                     .updateCounter();
                                                                 controller
                                                                     .updateTotal();
+                                                                Get.back();
                                                               }
-
-                                                              Get.back();
                                                             });
                                                       },
                                                       icon: const Icon(
@@ -2368,8 +2499,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                             .toStringAsFixed(2);
 
                                                         controller
-                                                            .discountedPriceFieldController
-                                                            .text = (double.parse(
+                                                                .discountedPriceFieldController
+                                                                .text = /* (double.parse(
                                                                     controller
                                                                         .priceFieldController
                                                                         .text) -
@@ -2380,7 +2511,14 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                     double.parse(controller
                                                                         .discountFieldController
                                                                         .text)))
-                                                            .toStringAsFixed(2);
+                                                            .toStringAsFixed(2); */
+                                                            (controller
+                                                                        .productList[
+                                                                            index]
+                                                                        .discountedCost ??
+                                                                    0.0)
+                                                                .toStringAsFixed(
+                                                                    2);
                                                         controller
                                                             .totalRowPriceFieldController
                                                             .text = (double.parse(
@@ -2656,10 +2794,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                             true,
                                                                         textAlign:
                                                                             TextAlign.center,
-                                                                        controller: controller._trx.records![index].pricelistdescription ==
-                                                                                "Listino Generale"
-                                                                            ? controller.priceFieldController
-                                                                            : controller.discountedPriceFieldController,
+                                                                        controller:
+                                                                            controller.priceFieldController,
                                                                         keyboardType: const TextInputType.numberWithOptions(
                                                                             signed:
                                                                                 false,
@@ -2686,7 +2822,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Price".tr,
+                                                                              "Prezzo List.".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -2717,6 +2853,133 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                               : Colors.red,
                                                                         ),
                                                                       )),
+                                                                ),
+                                                                Divider(),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
+                                                                      width:
+                                                                          100,
+                                                                      child:
+                                                                          TextField(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        controller:
+                                                                            controller.discountFieldController,
+                                                                        autofocus:
+                                                                            true,
+                                                                        keyboardType: const TextInputType.numberWithOptions(
+                                                                            signed:
+                                                                                false,
+                                                                            decimal:
+                                                                                true),
+                                                                        inputFormatters: [
+                                                                          FilteringTextInputFormatter.allow(
+                                                                              RegExp("[0-9.]"))
+                                                                        ],
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountedPriceFieldController.text =
+                                                                                (double.parse(controller.priceFieldController.text) - ((double.parse(controller.priceFieldController.text) / 100) * double.parse(value))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          prefixText:
+                                                                              '%',
+                                                                          labelStyle:
+                                                                              const TextStyle(color: Colors.white),
+                                                                          labelText:
+                                                                              "Discount".tr,
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
+                                                                      width:
+                                                                          100,
+                                                                      child:
+                                                                          TextField(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        controller:
+                                                                            controller.discountedPriceFieldController,
+                                                                        autofocus:
+                                                                            true,
+                                                                        keyboardType: const TextInputType.numberWithOptions(
+                                                                            signed:
+                                                                                false,
+                                                                            decimal:
+                                                                                true),
+                                                                        inputFormatters: [
+                                                                          FilteringTextInputFormatter.allow(
+                                                                              RegExp("[0-9.]"))
+                                                                        ],
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountFieldController.text =
+                                                                                (100.00 - ((double.parse(value) / double.parse(controller.priceFieldController.text)) * 100)).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          prefixText:
+                                                                              '€',
+                                                                          labelStyle:
+                                                                              const TextStyle(color: Colors.white),
+                                                                          labelText:
+                                                                              "Net Price".tr,
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                                 Divider(),
                                                                 Row(
@@ -2851,9 +3114,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                     .updateCounter();
                                                                 controller
                                                                     .updateTotal();
+                                                                Get.back();
                                                               }
-
-                                                              Get.back();
                                                             });
                                                       },
                                                       icon: const Icon(
@@ -3889,8 +4151,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                             .toStringAsFixed(2);
 
                                                         controller
-                                                            .discountedPriceFieldController
-                                                            .text = (double.parse(
+                                                                .discountedPriceFieldController
+                                                                .text = /* (double.parse(
                                                                     controller
                                                                         .priceFieldController
                                                                         .text) -
@@ -3901,7 +4163,14 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                     double.parse(controller
                                                                         .discountFieldController
                                                                         .text)))
-                                                            .toStringAsFixed(2);
+                                                            .toStringAsFixed(2); */
+                                                            (controller
+                                                                        .productList[
+                                                                            index]
+                                                                        .discountedCost ??
+                                                                    0.0)
+                                                                .toStringAsFixed(
+                                                                    2);
                                                         controller
                                                             .totalRowPriceFieldController
                                                             .text = (double.parse(
@@ -4177,10 +4446,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                             true,
                                                                         textAlign:
                                                                             TextAlign.center,
-                                                                        controller: controller._trx.records![index].pricelistdescription ==
-                                                                                "Listino Generale"
-                                                                            ? controller.priceFieldController
-                                                                            : controller.discountedPriceFieldController,
+                                                                        controller:
+                                                                            controller.priceFieldController,
                                                                         keyboardType: const TextInputType.numberWithOptions(
                                                                             signed:
                                                                                 false,
@@ -4207,7 +4474,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                           labelStyle:
                                                                               const TextStyle(color: Colors.white),
                                                                           labelText:
-                                                                              "Price".tr,
+                                                                              "Prezzo List.".tr,
                                                                           filled:
                                                                               true,
                                                                           border:
@@ -4238,6 +4505,133 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                               : Colors.red,
                                                                         ),
                                                                       )),
+                                                                ),
+                                                                Divider(),
+                                                                Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceEvenly,
+                                                                  crossAxisAlignment:
+                                                                      CrossAxisAlignment
+                                                                          .center,
+                                                                  children: [
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
+                                                                      width:
+                                                                          100,
+                                                                      child:
+                                                                          TextField(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        controller:
+                                                                            controller.discountFieldController,
+                                                                        autofocus:
+                                                                            true,
+                                                                        keyboardType: const TextInputType.numberWithOptions(
+                                                                            signed:
+                                                                                false,
+                                                                            decimal:
+                                                                                true),
+                                                                        inputFormatters: [
+                                                                          FilteringTextInputFormatter.allow(
+                                                                              RegExp("[0-9.]"))
+                                                                        ],
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountedPriceFieldController.text =
+                                                                                (double.parse(controller.priceFieldController.text) - ((double.parse(controller.priceFieldController.text) / 100) * double.parse(value))).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          prefixText:
+                                                                              '%',
+                                                                          labelStyle:
+                                                                              const TextStyle(color: Colors.white),
+                                                                          labelText:
+                                                                              "Discount".tr,
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                    Container(
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
+                                                                      width:
+                                                                          100,
+                                                                      child:
+                                                                          TextField(
+                                                                        textAlign:
+                                                                            TextAlign.center,
+                                                                        controller:
+                                                                            controller.discountedPriceFieldController,
+                                                                        autofocus:
+                                                                            true,
+                                                                        keyboardType: const TextInputType.numberWithOptions(
+                                                                            signed:
+                                                                                false,
+                                                                            decimal:
+                                                                                true),
+                                                                        inputFormatters: [
+                                                                          FilteringTextInputFormatter.allow(
+                                                                              RegExp("[0-9.]"))
+                                                                        ],
+                                                                        onChanged:
+                                                                            (value) {
+                                                                          if (double.tryParse(value) !=
+                                                                              null) {
+                                                                            controller.discountFieldController.text =
+                                                                                (100.00 - ((double.parse(value) / double.parse(controller.priceFieldController.text)) * 100)).toStringAsFixed(2);
+                                                                            controller.totalRowPriceFieldController.text =
+                                                                                (double.parse(controller.qtyFieldController.text) * double.parse(controller.discountedPriceFieldController.text)).toStringAsFixed(2);
+                                                                          }
+                                                                        },
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          prefixText:
+                                                                              '€',
+                                                                          labelStyle:
+                                                                              const TextStyle(color: Colors.white),
+                                                                          labelText:
+                                                                              "Net Price".tr,
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                      ),
+                                                                    ),
+                                                                  ],
                                                                 ),
                                                                 Divider(),
                                                                 Row(
@@ -4372,9 +4766,8 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                                                     .updateCounter();
                                                                 controller
                                                                     .updateTotal();
+                                                                Get.back();
                                                               }
-
-                                                              Get.back();
                                                             });
                                                       },
                                                       icon: const Icon(
@@ -4871,10 +5264,16 @@ class CRMSalesOrderCreationBPPriceListEditScreen
           controller.priceFieldController.text =
               (controller._trx.records![index].priceList ?? 0.0)
                   .toStringAsFixed(2);
-          controller.discountFieldController.text = '0.0';
+
           controller.discountedPriceFieldController.text =
               (controller._trx.records![index].priceStd ?? 0.0)
                   .toStringAsFixed(2);
+          controller.discountFieldController.text = (100.00 -
+                  ((double.parse(
+                              controller.discountedPriceFieldController.text) /
+                          double.parse(controller.priceFieldController.text)) *
+                      100))
+              .toStringAsFixed(2);
           controller.totalRowPriceFieldController
               .text = (double.parse(controller.qtyFieldController.text) *
                   double.parse(controller.discountedPriceFieldController.text))
@@ -4942,7 +5341,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                         ),
                       ),
                       Container(
-                        width: 100,
+                        width: 120,
                         child: TextField(
                           textAlign: TextAlign.center,
                           controller: controller.qtyMultiplierController,
@@ -5004,6 +5403,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                                   ? Colors.white
                                   : Colors.red,
                             ),
+                            //readOnly: true,
                             textAlign: TextAlign.center,
                             controller: controller.qtyFieldController,
                             autofocus: true,
@@ -5064,11 +5464,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                           ),
                           readOnly: true,
                           textAlign: TextAlign.center,
-                          controller: controller._trx.records![index]
-                                      .pricelistdescription ==
-                                  "Listino Generale"
-                              ? controller.discountedPriceFieldController
-                              : controller.priceFieldController,
+                          controller: controller.priceFieldController,
                           keyboardType: const TextInputType.numberWithOptions(
                               signed: false, decimal: true),
                           inputFormatters: [
@@ -5094,7 +5490,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                           decoration: InputDecoration(
                             prefixText: '€',
                             labelStyle: const TextStyle(color: Colors.white),
-                            labelText: "Price".tr,
+                            labelText: "Prezzo List.".tr,
                             filled: true,
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(10),
@@ -5119,12 +5515,108 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                           ),
                         )),
                   ),
+                  const Divider(),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        width: 100,
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          controller: controller.discountFieldController,
+                          autofocus: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: false, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                          ],
+                          onChanged: (value) {
+                            if (double.tryParse(value) != null) {
+                              controller.discountedPriceFieldController.text =
+                                  (double.parse(controller
+                                              .priceFieldController.text) -
+                                          ((double.parse(controller
+                                                      .priceFieldController
+                                                      .text) /
+                                                  100) *
+                                              double.parse(value)))
+                                      .toStringAsFixed(2);
+                              controller.totalRowPriceFieldController
+                                  .text = (double.parse(
+                                          controller.qtyFieldController.text) *
+                                      double.parse(controller
+                                          .discountedPriceFieldController.text))
+                                  .toStringAsFixed(2);
+                            }
+                          },
+                          decoration: InputDecoration(
+                            prefixText: '%',
+                            labelStyle: const TextStyle(color: Colors.white),
+                            labelText: "Discount".tr,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            isDense: true,
+                            fillColor: Theme.of(context).cardColor,
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 10),
+                        width: 100,
+                        child: TextField(
+                          textAlign: TextAlign.center,
+                          controller: controller.discountedPriceFieldController,
+                          autofocus: true,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: false, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                          ],
+                          onChanged: (value) {
+                            if (double.tryParse(value) != null) {
+                              controller.discountFieldController.text =
+                                  (100.00 -
+                                          ((double.parse(value) /
+                                                  double.parse(controller
+                                                      .priceFieldController
+                                                      .text)) *
+                                              100))
+                                      .toStringAsFixed(2);
+                              controller.totalRowPriceFieldController
+                                  .text = (double.parse(
+                                          controller.qtyFieldController.text) *
+                                      double.parse(controller
+                                          .discountedPriceFieldController.text))
+                                  .toStringAsFixed(2);
+                            }
+                          },
+                          decoration: InputDecoration(
+                            prefixText: '€',
+                            labelStyle: const TextStyle(color: Colors.white),
+                            labelText: "Net Price".tr,
+                            filled: true,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            isDense: true,
+                            fillColor: Theme.of(context).cardColor,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                   Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(width: 100),
+                      SizedBox(width: 120),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
                         width: 100,
@@ -5217,7 +5709,7 @@ class CRMSalesOrderCreationBPPriceListEditScreen
               ),
               ListTile(
                 title: Text(
-                  controller._trx.records![index].name!.tr,
+                  "${controller._trx.records![index].value}_${controller._trx.records![index].name!.tr}",
                 ),
                 subtitle: Column(
                   children: [
@@ -5248,30 +5740,19 @@ class CRMSalesOrderCreationBPPriceListEditScreen
                     ),
                     Row(
                       children: [
-                        Visibility(
-                          visible:
-                              (controller._trx.records![index].qtyOnHand ?? 0) >
-                                  0,
-                          child: Expanded(
-                            child: Text(
-                              controller._trx.records![index].qtyOnHand ==
-                                          null ||
-                                      controller
-                                              ._trx.records![index].qtyOnHand ==
-                                          0
-                                  ? ""
-                                  : "Available".tr,
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  color: controller._trx.records![index]
-                                                  .qtyOnHand ==
-                                              null ||
-                                          controller._trx.records![index]
-                                                  .qtyOnHand ==
-                                              0
-                                      ? Colors.red
-                                      : kNotifColor),
-                            ),
+                        Expanded(
+                          child: Text(
+                            "${controller._trx.records![index].qtyOnHand == null || controller._trx.records![index].qtyOnHand == 0 ? "" : "Availability:".tr} ${controller._trx.records![index].qtyOnHand == null || controller._trx.records![index].qtyOnHand == 0 ? "Not Available".tr : controller._trx.records![index].qtyOnHand}",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color:
+                                    controller._trx.records![index].qtyOnHand ==
+                                                null ||
+                                            controller._trx.records![index]
+                                                    .qtyOnHand ==
+                                                0
+                                        ? Colors.red
+                                        : kNotifColor),
                           ),
                         ),
                       ],

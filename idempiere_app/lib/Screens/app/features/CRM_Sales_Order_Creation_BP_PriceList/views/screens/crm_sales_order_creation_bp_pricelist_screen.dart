@@ -1851,7 +1851,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                             textConfirm: "Create".tr,
                             textCancel: "Cancel".tr,
                             onConfirm: () {
-                              controller.createSalesOrder();
+                              controller.createSalesOrder(context);
                             });
                       },
                     ),
@@ -3603,7 +3603,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                             textConfirm: "Create".tr,
                             textCancel: "Cancel".tr,
                             onConfirm: () {
-                              controller.createSalesOrder();
+                              controller.createSalesOrder(context);
                             });
                       },
                     ),
@@ -5355,7 +5355,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                             textConfirm: "Create".tr,
                             textCancel: "Cancel".tr,
                             onConfirm: () {
-                              controller.createSalesOrder();
+                              controller.createSalesOrder(context);
                             });
                       },
                     ),

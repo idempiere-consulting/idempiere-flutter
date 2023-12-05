@@ -7,10 +7,14 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter_material_symbols/flutter_material_symbols.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Equipment/views/screens/vehicle_equipment_edit_equipment.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Equipment/views/screens/vehicle_equipment_equipment_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/models/asset_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -74,7 +78,7 @@ class VehicleEquipmentEquipmentScreen
                       margin: const EdgeInsets.only(left: 10),
                       child: ElevatedButton(
                         onPressed: () {
-                          controller.getEquipments();
+                          controller.getEquipment();
                         },
                         child: Row(
                           children: [
@@ -117,7 +121,7 @@ class VehicleEquipmentEquipmentScreen
                         onPressed: () {
                           if (controller.pagesCount > 1) {
                             controller.pagesCount.value -= 1;
-                            controller.getEquipments();
+                            controller.getEquipment();
                           }
                         },
                         icon: const Icon(Icons.skip_previous),
@@ -129,7 +133,7 @@ class VehicleEquipmentEquipmentScreen
                           if (controller.pagesCount <
                               controller.pagesTot.value) {
                             controller.pagesCount.value += 1;
-                            controller.getEquipments();
+                            controller.getEquipment();
                           }
                         },
                         icon: const Icon(Icons.skip_next),
@@ -141,6 +145,37 @@ class VehicleEquipmentEquipmentScreen
             ),
           ],
         ),
+      ),
+
+      floatingActionButtonLocation:
+          FloatingActionButtonLocation.miniCenterDocked,
+      floatingActionButton: SpeedDial(
+        animatedIcon: AnimatedIcons.home_menu,
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+        /*  buttonSize: const Size(, 45),
+        childrenButtonSize: const Size(45, 45), */
+        children: [
+          SpeedDialChild(
+              label: 'Filter'.tr,
+              child: Obx(
+                () => Icon(
+                  MaterialSymbols.filter_alt_filled,
+                  color: controller.value.value == "" &&
+                          controller.name.value == "" &&
+                          controller.licensePlate.value == ""
+                      ? Colors.white
+                      : kNotifColor,
+                ),
+              ),
+              onTap: () {
+                Get.to(const VehicleEquipmentFilterEquipment(), arguments: {
+                  'value': controller.value.value,
+                  'name': controller.name.value,
+                  'licensePlate': controller.licensePlate.value,
+                });
+              }),
+        ],
       ),
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
@@ -165,7 +200,7 @@ class VehicleEquipmentEquipmentScreen
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: controller.trx.rowcount,
+                      itemCount: controller._trx.records!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 8.0,
@@ -191,6 +226,36 @@ class VehicleEquipmentEquipmentScreen
                                   ),
                                   tooltip: 'Edit Vehicle'.tr,
                                   onPressed: () {
+                                    Get.to(() => const EditEquipment(),
+                                        arguments: {
+                                          "id": controller
+                                              ._trx.records![index].id,
+                                          "value": controller
+                                              ._trx.records![index].value,
+                                          "invNo": controller
+                                              ._trx.records![index].inventoryNo,
+                                          "licencePlate": controller._trx
+                                              .records![index].licensePlate,
+                                          "serNo": controller
+                                              ._trx.records![index].serNo,
+                                          "targetFrame": controller
+                                              ._trx.records![index].targetFrame,
+                                          "name": controller
+                                              ._trx.records![index].name,
+                                          "description": controller
+                                              ._trx.records![index].description,
+                                          "year": controller
+                                              ._trx.records![index].year,
+                                          "isInPosession": controller._trx
+                                              .records![index].isInPosession,
+                                          "businessPartnerName": controller
+                                              ._trx
+                                              .records![index]
+                                              .cbPartnerID
+                                              ?.identifier,
+                                          "businessPartnerId": controller._trx
+                                              .records![index].cbPartnerID?.id,
+                                        });
                                     //log("info button pressed".tr);
                                   },
                                 ),

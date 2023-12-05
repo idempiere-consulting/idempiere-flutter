@@ -51,6 +51,8 @@ class _SupplychainCreateMaterialReceiptOrderLineState
 
       qtyArrivedFieldControllerList = List.generate(
           orderLineList.records!.length, (i) => TextEditingController());
+      lotNoFieldControllerList = List.generate(
+          orderLineList.records!.length, (i) => TextEditingController());
       //print(trx.rowcount);
       //print(response.body);
       // ignore: unnecessary_null_comparison
@@ -82,6 +84,7 @@ class _SupplychainCreateMaterialReceiptOrderLineState
             qtyArrivedFieldControllerList[i].text == ''
                 ? '0'
                 : qtyArrivedFieldControllerList[i].text);
+        rec.lotNo = lotNoFieldControllerList[i].text;
 
         Get.find<SupplychainMaterialreceiptCreationController>()
             .orderLineList
@@ -104,6 +107,8 @@ class _SupplychainCreateMaterialReceiptOrderLineState
   bool orderLineListAvailable = false;
   SalesOrderLineJson orderLineList = SalesOrderLineJson(records: []);
   List<TextEditingController> qtyArrivedFieldControllerList = [];
+
+  List<TextEditingController> lotNoFieldControllerList = [];
 
   @override
   void initState() {
@@ -234,25 +239,6 @@ class _SupplychainCreateMaterialReceiptOrderLineState
                                 decoration: const BoxDecoration(
                                     color: Color.fromRGBO(64, 75, 96, .9)),
                                 child: ListTile(
-                                  /*  tilePadding: const EdgeInsets.symmetric(
-                                      horizontal: 20.0, vertical: 10.0), */
-                                  /* leading: Container(
-                                    padding: const EdgeInsets.only(right: 12.0),
-                                    decoration: const BoxDecoration(
-                                        border: Border(
-                                            right: BorderSide(
-                                                width: 1.0,
-                                                color: Colors.white24))),
-                                    child: IconButton(
-                                      icon: const Icon(
-                                        Icons.edit,
-                                        color: Colors.green,
-                                      ),
-                                      tooltip: ''.tr,
-                                      onPressed: () {},
-                                    ),
-                                  ), */
-
                                   title: Text(
                                     orderLineList.records![index].mProductID
                                             ?.identifier ??
@@ -355,6 +341,30 @@ class _SupplychainCreateMaterialReceiptOrderLineState
                                           ],
                                         ),
                                       ),
+                                      Row(
+                                        children: [
+                                          Flexible(
+                                            child: Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 15, bottom: 15),
+                                              child: TextField(
+                                                //textAlign: TextAlign.end,
+                                                controller:
+                                                    lotNoFieldControllerList[
+                                                        index],
+                                                decoration: InputDecoration(
+                                                  border:
+                                                      const OutlineInputBorder(),
+                                                  labelText: 'Lot'.tr,
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .always,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )
                                     ],
                                   ),
                                 ),

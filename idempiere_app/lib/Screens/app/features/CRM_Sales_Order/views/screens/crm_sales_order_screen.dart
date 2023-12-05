@@ -10,6 +10,7 @@ import 'dart:typed_data';
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_material_symbols/flutter_material_symbols.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -23,6 +24,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens
 //import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/models/asset_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -603,6 +605,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .id,
+                                                              "note": controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .note ??
+                                                                  '',
                                                               "docNo": controller
                                                                   ._trx
                                                                   .records![
@@ -757,6 +765,126 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon: const Icon(
                                                         EvaIcons.edit2Outline),
+                                                  ),
+                                                  Visibility(
+                                                    visible: int.parse(
+                                                                        controller.list[
+                                                                            14],
+                                                                        radix: 16)
+                                                                    .toRadixString(
+                                                                        2)
+                                                                    .padLeft(4, "0")
+                                                                    .toString()[
+                                                                6] !=
+                                                            "1" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            'CO',
+                                                    child: IconButton(
+                                                      tooltip: 'Asset Used'.tr,
+                                                      onPressed: () async {
+                                                        controller
+                                                            .codeFieldController
+                                                            .text = '';
+                                                        controller
+                                                            .assetQtyFieldController
+                                                            .text = '1';
+                                                        Get.defaultDialog(
+                                                            title:
+                                                                'Asset Used'.tr,
+                                                            content: Column(
+                                                              children: [
+                                                                Divider(),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      controller:
+                                                                          controller
+                                                                              .codeFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Code".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                    )),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      controller:
+                                                                          controller
+                                                                              .assetQtyFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Qty".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                      keyboardType: const TextInputType
+                                                                              .numberWithOptions(
+                                                                          signed:
+                                                                              false,
+                                                                          decimal:
+                                                                              true),
+                                                                      inputFormatters: [
+                                                                        FilteringTextInputFormatter.allow(
+                                                                            RegExp("[0-9]"))
+                                                                      ],
+                                                                    )),
+                                                              ],
+                                                            ),
+                                                            onConfirm: () {
+                                                              controller
+                                                                  .getAssetUsed(
+                                                                      index);
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          MaterialSymbols
+                                                              .build),
+                                                    ),
                                                   ),
                                                   Visibility(
                                                     visible: controller
@@ -949,7 +1077,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                             ),
                                             tooltip: 'Edit Sales Order'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
                                               if (controller.trx.records![index]
                                                           .docStatus?.id !=
                                                       "CO" &&
@@ -1008,6 +1135,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           .toString(),
                                                     });
                                               }
+                                              //log("info button pressed");
                                             },
                                           ),
                                         ),
@@ -1155,6 +1283,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                       .records![
                                                                           index]
                                                                       .id,
+                                                              "note": controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .note ??
+                                                                  '',
                                                               "docNo": controller
                                                                   ._trx
                                                                   .records![
@@ -1309,6 +1443,126 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon: const Icon(
                                                         EvaIcons.edit2Outline),
+                                                  ),
+                                                  Visibility(
+                                                    visible: int.parse(
+                                                                        controller.list[
+                                                                            14],
+                                                                        radix: 16)
+                                                                    .toRadixString(
+                                                                        2)
+                                                                    .padLeft(4, "0")
+                                                                    .toString()[
+                                                                6] !=
+                                                            "1" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            'CO',
+                                                    child: IconButton(
+                                                      tooltip: 'Asset Used'.tr,
+                                                      onPressed: () async {
+                                                        controller
+                                                            .codeFieldController
+                                                            .text = '';
+                                                        controller
+                                                            .assetQtyFieldController
+                                                            .text = '1';
+                                                        Get.defaultDialog(
+                                                            title:
+                                                                'Asset Used'.tr,
+                                                            content: Column(
+                                                              children: [
+                                                                Divider(),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      controller:
+                                                                          controller
+                                                                              .codeFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Code".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                    )),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      controller:
+                                                                          controller
+                                                                              .assetQtyFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Qty".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                      keyboardType: const TextInputType
+                                                                              .numberWithOptions(
+                                                                          signed:
+                                                                              false,
+                                                                          decimal:
+                                                                              true),
+                                                                      inputFormatters: [
+                                                                        FilteringTextInputFormatter.allow(
+                                                                            RegExp("[0-9]"))
+                                                                      ],
+                                                                    )),
+                                                              ],
+                                                            ),
+                                                            onConfirm: () {
+                                                              controller
+                                                                  .getAssetUsed(
+                                                                      index);
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          MaterialSymbols
+                                                              .build),
+                                                    ),
                                                   ),
                                                   Visibility(
                                                     visible: controller
@@ -1501,7 +1755,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                             ),
                                             tooltip: 'Edit Sales Order'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
                                               if (controller.trx.records![index]
                                                           .docStatus?.id !=
                                                       "CO" &&
@@ -1560,6 +1813,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           .toString(),
                                                     });
                                               }
+                                              //log("info button pressed");
                                             },
                                           ),
                                         ),
@@ -1698,96 +1952,88 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                       tooltip:
                                                           'Edit Sales Order'.tr,
                                                       onPressed: () async {
-                                                        if (controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .docStatus
-                                                                    ?.id !=
-                                                                "CO" &&
-                                                            controller
-                                                                    .trx
-                                                                    .records![
-                                                                        index]
-                                                                    .docStatus
-                                                                    ?.id !=
-                                                                "CL") {
-                                                          Get.toNamed(
-                                                              '/SalesOrderCreationBPPricelistEdit',
-                                                              arguments: {
-                                                                "orderId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .id,
-                                                                "docNo": controller
-                                                                    ._trx
-                                                                    .records![
-                                                                        index]
-                                                                    .documentNo,
-                                                                "priceListId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .mPriceListID
-                                                                        ?.id,
-                                                                "businessPartnerId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .cBPartnerID
-                                                                        ?.id,
-                                                                "businessPartnerName": controller
-                                                                    ._trx
-                                                                    .records![
-                                                                        index]
-                                                                    .cBPartnerID
-                                                                    ?.identifier,
-                                                                "dateOrdered":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .dateOrdered,
-                                                                "datePromised":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .datePromised,
-                                                                "documentTypeId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .cDocTypeTargetID
-                                                                        ?.id,
-                                                                "paymentTermId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .cPaymentTermID
-                                                                        ?.id,
-                                                                "paymentRuleId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .paymentRule
-                                                                        ?.id,
-                                                                "bpLocationId":
-                                                                    controller
-                                                                        ._trx
-                                                                        .records![
-                                                                            index]
-                                                                        .cBPartnerLocationID
-                                                                        ?.id,
-                                                              });
-                                                        }
+                                                        Get.toNamed(
+                                                            '/SalesOrderCreationBPPricelistEdit',
+                                                            arguments: {
+                                                              "orderId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .id,
+                                                              "note": controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .note ??
+                                                                  '',
+                                                              "docNo": controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .documentNo,
+                                                              "priceListId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mPriceListID
+                                                                      ?.id,
+                                                              "businessPartnerId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.id,
+                                                              "businessPartnerName":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerID
+                                                                      ?.identifier,
+                                                              "dateOrdered":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .dateOrdered,
+                                                              "datePromised":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .datePromised,
+                                                              "documentTypeId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cDocTypeTargetID
+                                                                      ?.id,
+                                                              "paymentTermId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cPaymentTermID
+                                                                      ?.id,
+                                                              "paymentRuleId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .paymentRule
+                                                                      ?.id,
+                                                              "bpLocationId":
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cBPartnerLocationID
+                                                                      ?.id,
+                                                            });
                                                       },
                                                       icon: const Icon(
                                                           Icons.edit_document),
@@ -1875,6 +2121,126 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                     },
                                                     icon: const Icon(
                                                         EvaIcons.edit2Outline),
+                                                  ),
+                                                  Visibility(
+                                                    visible: int.parse(
+                                                                        controller.list[
+                                                                            14],
+                                                                        radix: 16)
+                                                                    .toRadixString(
+                                                                        2)
+                                                                    .padLeft(4, "0")
+                                                                    .toString()[
+                                                                6] !=
+                                                            "1" &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .docStatus
+                                                                ?.id !=
+                                                            'CO',
+                                                    child: IconButton(
+                                                      tooltip: 'Asset Used'.tr,
+                                                      onPressed: () async {
+                                                        controller
+                                                            .codeFieldController
+                                                            .text = '';
+                                                        controller
+                                                            .assetQtyFieldController
+                                                            .text = '1';
+                                                        Get.defaultDialog(
+                                                            title:
+                                                                'Asset Used'.tr,
+                                                            content: Column(
+                                                              children: [
+                                                                Divider(),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      controller:
+                                                                          controller
+                                                                              .codeFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Code".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                    )),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      textAlign:
+                                                                          TextAlign
+                                                                              .center,
+                                                                      controller:
+                                                                          controller
+                                                                              .assetQtyFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Qty".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                      keyboardType: const TextInputType
+                                                                              .numberWithOptions(
+                                                                          signed:
+                                                                              false,
+                                                                          decimal:
+                                                                              true),
+                                                                      inputFormatters: [
+                                                                        FilteringTextInputFormatter.allow(
+                                                                            RegExp("[0-9]"))
+                                                                      ],
+                                                                    )),
+                                                              ],
+                                                            ),
+                                                            onConfirm: () {
+                                                              controller
+                                                                  .getAssetUsed(
+                                                                      index);
+                                                            });
+                                                      },
+                                                      icon: const Icon(
+                                                          MaterialSymbols
+                                                              .build),
+                                                    ),
                                                   ),
                                                   Visibility(
                                                     visible: controller

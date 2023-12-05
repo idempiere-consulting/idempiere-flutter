@@ -329,7 +329,7 @@ class SupplychainMaterialreceiptController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      //print(utf8.decode(response.bodyBytes));
+      print(utf8.decode(response.bodyBytes));
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       String pdfString = json["exportFile"];
@@ -344,6 +344,7 @@ class SupplychainMaterialreceiptController extends GetxController {
 
       //return json.records!;
     } else {
+      print(utf8.decode(response.bodyBytes));
       throw Exception("Failed to load PDF");
     }
   }

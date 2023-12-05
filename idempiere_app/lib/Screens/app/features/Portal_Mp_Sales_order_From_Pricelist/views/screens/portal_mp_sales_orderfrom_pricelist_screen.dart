@@ -28,6 +28,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/mode
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -1588,7 +1589,7 @@ class PortalMpSalesOrderFromPriceListScreen
                             textConfirm: "Create".tr,
                             textCancel: "Cancel".tr,
                             onConfirm: () {
-                              controller.createSalesOrder();
+                              controller.createSalesOrder(context);
                             });
                       },
                     ),
@@ -3076,7 +3077,7 @@ class PortalMpSalesOrderFromPriceListScreen
                             textConfirm: "Create".tr,
                             textCancel: "Cancel".tr,
                             onConfirm: () {
-                              controller.createSalesOrder();
+                              controller.createSalesOrder(context);
                             });
                       },
                     ),
@@ -4564,7 +4565,7 @@ class PortalMpSalesOrderFromPriceListScreen
                             textConfirm: "Create".tr,
                             textCancel: "Cancel".tr,
                             onConfirm: () {
-                              controller.createSalesOrder();
+                              controller.createSalesOrder(context);
                             });
                       },
                     ),

@@ -133,6 +133,8 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
           (element) => element.salesRepID?.id != GetStorage().read('userId'));
     }
 
+    jsonbps.records!.removeWhere((element) => element.isCustomer == false);
+
     return jsonbps.records!;
 
     //print(list[0].eMail);

@@ -13,6 +13,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/models/asset_json.dart';
+import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_edit_vehicle.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_vehicle_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -198,7 +199,7 @@ class VehicleEquipmentVehicleScreen
                   ? ListView.builder(
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
-                      itemCount: controller.trx.rowcount,
+                      itemCount: controller._trx.records!.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 8.0,
@@ -224,6 +225,36 @@ class VehicleEquipmentVehicleScreen
                                   ),
                                   tooltip: 'Edit Vehicle'.tr,
                                   onPressed: () {
+                                    Get.to(() => const EditVehicle(),
+                                        arguments: {
+                                          "id": controller
+                                              ._trx.records![index].id,
+                                          "value": controller
+                                              ._trx.records![index].value,
+                                          "invNo": controller
+                                              ._trx.records![index].inventoryNo,
+                                          "licencePlate": controller._trx
+                                              .records![index].licensePlate,
+                                          "serNo": controller
+                                              ._trx.records![index].serNo,
+                                          "targetFrame": controller
+                                              ._trx.records![index].targetFrame,
+                                          "name": controller
+                                              ._trx.records![index].name,
+                                          "description": controller
+                                              ._trx.records![index].description,
+                                          "year": controller
+                                              ._trx.records![index].year,
+                                          "isInPosession": controller._trx
+                                              .records![index].isInPosession,
+                                          "businessPartnerName": controller
+                                              ._trx
+                                              .records![index]
+                                              .cbPartnerID
+                                              ?.identifier,
+                                          "businessPartnerId": controller._trx
+                                              .records![index].cbPartnerID?.id,
+                                        });
                                     //log("info button pressed".tr);
                                   },
                                 ),

@@ -35,6 +35,10 @@ class CRMSalesOrderController extends GetxController {
   var docNoValue = "".obs;
 
   var searchFieldController = TextEditingController();
+
+  var codeFieldController = TextEditingController();
+  var assetQtyFieldController = TextEditingController();
+
   var searchFilterValue = "".obs;
 
   late List<Types> dropDownList;
@@ -136,6 +140,84 @@ class CRMSalesOrderController extends GetxController {
       path: receiver,
     );
     await launchUrl(launchUri);
+  }
+
+  Future<void> getAssetUsed(index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/a_asset?\$filter= Value eq \'${codeFieldController.text}\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json =
+          AssetJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.records!.isNotEmpty) {
+        registerAssetUse(json.records![0].id!, _trx.records![index].id!);
+      }
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> registerAssetUse(int assetId, int orderId) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/windows/lit-draftjournal');
+
+    var now = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    String formattedDate = formatter.format(now);
+
+    var msg = jsonEncode({
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+      "Name": "Asset Use",
+      "C_Order_ID": {"id": orderId},
+      "A_Asset_ID": {"id": assetId},
+      "DateDoc": formattedDate,
+      "Qty": int.parse(assetQtyFieldController.text),
+    });
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      Get.back();
+      Get.snackbar(
+        "Done".tr,
+        "The record has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      print(response.body);
+      Get.snackbar(
+        "Error!".tr,
+        "Record not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 
   Future<void> getSalesOrders() async {

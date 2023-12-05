@@ -125,6 +125,7 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
         "User1_ID": {"id": -1},
         "User2_ID": {"id": -1},
         "C_Project_ID": {"id": -1},
+        "Lot": element.lotNo ?? '',
       });
     }
 

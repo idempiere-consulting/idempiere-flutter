@@ -9,22 +9,30 @@ class VehicleEquipmentEquipmentController extends GetxController {
   var pagesCount = 1.obs;
   var pagesTot = 1.obs;
 
+  var valueFilter = "";
+  var nameFilter = "";
+  var licensePlateFilter = "";
+
+  var value = "".obs;
+  var name = "".obs;
+  var licensePlate = "".obs;
+
   @override
   void onInit() {
     super.onInit();
-    getEquipments();
+    getEquipment();
   }
 
   bool get dataAvailable => _dataAvailable.value;
   AssetJSON get trx => _trx;
 
-  Future<void> getEquipments() async {
+  Future<void> getEquipment() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/A_Asset?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/A_Asset?\$filter= lit_assettype eq \'EQU\' and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
