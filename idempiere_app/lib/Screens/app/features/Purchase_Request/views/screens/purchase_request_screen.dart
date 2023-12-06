@@ -402,19 +402,40 @@ class PurchaseRequestScreen extends GetView<PurchaseRequestController> {
                                                 horizontal: 20.0,
                                                 vertical: 10.0),
                                         children: [
-                                          Column(
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
                                             children: [
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    "Amount: ".tr,
-                                                    style: const TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold),
+                                              Visibility(
+                                                visible: controller
+                                                        .trx
+                                                        .records![index]
+                                                        .docStatus
+                                                        ?.id !=
+                                                    'CO',
+                                                child: ElevatedButton(
+                                                  style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(Colors.green),
                                                   ),
-                                                  Text(
-                                                      "€${controller.trx.records![index].totalLines}"),
-                                                ],
+                                                  onPressed: () async {
+                                                    Get.defaultDialog(
+                                                      title: 'Complete'.tr,
+                                                      content: Text(
+                                                          "Are you sure you want to complete the record?"
+                                                              .tr
+                                                              .tr),
+                                                      onCancel: () {},
+                                                      onConfirm: () async {
+                                                        controller
+                                                            .completeRequest(
+                                                                index);
+                                                      },
+                                                    );
+                                                  },
+                                                  child: Text("Complete".tr),
+                                                ),
                                               ),
                                             ],
                                           ),

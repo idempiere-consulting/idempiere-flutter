@@ -1245,7 +1245,13 @@ class LocaleString extends Translations {
           'ASSET': 'CESPITE',
           'Creating record..': 'Creazione record..',
           'PURCH. REQ.: ': 'RICH. ACQ,: ',
-          'Purchase Request': 'Richiesta di Acquisto'
+          'Purchase Request': 'Richiesta di Acquisto',
+          'Search Product...': 'Cerca Prodotto',
+          'Confirm Request': 'Conferma Richiesta',
+          'Create Request': 'Crea Richiesta',
+          'Are you sure you want to create the Request?':
+              'Sicuro di voler creare la Richiesta?',
+          'requisition-line': 'linea-richiesta'
         },
       };
 }

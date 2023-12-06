@@ -350,7 +350,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
     final protocol = GetStorage().read('protocol');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/AD_User?\$filter= Value eq \'tba\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/AD_User?\$filter= Value eq \'hrm\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{

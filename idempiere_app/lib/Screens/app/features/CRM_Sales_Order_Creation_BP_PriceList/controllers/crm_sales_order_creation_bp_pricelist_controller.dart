@@ -719,7 +719,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       "DateOrdered": "${formattedDate}T00:00:00Z",
       "Note": noteFieldController.text,
       "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
-      "ShipDate": "${dateStartFieldController.text}T70:00:00Z",
+      "ShipDate": "${dateStartFieldController.text}T07:00:00Z",
       "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
       "DeliveryRule": defValues.records![0].deliveryRule!.id,
       "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,

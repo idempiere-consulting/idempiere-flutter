@@ -77,6 +77,54 @@ class PurchaseRequestController extends GetxController {
   PurchaseRequestJSON get trx => _trx;
   //String get value => _value.toString();
 
+  completeRequest(int index) async {
+    Get.back();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final msg = jsonEncode({
+      "doc-action": "CO",
+    });
+    //print(msg);
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Requisition/${_trx.records![index].id}');
+    //print(url);
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getPurchaseRequests();
+      //print(response.body);
+
+      Get.snackbar(
+        "Done!".tr,
+        "Record has been completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record not completed".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   changeFilter() {
     filterCount++;
     if (filterCount == 2) {
