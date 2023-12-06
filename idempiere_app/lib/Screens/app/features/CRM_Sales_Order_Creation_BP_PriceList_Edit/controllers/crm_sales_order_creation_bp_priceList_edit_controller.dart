@@ -584,37 +584,6 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
     }
   }
 
-  /* Future<void> getTabs() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/windows/sales-order/tabs');
-
-    var response = await http.get(
-      url,
-      //body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      print(response.body);
-
-      //var json = jsonDecode(utf8.decode(response.bodyBytes));
-
-      /* cOrderId = json["id"];
-      if (cOrderId != 0) {
-        createSalesOrderLine();
-      } */
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  } */
-
   Future<void> editSalesOrder() async {
     Get.back();
     final ip = GetStorage().read('ip');
@@ -783,37 +752,6 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
       );
     }
   }
-
-  /* Future<void> createSalesOrderLine() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/sales-order/$cOrderId/tabs/order-line');
-
-    var msg = jsonEncode({
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "M_Product_ID": {"id": productList[0].id},
-    });
-
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 201) {
-      print(response.body);
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  } */
 
   // Data
   // ignore: library_private_types_in_public_api

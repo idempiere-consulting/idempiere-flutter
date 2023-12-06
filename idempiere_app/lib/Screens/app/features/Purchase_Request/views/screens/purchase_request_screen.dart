@@ -408,6 +408,40 @@ class PurchaseRequestScreen extends GetView<PurchaseRequestController> {
                                             children: [
                                               Visibility(
                                                 visible: controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        "CO" &&
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .docStatus
+                                                            ?.id !=
+                                                        "CL",
+                                                child: IconButton(
+                                                  tooltip:
+                                                      'Edit Purchase Request'
+                                                          .tr
+                                                          .tr,
+                                                  onPressed: () async {
+                                                    Get.toNamed(
+                                                        '/PurchaseRequestCreationEdit',
+                                                        arguments: {
+                                                          "requisitionId":
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .id,
+                                                        });
+                                                  },
+                                                  icon: const Icon(
+                                                      Icons.edit_document),
+                                                ),
+                                              ),
+                                              Visibility(
+                                                visible: controller
                                                         .trx
                                                         .records![index]
                                                         .docStatus

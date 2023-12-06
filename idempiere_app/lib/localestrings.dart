@@ -1251,7 +1251,13 @@ class LocaleString extends Translations {
           'Create Request': 'Crea Richiesta',
           'Are you sure you want to create the Request?':
               'Sicuro di voler creare la Richiesta?',
-          'requisition-line': 'linea-richiesta'
+          'requisition-line': 'linea-richiesta',
+          'Edit Purchase Request': 'Modifica Richiesta di Acquisto',
+          'requisition': 'richiesta-di-acquisto-rda01',
+          'Edit Request': 'Modifica Richiesta',
+          'Are you sure you want to edit the Request?':
+              'Sicuro di voler modificare la Richiesta?',
+          'The record has been edited': 'Il record è stato modificato'
         },
       };
 }

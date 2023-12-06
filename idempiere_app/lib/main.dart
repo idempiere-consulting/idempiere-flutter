@@ -89,6 +89,7 @@ import 'package:idempiere_app/Screens/app/features/Purchase_Product_List/views/s
 import 'package:idempiere_app/Screens/app/features/Purchase_Productwarehouseprice/views/screens/purchase_productwarehouseprice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Request/views/screens/purchase_request_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Request_Creation/views/screens/purchase_request_creation_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Purchase_Request_Creation_Edit/views/screens/purchase_request_creation_edit_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Settings/views/screens/settings_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Signature/signature_page.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain/views/screens/supplychain_screen.dart';
@@ -607,6 +608,11 @@ class MyApp extends StatelessWidget {
           name: '/PurchaseRequestCreation',
           page: () => const PurchaseRequestCreationScreen(),
           binding: PurchaseRequestCreationBinding(),
+        ),
+        GetPage(
+          name: '/PurchaseRequestCreationEdit',
+          page: () => const PurchaseRequestCreationEditScreen(),
+          binding: PurchaseRequestCreationEditBinding(),
         ),
         GetPage(
           name: '/PurchaseInvoice',
