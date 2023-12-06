@@ -1244,7 +1244,7 @@ class LocaleString extends Translations {
           'Asset': 'Cespite',
           'ASSET': 'CESPITE',
           'Creating record..': 'Creazione record..',
-          'PURCH. REQ.: ': 'RICH. ACQ,: ',
+          'PURCH. REQ.: ': 'RICH. ACQ.: ',
           'Purchase Request': 'Richiesta di Acquisto',
           'Search Product...': 'Cerca Prodotto',
           'Confirm Request': 'Conferma Richiesta',
