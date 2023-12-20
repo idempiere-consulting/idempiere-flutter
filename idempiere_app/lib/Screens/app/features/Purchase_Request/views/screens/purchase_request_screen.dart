@@ -301,12 +301,22 @@ class PurchaseRequestScreen extends GetView<PurchaseRequestController> {
                                                       width: 1.0,
                                                       color: Colors.white24))),
                                           child: IconButton(
-                                            icon: const Icon(
-                                              Icons.edit,
+                                            icon: Icon(
+                                              Symbols.delete,
+                                              color: controller
+                                                          .trx
+                                                          .records![index]
+                                                          .docStatus
+                                                          ?.id ==
+                                                      "CO"
+                                                  ? Colors.grey
+                                                  : Colors.red,
                                             ),
-                                            tooltip: 'Edit Sales Order'.tr,
+                                            tooltip:
+                                                'Delete Purchase Request'.tr,
                                             onPressed: () {
-                                              //log("info button pressed");
+                                              controller
+                                                  .deletePurchaseRequest(index);
                                             },
                                           ),
                                         ),

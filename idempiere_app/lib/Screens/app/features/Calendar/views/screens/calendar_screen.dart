@@ -164,6 +164,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
         int index = 1;
         getAllEventsPages(json, index);
       } else {
+        selectedEvents.removeWhere((key, value) => true);
         for (var i = 0; i < json.records!.length; i++) {
           //print('hallo');
           //print(list![i].mpotid?.id);
@@ -229,8 +230,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
             ];
           }
         }
-        flag = true;
-        setState(() {});
+
+        setState(() {
+          flag = true;
+        });
       }
       //print(json.rowcount);
     } else {
@@ -281,6 +284,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
       if (json.pagecount! > index) {
         getAllEventsPages(json, index);
       } else {
+        selectedEvents.removeWhere((key, value) => true);
         for (var i = 0; i < json.records!.length; i++) {
           //print('hallo');
           //print(list![i].mpotid?.id);
@@ -382,7 +386,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/ad_user?\$filter= DateLastLogin neq null and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= (DateLastLogin neq null or lit_isResource eq true) and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -513,37 +517,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       "1"
                                   ? true
                                   : false,
-                              child: /* Autocomplete<Records>(
-                                initialValue: TextEditingValue(
-                                    text: GetStorage().read('user') ?? ""),
-                                displayStringForOption: _displayStringForOption,
-                                optionsBuilder:
-                                    (TextEditingValue textEditingValue) {
-                                  if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
-                                  }
-                                  return snapshot.data!.where((Records option) {
-                                    return option.name!
-                                        .toString()
-                                        .toLowerCase()
-                                        .contains(textEditingValue.text
-                                            .toLowerCase());
-                                  });
-                                },
-                                onSelected: (Records selection) {
-                                  //debugPrint(
-                                  //'You just selected ${_displayStringForOption(selection)}');
-                                  setState(() {
-                                    flag = false;
-                                    adUserId = selection.id!;
-                                    //flag = true;
-                                  });
-                                  getAllEvents();
-
-                                  //print(salesrepValue);
-                                },
-                              ), */
-                                  TypeAheadField<Records>(
+                              child: TypeAheadField<Records>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: userFieldController,
                                   //autofocus: true,
@@ -635,53 +609,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
                       return isSameDay(selectedDay, date);
                     },
                     onHeaderLongPressed: (date) {
-                      /* showDialog(
-                        context: context,
-                        builder: (context) => AlertDialog(
-                          title: Text(
-                            "Add Event".tr,
-                          ),
-                          content: DropdownButton(
-                            value: dropdownValue,
-                            elevation: 16,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                dropdownValue = newValue!;
-                              });
-                              //print(dropdownValue);
-                            },
-                            items: dropDownList.map((list) {
-                              return DropdownMenuItem<String>(
-                                child: Text(
-                                  list.name.toString(),
-                                ),
-                                value: list.id,
-                              );
-                            }).toList(),
-                          ),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text("Cancel".tr),
-                            ),
-                            TextButton(
-                              onPressed: () {
-                                Get.back();
-                                setState(() {});
-                                switch (dropdownValue) {
-                                  case "1":
-                                    Get.off(const CreateCalendarEvent());
-                                    break;
-                                  default:
-                                }
-                              },
-                              child: Text("Accept".tr),
-                            ),
-                          ],
-                        ),
-                      ); */
                       Get.off(const CreateCalendarEvent(),
                           arguments: {"adUserId": adUserId});
                     },

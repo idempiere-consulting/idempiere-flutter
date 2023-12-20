@@ -56,7 +56,7 @@ class Body extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: const [
                 Text(
-                  "build: 1.3.3.6_2023-12-04",
+                  "build: 1.3.3.8_2023-12-12",
                   style: TextStyle(fontSize: 9),
                 ),
               ],

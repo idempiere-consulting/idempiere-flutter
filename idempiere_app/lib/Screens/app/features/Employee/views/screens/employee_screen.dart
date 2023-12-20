@@ -25,6 +25,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:material_symbols_icons/symbols.dart';
 
 // binding
 part '../../bindings/employee_binding.dart';
@@ -53,12 +54,13 @@ class EmployeeScreen extends GetView<EmployeeController> {
       //key: controller.scaffoldKey,
       drawer: /* (ResponsiveBuilder.isDesktop(context))
           ? null
-          : */ Drawer(
-              child: Padding(
-                padding: const EdgeInsets.only(top: kSpacing),
-                child: _Sidebar(data: controller.getSelectedProject()),
-              ),
-            ),
+          : */
+          Drawer(
+        child: Padding(
+          padding: const EdgeInsets.only(top: kSpacing),
+          child: _Sidebar(data: controller.getSelectedProject()),
+        ),
+      ),
       body: SingleChildScrollView(
           child: ResponsiveBuilder(
         mobileBuilder: (context, constraints) {
@@ -96,7 +98,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
           ]);
         },
         tabletBuilder: (context, constraints) {
-           return Column(children: [
+          return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -130,7 +132,7 @@ class EmployeeScreen extends GetView<EmployeeController> {
           ]);
         },
         desktopBuilder: (context, constraints) {
-           return Column(children: [
+          return Column(children: [
             const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             _buildHeader(
                 onPressedMenu: () => Scaffold.of(context).openDrawer()),

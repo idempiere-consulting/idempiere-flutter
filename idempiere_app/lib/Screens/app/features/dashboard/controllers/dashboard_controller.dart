@@ -1,12 +1,11 @@
 part of dashboard;
 
 class DashboardController extends GetxController {
-  /* final scaffoldKey = GlobalKey<ScaffoldState>();
-  void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
-    }
-  } */
+  BroadcastMessageJSON broadcastMessage = BroadcastMessageJSON(records: []);
+
+  TextEditingController messageContentFieldController = TextEditingController();
+
+  var broadcastMessageAvailable = false.obs;
 
   var notificationCounter = 0.obs;
 
@@ -28,9 +27,9 @@ class DashboardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-
     getNotificationCounter();
     getAllEvents();
+    getAllBroadcastMessages();
   }
 
   /* Future<void> nextcloudTest() async {
@@ -53,6 +52,75 @@ class DashboardController extends GetxController {
 
     print('... done!');
   } */
+
+  Future<void> markAsRead(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+
+    var msg = {
+      "Processed": true,
+    };
+
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_note/${broadcastMessage.records![index].adNoteID!.id}');
+    //print(msg);
+    var response = await http.put(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      getAllBroadcastMessages();
+      Get.back();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getAllBroadcastMessages() async {
+    broadcastMessageAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_broadcastmsg_v?\$filter=  AD_User2_ID eq ${GetStorage().read('userId')} and AD_Client_ID eq ${GetStorage().read("clientid")}&\$orderby= Created asc');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      broadcastMessage = BroadcastMessageJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (broadcastMessage.records!.isEmpty) {
+        broadcastMessageAvailable.value = false;
+      } else {
+        broadcastMessageAvailable.value = true;
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
 
   Future<void> getAllEvents() async {
     var now = DateTime.now();

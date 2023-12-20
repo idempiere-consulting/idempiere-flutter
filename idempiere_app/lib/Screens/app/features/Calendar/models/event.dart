@@ -26,6 +26,7 @@ class Event {
   final String workOrderName;
   final int userId;
   final String userName;
+  final String? createdby;
 
   const Event({
     required this.id,
@@ -48,5 +49,6 @@ class Event {
     required this.workOrderName,
     required this.userId,
     required this.userName,
+    this.createdby,
   });
 }

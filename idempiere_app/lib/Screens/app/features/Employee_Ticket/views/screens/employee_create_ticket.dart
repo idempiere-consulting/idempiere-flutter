@@ -155,7 +155,7 @@ class _CreateEmployeeTicketState extends State<CreateEmployeeTicket> {
       "Priority": {"id": "5"},
       "ConfidentialType": {"id": "C"},
       "SalesRep_ID": {"id": salesRepId},
-      "Summary": " ",
+      "Summary": noteFieldController.text,
       "ConfidentialTypeEntry": {"id": "C"},
       "C_BPartner_ID": {"id": businessPartnerId},
       "StartDate": "${formattedDateFrom}T$timeStart:00Z",

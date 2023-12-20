@@ -39,6 +39,12 @@ class _Sidebar extends StatelessWidget {
                   label: "Employee Ticket".tr,
                   visible: true,
                 ),
+                SelectionButtonData(
+                  activeIcon: Symbols.videogame_asset,
+                  icon: Symbols.videogame_asset,
+                  label: "Employee Resource".tr,
+                  visible: true,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -49,6 +55,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 1:
                     Get.offNamed('/EmployeeTicket');
+                    break;
+                  case 2:
+                    Get.offNamed('/EmployeeResource');
                     break;
 
                   default:

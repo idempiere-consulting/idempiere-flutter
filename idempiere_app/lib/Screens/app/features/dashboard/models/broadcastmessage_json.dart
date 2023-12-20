@@ -1,25 +1,28 @@
-class LoadUnloadLineJson {
+class BroadcastMessageJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<LULRecords>? records;
+  final int? arraycount;
+  final List<Records>? records;
 
-  LoadUnloadLineJson({
+  BroadcastMessageJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
+    this.arraycount,
     this.records,
   });
 
-  LoadUnloadLineJson.fromJson(Map<String, dynamic> json)
+  BroadcastMessageJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
+        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => LULRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -27,13 +30,13 @@ class LoadUnloadLineJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
+        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
 
-class LULRecords {
+class Records {
   final int? id;
-  final String? uid;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
   final bool? isActive;
@@ -41,27 +44,27 @@ class LULRecords {
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final MInventoryID? mInventoryID;
-  final MLocatorID? mLocatorID;
-  final MProductID? mProductID;
-  final num? qtyBook;
-  final num? qtyCount;
-  final String? description;
-  final int? line;
-  final MAttributeSetInstanceID? mAttributeSetInstanceID;
-  final CChargeID? cChargeID;
-  final InventoryType? inventoryType;
+  final BroadcastFrequency? broadcastFrequency;
+  final String? broadcastMessage;
+  final BroadcastType? broadcastType;
+  final bool? logAcknowledge;
+  final Target? target;
+  final ADRoleID? aDRoleID;
+  final ADUserID? aDUserID;
+  final ADBroadcastMessageID? aDBroadcastMessageID;
+  final bool? isPublished;
   final bool? processed;
-  final num? qtyInternalUse;
-  final String? value;
-  final int? qtyCsv;
-  final int? currentCostPrice;
-  final int? newCostPrice;
+  final bool? expired;
+  final String? aDBroadcastMessageUU;
+  final String? title;
+  final ADUser2ID? aDUser2ID;
+  final ADUser3ID? aDUser3ID;
+  final ADNoteID? adNoteID;
+  final String? url;
   final String? modelname;
 
-  LULRecords({
+  Records({
     this.id,
-    this.uid,
     this.aDClientID,
     this.aDOrgID,
     this.isActive,
@@ -69,28 +72,28 @@ class LULRecords {
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.mInventoryID,
-    this.mLocatorID,
-    this.mProductID,
-    this.qtyBook,
-    this.qtyCount,
-    this.description,
-    this.line,
-    this.mAttributeSetInstanceID,
-    this.cChargeID,
-    this.inventoryType,
+    this.broadcastFrequency,
+    this.broadcastMessage,
+    this.broadcastType,
+    this.logAcknowledge,
+    this.target,
+    this.aDRoleID,
+    this.aDUserID,
+    this.aDBroadcastMessageID,
+    this.isPublished,
     this.processed,
-    this.qtyInternalUse,
-    this.value,
-    this.qtyCsv,
-    this.currentCostPrice,
-    this.newCostPrice,
+    this.expired,
+    this.aDBroadcastMessageUU,
+    this.title,
+    this.aDUser2ID,
+    this.aDUser3ID,
+    this.adNoteID,
+    this.url,
     this.modelname,
   });
 
-  LULRecords.fromJson(Map<String, dynamic> json)
+  Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
-        uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
@@ -106,43 +109,50 @@ class LULRecords {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        mInventoryID = (json['M_Inventory_ID'] as Map<String, dynamic>?) != null
-            ? MInventoryID.fromJson(
-                json['M_Inventory_ID'] as Map<String, dynamic>)
-            : null,
-        mLocatorID = (json['M_Locator_ID'] as Map<String, dynamic>?) != null
-            ? MLocatorID.fromJson(json['M_Locator_ID'] as Map<String, dynamic>)
-            : null,
-        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
-            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
-            : null,
-        qtyBook = json['QtyBook'] as num?,
-        qtyCount = json['QtyCount'] as num?,
-        description = json['Description'] as String?,
-        line = json['Line'] as int?,
-        mAttributeSetInstanceID =
-            (json['M_AttributeSetInstance_ID'] as Map<String, dynamic>?) != null
-                ? MAttributeSetInstanceID.fromJson(
-                    json['M_AttributeSetInstance_ID'] as Map<String, dynamic>)
+        broadcastFrequency =
+            (json['BroadcastFrequency'] as Map<String, dynamic>?) != null
+                ? BroadcastFrequency.fromJson(
+                    json['BroadcastFrequency'] as Map<String, dynamic>)
                 : null,
-        cChargeID = (json['C_Charge_ID'] as Map<String, dynamic>?) != null
-            ? CChargeID.fromJson(json['C_Charge_ID'] as Map<String, dynamic>)
+        broadcastMessage = json['BroadcastMessage'] as String?,
+        broadcastType = (json['BroadcastType'] as Map<String, dynamic>?) != null
+            ? BroadcastType.fromJson(
+                json['BroadcastType'] as Map<String, dynamic>)
             : null,
-        inventoryType = (json['InventoryType'] as Map<String, dynamic>?) != null
-            ? InventoryType.fromJson(
-                json['InventoryType'] as Map<String, dynamic>)
+        logAcknowledge = json['LogAcknowledge'] as bool?,
+        target = (json['Target'] as Map<String, dynamic>?) != null
+            ? Target.fromJson(json['Target'] as Map<String, dynamic>)
             : null,
+        aDRoleID = (json['AD_Role_ID'] as Map<String, dynamic>?) != null
+            ? ADRoleID.fromJson(json['AD_Role_ID'] as Map<String, dynamic>)
+            : null,
+        aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+            : null,
+        aDBroadcastMessageID =
+            (json['AD_BroadcastMessage_ID'] as Map<String, dynamic>?) != null
+                ? ADBroadcastMessageID.fromJson(
+                    json['AD_BroadcastMessage_ID'] as Map<String, dynamic>)
+                : null,
+        isPublished = json['IsPublished'] as bool?,
         processed = json['Processed'] as bool?,
-        qtyInternalUse = json['QtyInternalUse'] as num?,
-        value = json['Value'] as String?,
-        qtyCsv = json['QtyCsv'] as int?,
-        currentCostPrice = json['CurrentCostPrice'] as int?,
-        newCostPrice = json['NewCostPrice'] as int?,
+        expired = json['Expired'] as bool?,
+        aDBroadcastMessageUU = json['AD_BroadcastMessage_UU'] as String?,
+        title = json['Title'] as String?,
+        aDUser2ID = (json['AD_User2_ID'] as Map<String, dynamic>?) != null
+            ? ADUser2ID.fromJson(json['AD_User2_ID'] as Map<String, dynamic>)
+            : null,
+        aDUser3ID = (json['AD_User3_ID'] as Map<String, dynamic>?) != null
+            ? ADUser3ID.fromJson(json['AD_User3_ID'] as Map<String, dynamic>)
+            : null,
+        adNoteID = (json['AD_Note_ID'] as Map<String, dynamic>?) != null
+            ? ADNoteID.fromJson(json['AD_Note_ID'] as Map<String, dynamic>)
+            : null,
+        url = json['URL'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
         'IsActive': isActive,
@@ -150,22 +160,47 @@ class LULRecords {
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'M_Inventory_ID': mInventoryID?.toJson(),
-        'M_Locator_ID': mLocatorID?.toJson(),
-        'M_Product_ID': mProductID?.toJson(),
-        'QtyBook': qtyBook,
-        'QtyCount': qtyCount,
-        'Description': description,
-        'Line': line,
-        'M_AttributeSetInstance_ID': mAttributeSetInstanceID?.toJson(),
-        'C_Charge_ID': cChargeID?.toJson(),
-        'InventoryType': inventoryType?.toJson(),
+        'BroadcastFrequency': broadcastFrequency?.toJson(),
+        'BroadcastMessage': broadcastMessage,
+        'BroadcastType': broadcastType?.toJson(),
+        'LogAcknowledge': logAcknowledge,
+        'Target': target?.toJson(),
+        'AD_Role_ID': aDRoleID?.toJson(),
+        'AD_User_ID': aDUserID?.toJson(),
+        'AD_BroadcastMessage_ID': aDBroadcastMessageID?.toJson(),
+        'IsPublished': isPublished,
         'Processed': processed,
-        'QtyInternalUse': qtyInternalUse,
-        'Value': value,
-        'QtyCsv': qtyCsv,
-        'CurrentCostPrice': currentCostPrice,
-        'NewCostPrice': newCostPrice,
+        'Expired': expired,
+        'AD_BroadcastMessage_UU': aDBroadcastMessageUU,
+        'Title': title,
+        'AD_User2_ID': aDUser2ID?.toJson(),
+        'model-name': modelname
+      };
+}
+
+class ADNoteID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADNoteID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADNoteID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
         'model-name': modelname
       };
 }
@@ -278,157 +313,211 @@ class UpdatedBy {
       };
 }
 
-class MInventoryID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MInventoryID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MInventoryID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MLocatorID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MLocatorID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MLocatorID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MProductID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MProductID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MProductID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class MAttributeSetInstanceID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  MAttributeSetInstanceID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  MAttributeSetInstanceID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CChargeID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  CChargeID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  CChargeID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class InventoryType {
+class BroadcastFrequency {
   final String? propertyLabel;
   final String? id;
   final String? identifier;
   final String? modelname;
 
-  InventoryType({
+  BroadcastFrequency({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  InventoryType.fromJson(Map<String, dynamic> json)
+  BroadcastFrequency.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class BroadcastType {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  BroadcastType({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  BroadcastType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class Target {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  Target({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  Target.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADRoleID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADRoleID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADRoleID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUserID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUserID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUserID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADBroadcastMessageID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADBroadcastMessageID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADBroadcastMessageID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUser2ID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUser2ID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUser2ID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUser3ID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUser3ID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUser3ID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

@@ -434,49 +434,13 @@ class SupplychainInventoryLotScreen
           tabletBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 15),
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("${"INVENTORY: ".tr}${controller.trx.rowcount}")
-                        : Text("INVENTORY: ".tr)),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        //Get.to(const CreateLead());
-                      },
-                      icon: const Icon(
-                        Icons.person_add,
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.getInventories();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.yellow,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
+                      primary: false,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: controller.trx.rowcount,
@@ -505,7 +469,7 @@ class SupplychainInventoryLotScreen
                                   ),
                                   tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
-                                    Get.to(const EditSupplychainInventory(),
+                                    Get.to(const EditSupplychainInventoryLot(),
                                         arguments: {
                                           "id":
                                               controller.trx.records![index].id,
@@ -564,7 +528,7 @@ class SupplychainInventoryLotScreen
                                       : Colors.yellow,
                                 ),
                                 onPressed: () {
-                                  Get.toNamed('/SupplychainInventoryLine',
+                                  Get.toNamed('/SupplychainInventoryLotLine',
                                       arguments: {
                                         "id": controller.trx.records![index].id,
                                         "docNo": controller
@@ -700,49 +664,13 @@ class SupplychainInventoryLotScreen
           desktopBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader(
+              _buildHeader2(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              _buildProfile(data: controller.getProfil()),
-              const SizedBox(height: kSpacing),
-              Row(
-                children: [
-                  Container(
-                    margin: const EdgeInsets.only(left: 15),
-                    child: Obx(() => controller.dataAvailable
-                        ? Text("INVENTORY: ".tr + "${controller.trx.rowcount}")
-                        : Text("INVENTORY: ".tr)),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 40),
-                    child: IconButton(
-                      onPressed: () {
-                        //Get.to(const CreateLead());
-                      },
-                      icon: const Icon(
-                        Icons.person_add,
-                        color: Colors.lightBlue,
-                      ),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.only(left: 20),
-                    child: IconButton(
-                      onPressed: () {
-                        controller.getInventories();
-                      },
-                      icon: const Icon(
-                        Icons.refresh,
-                        color: Colors.yellow,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: kSpacing),
               Obx(() => controller.dataAvailable
                   ? ListView.builder(
+                      primary: false,
                       scrollDirection: Axis.vertical,
                       shrinkWrap: true,
                       itemCount: controller.trx.rowcount,
@@ -771,7 +699,7 @@ class SupplychainInventoryLotScreen
                                   ),
                                   tooltip: 'Edit Inventory'.tr,
                                   onPressed: () {
-                                    Get.to(const EditSupplychainInventory(),
+                                    Get.to(const EditSupplychainInventoryLot(),
                                         arguments: {
                                           "id":
                                               controller.trx.records![index].id,
@@ -830,7 +758,7 @@ class SupplychainInventoryLotScreen
                                       : Colors.yellow,
                                 ),
                                 onPressed: () {
-                                  Get.toNamed('/SupplychainInventoryLine',
+                                  Get.toNamed('/SupplychainInventoryLotLine',
                                       arguments: {
                                         "id": controller.trx.records![index].id,
                                         "docNo": controller

@@ -25,6 +25,7 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:material_symbols_icons/symbols.dart';
 
 // binding
 part '../../bindings/human_resource_binding.dart';

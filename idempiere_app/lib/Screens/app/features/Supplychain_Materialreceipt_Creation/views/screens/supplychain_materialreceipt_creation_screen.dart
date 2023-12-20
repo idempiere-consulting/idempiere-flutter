@@ -17,6 +17,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/mode
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_Contract/models/documenttype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt/views/screens/supplychain_materialreceipt_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt_Creation/models/materialreceipt_purchaseorder_json.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Materialreceipt_Creation/views/screens/supplychain_materialreceipt_create_orderlines.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';

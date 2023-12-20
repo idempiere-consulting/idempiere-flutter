@@ -12,8 +12,11 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact_bp_json.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Resource/views/screens/employee_edit_resource.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Resource/views/screens/employee_resource_filter_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Employee_Resource_Calendar_Slot/views/screens/create_employee_resource_calendar_slot_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/models/asset_json.dart';
 import 'package:idempiere_app/Screens/app/features/Vehicle_Equipment_Vehicle/views/screens/vehicle_equipment_edit_vehicle.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -32,14 +35,16 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 // binding
-part '../../bindings/employee_resource_binding.dart';
+part '../../bindings/employee_resource_calendar_slot_binding.dart';
 
 // controller
-part '../../controllers/employee_resource_controller.dart';
+part '../../controllers/employee_resource_calendar_slot_controller.dart';
 
 // models
 part '../../models/profile.dart';
@@ -53,154 +58,83 @@ part '../components/recent_messages.dart';
 part '../components/sidebar.dart';
 part '../components/team_member.dart';
 
-class EmployeeResourceScreen extends GetView<EmployeeResourceController> {
-  const EmployeeResourceScreen({Key? key}) : super(key: key);
+class EmployeeResourceCalendarSlotScreen
+    extends GetView<EmployeeResourceCalendarSlotController> {
+  const EmployeeResourceCalendarSlotScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomAppBar(
-        shape: const AutomaticNotchedShape(
-            RoundedRectangleBorder(), StadiumBorder()),
-        //shape: AutomaticNotchedShape(RoundedRectangleBorder(), StadiumBorder()),
-        color: Theme.of(context).cardColor,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("${controller.args['name'] ?? 'N/A'}"),
+      ),
+      body: ResponsiveBuilder(
+        mobileBuilder: (context, constraints) {
+          return Column(children: [
+            //const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
             Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(left: 10),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          controller.getResources();
-                        },
-                        child: Row(
-                          children: [
-                            //Icon(Icons.filter_alt),
-                            Obx(() => controller.dataAvailable
-                                ? Text(
-                                    "${"RESOURCE".tr}:  ${controller.trx.rowcount}")
-                                : Text("${"RESOURCE".tr}:  ")),
-                          ],
+                Obx(
+                  () => controller.flag.value
+                      ? TableCalendar(
+                          locale: 'languageCalendar'.tr,
+                          focusedDay: controller.focusedDay.value,
+                          firstDay: DateTime(2000),
+                          lastDay: DateTime(2100),
+                          calendarFormat: controller.format,
+                          calendarStyle: const CalendarStyle(
+                            markerDecoration: BoxDecoration(
+                                color: Colors.yellow, shape: BoxShape.circle),
+                            todayDecoration: BoxDecoration(
+                              color: Colors.deepPurple,
+                            ),
+                          ),
+                          headerStyle: const HeaderStyle(
+                            //formatButtonVisible: false,
+                            formatButtonShowsNext: false,
+                          ),
+                          startingDayOfWeek: StartingDayOfWeek.monday,
+                          daysOfWeekVisible: true,
+                          onFormatChanged: (CalendarFormat format) {
+                            controller.format = format;
+                          },
+                          onDaySelected:
+                              (DateTime selectDay, DateTime focusDay) {
+                            controller.selectedDay.value = selectDay;
+                            controller.focusedDay.value = focusDay;
+                            controller.getEventsfromDay2(selectDay);
+
+                            //print(focusedDay);
+                          },
+                          onDayLongPressed: (selectedDay, focusedDay) {
+                            Get.to(
+                                () =>
+                                    const EmployeeResourceCreateCalendarSlot(),
+                                arguments: {
+                                  "resourceId": controller.args["id"],
+                                  "date": selectedDay
+                                });
+                          },
+                          selectedDayPredicate: (DateTime date) {
+                            return isSameDay(
+                                controller.selectedDay.value, date);
+                          },
+                          onHeaderLongPressed: (date) {},
+                          eventLoader: controller.getEventsfromDay,
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator(),
                         ),
-                      ),
-                    ),
-                    /* Container(
-                      margin: const EdgeInsets.only(left: 20),
-                      child: IconButton(
-                        onPressed: () {
-                          controller.getTasks();
-                        },
-                        icon: const Icon(
-                          Icons.refresh,
-                          color: Colors.yellow,
-                        ),
-                      ),
-                    ), */
-                  ],
-                )
+                ),
               ],
             ),
-            Flexible(
-              fit: FlexFit.tight,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                        onPressed: () {
-                          if (controller.pagesCount > 1) {
-                            controller.pagesCount.value -= 1;
-                            controller.getResources();
-                          }
-                        },
-                        icon: const Icon(Icons.skip_previous),
-                      ),
-                      Obx(() => Text(
-                          "${controller.pagesCount.value}/${controller.pagesTot.value}")),
-                      IconButton(
-                        onPressed: () {
-                          if (controller.pagesCount <
-                              controller.pagesTot.value) {
-                            controller.pagesCount.value += 1;
-                            controller.getResources();
-                          }
-                        },
-                        icon: const Icon(Icons.skip_next),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      floatingActionButtonLocation:
-          FloatingActionButtonLocation.miniCenterDocked,
-      floatingActionButton: SpeedDial(
-        animatedIcon: AnimatedIcons.home_menu,
-        backgroundColor: Theme.of(context).primaryColor,
-        foregroundColor: Colors.white,
-        /*  buttonSize: const Size(, 45),
-        childrenButtonSize: const Size(45, 45), */
-        children: [
-          SpeedDialChild(
-              label: 'Filter'.tr,
-              child: Obx(
-                () => Icon(
-                  Symbols.filter_alt,
-                  color: controller.value.value == "" &&
-                          controller.name.value == "" &&
-                          controller.licensePlate.value == ""
-                      ? Colors.white
-                      : kNotifColor,
-                ),
-              ),
-              onTap: () {
-                Get.to(const EmployeeFilterResource(), arguments: {
-                  'value': controller.value.value,
-                  'name': controller.name.value,
-                  'licensePlate': controller.licensePlate.value,
-                });
-              }),
-        ],
-      ),
-      //key: controller.scaffoldKey,
-      drawer: /* (ResponsiveBuilder.isDesktop(context))
-          ? null
-          : */
-          Drawer(
-        child: Padding(
-          padding: const EdgeInsets.only(top: kSpacing),
-          child: _Sidebar(data: controller.getSelectedProject()),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: ResponsiveBuilder(
-          mobileBuilder: (context, constraints) {
-            return Column(children: [
-              const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
-              _buildHeader2(
-                  onPressedMenu: () => Scaffold.of(context).openDrawer()),
-              const SizedBox(height: kSpacing / 2),
-              const Divider(),
-              Obx(() => controller.dataAvailable
-                  ? ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      shrinkWrap: true,
-                      itemCount: controller._trx.records!.length,
+            Obx(
+              () => Visibility(
+                visible: controller.listAvailable.value,
+                child: Flexible(
+                  child: ListView.builder(
+                      itemCount: controller.selectedDayEventList.length,
                       itemBuilder: (BuildContext context, int index) {
                         return Card(
                           elevation: 8.0,
@@ -221,36 +155,94 @@ class EmployeeResourceScreen extends GetView<EmployeeResourceController> {
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Symbols.calendar_add_on,
-                                    color: kNotifColor,
+                                    Icons.edit,
+                                    color: Colors.grey,
                                   ),
-                                  tooltip: 'Add Resource Slot'.tr,
-                                  onPressed: () {
-                                    Get.toNamed('/EmployeeResourceCalendarSlot',
-                                        arguments: {
-                                          "id": controller
-                                              ._trx.records![index].id,
-                                          "name": controller
-                                              ._trx.records![index].name,
-                                        });
-                                  },
+                                  tooltip: 'Edit Event'.tr,
+                                  onPressed: () {},
                                 ),
                               ),
                               title: Text(
-                                controller.trx.records![index].name ?? "???",
+                                controller.selectedDayEventList[index]
+                                        .createdby ??
+                                    'N/A',
                                 style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold),
                               ),
-                              // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
-
+                              trailing: IconButton(
+                                icon: Icon(
+                                  Icons.timelapse,
+                                  color: controller.selectedDayEventList[index]
+                                              .statusId ==
+                                          "DR"
+                                      ? Colors.yellow
+                                      : controller.selectedDayEventList[index]
+                                                  .statusId ==
+                                              "CO"
+                                          ? Colors.green
+                                          : controller
+                                                      .selectedDayEventList[
+                                                          index]
+                                                      .statusId ==
+                                                  "IN"
+                                              ? Colors.grey
+                                              : controller
+                                                          .selectedDayEventList[
+                                                              index]
+                                                          .statusId ==
+                                                      "PR"
+                                                  ? Colors.orange
+                                                  : controller
+                                                              .selectedDayEventList[
+                                                                  index]
+                                                              .statusId ==
+                                                          "IP"
+                                                      ? Colors.white
+                                                      : controller
+                                                                  .selectedDayEventList[
+                                                                      index]
+                                                                  .statusId ==
+                                                              "CF"
+                                                          ? Colors.lightGreen
+                                                          : controller
+                                                                      .selectedDayEventList[
+                                                                          index]
+                                                                      .statusId ==
+                                                                  "NY"
+                                                              ? Colors.red
+                                                              : controller
+                                                                          .selectedDayEventList[
+                                                                              index]
+                                                                          .statusId ==
+                                                                      "WP"
+                                                                  ? Colors
+                                                                      .yellow
+                                                                  : Colors.red,
+                                ),
+                                onPressed: () {},
+                              ),
                               subtitle: Column(
                                 children: [
                                   Row(
+                                    children: [
+                                      Expanded(
+                                          child: Text(
+                                        controller
+                                            .selectedDayEventList[index].title,
+                                        style: const TextStyle(
+                                            color: Colors.white),
+                                      )),
+                                    ],
+                                  ),
+                                  Row(
                                     children: <Widget>[
+                                      const Icon(
+                                        Icons.event,
+                                        color: Colors.white,
+                                      ),
                                       Text(
-                                        controller.trx.records![index].value ??
-                                            "??",
+                                        '${controller.selectedDayEventList[index].startDate}   ${controller.selectedDayEventList[index].scheduledStartTime} - ${controller.selectedDayEventList[index].scheduledEndTime}',
                                         style: const TextStyle(
                                             color: Colors.white),
                                       ),
@@ -258,29 +250,24 @@ class EmployeeResourceScreen extends GetView<EmployeeResourceController> {
                                   ),
                                 ],
                               ),
-                              /* trailing: const Icon(
-                                Icons.keyboard_arrow_right,
-                                color: Colors.white,
-                                size: 30.0,
-                              ), */
                               childrenPadding: const EdgeInsets.symmetric(
                                   horizontal: 20.0, vertical: 10.0),
-                              children: const [],
+                              children: [],
                             ),
                           ),
                         );
-                      },
-                    )
-                  : const Center(child: CircularProgressIndicator())),
-            ]);
-          },
-          tabletBuilder: (context, constraints) {
-            return Column(children: const []);
-          },
-          desktopBuilder: (context, constraints) {
-            return Column(children: const []);
-          },
-        ),
+                      }),
+                ),
+              ),
+            ),
+          ]);
+        },
+        tabletBuilder: (context, constraints) {
+          return Column(children: const []);
+        },
+        desktopBuilder: (context, constraints) {
+          return Column(children: const []);
+        },
       ),
     );
   }

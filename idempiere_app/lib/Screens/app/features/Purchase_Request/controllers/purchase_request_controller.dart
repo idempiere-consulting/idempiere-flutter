@@ -185,6 +185,46 @@ class PurchaseRequestController extends GetxController {
     await launchUrl(launchUri);
   }
 
+  Future<void> deletePurchaseRequest(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/requisition/${_trx.records![index].id}');
+    //print(msg);
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getPurchaseRequests();
+      Get.snackbar(
+        "Done".tr,
+        "The record has been deleted".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+      //print("done!");
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record not deleted".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   Future<void> getPurchaseRequests() async {
     var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     _dataAvailable.value = false;

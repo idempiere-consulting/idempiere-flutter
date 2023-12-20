@@ -106,6 +106,7 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
   }
 
   Future<void> createMaterialReceipt() async {
+    Get.back();
     var inputFormat = DateFormat('dd/MM/yyyy');
     var date = inputFormat.parse(documentDateFieldController.text);
     final ip = GetStorage().read('ip');
@@ -113,28 +114,6 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://$ip/api/v1/windows/material-receipt');
 
-    List<Map<String, Object>> list = [];
-
-    for (var element in orderLineList.records!) {
-      list.add({
-        "C_OrderLine_ID": {"id": element.id},
-        "QtyEntered": element.qtyRegistered!.toInt(),
-        "C_ProjectPhase_ID": {"id": -1},
-        "C_Activity_ID": {"id": -1},
-        "C_Campaign_ID": {"id": -1},
-        "User1_ID": {"id": -1},
-        "User2_ID": {"id": -1},
-        "C_Project_ID": {"id": -1},
-        "Lot": element.lotNo ?? '',
-      });
-    }
-
-    //print(url.toString());
-    // physical-inventory/conteggio-inventario-if00/tabs/
-    // physical-inventory/tabs/inventory-count/1000008/
-    // inventory-count-line/
-    // 1000008
-    // 1000159
     final msg = jsonEncode({
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -149,7 +128,7 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
       "MovementType": {"id": 'V+'},
       "DocumentNo": docNoFieldController.text,
       "FreightCostRule": defValues.records![0].freightCostRule!.id,
-      "receipt-line".tr: list,
+      //"receipt-line".tr: list,
     });
     var response = await http.post(
       url,
@@ -164,6 +143,12 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
         print(response.body);
       }
       var json = jsonDecode(utf8.decode(response.bodyBytes));
+      for (var element in orderLineList.records!) {
+        createMaterialReceiptLines(json["id"], element.id,
+            element.qtyRegistered!.toInt(), element.lotNo ?? '');
+      }
+      Get.find<SupplychainMaterialreceiptController>().getShipments();
+      Get.back();
       Get.snackbar(
         "${json["DocumentNo"]}",
         "The record has been created".tr,
@@ -179,6 +164,92 @@ class SupplychainMaterialreceiptCreationController extends GetxController {
       Get.snackbar(
         "Error!".tr,
         "Record not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> createMaterialReceiptLines(
+      int id, int? orderlineId, int qtyEntered, String lot) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/material-receipt/tabs/${"material-receipt".tr}/$id/${"receipt-line".tr}');
+    final msg = jsonEncode({
+      "M_InOut_ID": {"id": id},
+      "C_OrderLine_ID": {"id": orderlineId},
+      "QtyEntered": qtyEntered,
+      "C_ProjectPhase_ID": {"id": -1},
+      "C_Activity_ID": {"id": -1},
+      "C_Campaign_ID": {"id": -1},
+      "User1_ID": {"id": -1},
+      "User2_ID": {"id": -1},
+      "C_Project_ID": {"id": -1},
+      //"Lot": lot,
+    });
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 201) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+      if (lot != '') {
+        setLotLine(json['id'], lot);
+      }
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record Line not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> setLotLine(int id, String lot) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/material-receipt/tabs/${"receipt-line".tr}/$id');
+    final msg = jsonEncode({
+      "Lot": lot,
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+      Get.snackbar(
+        "Error!".tr,
+        "Record Line not modified".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,

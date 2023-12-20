@@ -2,7 +2,7 @@ part of dashboard;
 
 class EmployeeResourceController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
-  late AssetJSON _trx;
+  late ContactJson _trx;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
@@ -24,7 +24,7 @@ class EmployeeResourceController extends GetxController {
   }
 
   bool get dataAvailable => _dataAvailable.value;
-  AssetJSON get trx => _trx;
+  ContactJson get trx => _trx;
 
   Future<void> getResources() async {
     _dataAvailable.value = false;
@@ -32,7 +32,7 @@ class EmployeeResourceController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/A_Asset?\$filter= lit_assettype eq \'VEH\' and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Name');
+        '$protocol://$ip/api/v1/models/AD_User?\$filter= lit_isResource eq true and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -42,7 +42,7 @@ class EmployeeResourceController extends GetxController {
     );
     if (response.statusCode == 200) {
       //print(response.body);
-      _trx = AssetJSON.fromJson(jsonDecode(response.body));
+      _trx = ContactJson.fromJson(jsonDecode(response.body));
       pagesTot.value = _trx.pagecount!;
       //print(_trx.rowcount);
       //print(response.body);

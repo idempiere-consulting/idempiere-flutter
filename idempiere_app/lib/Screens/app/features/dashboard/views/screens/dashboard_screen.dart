@@ -12,6 +12,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/Login/login_screen.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard/models/broadcastmessage_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -29,6 +30,8 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
+import 'package:url_launcher/url_launcher.dart';
 /* import 'package:nextcloud/nextcloud.dart';
 import 'package:path_provider/path_provider.dart'; */
 
@@ -71,8 +74,7 @@ class DashboardScreen extends GetView<DashboardController> {
             child: _Sidebar(data: controller.getSelectedProject()),
           ),
         ),
-        body: SingleChildScrollView(
-            child: ResponsiveBuilder(
+        body: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
@@ -159,28 +161,162 @@ class DashboardScreen extends GetView<DashboardController> {
                   ),
                 ),
               ),
+              Flexible(
+                child: Container(
+                  margin: const EdgeInsets.only(
+                      top: kSpacing, left: kSpacing, right: kSpacing),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(kBorderRadius),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: kSpacing,
+                            top: kSpacing,
+                            bottom: 5,
+                          ),
+                          child: Column(
+                            children: [
+                              Text(
+                                "${"Messages".tr}: ".tr,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Obx(
+                          () => Visibility(
+                            visible: controller.broadcastMessageAvailable.value,
+                            replacement: Divider(),
+                            child: Expanded(
+                              child: ListView.builder(
+                                  //shrinkWrap: true,
+                                  itemCount: controller
+                                      .broadcastMessage.records!.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return ListTile(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              horizontal: kSpacing),
+                                      leading: const Icon(
+                                          Symbols.mark_email_unread_rounded),
+                                      title: Text(
+                                        controller.broadcastMessage
+                                                .records![index].title ??
+                                            'N/A',
+                                        style: TextStyle(
+                                          fontSize: 13,
+                                          color: kFontColorPallets[0],
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        "${"From".tr} ${controller.broadcastMessage.records![index].aDUser3ID != null ? controller.broadcastMessage.records![index].aDUser3ID!.identifier : controller.broadcastMessage.records![index].aDUserID!.identifier} ${'on'.tr} ${controller.broadcastMessage.records![index].created!.substring(0, 10)}",
+                                        style: TextStyle(
+                                          fontSize: 11,
+                                          color: kFontColorPallets[2],
+                                        ),
+                                      ),
+                                      onTap: () {
+                                        controller.messageContentFieldController
+                                            .text = controller
+                                                .broadcastMessage
+                                                .records![index]
+                                                .broadcastMessage ??
+                                            'N/A';
+                                        Get.defaultDialog(
+                                          title: 'Message'.tr,
+                                          textConfirm: 'Mark as Read'.tr,
+                                          onConfirm: () {
+                                            controller.markAsRead(index);
+                                          },
+                                          content: Column(
+                                            children: [
+                                              TextField(
+                                                minLines: 1,
+                                                maxLines: 10,
+                                                decoration: InputDecoration(
+                                                  //labelText: '',
+                                                  labelStyle: const TextStyle(
+                                                      color: Colors.white),
+                                                  //hintText: 'Description..'.tr,
+                                                  filled: true,
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                    borderSide: BorderSide.none,
+                                                  ),
+                                                  isDense: true,
+                                                  fillColor: Theme.of(context)
+                                                      .cardColor,
+                                                ),
+                                                readOnly: true,
+                                                controller: controller
+                                                    .messageContentFieldController,
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      trailing: controller.broadcastMessage
+                                                  .records![index].url !=
+                                              null
+                                          ? IconButton(
+                                              onPressed: () async {
+                                                final Uri launchUri = Uri.parse(
+                                                    controller.broadcastMessage
+                                                        .records![index].url!);
+                                                await launchUrl(launchUri);
+                                              },
+                                              icon: const Icon(
+                                                Symbols.link,
+                                              ),
+                                            )
+                                          : Icon(
+                                              Icons.check,
+                                              color: Colors.grey,
+                                            ),
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                    );
+                                  }),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
               /*  Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+            child: GetPremiumCard(onPressed: () {}),
+          ), */
               /* const SizedBox(height: kSpacing * 1),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()), */
+          _buildTaskOverview(
+            data: controller.getAllTask(),
+            headerAxis: Axis.vertical,
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing * 2),
+          _buildActiveProject(
+            data: controller.getActiveProject(),
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing),
+          _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           tabletBuilder: (context, constraints) {
@@ -244,24 +380,24 @@ class DashboardScreen extends GetView<DashboardController> {
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
               /*  Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+            child: GetPremiumCard(onPressed: () {}),
+          ), */
               /* const SizedBox(height: kSpacing * 1),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()), */
+          _buildTaskOverview(
+            data: controller.getAllTask(),
+            headerAxis: Axis.vertical,
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing * 2),
+          _buildActiveProject(
+            data: controller.getActiveProject(),
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing),
+          _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           desktopBuilder: (context, constraints) {
@@ -325,27 +461,27 @@ class DashboardScreen extends GetView<DashboardController> {
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
               /*  Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+            child: GetPremiumCard(onPressed: () {}),
+          ), */
               /* const SizedBox(height: kSpacing * 1),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()), */
+          _buildTaskOverview(
+            data: controller.getAllTask(),
+            headerAxis: Axis.vertical,
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing * 2),
+          _buildActiveProject(
+            data: controller.getActiveProject(),
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing),
+          _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
-        )),
+        ),
       ),
     );
   }

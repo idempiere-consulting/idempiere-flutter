@@ -1257,7 +1257,25 @@ class LocaleString extends Translations {
           'Edit Request': 'Modifica Richiesta',
           'Are you sure you want to edit the Request?':
               'Sicuro di voler modificare la Richiesta?',
-          'The record has been edited': 'Il record è stato modificato'
+          'The record has been edited': 'Il record è stato modificato',
+          'Delete Purchase Request': 'Elimina Richiesta di Acquisto',
+          'request': 'ticket-tik00',
+          'Qty Count': 'Qtà Contata',
+          'Qty Booked': 'Qtà Registrata',
+          'material-receipt': 'entrata-merce-emer00',
+          'Record Line not created': 'Riga record non creata',
+          'Start Date': 'Data Inizio',
+          'End Date': 'Data Fine',
+          'Create Slot': 'Crea Slot',
+          'All day': 'Tutto il giorno',
+          'Morning': 'Mattina',
+          'Evening': 'Pomeriggio',
+          'Unavailable': 'Non Disponibile',
+          'Messages': 'Messaggi',
+          'at': 'alle',
+          'on': 'il',
+          'Message': 'Messaggio',
+          'Mark as Read': 'Segna come letto'
         },
       };
 }

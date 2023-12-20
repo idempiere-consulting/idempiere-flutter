@@ -62,7 +62,7 @@ class SupplychainInventoryLotLineScreen
       child: Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(Get.arguments["docNo"]),
+          title: Text(controller.args["docNo"]),
           leading: IconButton(
             icon: const Icon(Icons.chevron_left),
             onPressed: () {
@@ -75,8 +75,8 @@ class SupplychainInventoryLotLineScreen
               child: IconButton(
                 onPressed: () {
                   Get.to(const CreateSupplychainInventoryLotLine(), arguments: {
-                    "id": Get.arguments["id"],
-                    "warehouseId": Get.arguments["warehouseId"]
+                    "id": controller.args["id"],
+                    "warehouseId": controller.args["warehouseId"]
                   });
                 },
                 icon: const Icon(
@@ -256,9 +256,9 @@ class SupplychainInventoryLotLineScreen
                                                 "Are you sure you want to delete the record?"
                                                     .tr),
                                             onConfirm: () {
-                                              /* controller.deleteLoadUnloadLine(
+                                              controller.deleteLoadUnloadLine(
                                                   controller
-                                                      .trx.records![index].id!); */
+                                                      .trx.records![index].id!);
                                             },
                                             onCancel: () {});
                                       },
@@ -274,7 +274,7 @@ class SupplychainInventoryLotLineScreen
                                   ),
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale_outlined),
+                                      const Icon(Icons.receipt_long_outlined),
                                       Text(
                                         controller
                                                 .trx
@@ -382,9 +382,9 @@ class SupplychainInventoryLotLineScreen
                                                 "Are you sure you want to delete the record?"
                                                     .tr),
                                             onConfirm: () {
-                                              /* controller.deleteLoadUnloadLine(
+                                              controller.deleteLoadUnloadLine(
                                                   controller
-                                                      .trx.records![index].id!); */
+                                                      .trx.records![index].id!);
                                             },
                                             onCancel: () {});
                                       },
@@ -400,7 +400,7 @@ class SupplychainInventoryLotLineScreen
                                   ),
                                   subtitle: Row(
                                     children: <Widget>[
-                                      const Icon(Icons.linear_scale_outlined),
+                                      const Icon(Icons.receipt_long_outlined),
                                       Text(
                                         controller
                                                 .trx

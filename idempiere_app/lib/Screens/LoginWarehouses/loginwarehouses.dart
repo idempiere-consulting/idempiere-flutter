@@ -1462,7 +1462,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     }
   }
 
-  Future<List> _getWarehousesList() async {
+  Future<List> _getWarehousesList(BuildContext context) async {
     String ip = GetStorage().read('ip');
     String clientid = GetStorage().read('clientid');
     String roleid = GetStorage().read('roleid');
@@ -1490,7 +1490,30 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       // then parse the JSON.
       //print(response.body);
       var json = jsonDecode(response.body);
-      var posts = json['warehouses'];
+      List posts = json['warehouses'];
+
+      posts.removeWhere(
+          (element) => (element['name'] as String).contains('Deposito'));
+
+      if (posts.length == 1) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return Dialog(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const CircularProgressIndicator(),
+                  Text("Syncing data with iDempiere...".tr),
+                ],
+              ),
+            );
+          },
+        );
+        GetStorage().write('warehouseid', posts[0]['id'].toString());
+        _getAuthToken(posts[0]['id'].toString());
+      }
 
       return posts;
     } else {
@@ -1527,7 +1550,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
             height: size.height,
             width: double.infinity,
             child: FutureBuilder(
-                future: _getWarehousesList(),
+                future: _getWarehousesList(context),
                 builder: (BuildContext ctx, AsyncSnapshot<List> snapshot) =>
                     snapshot.hasData
                         ? ListView.builder(

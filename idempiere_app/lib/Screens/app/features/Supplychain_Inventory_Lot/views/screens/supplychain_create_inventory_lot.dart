@@ -63,7 +63,7 @@ class _CreateSupplychainInventoryLotState
       }
       var json = jsonDecode(utf8.decode(response.bodyBytes));
       Get.find<SupplychainInventoryLotController>().getInventories();
-      Get.offNamed('/SupplychainInventoryLine', arguments: {
+      Get.offNamed('/SupplychainInventoryLotLine', arguments: {
         "id": json["id"],
         "docNo": json["DocumentNo"],
         "warehouseId": warehouseId
@@ -266,7 +266,7 @@ class _CreateSupplychainInventoryLotState
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: activityFieldController,
@@ -277,7 +277,7 @@ class _CreateSupplychainInventoryLotState
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                ),
+                ), */
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
@@ -347,7 +347,7 @@ class _CreateSupplychainInventoryLotState
                 const SizedBox(
                   height: 10,
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     controller: activityFieldController,
@@ -358,7 +358,7 @@ class _CreateSupplychainInventoryLotState
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
-                ),
+                ), */
                 Container(
                   padding: const EdgeInsets.only(left: 40),
                   child: Align(
