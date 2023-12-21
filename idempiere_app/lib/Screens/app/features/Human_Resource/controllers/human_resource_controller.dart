@@ -1,18 +1,56 @@
 part of dashboard;
 
 class HumanResourceController extends GetxController {
-  /* final scaffoldKey = GlobalKey<ScaffoldState>();
+  var employeePresenceAvailable = false.obs;
 
-  void openDrawer() {
-    if (scaffoldKey.currentState != null) {
-      scaffoldKey.currentState!.openDrawer();
+  EmployeePresenceJSON employeePresence = EmployeePresenceJSON(records: []);
+
+  int employeeLatenesses = 0;
+
+  int employeeNonAttendances = 0;
+
+  @override
+  void onInit() {
+    super.onInit();
+    getEmployeesPresence();
+  }
+
+  Future<void> getEmployeesPresence() async {
+    employeePresenceAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_empl_presence_v');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      employeePresence = EmployeePresenceJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      for (var element in employeePresence.records!) {
+        if (element.presente == 'ASSENTE') {
+          employeeNonAttendances++;
+        }
+        if (element.presente == 'PRESENTE' && (element.qty ?? 0) < 8) {
+          employeeLatenesses++;
+        }
+      }
+      employeePresenceAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
-  } */
+  }
 
   // Data
   // ignore: library_private_types_in_public_api
   _Profile getProfil() {
-    //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
     String roleName = GetStorage().read('rolename') as String;
     return _Profile(

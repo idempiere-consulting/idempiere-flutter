@@ -177,7 +177,7 @@ class _SupplychainFilterInventoryState
     //print(json.);
   }
 
-  Future<List<Records>> getAllInventoryDocTypes() async {
+  Future<List<CRecords>> getAllInventoryDocTypes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -197,7 +197,7 @@ class _SupplychainFilterInventoryState
 
       var jsonContacts = ContactsJson.fromJson(jsondecoded);
 
-      jsonContacts.records!.add(Records(id: 0, name: "All".tr));
+      jsonContacts.records!.add(CRecords(id: 0, name: "All".tr));
 
       return jsonContacts.records!;
     } else {
@@ -209,7 +209,7 @@ class _SupplychainFilterInventoryState
     //print(json.);
   }
 
-  Future<List<Records>> getAllWarehouses() async {
+  Future<List<CRecords>> getAllWarehouses() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -229,7 +229,7 @@ class _SupplychainFilterInventoryState
 
       var jsonContacts = ContactsJson.fromJson(jsondecoded);
 
-      jsonContacts.records!.add(Records(id: 0, name: "All".tr));
+      jsonContacts.records!.add(CRecords(id: 0, name: "All".tr));
 
       return jsonContacts.records!;
     } else {
@@ -342,7 +342,7 @@ class _SupplychainFilterInventoryState
                       child: FutureBuilder(
                         future: getAllInventoryDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -473,7 +473,7 @@ class _SupplychainFilterInventoryState
                       child: FutureBuilder(
                         future: getAllInventoryDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -560,7 +560,7 @@ class _SupplychainFilterInventoryState
                       child: FutureBuilder(
                         future: getAllInventoryDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(

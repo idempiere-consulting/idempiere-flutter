@@ -141,7 +141,7 @@ class _CreateLeadState extends State<CreateLead> {
     //print(response.body);
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -202,7 +202,7 @@ class _CreateLeadState extends State<CreateLead> {
     //print(json.);
   }
 
-  Future<List<CRecords>> getAllCampaigns() async {
+  Future<List<CPRecords>> getAllCampaigns() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -234,7 +234,7 @@ class _CreateLeadState extends State<CreateLead> {
     //print(json.);
   }
 
-  Future<List<CRecords>> getAllLeadSizes() async {
+  Future<List<CPRecords>> getAllLeadSizes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -473,9 +473,9 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   //autofocus: true,
                                   controller: salesRepFieldController,
@@ -571,7 +571,7 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllLeadSizes(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -621,7 +621,7 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -873,9 +873,9 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   //autofocus: true,
                                   controller: salesRepFieldController,
@@ -971,7 +971,7 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllLeadSizes(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -1021,7 +1021,7 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -1273,9 +1273,9 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   //autofocus: true,
                                   controller: salesRepFieldController,
@@ -1371,7 +1371,7 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllLeadSizes(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -1421,7 +1421,7 @@ class _CreateLeadState extends State<CreateLead> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(

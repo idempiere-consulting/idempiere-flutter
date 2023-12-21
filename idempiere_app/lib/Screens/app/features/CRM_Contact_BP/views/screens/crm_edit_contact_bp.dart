@@ -185,7 +185,7 @@ class _EditContactBPState extends State<EditContactBP> {
   }
 
   // ignore: unused_element
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(CRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 

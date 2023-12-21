@@ -493,9 +493,9 @@ class MaintenanceMpContractsCreateContractScreen
                       child: FutureBuilder(
                         future: controller.getAllTechnicians(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? Autocomplete<Records>(
+                                ? Autocomplete<CRecords>(
                                     initialValue: TextEditingValue(
                                         text: controller
                                             .technicianFieldController.text),
@@ -504,10 +504,10 @@ class MaintenanceMpContractsCreateContractScreen
                                     optionsBuilder:
                                         (TextEditingValue textEditingValue) {
                                       if (textEditingValue.text == '') {
-                                        return const Iterable<Records>.empty();
+                                        return const Iterable<CRecords>.empty();
                                       }
                                       return snapshot.data!
-                                          .where((Records option) {
+                                          .where((CRecords option) {
                                         return option.name!
                                             .toString()
                                             .toLowerCase()
@@ -515,7 +515,7 @@ class MaintenanceMpContractsCreateContractScreen
                                                 .toLowerCase());
                                       });
                                     },
-                                    onSelected: (Records selection) {
+                                    onSelected: (CRecords selection) {
                                       //debugPrint(
                                       //'You just selected ${_displayStringForOption(selection)}');
                                       controller.technicianFieldController
@@ -1113,9 +1113,9 @@ class MaintenanceMpContractsCreateContractScreen
                       child: FutureBuilder(
                         future: controller.getAllTechnicians(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? Autocomplete<Records>(
+                                ? Autocomplete<CRecords>(
                                     initialValue: TextEditingValue(
                                         text: controller
                                             .technicianFieldController.text),
@@ -1124,10 +1124,10 @@ class MaintenanceMpContractsCreateContractScreen
                                     optionsBuilder:
                                         (TextEditingValue textEditingValue) {
                                       if (textEditingValue.text == '') {
-                                        return const Iterable<Records>.empty();
+                                        return const Iterable<CRecords>.empty();
                                       }
                                       return snapshot.data!
-                                          .where((Records option) {
+                                          .where((CRecords option) {
                                         return option.name!
                                             .toString()
                                             .toLowerCase()
@@ -1135,7 +1135,7 @@ class MaintenanceMpContractsCreateContractScreen
                                                 .toLowerCase());
                                       });
                                     },
-                                    onSelected: (Records selection) {
+                                    onSelected: (CRecords selection) {
                                       //debugPrint(
                                       //'You just selected ${_displayStringForOption(selection)}');
                                       controller.technicianFieldController
@@ -1733,9 +1733,9 @@ class MaintenanceMpContractsCreateContractScreen
                       child: FutureBuilder(
                         future: controller.getAllTechnicians(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? Autocomplete<Records>(
+                                ? Autocomplete<CRecords>(
                                     initialValue: TextEditingValue(
                                         text: controller
                                             .technicianFieldController.text),
@@ -1744,10 +1744,10 @@ class MaintenanceMpContractsCreateContractScreen
                                     optionsBuilder:
                                         (TextEditingValue textEditingValue) {
                                       if (textEditingValue.text == '') {
-                                        return const Iterable<Records>.empty();
+                                        return const Iterable<CRecords>.empty();
                                       }
                                       return snapshot.data!
-                                          .where((Records option) {
+                                          .where((CRecords option) {
                                         return option.name!
                                             .toString()
                                             .toLowerCase()
@@ -1755,7 +1755,7 @@ class MaintenanceMpContractsCreateContractScreen
                                                 .toLowerCase());
                                       });
                                     },
-                                    onSelected: (Records selection) {
+                                    onSelected: (CRecords selection) {
                                       //debugPrint(
                                       //'You just selected ${_displayStringForOption(selection)}');
                                       controller.technicianFieldController

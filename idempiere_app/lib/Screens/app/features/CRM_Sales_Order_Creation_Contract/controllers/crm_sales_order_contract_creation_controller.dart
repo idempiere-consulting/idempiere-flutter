@@ -228,7 +228,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
 
   static String _displayStringForOption(BPRecords option) => option.name!;
   static String _displayProdStringForOption(PRecords option) => option.name!;
-  static String _displayTechStringForOption(Records option) => option.name!;
+  static String _displayTechStringForOption(CRecords option) => option.name!;
   static String _displayOrgStringForOption(ORecords option) => option.name!;
   static String _displayDocStringForOption(DTRecords option) => option.name!;
 
@@ -407,7 +407,7 @@ class CRMSalesOrderContractCreationController extends GetxController {
     }
   }
 
-  Future<List<Records>> getAllSalesReps() async {
+  Future<List<CRecords>> getAllSalesReps() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');

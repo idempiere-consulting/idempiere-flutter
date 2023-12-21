@@ -173,7 +173,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
     //print(response.body);
   }
 
-  Future<List<CRecords>> getAllLeadSizes() async {
+  Future<List<CPRecords>> getAllLeadSizes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -192,7 +192,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
 
       var jsonsectors = CampaignJSON.fromJson(jsondecoded);
 
-      jsonsectors.records!.insert(0, CRecords(id: 0, name: 'All'.tr));
+      jsonsectors.records!.insert(0, CPRecords(id: 0, name: 'All'.tr));
 
       return jsonsectors.records!;
     } else {
@@ -207,7 +207,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
     //print(json.);
   }
 
-  Future<List<CRecords>> getAllCampaigns() async {
+  Future<List<CPRecords>> getAllCampaigns() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -226,7 +226,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
 
       var jsonsectors = CampaignJSON.fromJson(jsondecoded);
 
-      jsonsectors.records!.insert(0, CRecords(id: 0, name: 'All'.tr));
+      jsonsectors.records!.insert(0, CPRecords(id: 0, name: 'All'.tr));
 
       return jsonsectors.records!;
     } else {
@@ -529,7 +529,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
                       child: FutureBuilder(
                         future: getAllLeadSizes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                                AsyncSnapshot<List<CPRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -579,7 +579,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
                       child: FutureBuilder(
                         future: getAllCampaigns(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                                AsyncSnapshot<List<CPRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -886,7 +886,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
                       child: FutureBuilder(
                         future: getAllLeadSizes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                                AsyncSnapshot<List<CPRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -936,7 +936,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
                       child: FutureBuilder(
                         future: getAllCampaigns(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                                AsyncSnapshot<List<CPRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -1243,7 +1243,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
                       child: FutureBuilder(
                         future: getAllLeadSizes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                                AsyncSnapshot<List<CPRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -1293,7 +1293,7 @@ class _PurchaseFilterLeadState extends State<PurchaseFilterLead> {
                       child: FutureBuilder(
                         future: getAllCampaigns(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
+                                AsyncSnapshot<List<CPRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(

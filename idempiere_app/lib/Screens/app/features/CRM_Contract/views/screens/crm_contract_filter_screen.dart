@@ -111,7 +111,7 @@ class _CRMFilterContractState extends State<CRMFilterContract> {
     //print(json.);
   }
 
-  Future<List<Records>> getAllContractDocTypes() async {
+  Future<List<CRecords>> getAllContractDocTypes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -131,7 +131,7 @@ class _CRMFilterContractState extends State<CRMFilterContract> {
 
       var jsonContacts = ContactsJson.fromJson(jsondecoded);
 
-      jsonContacts.records!.add(Records(id: 0, name: "All".tr));
+      jsonContacts.records!.add(CRecords(id: 0, name: "All".tr));
 
       return jsonContacts.records!;
     } else {
@@ -302,7 +302,7 @@ class _CRMFilterContractState extends State<CRMFilterContract> {
                       child: FutureBuilder(
                         future: getAllContractDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -448,7 +448,7 @@ class _CRMFilterContractState extends State<CRMFilterContract> {
                       child: FutureBuilder(
                         future: getAllContractDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -594,7 +594,7 @@ class _CRMFilterContractState extends State<CRMFilterContract> {
                       child: FutureBuilder(
                         future: getAllContractDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(

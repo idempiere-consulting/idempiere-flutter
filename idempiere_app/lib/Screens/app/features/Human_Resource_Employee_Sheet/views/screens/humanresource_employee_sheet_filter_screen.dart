@@ -172,7 +172,7 @@ class _HumanResourceFilterTicketState
     //print(json.);
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');

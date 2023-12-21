@@ -184,7 +184,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
     //print(response.body);
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -245,7 +245,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
     //print(json.);
   }
 
-  Future<List<CRecords>> getAllCampaigns() async {
+  Future<List<CPRecords>> getAllCampaigns() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -277,7 +277,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
     //print(json.);
   }
 
-  Future<List<CRecords>> getAllLeadSizes() async {
+  Future<List<CPRecords>> getAllLeadSizes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -736,7 +736,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
     getAllLeadStatuses();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(CRecords option) => option.name!;
   static String _displayCountryStringForOption(CtrRecords option) =>
       option.name!;
   static String _displayRegionStringForOption(RegRecords option) =>
@@ -888,9 +888,9 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   //autofocus: true,
                                   controller: salesRepFieldController,
@@ -987,7 +987,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllLeadSizes(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -1037,7 +1037,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -1525,9 +1525,9 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   //autofocus: true,
                                   controller: salesRepFieldController,
@@ -1624,7 +1624,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllLeadSizes(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -1674,7 +1674,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -2162,9 +2162,9 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   //autofocus: true,
                                   controller: salesRepFieldController,
@@ -2261,7 +2261,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllLeadSizes(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(
@@ -2311,7 +2311,7 @@ class _EditPurchaseLeadState extends State<EditPurchaseLead> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
                             ? InputDecorator(
                                 decoration: InputDecoration(

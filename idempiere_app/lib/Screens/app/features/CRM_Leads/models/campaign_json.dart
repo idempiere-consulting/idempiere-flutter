@@ -4,7 +4,7 @@ class CampaignJSON {
   final int? skiprecords;
   final int? rowcount;
   final int? arraycount;
-  final List<CRecords>? records;
+  final List<CPRecords>? records;
 
   CampaignJSON({
     this.pagecount,
@@ -22,7 +22,7 @@ class CampaignJSON {
         rowcount = json['row-count'] as int?,
         arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => CRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => CPRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -35,7 +35,7 @@ class CampaignJSON {
       };
 }
 
-class CRecords {
+class CPRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -52,7 +52,7 @@ class CRecords {
   final bool? isSummary;
   final String? modelname;
 
-  CRecords({
+  CPRecords({
     this.id,
     this.uid,
     this.aDClientID,
@@ -70,7 +70,7 @@ class CRecords {
     this.modelname,
   });
 
-  CRecords.fromJson(Map<String, dynamic> json)
+  CPRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null

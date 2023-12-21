@@ -17,6 +17,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_P
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList_Edit/views/screens/crm_sales_order_creation_bp_priceList_edit_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Resource/views/screens/employee_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Resource_Calendar_Slot/views/screens/employee_resource_calendar_slot_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource_Attendance/views/screens/humanresource_attendance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_Creation_BP_PriceList_Edit/views/screens/portal_mp_sales_order_creation_BP_PriceList_edit_screen.dart';
@@ -733,6 +734,11 @@ class MyApp extends StatelessWidget {
           name: '/HumanResourceTicket',
           page: () => const HumanResourceTicketScreen(),
           binding: HumanResourceTicketBinding(),
+        ),
+        GetPage(
+          name: '/HumanResourceAttendance',
+          page: () => const HumanResourceAttendanceScreen(),
+          binding: HumanResourceAttendanceBinding(),
         ),
         GetPage(
           name: '/HumanResourceWorkHours',

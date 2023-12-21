@@ -133,7 +133,7 @@ class _PortalMPFilterSalesOrderState extends State<PortalMPFilterSalesOrder> {
     //print(json.);
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -287,9 +287,9 @@ class _PortalMPFilterSalesOrderState extends State<PortalMPFilterSalesOrder> {
                       title: FutureBuilder(
                         future: getAllSalesRep(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? TypeAheadField<Records>(
+                                ? TypeAheadField<CRecords>(
                                     direction: AxisDirection.up,
                                     //getImmediateSuggestions: true,
                                     textFieldConfiguration:
@@ -492,9 +492,9 @@ class _PortalMPFilterSalesOrderState extends State<PortalMPFilterSalesOrder> {
                       title: FutureBuilder(
                         future: getAllSalesRep(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? TypeAheadField<Records>(
+                                ? TypeAheadField<CRecords>(
                                     direction: AxisDirection.up,
                                     //getImmediateSuggestions: true,
                                     textFieldConfiguration:
@@ -697,9 +697,9 @@ class _PortalMPFilterSalesOrderState extends State<PortalMPFilterSalesOrder> {
                       title: FutureBuilder(
                         future: getAllSalesRep(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? TypeAheadField<Records>(
+                                ? TypeAheadField<CRecords>(
                                     direction: AxisDirection.up,
                                     //getImmediateSuggestions: true,
                                     textFieldConfiguration:

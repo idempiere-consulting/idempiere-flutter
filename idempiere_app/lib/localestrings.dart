@@ -1275,7 +1275,9 @@ class LocaleString extends Translations {
           'at': 'alle',
           'on': 'il',
           'Message': 'Messaggio',
-          'Mark as Read': 'Segna come letto'
+          'Mark as Read': 'Segna come letto',
+          'Attendances': 'Presenze',
+          'Select an Organization': 'Seleziona un\'Organizzazione'
         },
       };
 }

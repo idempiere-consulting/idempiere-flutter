@@ -381,7 +381,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     return dJson.types;
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -427,7 +427,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
     }
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(CRecords option) => option.name!;
 
   CalendarFormat format = CalendarFormat.month;
   // ignore: prefer_typing_uninitialized_variables
@@ -507,7 +507,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: FutureBuilder(
                   future: getAllSalesRep(),
                   builder: (BuildContext ctx,
-                          AsyncSnapshot<List<Records>> snapshot) =>
+                          AsyncSnapshot<List<CRecords>> snapshot) =>
                       snapshot.hasData
                           ? Visibility(
                               visible: int.parse(list[0], radix: 16)
@@ -517,7 +517,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                       "1"
                                   ? true
                                   : false,
-                              child: TypeAheadField<Records>(
+                              child: TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: userFieldController,
                                   //autofocus: true,
@@ -824,7 +824,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: FutureBuilder(
                   future: getAllSalesRep(),
                   builder: (BuildContext ctx,
-                          AsyncSnapshot<List<Records>> snapshot) =>
+                          AsyncSnapshot<List<CRecords>> snapshot) =>
                       snapshot.hasData
                           ? Visibility(
                               visible: int.parse(list[0], radix: 16)
@@ -864,7 +864,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   //print(salesrepValue);
                                 },
                               ), */
-                                  TypeAheadField<Records>(
+                                  TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: userFieldController,
                                   //autofocus: true,
@@ -1216,7 +1216,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 child: FutureBuilder(
                   future: getAllSalesRep(),
                   builder: (BuildContext ctx,
-                          AsyncSnapshot<List<Records>> snapshot) =>
+                          AsyncSnapshot<List<CRecords>> snapshot) =>
                       snapshot.hasData
                           ? Visibility(
                               visible: int.parse(list[0], radix: 16)
@@ -1256,7 +1256,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                                   //print(salesrepValue);
                                 },
                               ), */
-                                  TypeAheadField<Records>(
+                                  TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   controller: userFieldController,
                                   //autofocus: true,

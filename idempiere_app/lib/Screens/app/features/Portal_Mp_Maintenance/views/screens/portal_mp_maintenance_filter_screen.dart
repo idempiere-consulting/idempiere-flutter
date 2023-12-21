@@ -82,7 +82,7 @@ class _PortalMPFilterMaintenanceState extends State<PortalMPFilterMaintenance> {
     //print(json.);
   }
 
-  Future<List<Records>> getAllContractDocTypes() async {
+  Future<List<CRecords>> getAllContractDocTypes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -102,7 +102,7 @@ class _PortalMPFilterMaintenanceState extends State<PortalMPFilterMaintenance> {
 
       var jsonContacts = ContactsJson.fromJson(jsondecoded);
 
-      jsonContacts.records!.add(Records(id: 0, name: "All".tr));
+      jsonContacts.records!.add(CRecords(id: 0, name: "All".tr));
 
       return jsonContacts.records!;
     } else {
@@ -207,7 +207,7 @@ class _PortalMPFilterMaintenanceState extends State<PortalMPFilterMaintenance> {
                       child: FutureBuilder(
                         future: getAllContractDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -294,7 +294,7 @@ class _PortalMPFilterMaintenanceState extends State<PortalMPFilterMaintenance> {
                       child: FutureBuilder(
                         future: getAllContractDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(
@@ -381,7 +381,7 @@ class _PortalMPFilterMaintenanceState extends State<PortalMPFilterMaintenance> {
                       child: FutureBuilder(
                         future: getAllContractDocTypes(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
                                 ? InputDecorator(
                                     decoration: InputDecoration(

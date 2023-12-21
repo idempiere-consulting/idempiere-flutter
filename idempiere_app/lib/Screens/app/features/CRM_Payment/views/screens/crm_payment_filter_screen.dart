@@ -178,7 +178,7 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
     //print(json.);
   }
 
-  Future<List<Records>> getAllBankAccounts() async {
+  Future<List<CRecords>> getAllBankAccounts() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -401,9 +401,9 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
                       child: FutureBuilder(
                         future: getAllBankAccounts(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? TypeAheadField<Records>(
+                                ? TypeAheadField<CRecords>(
                                     direction: AxisDirection.up,
                                     //getImmediateSuggestions: true,
                                     textFieldConfiguration:
@@ -585,9 +585,9 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
                       child: FutureBuilder(
                         future: getAllBankAccounts(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? TypeAheadField<Records>(
+                                ? TypeAheadField<CRecords>(
                                     direction: AxisDirection.up,
                                     //getImmediateSuggestions: true,
                                     textFieldConfiguration:
@@ -769,9 +769,9 @@ class _CRMFilterPaymentState extends State<CRMFilterPayment> {
                       child: FutureBuilder(
                         future: getAllBankAccounts(),
                         builder: (BuildContext ctx,
-                                AsyncSnapshot<List<Records>> snapshot) =>
+                                AsyncSnapshot<List<CRecords>> snapshot) =>
                             snapshot.hasData
-                                ? TypeAheadField<Records>(
+                                ? TypeAheadField<CRecords>(
                                     direction: AxisDirection.up,
                                     //getImmediateSuggestions: true,
                                     textFieldConfiguration:

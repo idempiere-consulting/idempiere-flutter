@@ -3,12 +3,14 @@
 library dashboard;
 
 //import 'dart:convert';
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource/models/employeepresence_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -24,7 +26,8 @@ import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:http/http.dart' as http;
+import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:material_symbols_icons/symbols.dart';
 
 // binding
@@ -66,8 +69,7 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
             child: _Sidebar(data: controller.getSelectedProject()),
           ),
         ),
-        body: SingleChildScrollView(
-            child: ResponsiveBuilder(
+        body: ResponsiveBuilder(
           mobileBuilder: (context, constraints) {
             return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
@@ -75,31 +77,110 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              //  _buildProfile(data: controller.getProfil()),
-              //  const SizedBox(height: kSpacing),
-              //  _buildProgress(axis: Axis.vertical),
-              //  const SizedBox(height: kSpacing),
-              //  _buildTeamMember(data: controller.getMember()),
-              /*  const SizedBox(height: kSpacing),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
-              /* /* const SizedBox(height: kSpacing * 2),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
+              Expanded(
+                child: ListView(
+                  children: [
+                    Obx(
+                      () => Visibility(
+                        visible: controller.employeePresenceAvailable.value,
+                        child: Container(
+                          height: 180,
+                          margin: const EdgeInsets.only(
+                              top: kSpacing, left: kSpacing, right: kSpacing),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(kBorderRadius),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: kSpacing,
+                                    top: kSpacing,
+                                    bottom: 5,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Attendances".tr}: ".tr,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 10,
+                                          top: kSpacing,
+                                          bottom: 5,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Symbols.no_accounts_rounded,
+                                                  size: 25,
+                                                  color: Colors.redAccent,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                SizedBox(
+                                                  width: 180,
+                                                  child: ElevatedButton(
+                                                      onPressed: () {},
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                              '${controller.employeeNonAttendances} Assenze'),
+                                                        ],
+                                                      )),
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(height: 20),
+                                            Row(
+                                              children: [
+                                                Icon(
+                                                  Symbols.person_alert_rounded,
+                                                  size: 25,
+                                                  color: Colors.yellowAccent,
+                                                ),
+                                                SizedBox(
+                                                  width: 10,
+                                                ),
+                                                SizedBox(
+                                                  width: 180,
+                                                  child: ElevatedButton(
+                                                      onPressed: () {},
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                              '${controller.employeeLatenesses} Ritardi/Anomalie'),
+                                                        ],
+                                                      )),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ), */ */
-              /*  const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           tabletBuilder: (context, constraints) {
@@ -109,31 +190,6 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),
               const SizedBox(height: kSpacing / 2),
               const Divider(),
-              //  _buildProfile(data: controller.getProfil()),
-              //  const SizedBox(height: kSpacing),
-              //  _buildProgress(axis: Axis.vertical),
-              //  const SizedBox(height: kSpacing),
-              //  _buildTeamMember(data: controller.getMember()),
-              /*  const SizedBox(height: kSpacing),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
-              /* /* const SizedBox(height: kSpacing * 2),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ), */ */
-              /*  const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
           desktopBuilder: (context, constraints) {
@@ -149,28 +205,28 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               /*  const SizedBox(height: kSpacing),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-                child: GetPremiumCard(onPressed: () {}),
-              ), */
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: kSpacing),
+            child: GetPremiumCard(onPressed: () {}),
+          ), */
               /* /* const SizedBox(height: kSpacing * 2),
-              _buildTaskOverview(
-                data: controller.getAllTask(),
-                headerAxis: Axis.vertical,
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ),
-              const SizedBox(height: kSpacing * 2),
-              _buildActiveProject(
-                data: controller.getActiveProject(),
-                crossAxisCount: 6,
-                crossAxisCellCount: 6,
-              ), */ */
+          _buildTaskOverview(
+            data: controller.getAllTask(),
+            headerAxis: Axis.vertical,
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ),
+          const SizedBox(height: kSpacing * 2),
+          _buildActiveProject(
+            data: controller.getActiveProject(),
+            crossAxisCount: 6,
+            crossAxisCellCount: 6,
+          ), */ */
               /*  const SizedBox(height: kSpacing),
-              _buildRecentMessages(data: controller.getChatting()), */
+          _buildRecentMessages(data: controller.getChatting()), */
             ]);
           },
-        )),
+        ),
       ),
     );
   }

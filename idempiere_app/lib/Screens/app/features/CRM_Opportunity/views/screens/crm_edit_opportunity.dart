@@ -142,7 +142,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     //print(response.body);
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -202,7 +202,7 @@ class _EditOpportunityState extends State<EditOpportunity> {
     //print(json.);
   }
 
-  Future<List<CRecords>> getAllCampaigns() async {
+  Future<List<CPRecords>> getAllCampaigns() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -489,9 +489,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   minLines: 1,
                                   maxLines: 4,
@@ -534,9 +534,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<CRecords>(
+                            ? TypeAheadField<CPRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   minLines: 1,
                                   maxLines: 4,
@@ -743,9 +743,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   minLines: 1,
                                   maxLines: 4,
@@ -788,9 +788,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<CRecords>(
+                            ? TypeAheadField<CPRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   minLines: 1,
                                   maxLines: 4,
@@ -997,9 +997,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<Records>(
+                            ? TypeAheadField<CRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   minLines: 1,
                                   maxLines: 4,
@@ -1042,9 +1042,9 @@ class _EditOpportunityState extends State<EditOpportunity> {
                   child: FutureBuilder(
                     future: getAllCampaigns(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
+                            AsyncSnapshot<List<CPRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<CRecords>(
+                            ? TypeAheadField<CPRecords>(
                                 textFieldConfiguration: TextFieldConfiguration(
                                   minLines: 1,
                                   maxLines: 4,

@@ -5,6 +5,14 @@ class DashboardController extends GetxController {
 
   TextEditingController messageContentFieldController = TextEditingController();
 
+  var employeePresenceAvailable = false.obs;
+
+  int employeeLatenesses = 0;
+
+  int employeeNonAttendances = 0;
+
+  EmployeePresenceJSON employeePresence = EmployeePresenceJSON(records: []);
+
   var broadcastMessageAvailable = false.obs;
 
   var notificationCounter = 0.obs;
@@ -30,28 +38,41 @@ class DashboardController extends GetxController {
     getNotificationCounter();
     getAllEvents();
     getAllBroadcastMessages();
+    getEmployeesPresence();
   }
 
-  /* Future<void> nextcloudTest() async {
-    /* final files = await client.webDav.ls('/');
-    for (final file in files) {
-      print(file.path);
-    } */
+  Future<void> getEmployeesPresence() async {
+    employeePresenceAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/lit_empl_presence_v');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      employeePresence = EmployeePresenceJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
 
-    final downloadedData = await client.webDav.downloadStream('Nextcloud.png');
-
-    Directory dir = await getApplicationDocumentsDirectory();
-
-    final file = File('${dir.path}/Nextcloud.png');
-    if (file.existsSync()) {
-      file.deleteSync();
+      for (var element in employeePresence.records!) {
+        if (element.presente == 'ASSENTE') {
+          employeeNonAttendances++;
+        }
+        if (element.presente == 'PRESENTE' && (element.qty ?? 0) < 8) {
+          employeeLatenesses++;
+        }
+      }
+      employeePresenceAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
-    final inputStream = file.openWrite();
-    await inputStream.addStream(downloadedData);
-    await inputStream.close();
-
-    print('... done!');
-  } */
+  }
 
   Future<void> markAsRead(int index) async {
     final ip = GetStorage().read('ip');

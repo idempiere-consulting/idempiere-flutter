@@ -445,7 +445,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     //print(json.);
   } */
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -542,7 +542,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
 
   static String _displayStringForOption(BPRecords option) => option.name!;
 
-  static String _displayStringForOptionUser(Records option) => option.name!;
+  static String _displayStringForOptionUser(CRecords option) => option.name!;
 
   //static String _displayStringForOption(Records option) => option.name!;
   //late List<Records> salesrepRecord;
@@ -705,9 +705,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: FutureBuilder(
                       future: getAllSalesRep(),
                       builder: (BuildContext ctx,
-                              AsyncSnapshot<List<Records>> snapshot) =>
+                              AsyncSnapshot<List<CRecords>> snapshot) =>
                           snapshot.hasData
-                              ? Autocomplete<Records>(
+                              ? Autocomplete<CRecords>(
                                   initialValue:
                                       TextEditingValue(text: userName),
                                   displayStringForOption:
@@ -715,10 +715,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                   optionsBuilder:
                                       (TextEditingValue textEditingValue) {
                                     if (textEditingValue.text == '') {
-                                      return const Iterable<Records>.empty();
+                                      return const Iterable<CRecords>.empty();
                                     }
                                     return snapshot.data!
-                                        .where((Records option) {
+                                        .where((CRecords option) {
                                       return option.name!
                                           .toString()
                                           .toLowerCase()
@@ -726,7 +726,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                               .toLowerCase());
                                     });
                                   },
-                                  onSelected: (Records selection) {
+                                  onSelected: (CRecords selection) {
                                     //debugPrint(
                                     //'You just selected ${_displayStringForOption(selection)}');
                                     setState(() {
@@ -1023,9 +1023,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: FutureBuilder(
                       future: getAllSalesRep(),
                       builder: (BuildContext ctx,
-                              AsyncSnapshot<List<Records>> snapshot) =>
+                              AsyncSnapshot<List<CRecords>> snapshot) =>
                           snapshot.hasData
-                              ? Autocomplete<Records>(
+                              ? Autocomplete<CRecords>(
                                   initialValue:
                                       TextEditingValue(text: userName),
                                   displayStringForOption:
@@ -1033,10 +1033,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                   optionsBuilder:
                                       (TextEditingValue textEditingValue) {
                                     if (textEditingValue.text == '') {
-                                      return const Iterable<Records>.empty();
+                                      return const Iterable<CRecords>.empty();
                                     }
                                     return snapshot.data!
-                                        .where((Records option) {
+                                        .where((CRecords option) {
                                       return option.name!
                                           .toString()
                                           .toLowerCase()
@@ -1044,7 +1044,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                               .toLowerCase());
                                     });
                                   },
-                                  onSelected: (Records selection) {
+                                  onSelected: (CRecords selection) {
                                     //debugPrint(
                                     //'You just selected ${_displayStringForOption(selection)}');
                                     setState(() {
@@ -1341,9 +1341,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                     child: FutureBuilder(
                       future: getAllSalesRep(),
                       builder: (BuildContext ctx,
-                              AsyncSnapshot<List<Records>> snapshot) =>
+                              AsyncSnapshot<List<CRecords>> snapshot) =>
                           snapshot.hasData
-                              ? Autocomplete<Records>(
+                              ? Autocomplete<CRecords>(
                                   initialValue:
                                       TextEditingValue(text: userName),
                                   displayStringForOption:
@@ -1351,10 +1351,10 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                   optionsBuilder:
                                       (TextEditingValue textEditingValue) {
                                     if (textEditingValue.text == '') {
-                                      return const Iterable<Records>.empty();
+                                      return const Iterable<CRecords>.empty();
                                     }
                                     return snapshot.data!
-                                        .where((Records option) {
+                                        .where((CRecords option) {
                                       return option.name!
                                           .toString()
                                           .toLowerCase()
@@ -1362,7 +1362,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                                               .toLowerCase());
                                     });
                                   },
-                                  onSelected: (Records selection) {
+                                  onSelected: (CRecords selection) {
                                     //debugPrint(
                                     //'You just selected ${_displayStringForOption(selection)}');
                                     setState(() {

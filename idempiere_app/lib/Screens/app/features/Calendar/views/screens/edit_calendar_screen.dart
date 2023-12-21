@@ -124,7 +124,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     return dJson.types;
   }
 
-  Future<List<Records>> getAllUsers() async {
+  Future<List<CRecords>> getAllUsers() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -293,9 +293,9 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     child: FutureBuilder(
                       future: getAllUsers(),
                       builder: (BuildContext ctx,
-                              AsyncSnapshot<List<Records>> snapshot) =>
+                              AsyncSnapshot<List<CRecords>> snapshot) =>
                           snapshot.hasData
-                              ? TypeAheadField<Records>(
+                              ? TypeAheadField<CRecords>(
                                   direction: AxisDirection.up,
                                   //getImmediateSuggestions: true,
                                   textFieldConfiguration:

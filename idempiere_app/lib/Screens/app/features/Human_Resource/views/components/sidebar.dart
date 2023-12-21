@@ -57,6 +57,12 @@ class _Sidebar extends StatelessWidget {
                       ? true
                       : false,
                 ),
+                SelectionButtonData(
+                  activeIcon: Symbols.person_check,
+                  icon: Symbols.person_check,
+                  label: "Attendance".tr,
+                  visible: true,
+                ),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -73,6 +79,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 3:
                     Get.offNamed('/HumanResourceEmployeeSheetScreen');
+                    break;
+                  case 4:
+                    Get.offNamed('/HumanResourceAttendance');
                     break;
                   default:
                 }

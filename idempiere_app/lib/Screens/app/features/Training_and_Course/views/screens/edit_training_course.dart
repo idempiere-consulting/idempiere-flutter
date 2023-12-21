@@ -131,7 +131,7 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
     //print(response.body);
   }
 
-  Future<List<Records>> getAllSalesRep() async {
+  Future<List<CRecords>> getAllSalesRep() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -193,7 +193,7 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
     getAllLeadStatuses();
   }
 
-  static String _displayStringForOption(Records option) => option.name!;
+  static String _displayStringForOption(CRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 
@@ -327,18 +327,19 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<CRecords>(
                                 initialValue:
                                     TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<CRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((CRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -346,7 +347,7 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (CRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
@@ -489,18 +490,19 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<CRecords>(
                                 initialValue:
                                     TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<CRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((CRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -508,7 +510,7 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (CRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {
@@ -651,18 +653,19 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
                   child: FutureBuilder(
                     future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? Autocomplete<Records>(
+                            ? Autocomplete<CRecords>(
                                 initialValue:
                                     TextEditingValue(text: args["salesRep"]),
                                 displayStringForOption: _displayStringForOption,
                                 optionsBuilder:
                                     (TextEditingValue textEditingValue) {
                                   if (textEditingValue.text == '') {
-                                    return const Iterable<Records>.empty();
+                                    return const Iterable<CRecords>.empty();
                                   }
-                                  return snapshot.data!.where((Records option) {
+                                  return snapshot.data!
+                                      .where((CRecords option) {
                                     return option.name!
                                         .toString()
                                         .toLowerCase()
@@ -670,7 +673,7 @@ class _EditTrainingCourseState extends State<EditTrainingCourse> {
                                             .toLowerCase());
                                   });
                                 },
-                                onSelected: (Records selection) {
+                                onSelected: (CRecords selection) {
                                   //debugPrint(
                                   //'You just selected ${_displayStringForOption(selection)}');
                                   setState(() {

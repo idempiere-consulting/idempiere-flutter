@@ -154,7 +154,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
   get displayTechStringForOption => _displayTechStringForOption;
 
   static String _displayStringForOption(BPRecords option) => option.name!;
-  static String _displayTechStringForOption(Records option) => option.name!;
+  static String _displayTechStringForOption(CRecords option) => option.name!;
 
   Future<List<BPRecords>> getAllBPs() async {
     //await getBusinessPartner();
@@ -226,7 +226,7 @@ class MaintenanceMpContractsCreateContractController extends GetxController {
     }
   }
 
-  Future<List<Records>> getAllTechnicians() async {
+  Future<List<CRecords>> getAllTechnicians() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
