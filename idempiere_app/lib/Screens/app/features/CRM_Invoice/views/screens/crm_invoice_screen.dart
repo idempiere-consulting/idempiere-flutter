@@ -199,12 +199,12 @@ class CRMInvoiceScreen extends GetView<CRMInvoiceController> {
                     'dateEnd': controller.dateEndValue.value,
                   });
                 }),
-            SpeedDialChild(
+            /* SpeedDialChild(
                 label: 'New'.tr,
                 child: const Icon(Symbols.assignment_add),
                 onTap: () {
                   Get.toNamed('/SalesOrderCreation');
-                })
+                }) */
           ],
         ),
         //key: controller.scaffoldKey,

@@ -49,7 +49,7 @@ class Records {
   final num? opportunityAmt;
   final CCurrencyID? cCurrencyID;
   final CSalesStageID? cSalesStageID;
-  final int? probability;
+  final num? probability;
   final num? weightedAmt;
   final bool? isPublished;
   final bool? isFavourite;
@@ -135,7 +135,7 @@ class Records {
         mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
             ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
             : null,
-        probability = json['Probability'] as int?,
+        probability = json['Probability'] as num?,
         weightedAmt = json['WeightedAmt'] as num?,
         isPublished = json['IsPublished'] as bool?,
         isFavourite = json['IsFavourite'] as bool?,

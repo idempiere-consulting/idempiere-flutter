@@ -52,6 +52,7 @@ class EPRecords {
   final ADUserID? aDUserID;
   final num? qty;
   final String? presente;
+  final num? dailyCapacity;
   final String? modelname;
 
   EPRecords({
@@ -71,6 +72,7 @@ class EPRecords {
     this.aDUserID,
     this.qty,
     this.presente,
+    this.dailyCapacity,
     this.modelname,
   });
 
@@ -103,6 +105,7 @@ class EPRecords {
             : null,
         qty = json['Qty'] as num?,
         presente = json['presente'] as String?,
+        dailyCapacity = json['DailyCapacity'] as num?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

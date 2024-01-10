@@ -121,18 +121,22 @@ class DashboardScreen extends GetView<DashboardController> {
                                     "1"
                             ? true
                             : false,
-                        child: ElevatedButton.icon(
-                          style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  Colors.green)),
-                          onPressed: () {},
-                          icon: const Icon(
-                            // <-- Icon
-                            Icons.pending_actions_rounded,
-                            size: 24.0,
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green)),
+                            onPressed: () {},
+                            icon: const Icon(
+                              // <-- Icon
+                              Icons.pending_actions_rounded,
+                              size: 24.0,
+                            ),
+                            label: Text('You Started at '.tr +
+                                controller.workStartHour.value), // <-- Text
                           ),
-                          label: Text('You Started at '.tr +
-                              controller.workStartHour.value), // <-- Text
                         ),
                       ),
                     ),
@@ -148,6 +152,7 @@ class DashboardScreen extends GetView<DashboardController> {
                             : false,
                         child: Container(
                           padding: const EdgeInsets.only(top: 10),
+                          margin: EdgeInsets.symmetric(horizontal: 30),
                           child: ElevatedButton.icon(
                             style: ButtonStyle(
                                 backgroundColor:
@@ -359,7 +364,14 @@ class DashboardScreen extends GetView<DashboardController> {
                                                 SizedBox(
                                                   width: 180,
                                                   child: ElevatedButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/HumanResourceAttendance',
+                                                            arguments: {
+                                                              "presenceValue":
+                                                                  "ABSENT".tr
+                                                            });
+                                                      },
                                                       child: Row(
                                                         children: [
                                                           Text(
@@ -380,17 +392,21 @@ class DashboardScreen extends GetView<DashboardController> {
                                                 SizedBox(
                                                   width: 10,
                                                 ),
-                                                SizedBox(
-                                                  width: 180,
-                                                  child: ElevatedButton(
-                                                      onPressed: () {},
-                                                      child: Row(
-                                                        children: [
-                                                          Text(
-                                                              '${controller.employeeLatenesses} Ritardi/Anomalie'),
-                                                        ],
-                                                      )),
-                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Get.offNamed(
+                                                          '/HumanResourceAttendance',
+                                                          arguments: {
+                                                            "presenceValue":
+                                                                "ATTENDED".tr
+                                                          });
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                            '${controller.employeeLatenesses} Ritardi/Anomalie'),
+                                                      ],
+                                                    )),
                                               ],
                                             ),
                                           ],

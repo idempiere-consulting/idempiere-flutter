@@ -1277,7 +1277,15 @@ class LocaleString extends Translations {
           'Message': 'Messaggio',
           'Mark as Read': 'Segna come letto',
           'Attendances': 'Presenze',
-          'Select an Organization': 'Seleziona un\'Organizzazione'
+          'Select an Organization': 'Seleziona un\'Organizzazione',
+          'ATTENDED': 'PRESENTE',
+          'ABSENT': 'ASSENTE',
+          'Date Range': 'Intervallo di Date',
+          'Last Month': 'Ultimo Mese',
+          'Last Week': 'Ultima Settimana',
+          'Yesterday': 'Ieri',
+          'All(singular)': 'Tutto',
+          'ABSENCES': 'ASSENZE'
         },
       };
 }

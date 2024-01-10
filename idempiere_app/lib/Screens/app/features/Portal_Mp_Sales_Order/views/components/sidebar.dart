@@ -60,15 +60,15 @@ class _Sidebar extends StatelessWidget {
                       "1",
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person,
-                  icon: EvaIcons.personOutline,
-                  label: "Sales Offer".tr,
-                  visible: int.parse(list[36], radix: 16)
+                    activeIcon: Icons.person,
+                    icon: EvaIcons.personOutline,
+                    label: "Sales Offer".tr,
+                    visible: /* int.parse(list[36], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")
                           .toString()[1] ==
-                      "1",
-                ),
+                      "1", */
+                        false),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,

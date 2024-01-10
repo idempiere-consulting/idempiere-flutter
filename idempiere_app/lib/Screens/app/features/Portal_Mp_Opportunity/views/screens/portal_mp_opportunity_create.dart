@@ -13,34 +13,37 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/campaign_jso
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunitystatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/views/screens/portal_mp_opportunity_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
-class CreateOpportunity extends StatefulWidget {
-  const CreateOpportunity({Key? key}) : super(key: key);
+class PortalMPCreateOpportunity extends StatefulWidget {
+  const PortalMPCreateOpportunity({Key? key}) : super(key: key);
 
   @override
-  State<CreateOpportunity> createState() => _CreateOpportunityState();
+  State<PortalMPCreateOpportunity> createState() =>
+      _PortalMPCreateOpportunityState();
 }
 
-class _CreateOpportunityState extends State<CreateOpportunity> {
+class _PortalMPCreateOpportunityState extends State<PortalMPCreateOpportunity> {
   saveOpportunity() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
     String expectedCloseDate = DateFormat('yyyy-MM-dd')
         .format(DateTime.now().add(const Duration(days: 7)));
+
     var msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "C_SalesStage_ID": {"id": int.parse(dropdownValue)},
-      "SalesRep_ID": {"identifier": salesrepValue},
+      "SalesRep_ID": {"id": Get.arguments["salesRepId"]},
       "M_Product_ID": {"id": productId},
       "OpportunityAmt": double.parse(amtFieldController.text),
-      "C_BPartner_ID": {"id": bPId},
+      "C_BPartner_ID": {"id": Get.arguments["businessPartnerId"]},
       "Description": descriptionFieldController.text,
       "Probability": double.parse(probabilityFieldController.text),
       "Comments": noteFieldController.text,
@@ -64,8 +67,9 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
         'Authorization': authorization,
       },
     );
-    if (response.statusCode == 200) {
-      Get.find<CRMOpportunityController>().getOpportunities();
+    if (response.statusCode == 201) {
+      Get.find<PortalMpOpportunityController>().getOpportunities();
+      Get.back();
       //print("done!");
       Get.snackbar(
         "Done!".tr,
@@ -76,6 +80,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
         ),
       );
     } else {
+      print(response.body);
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -288,7 +293,7 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
     noteFieldController = TextEditingController(text: "");
     probabilityFieldController = TextEditingController(text: "0");
     salesRepFieldController =
-        TextEditingController(text: GetStorage().read('user'));
+        TextEditingController(text: Get.arguments["salesRepName"]);
     productFieldController = TextEditingController(text: "");
     campaignFieldController = TextEditingController(text: "");
     productName = const TextEditingValue(text: "");
@@ -343,45 +348,25 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: FutureBuilder(
-                    future: getAllBPs(),
+                    future: getAllSalesRep(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                            AsyncSnapshot<List<CRecords>> snapshot) =>
                         snapshot.hasData
-                            ? TypeAheadField<BPRecords>(
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  minLines: 1,
-                                  maxLines: 4,
-                                  controller: bPartnerFieldController,
-                                  //autofocus: true,
-                                  /* style: DefaultTextStyle.of(context)
-                                      .style
-                                      .copyWith(fontStyle: FontStyle.italic), */
-                                  decoration: const InputDecoration(
-                                    prefixIcon: Icon(Icons.handshake_outlined),
-                                    border: OutlineInputBorder(),
-                                    labelText: 'Business Partner',
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
+                            ? TextField(
+                                readOnly: true,
+                                controller: salesRepFieldController,
+                                decoration: InputDecoration(
+                                  labelStyle:
+                                      const TextStyle(color: Colors.white),
+                                  labelText: "SalesRep".tr,
+                                  filled: true,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: BorderSide.none,
                                   ),
+                                  isDense: true,
+                                  fillColor: Theme.of(context).cardColor,
                                 ),
-                                suggestionsCallback: (pattern) async {
-                                  return snapshot.data!.where((element) =>
-                                      (element.name ?? "")
-                                          .toLowerCase()
-                                          .contains(pattern.toLowerCase()));
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  return ListTile(
-                                    //leading: Icon(Icons.shopping_cart),
-                                    title: Text(suggestion.name ?? ""),
-                                  );
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  bPId = suggestion.id!;
-                                  bPartnerFieldController.text =
-                                      suggestion.name;
-                                  //productName = selection.name;
-                                },
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),
@@ -456,177 +441,6 @@ class _CreateOpportunityState extends State<CreateOpportunity> {
                                   productFieldController.text = suggestion.name;
                                   //productName = selection.name;
                                 },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: probabilityFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.percent),
-                      border: const OutlineInputBorder(),
-                      labelText: 'Probability'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: TextField(
-                    controller: amtFieldController,
-                    decoration: InputDecoration(
-                      prefixIcon: const Icon(Icons.payment),
-                      border: const OutlineInputBorder(),
-                      labelText: 'OpportunityAmt'.tr,
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
-                    ),
-                    keyboardType: const TextInputType.numberWithOptions(
-                        signed: true, decimal: true),
-                    inputFormatters: [
-                      FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
-                    ],
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllSalesRep(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? TypeAheadField<CRecords>(
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  minLines: 1,
-                                  maxLines: 4,
-                                  controller: salesRepFieldController,
-                                  decoration: InputDecoration(
-                                    prefixIcon:
-                                        const Icon(Icons.person_outline),
-                                    border: const OutlineInputBorder(),
-                                    labelText: 'SalesRep'.tr,
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                  ),
-                                ),
-                                suggestionsCallback: (pattern) async {
-                                  return snapshot.data!.where((element) =>
-                                      (element.name ?? "")
-                                          .toLowerCase()
-                                          .contains(pattern.toLowerCase()));
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  return ListTile(
-                                    //leading: Icon(Icons.shopping_cart),
-                                    title: Text(suggestion.name ?? ""),
-                                  );
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  salesrepValue = suggestion.name!;
-                                  salesRepFieldController.text =
-                                      suggestion.name;
-                                  //productName = selection.name;
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllCampaigns(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<CPRecords>> snapshot) =>
-                        snapshot.hasData
-                            ? TypeAheadField<CPRecords>(
-                                textFieldConfiguration: TextFieldConfiguration(
-                                  minLines: 1,
-                                  maxLines: 4,
-                                  controller: campaignFieldController,
-                                  decoration: InputDecoration(
-                                    prefixIcon: const Icon(Icons.abc),
-                                    border: const OutlineInputBorder(),
-                                    labelText: 'Campaign'.tr,
-                                    floatingLabelBehavior:
-                                        FloatingLabelBehavior.always,
-                                  ),
-                                ),
-                                suggestionsCallback: (pattern) async {
-                                  return snapshot.data!.where((element) =>
-                                      (element.name ?? "")
-                                          .toLowerCase()
-                                          .contains(pattern.toLowerCase()));
-                                },
-                                itemBuilder: (context, suggestion) {
-                                  return ListTile(
-                                    //leading: Icon(Icons.shopping_cart),
-                                    title: Text(suggestion.name ?? ""),
-                                  );
-                                },
-                                onSuggestionSelected: (suggestion) {
-                                  campaignId = suggestion.id!;
-                                  campaignFieldController.text =
-                                      suggestion.name;
-                                  //productName = selection.name;
-                                },
-                              )
-                            : const Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "SalesStage".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
-                  child: FutureBuilder(
-                    future: getAllOpportunityStatuses(),
-                    builder: (BuildContext ctx,
-                            AsyncSnapshot<List<OSRecords>> snapshot) =>
-                        snapshot.hasData && flag
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.id.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),

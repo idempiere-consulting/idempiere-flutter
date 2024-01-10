@@ -1,6 +1,7 @@
 part of dashboard;
 
 class HumanResourceAttendanceController extends GetxController {
+  DateTime today = DateTime.now();
   var employeePresenceAvailable = false.obs;
 
   EmployeePresenceJSON employeePresence = EmployeePresenceJSON(records: []);
@@ -15,9 +16,62 @@ class HumanResourceAttendanceController extends GetxController {
 
   TextEditingController userSearchFieldController = TextEditingController();
 
+  var dropdownValue =
+      "${Get.arguments != null ? Get.arguments['presenceValue'] : "0"}".obs;
+
+  var dateRangeDropdownValue = "0".obs;
+
+  var dateRangeDropdownList = [];
+
+  List<Types> dropDownList = [];
+
+  final presence = {
+    "types": [
+      {"id": "0", "name": "All(singular)".tr},
+      {"id": "ABSENT".tr, "name": "ABSENCES".tr},
+      {"id": "ATTENDED".tr, "name": "RITARDO/ANOMALIA".tr},
+    ]
+  };
+
+  final dateRange = {
+    "types": [
+      {"id": "0", "name": "All".tr},
+      {"id": "1".tr, "name": "Last Month".tr},
+      {"id": "2".tr, "name": "Last Week".tr},
+      {"id": "3".tr, "name": "Yesterday".tr},
+      {"id": "4".tr, "name": "Today".tr},
+    ]
+  };
+
+  Map<String, String> dateRangeFilter = {};
+
+  List<Types>? getTypes() {
+    var dJson = TypeJson.fromJson(presence);
+
+    return dJson.types;
+  }
+
+  List<Types>? getDateRange() {
+    var dJson = TypeJson.fromJson(dateRange);
+
+    return dJson.types;
+  }
+
   @override
   void onInit() {
+    dropDownList = getTypes()!;
+    dateRangeDropdownList = getDateRange()!;
     super.onInit();
+    dateRangeFilter.addAll({
+      "0": "",
+      "1":
+          " and day ge '${DateFormat('yyyy-MM-dd').format(today.subtract(const Duration(days: 30)))}'",
+      "2":
+          " and day ge '${DateFormat('yyyy-MM-dd').format(today.subtract(const Duration(days: 7)))}'",
+      "3":
+          " and day eq '${DateFormat('yyyy-MM-dd').format(today.subtract(const Duration(days: 1)))}'",
+      "4": " and day ge '${DateFormat('yyyy-MM-dd').format(today)}'",
+    });
   }
 
   Future<void> getEmployeesPresence() async {

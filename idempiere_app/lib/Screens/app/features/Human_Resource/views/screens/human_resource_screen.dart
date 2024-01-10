@@ -132,7 +132,14 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                                                 SizedBox(
                                                   width: 180,
                                                   child: ElevatedButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/HumanResourceAttendance',
+                                                            arguments: {
+                                                              "presenceValue":
+                                                                  "ABSENT".tr
+                                                            });
+                                                      },
                                                       child: Row(
                                                         children: [
                                                           Text(
@@ -156,7 +163,14 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                                                 SizedBox(
                                                   width: 180,
                                                   child: ElevatedButton(
-                                                      onPressed: () {},
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/HumanResourceAttendance',
+                                                            arguments: {
+                                                              "presenceValue":
+                                                                  "ATTENDED".tr
+                                                            });
+                                                      },
                                                       child: Row(
                                                         children: [
                                                           Text(

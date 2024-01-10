@@ -155,7 +155,7 @@ class PortalMpSalesOfferScreen extends GetView<PortalMpSalesOfferController> {
                                   children: [
                                     //Icon(Icons.filter_alt),
                                     Obx(() => controller.dataAvailable
-                                        ? Text("SALES ORDERS: ".tr +
+                                        ? Text("SALES A ORDERS: ".tr +
                                             controller.trx.rowcount.toString())
                                         : Text("SALES ORDERS: ".tr)),
                                   ],

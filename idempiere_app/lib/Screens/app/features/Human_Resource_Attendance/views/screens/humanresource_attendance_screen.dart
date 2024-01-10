@@ -12,7 +12,9 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Open_Items/models/organization_json.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource/models/employeepresence_json.dart';
+import 'package:idempiere_app/Screens/app/features/Human_Resource_Attendance/views/screens/humanresource_attendance_list_screen.dart';
 
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -31,6 +33,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 import '../../../CRM_Contact_BP/models/contact.dart';
@@ -127,6 +130,9 @@ class HumanResourceAttendanceScreen
                             ),
                 ),
               ),
+              SizedBox(
+                height: 20,
+              ),
               Container(
                 margin: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 child: FutureBuilder(
@@ -173,6 +179,7 @@ class HumanResourceAttendanceScreen
                                 );
                               },
                               onSuggestionSelected: (suggestion) {
+                                print(suggestion.id!);
                                 controller.userSearchFieldController.text =
                                     suggestion.name!;
                                 controller.userId = suggestion.id!;
@@ -182,6 +189,81 @@ class HumanResourceAttendanceScreen
                               child: CircularProgressIndicator(),
                             ),
                 ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                    left: 10, right: 10, bottom: 10, top: 15),
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: 'Date Range'.tr,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(EvaIcons.list),
+                    isDense: true,
+                  ),
+                  child: Obx(
+                    () => DropdownButton(
+                      isDense: true,
+                      underline: const SizedBox(),
+                      value: controller.dateRangeDropdownValue.value,
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        controller.dateRangeDropdownValue.value = newValue!;
+                      },
+                      items: controller.dateRangeDropdownList.map((list) {
+                        return DropdownMenuItem<String>(
+                          value: list.id,
+                          child: Text(
+                            list.name.toString(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.only(
+                    left: 10, right: 10, bottom: 10, top: 15),
+                child: InputDecorator(
+                  decoration: InputDecoration(
+                    labelText: 'Type'.tr,
+                    border: const OutlineInputBorder(),
+                    prefixIcon: const Icon(EvaIcons.list),
+                    isDense: true,
+                  ),
+                  child: Obx(
+                    () => DropdownButton(
+                      isDense: true,
+                      underline: const SizedBox(),
+                      value: controller.dropdownValue.value,
+                      elevation: 16,
+                      onChanged: (String? newValue) {
+                        controller.dropdownValue.value = newValue!;
+                      },
+                      items: controller.dropDownList.map((list) {
+                        return DropdownMenuItem<String>(
+                          value: list.id,
+                          child: Text(
+                            list.name.toString(),
+                          ),
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Get.to(() => const HumanResourceAttendanceListScreen(),
+                      arguments: {
+                        "organizationId": controller.organizationId.value,
+                        "employeeId": controller.userId,
+                        "dateRange": controller.dateRangeFilter[
+                            controller.dateRangeDropdownValue.value],
+                        "type": controller.dropdownValue.value,
+                      });
+                },
+                child: Text('Search'.tr),
               ),
             ]);
           },

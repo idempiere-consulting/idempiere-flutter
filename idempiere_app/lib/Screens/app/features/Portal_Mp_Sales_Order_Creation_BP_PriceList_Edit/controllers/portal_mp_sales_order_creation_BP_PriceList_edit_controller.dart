@@ -627,7 +627,7 @@ class PortalMpSalesOrderCreationBPPriceListEditController
       'C_BPartner_Location_ID': {'id': int.parse(bpLocationId.value)},
       'PaymentRule': paymentRuleId.value,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
-      "DatePromised": "${dateStartFieldController.text}T00:00:00Z",
+      "DatePromised": "${dateStartFieldController.text}T07:00:00Z",
       "ShipDate": "${dateStartFieldController.text}T07:00:00Z",
       'Note': noteFieldController.text,
       "IsLocked": isWIP.value,

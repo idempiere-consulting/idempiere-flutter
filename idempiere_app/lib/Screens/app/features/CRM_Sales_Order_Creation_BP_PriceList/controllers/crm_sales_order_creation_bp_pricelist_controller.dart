@@ -704,7 +704,7 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       });
     }
 
-    var msg = jsonEncode({
+    var msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
@@ -713,8 +713,8 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       "Bill_BPartner_ID": {"id": businessPartnerId},
       "Bill_Location_ID": {"id": defValues.records![0].cBPartnerLocationID!.id},
       "Revision": defValues.records![0].revision,
-      "AD_User_ID": defValues.records![0].aDUserID!.id,
-      "Bill_User_ID": defValues.records![0].billUserID!.id,
+      //"AD_User_ID": defValues.records![0].aDUserID!.id,
+      //"Bill_User_ID": defValues.records![0].billUserID!.id,
       "C_DocTypeTarget_ID": {"id": int.parse(dropdownValue.value)},
       "DateOrdered": "${formattedDate}T00:00:00Z",
       "Note": noteFieldController.text,
@@ -733,11 +733,18 @@ class CRMSalesOrderCreationBPPricelistController extends GetxController {
       "PaymentRule": {"id": paymentRuleId.value},
       "IsLocked": isWIP.value,
       "order-line".tr: list,
-    });
+    };
+
+    if (defValues.records![0].aDUserID != null) {
+      msg.addAll({
+        "AD_User_ID": defValues.records![0].aDUserID!.id,
+        "Bill_User_ID": defValues.records![0].billUserID!.id,
+      });
+    }
 
     var response = await http.post(
       url,
-      body: msg,
+      body: jsonEncode(msg),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': authorization,
