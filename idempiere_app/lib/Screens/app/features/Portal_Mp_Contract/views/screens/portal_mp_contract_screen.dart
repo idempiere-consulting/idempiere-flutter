@@ -14,9 +14,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/models/contract_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/models/contract_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp/views/screens/portal_mp_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_contract_filter_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_edit_contract.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -827,7 +825,7 @@ class PortalMpContractScreen extends GetView<PortalMpContractController> {
                                                   ],
                                                   rows: controller.headerRows,
                                                 )
-                                              : SizedBox(),
+                                              : const SizedBox(),
                                         ),
                                       ),
                                     ),

@@ -38,8 +38,8 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
     final msg = jsonEncode({
       "LIT_Sign_Image_ID": imageId,
     });
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/mp_ot/${Get.arguments["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${Get.arguments["id"]}');
     // ignore: unused_local_variable
     var response = await http.put(
       url,
@@ -87,8 +87,7 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                 String authorization = 'Bearer ${GetStorage().read('token')}';
                 final msg = jsonEncode(
                     {"name": "customersignature.jpg", "BinaryData": image64});
-                var url =
-                    Uri.parse('$protocol://' + ip + '/api/v1/models/ad_image');
+                var url = Uri.parse('$protocol://$ip/api/v1/models/ad_image');
 
                 var isConnected = await checkConnection();
 
@@ -151,9 +150,8 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                   if (GetStorage().read('postCallList') == null) {
                     var call = jsonEncode({
                       "offlineid": GetStorage().read('postCallId'),
-                      "url": '$protocol://' +
-                          ip +
-                          '/api/v1/models/mp_maintain/${Get.arguments["id"]}/attachments',
+                      "url":
+                          '$protocol://$ip/api/v1/models/mp_maintain/${Get.arguments["id"]}/attachments',
                       "name": "clientsignature.jpg",
                       "data": image64
                     });
@@ -163,9 +161,8 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                     list = GetStorage().read('postCallList');
                     var call = jsonEncode({
                       "offlineid": GetStorage().read('postCallId'),
-                      "url": '$protocol://' +
-                          ip +
-                          '/api/v1/models/mp_maintain/${Get.arguments["id"]}/attachments',
+                      "url":
+                          '$protocol://$ip/api/v1/models/mp_maintain/${Get.arguments["id"]}/attachments',
                       "name": "clientsignature.jpg",
                       "data": image64
                     });

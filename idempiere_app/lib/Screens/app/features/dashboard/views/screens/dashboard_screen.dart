@@ -122,7 +122,7 @@ class DashboardScreen extends GetView<DashboardController> {
                             ? true
                             : false,
                         child: Container(
-                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
                           child: ElevatedButton.icon(
                             style: ButtonStyle(
                                 backgroundColor:
@@ -152,7 +152,7 @@ class DashboardScreen extends GetView<DashboardController> {
                             : false,
                         child: Container(
                           padding: const EdgeInsets.only(top: 10),
-                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
                           child: ElevatedButton.icon(
                             style: ButtonStyle(
                                 backgroundColor:
@@ -201,7 +201,7 @@ class DashboardScreen extends GetView<DashboardController> {
                               () => Visibility(
                                 visible:
                                     controller.broadcastMessageAvailable.value,
-                                replacement: Divider(),
+                                replacement: const Divider(),
                                 child: Expanded(
                                   child: ListView.builder(
                                       //shrinkWrap: true,
@@ -295,7 +295,7 @@ class DashboardScreen extends GetView<DashboardController> {
                                                     Symbols.link,
                                                   ),
                                                 )
-                                              : Icon(
+                                              : const Icon(
                                                   Icons.check,
                                                   color: Colors.grey,
                                                 ),
@@ -353,12 +353,12 @@ class DashboardScreen extends GetView<DashboardController> {
                                           children: [
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Symbols.no_accounts_rounded,
                                                   size: 25,
                                                   color: Colors.redAccent,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
                                                 SizedBox(
@@ -381,15 +381,15 @@ class DashboardScreen extends GetView<DashboardController> {
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 20),
+                                            const SizedBox(height: 20),
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Symbols.person_alert_rounded,
                                                   size: 25,
                                                   color: Colors.yellowAccent,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
                                                 ElevatedButton(

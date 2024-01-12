@@ -47,9 +47,8 @@ class _CreateSupplychainInventoryLotLineState
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_locator?\$filter= M_Warehouse_ID eq ${args["warehouseId"]} and IsDefault eq true and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_locator?\$filter= M_Warehouse_ID eq ${args["warehouseId"]} and IsDefault eq true and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -59,7 +58,7 @@ class _CreateSupplychainInventoryLotLineState
       },
     );
     if (response.statusCode == 200) {
-      print(utf8.decode(response.bodyBytes));
+      //print(utf8.decode(response.bodyBytes));
       var json = jsonDecode(utf8.decode(response.bodyBytes));
 
       setState(() {
@@ -77,9 +76,8 @@ class _CreateSupplychainInventoryLotLineState
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_storageonhand?\$filter=M_Product_ID eq $id and QtyOnHand gt 0 and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -89,7 +87,7 @@ class _CreateSupplychainInventoryLotLineState
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       setState(() {
         attrFieldAvailable = false;
         attrFieldVisible = false;
@@ -121,9 +119,8 @@ class _CreateSupplychainInventoryLotLineState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/${"physical-inventory".tr}/tabs/${"inventory-count-line".tr}/$lineId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/${"physical-inventory".tr}/tabs/${"inventory-count-line".tr}/$lineId');
 
     var msg = jsonEncode({
       "QtyCount": double.parse(quantityFieldController.text),
@@ -175,9 +172,8 @@ class _CreateSupplychainInventoryLotLineState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/windows/${"physical-inventory".tr}/tabs/${"inventory-count".tr}/${Get.arguments["id"]}/${"inventory-count-line".tr}/');
+    var url = Uri.parse(
+        '$protocol://ip/api/v1/windows/${"physical-inventory".tr}/tabs/${"inventory-count".tr}/${Get.arguments["id"]}/${"inventory-count-line".tr}/');
     //print(url.toString());
     // physical-inventory/conteggio-inventario-if00/tabs/
     // physical-inventory/tabs/inventory-count/1000008/

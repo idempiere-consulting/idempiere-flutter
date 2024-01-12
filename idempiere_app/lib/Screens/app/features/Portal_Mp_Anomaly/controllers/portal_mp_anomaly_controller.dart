@@ -281,7 +281,9 @@ class PortalMpAnomalyController extends GetxController {
     );
     if (response.statusCode == 200) {
       //C_BPartner_ID eq $businessPartnerId and
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       _trxDesktop =
           LitNcJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       desktopPagesTot.value = _trxDesktop.pagecount!;
@@ -335,7 +337,9 @@ class PortalMpAnomalyController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       _trxDesktopLines = ContractLineJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -361,7 +365,9 @@ class PortalMpAnomalyController extends GetxController {
 
       linesDataAvailable.value = true;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

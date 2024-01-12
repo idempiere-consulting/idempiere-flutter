@@ -69,7 +69,7 @@ class MaintenanceMptaskLineScreen
     return Scaffold(
       floatingActionButton: FloatingActionButton.small(
         onPressed: controller.syncWorkOrderTask,
-        child: Icon(Icons.refresh),
+        child: const Icon(Icons.refresh),
       ),
       appBar: AppBar(
         centerTitle: true,
@@ -154,7 +154,7 @@ class MaintenanceMptaskLineScreen
                                     "${controller.prodCountList.records![index].mProductID?.identifier} : ${controller.prodCountList.records![index].qty}")),
                           );
                         })
-                    : SizedBox(),
+                    : const SizedBox(),
               ),
               Container(
                 color: Colors.grey[600],

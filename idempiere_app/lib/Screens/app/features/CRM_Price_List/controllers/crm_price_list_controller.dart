@@ -32,13 +32,6 @@ class CRMPriceListController extends GetxController {
   var priceListId = 0.obs;
   var args = Get.arguments;
 
-  @override
-  void onInit() {
-    super.onInit();
-
-    //getPriceList();
-  }
-
   bool get dataAvailable => _dataAvailable.value;
   PriceListJson get trx => _trx;
   //String get value => _value.toString();

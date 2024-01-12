@@ -47,7 +47,7 @@ class _CreateSupplychainInventoryLotState
     }
 
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/M_Inventory/');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/M_Inventory/');
     //print(msg);
     var response = await http.post(
       url,

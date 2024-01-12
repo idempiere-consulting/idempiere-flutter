@@ -20,11 +20,10 @@ class SupplychainInventoryLineController extends GetxController {
 
   deleteLoadUnloadLine(int id) async {
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
 
     final protocol = GetStorage().read('protocol');
-    var url =
-        Uri.parse('$protocol://' + ip + '/api/v1/models/M_InventoryLine/$id');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/M_InventoryLine/$id');
     //print(msg);
     var response = await http.delete(
       url,
@@ -63,11 +62,10 @@ class SupplychainInventoryLineController extends GetxController {
   Future<void> getInventoryLines() async {
     _dataAvailable.value = false;
     final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ' + GetStorage().read('token');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/M_InventoryLine?\$filter= M_Inventory_ID eq ${args["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_InventoryLine?\$filter= M_Inventory_ID eq ${args["id"]} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -93,8 +91,8 @@ class SupplychainInventoryLineController extends GetxController {
   } */
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
-    //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
     String roleName = GetStorage().read('rolename') as String;
     return _Profile(

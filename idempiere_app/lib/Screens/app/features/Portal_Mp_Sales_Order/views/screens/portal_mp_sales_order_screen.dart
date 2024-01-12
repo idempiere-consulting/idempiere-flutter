@@ -11,7 +11,6 @@ import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -20,7 +19,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/contra
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edithtml_sales_order.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Offer/views/screens/portal_mp_sales_order_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -33,7 +31,6 @@ import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edit_sales_order.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
@@ -48,8 +45,6 @@ import 'package:pdf/pdf.dart';
 
 //model for sales_order_controller
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-
-import '../../../CRM_Sales_Order/views/screens/signature_page.dart';
 
 // binding
 part '../../bindings/portal_mp_sales_order_binding.dart';

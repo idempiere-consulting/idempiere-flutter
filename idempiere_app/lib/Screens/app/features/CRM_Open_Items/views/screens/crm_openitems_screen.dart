@@ -435,7 +435,7 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                               horizontal: 20.0, vertical: 10.0),
                                       children: [
                                         Column(
-                                          children: [
+                                          children: const [
                                             /* Row(
                                               children: [
                                                 IconButton(
@@ -796,7 +796,7 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                               horizontal: 20.0, vertical: 10.0),
                                       children: [
                                         Column(
-                                          children: [
+                                          children: const [
                                             /* Row(
                                               children: [
                                                 IconButton(
@@ -1157,7 +1157,7 @@ class CRMOpenItemsScreen extends GetView<CRMOpenItemsController> {
                                               horizontal: 20.0, vertical: 10.0),
                                       children: [
                                         Column(
-                                          children: [
+                                          children: const [
                                             /* Row(
                                               children: [
                                                 IconButton(

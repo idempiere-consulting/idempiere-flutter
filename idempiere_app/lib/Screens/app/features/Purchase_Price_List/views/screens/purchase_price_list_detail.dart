@@ -237,7 +237,7 @@ class _PriceListDetailState extends State<PriceListDetail>
                               : const Text('no image'),
                         ],
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
                 Container(
                   alignment: const FractionalOffset(0.5, 0.95),
                   child: TabPageSelector(
@@ -285,7 +285,7 @@ class _PriceListDetailState extends State<PriceListDetail>
             visible: discountedCost != cost,
             child: Text(
               "€$cost",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12.0,
                 color: Colors.grey,
                 decoration: TextDecoration.lineThrough,
@@ -299,7 +299,7 @@ class _PriceListDetailState extends State<PriceListDetail>
             visible: discountedCost != cost,
             child: Text(
               "$discount% ${"Off".tr}",
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 12.0,
                 color: kNotifColor,
               ),
@@ -483,7 +483,7 @@ class _PriceListDetailState extends State<PriceListDetail>
             Tab(
               child: Text(
                 "DETAILS".tr,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               ),
@@ -491,7 +491,7 @@ class _PriceListDetailState extends State<PriceListDetail>
             Tab(
               child: Text(
                 "NOTE".tr,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                 ),
               ),

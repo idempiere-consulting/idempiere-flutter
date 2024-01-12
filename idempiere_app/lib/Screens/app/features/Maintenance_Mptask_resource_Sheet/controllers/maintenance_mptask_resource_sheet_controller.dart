@@ -230,7 +230,7 @@ class MaintenanceMpResourceSheetController extends GetxController {
     surveyLines2.records!.removeWhere(
         (element) => element.mPMaintainResourceID?.id != Get.arguments["id"]);
 
-    print('hallo');
+    //print('hallo');
 
     var middlePeriod = Get.arguments["middlePeriod"];
     var workOrderMonth = dateWorkStart.month;
@@ -509,7 +509,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-        print(response.body);
+        if (kDebugMode) {
+          print(response.body);
+        }
         var json = jsonDecode(utf8.decode(response.bodyBytes));
         getQuizLines(json["records"][0]["id"]);
         //GetStorage().write('workOrderSync', response.body);
@@ -580,7 +582,9 @@ class MaintenanceMpResourceSheetController extends GetxController {
 
       surveyAvailable.value = true;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

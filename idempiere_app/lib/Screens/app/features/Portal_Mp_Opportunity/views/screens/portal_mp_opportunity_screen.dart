@@ -18,10 +18,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/busine
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_edit_opportunity.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_create_tasks.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/views/screens/crm_opportunity_filters_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/views/screens/portal_mp_edit_opportunity.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Opportunity/views/screens/portal_mp_opportunity_create.dart';
@@ -42,7 +38,6 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
-import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 // binding
@@ -446,10 +441,10 @@ class PortalMpOpportunityScreen extends GetView<PortalMpOpportunityController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
           ),
         ),

@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/storageonhand_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/views/screens/crm_sales_order_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -1029,7 +1028,7 @@ class _CreatePurchaseOrderLineState extends State<CreatePurchaseOrderLine> {
             );
           },
           desktopBuilder: (context, constraints) {
-           return Column(
+            return Column(
               children: [
                 const SizedBox(
                   height: 10,

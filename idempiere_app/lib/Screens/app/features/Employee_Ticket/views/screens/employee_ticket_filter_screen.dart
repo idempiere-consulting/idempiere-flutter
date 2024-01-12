@@ -9,7 +9,6 @@ import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Employee_Ticket/views/screens/employee_ticket_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';

@@ -126,9 +126,8 @@ class PortalMpSalesOrderController extends GetxController {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -292,7 +291,7 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var rowList = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       duplicateDocument(header, rowList);
@@ -507,7 +506,7 @@ class PortalMpSalesOrderController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       _trxDesktopLines = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -564,7 +563,7 @@ class PortalMpSalesOrderController extends GetxController {
 
       linesDataAvailable.value = true;
     } else {
-      print(response.body);
+      //print(response.body);
     }
   }
 

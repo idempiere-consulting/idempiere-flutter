@@ -183,7 +183,7 @@ class CRMSalesOrderCreationBPPriceListEditController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var rowList = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (var element in rowList.records!) {

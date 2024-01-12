@@ -131,9 +131,8 @@ class PortalMpInvoiceController extends GetxController {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -224,12 +223,6 @@ class PortalMpInvoiceController extends GetxController {
   }
 
   Future<void> getInvoices() async {
-    var now = DateTime.now();
-    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     var notificationFilter = '';
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -261,7 +254,9 @@ class PortalMpInvoiceController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -473,7 +468,6 @@ class PortalMpInvoiceController extends GetxController {
   }
 
   Future<void> getElectronicInvoiceAttachmentPDF(int id, String name) async {
-    print(id);
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');

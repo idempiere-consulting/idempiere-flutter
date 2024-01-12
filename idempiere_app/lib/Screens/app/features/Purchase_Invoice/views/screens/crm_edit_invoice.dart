@@ -2,25 +2,15 @@ import 'dart:convert';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Invoice/views/screens/crm_invoice_screen.dart';
 
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
-
-//models
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/doctype_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/bplocation_json.dart';
-
-//screens
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
-import 'package:idempiere_app/constants.dart';
 
 class PurchaseEditInvoice extends StatefulWidget {
   const PurchaseEditInvoice({Key? key}) : super(key: key);
@@ -162,7 +152,7 @@ class _PurchaseEditInvoiceState extends State<PurchaseEditInvoice> {
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(

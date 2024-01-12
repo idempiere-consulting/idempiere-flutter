@@ -14,15 +14,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Order/views/screens/crm_edit_sales_order.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Order/views/screens/crm_sales_order_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/contractarticle_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edithtml_sales_order.dart';
 //import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Request/models/purchase_request_json.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Request/views/screens/purchase_request_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
@@ -38,7 +32,6 @@ import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
 // ignore: depend_on_referenced_packages
@@ -330,7 +323,7 @@ class PurchaseRequestScreen extends GetView<PurchaseRequestController> {
 
                                         subtitle: Column(
                                           children: [
-                                            Divider(),
+                                            const Divider(),
                                             Row(
                                               children: <Widget>[
                                                 const Icon(Icons.person,
@@ -366,7 +359,7 @@ class PurchaseRequestScreen extends GetView<PurchaseRequestController> {
                                                 ),
                                               ],
                                             ),
-                                            Divider(),
+                                            const Divider(),
                                             Row(
                                               children: <Widget>[
                                                 const Icon(
@@ -495,10 +488,10 @@ class PurchaseRequestScreen extends GetView<PurchaseRequestController> {
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
           ),
         ),

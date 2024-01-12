@@ -144,12 +144,6 @@ class PurchaseInvoiceController extends GetxController {
   }
 
   Future<void> getInvoices() async {
-    var now = DateTime.now();
-    DateTime ninetyDaysAgo = now.subtract(const Duration(days: 90));
-    var formatter = DateFormat('yyyy-MM-dd');
-    String formattedDate = formatter.format(now);
-    String formattedNinetyDaysAgo = formatter.format(ninetyDaysAgo);
-    var apiUrlFilter = ["", " and SalesRep_ID eq $adUserId"];
     var notificationFilter = '';
     if (Get.arguments != null) {
       if (Get.arguments['notificationId'] != null) {
@@ -181,7 +175,9 @@ class PurchaseInvoiceController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

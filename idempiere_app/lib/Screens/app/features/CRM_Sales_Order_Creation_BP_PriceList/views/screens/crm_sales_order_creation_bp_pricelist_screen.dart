@@ -18,13 +18,11 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/product_category_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/models/price_list_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/product_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
@@ -1063,7 +1061,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           100,
                                                                       child:
@@ -1123,7 +1121,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -1133,9 +1131,10 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              top: 10),
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
                                                                       width:
                                                                           100,
                                                                       child:
@@ -1278,7 +1277,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         ),
                                                                       )),
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -1405,7 +1404,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -1414,7 +1413,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       CrossAxisAlignment
                                                                           .center,
                                                                   children: [
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                         width:
                                                                             100),
                                                                     Container(
@@ -2814,7 +2813,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           100,
                                                                       child:
@@ -2874,7 +2873,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -2884,9 +2883,10 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              top: 10),
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
                                                                       width:
                                                                           100,
                                                                       child:
@@ -3029,7 +3029,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         ),
                                                                       )),
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -3156,7 +3156,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -3165,7 +3165,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       CrossAxisAlignment
                                                                           .center,
                                                                   children: [
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                         width:
                                                                             100),
                                                                     Container(
@@ -4566,7 +4566,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           100,
                                                                       child:
@@ -4626,7 +4626,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -4636,9 +4636,10 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              top: 10),
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
                                                                       width:
                                                                           100,
                                                                       child:
@@ -4781,7 +4782,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                         ),
                                                                       )),
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -4908,7 +4909,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -4917,7 +4918,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                                                                       CrossAxisAlignment
                                                                           .center,
                                                                   children: [
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                         width:
                                                                             100),
                                                                     Container(
@@ -5640,7 +5641,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 120,
                         child: TextField(
                           textAlign: TextAlign.center,
@@ -5688,7 +5689,7 @@ class CRMSalesOrderCreationBPPricelistScreen
                       ),
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -5911,12 +5912,12 @@ class CRMSalesOrderCreationBPPricelistScreen
                       ),
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(width: 120),
+                      const SizedBox(width: 120),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
                         width: 100,

@@ -159,6 +159,7 @@ class CRMOpenItemsController extends GetxController {
           OpenItemJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (json.records!.isEmpty) {
+        // ignore: use_build_context_synchronously
         showDialog(
           context: context,
           barrierDismissible: true,

@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 2,
+              initialSelected: 1,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -34,21 +34,9 @@ class _Sidebar extends StatelessWidget {
                   label: "Dashboard".tr,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.person_add,
-                  icon: EvaIcons.personOutline,
-                  label: "Production",
-                  visible: int.parse(list[3], radix: 16)
-                              .toRadixString(2)
-                              .padLeft(4, "0")
-                              .toString()[1] ==
-                          "1"
-                      ? true
-                      : false,
-                ),
-                SelectionButtonData(
                   activeIcon: Icons.paid,
                   icon: Icons.paid_outlined,
-                  label: "Production Order",
+                  label: "Production Order".tr,
                   visible: int.parse(list[7], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
@@ -65,10 +53,8 @@ class _Sidebar extends StatelessWidget {
                   case 0:
                     Get.offNamed('/Dashboard');
                     break;
+
                   case 1:
-                    Get.offNamed('/Production');
-                    break;
-                  case 2:
                     Get.offNamed('/ProductionOrder');
                     break;
                   default:

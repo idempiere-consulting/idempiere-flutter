@@ -50,7 +50,7 @@ class PurchaseRequestCreationEditController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var rowList = RequisitionLineJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (var element in rowList.records!) {
@@ -122,7 +122,7 @@ class PurchaseRequestCreationEditController extends GetxController {
       },
       content: Column(
         children: [
-          Divider(),
+          const Divider(),
           Container(
             width: 100,
             margin: const EdgeInsets.all(10),

@@ -8,27 +8,18 @@ import 'dart:developer';
 
 import 'package:data_table_2/data_table_2.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_barcode_listener/flutter_barcode_listener.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/lead.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_create_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_lead_create_tasks.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_lead_filters_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/pos_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/posbuttonlayout_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/postablerow_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/product_category_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Product_List/models/product_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
-import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -45,9 +36,8 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:intl/intl.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../Portal_Mp_Sales_Order_B2B/views/screens/portal_mp_sales_order_b2b_screen.dart';
 
@@ -738,7 +728,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                           "N/A",
                                                       overflow:
                                                           TextOverflow.ellipsis,
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           fontSize: 10),
@@ -746,7 +736,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                               );
                                             },
                                           )
-                                        : SizedBox(),
+                                        : const SizedBox(),
                               ),
                             ),
                             StaggeredGridTile.count(

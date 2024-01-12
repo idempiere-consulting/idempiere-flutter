@@ -140,7 +140,9 @@ class MaintenanceMpResourceController extends GetxController {
     _tt3.records?.insert(0, RefRecords(id: 0, name: "All Group Locations".tr));
 
     for (var element in _tt3.records!) {
-      print(element.id);
+      if (kDebugMode) {
+        print(element.id);
+      }
     }
 
     filter1Available.value = true;
@@ -314,7 +316,9 @@ class MaintenanceMpResourceController extends GetxController {
               color: Colors.red,
             ),
           );
-          print(response.body);
+          if (kDebugMode) {
+            print(response.body);
+          }
         }
       },
     );
@@ -1153,9 +1157,13 @@ class MaintenanceMpResourceController extends GetxController {
     );
 
     if (response.statusCode == 201) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     } else {
-      print(response.bodyBytes);
+      if (kDebugMode) {
+        print(response.bodyBytes);
+      }
     }
   }
 

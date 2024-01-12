@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 part of dashboard;
 
 class SettingsController extends GetxController {
@@ -59,9 +61,8 @@ class SettingsController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/jp_todo?\$filter= JP_ToDo_Type eq \'S\' and AD_User_ID eq ${GetStorage().read('userId')} and Created ge \'$formattedFiftyDaysAgo\' and Created le \'$formattedDate 23:59:59\'');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -83,9 +84,8 @@ class SettingsController extends GetxController {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_UserPreference?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -107,9 +107,8 @@ class SettingsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -142,9 +141,8 @@ class SettingsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -184,9 +182,8 @@ class SettingsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -222,9 +219,8 @@ class SettingsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -266,9 +262,8 @@ class SettingsController extends GetxController {
     var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
 
     var response = await http.get(
       url,
@@ -296,8 +291,8 @@ class SettingsController extends GetxController {
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://' + ip + '/api/v1/models/lit_mp_maintain_resource_v');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v');
 
     var response = await http.get(
       url,
@@ -336,9 +331,8 @@ class SettingsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -381,9 +375,8 @@ class SettingsController extends GetxController {
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
 
     var response = await http.get(
       url,
@@ -398,9 +391,8 @@ class SettingsController extends GetxController {
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -434,9 +426,8 @@ class SettingsController extends GetxController {
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'C_BP_EDI EDI Type\'');
 
     var response = await http.get(
       url,
@@ -451,9 +442,8 @@ class SettingsController extends GetxController {
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -487,9 +477,8 @@ class SettingsController extends GetxController {
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_resource_survey_line?\$orderby= LineNo asc');
 
     var response = await http.get(
       url,
@@ -526,9 +515,8 @@ class SettingsController extends GetxController {
     String ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/m_product?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -570,9 +558,8 @@ class SettingsController extends GetxController {
     //var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Reference?\$filter= Name eq \'LIT_ResourceType\'');
 
     var response = await http.get(
       url,
@@ -587,9 +574,8 @@ class SettingsController extends GetxController {
 
       var json = jsonDecode(response.body);
       var id = json["records"][0]["id"];
-      var url2 = Uri.parse('$protocol://' +
-          ip +
-          '/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
+      var url2 = Uri.parse(
+          '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq $id');
 
       var response2 = await http.get(
         url2,
@@ -658,6 +644,7 @@ class SettingsController extends GetxController {
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

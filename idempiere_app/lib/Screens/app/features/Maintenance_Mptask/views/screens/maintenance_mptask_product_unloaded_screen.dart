@@ -2,16 +2,13 @@
 
 import 'dart:convert';
 //import 'dart:developer';
-import 'package:data_table_2/data_table_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/infocount_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/product_unloaded_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
-import 'package:pluto_grid/pluto_grid.dart';
 
 class MaintenanceMptaskProductUnloaded extends StatefulWidget {
   const MaintenanceMptaskProductUnloaded({Key? key}) : super(key: key);
@@ -99,7 +96,7 @@ class _MaintenanceMptaskInfoState
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -187,25 +184,25 @@ class _MaintenanceMptaskInfoState
                                     horizontal: 20.0, vertical: 10.0),
                                 children: [
                                   Column(
-                                    children: [],
+                                    children: const [],
                                   ),
                                 ],
                               ),
                             ),
                           );
                         })
-                    : CircularProgressIndicator(),
+                    : const CircularProgressIndicator(),
               ],
             );
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [],
+              children: const [],
             );
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [],
+              children: const [],
             );
           },
         ),

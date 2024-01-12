@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 //import 'dart:developer';
 
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -66,7 +65,9 @@ class _EditEmployeeResourceState extends State<EditEmployeeResource> {
         ),
       );
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       Get.snackbar(
         "Error!".tr,
         "Record not updated".tr,
@@ -131,7 +132,7 @@ class _EditEmployeeResourceState extends State<EditEmployeeResource> {
   @override
   Widget build(BuildContext context) {
     //getSalesRepAutoComplete();
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         title: Center(
@@ -337,8 +338,8 @@ class _EditEmployeeResourceState extends State<EditEmployeeResource> {
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],
@@ -346,8 +347,8 @@ class _EditEmployeeResourceState extends State<EditEmployeeResource> {
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],

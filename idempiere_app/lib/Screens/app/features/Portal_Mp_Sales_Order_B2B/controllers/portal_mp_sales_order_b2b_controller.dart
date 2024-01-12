@@ -800,6 +800,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
 
       //var currentStock = gridDetail.records![0].!.split(';');
 
+      // ignore: use_build_context_synchronously
       openDataTableGridPopUp(context, sku);
 
       //getProdB2BStock(id);

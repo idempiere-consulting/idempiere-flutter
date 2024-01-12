@@ -888,7 +888,7 @@ class PortalMpSalesOrderB2BScreen
                                 width: controller.columns.length * 100,
                                 height: 400,
                                 child: PlutoGrid(
-                                    configuration: PlutoGridConfiguration(
+                                    configuration: const PlutoGridConfiguration(
                                       columnSize: PlutoGridColumnSizeConfig(
                                           autoSizeMode:
                                               PlutoAutoSizeMode.scale),

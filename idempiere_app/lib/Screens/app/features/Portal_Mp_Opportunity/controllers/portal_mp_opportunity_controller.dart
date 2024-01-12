@@ -160,12 +160,10 @@ class PortalMpOpportunityController extends GetxController {
 
   Future<void> getSalesRep() async {
     final protocol = GetStorage().read('protocol');
-    var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq ${businessPartnerId.value} and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= C_BPartner_ID eq ${businessPartnerId.value} and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -194,9 +192,8 @@ class PortalMpOpportunityController extends GetxController {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var url = Uri.parse('$protocol://' +
-        ip +
-        '/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -244,7 +241,9 @@ class PortalMpOpportunityController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       _trx =
           OpportunityJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -254,11 +253,14 @@ class PortalMpOpportunityController extends GetxController {
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;

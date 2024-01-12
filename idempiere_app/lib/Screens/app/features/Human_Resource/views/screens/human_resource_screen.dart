@@ -121,12 +121,12 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                                           children: [
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Symbols.no_accounts_rounded,
                                                   size: 25,
                                                   color: Colors.redAccent,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
                                                 SizedBox(
@@ -149,15 +149,15 @@ class HumanResourceScreen extends GetView<HumanResourceController> {
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 20),
+                                            const SizedBox(height: 20),
                                             Row(
                                               children: [
-                                                Icon(
+                                                const Icon(
                                                   Symbols.person_alert_rounded,
                                                   size: 25,
                                                   color: Colors.yellowAccent,
                                                 ),
-                                                SizedBox(
+                                                const SizedBox(
                                                   width: 10,
                                                 ),
                                                 SizedBox(

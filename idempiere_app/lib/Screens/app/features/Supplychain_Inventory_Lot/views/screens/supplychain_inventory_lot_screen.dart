@@ -11,7 +11,6 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory/views/screens/edit_supplychain_inventory.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot/views/screens/edit_supplychain_inventory_lot.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot/views/screens/supplychain_create_inventory_lot.dart';
 import 'package:idempiere_app/Screens/app/features/Supplychain_Inventory_Lot/views/screens/supplychain_inventory_lot_filter_screen.dart';
@@ -372,18 +371,14 @@ class SupplychainInventoryLotScreen
                                                   final ip =
                                                       GetStorage().read('ip');
                                                   String authorization =
-                                                      'Bearer ' +
-                                                          GetStorage()
-                                                              .read('token');
+                                                      'Bearer ${GetStorage().read('token')}';
                                                   final msg = jsonEncode({
                                                     "DocAction": "CO",
                                                   });
                                                   final protocol = GetStorage()
                                                       .read('protocol');
                                                   var url = Uri.parse(
-                                                      '$protocol://' +
-                                                          ip +
-                                                          '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                      '$protocol://$ip/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                   var response = await http.put(
                                                     url,
@@ -602,18 +597,14 @@ class SupplychainInventoryLotScreen
                                                   final ip =
                                                       GetStorage().read('ip');
                                                   String authorization =
-                                                      'Bearer ' +
-                                                          GetStorage()
-                                                              .read('token');
+                                                      'Bearer ${GetStorage().read('token')}';
                                                   final msg = jsonEncode({
                                                     "DocAction": "CO",
                                                   });
                                                   final protocol = GetStorage()
                                                       .read('protocol');
                                                   var url = Uri.parse(
-                                                      '$protocol://' +
-                                                          ip +
-                                                          '/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
+                                                      '$protocol://$ip/api/v1/models/M_Inventory/${controller.trx.records![index].id}');
 
                                                   var response = await http.put(
                                                     url,

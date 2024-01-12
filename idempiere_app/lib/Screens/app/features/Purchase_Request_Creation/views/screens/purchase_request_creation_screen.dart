@@ -5,33 +5,19 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:animate_do/animate_do.dart';
-import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:date_time_picker/date_time_picker.dart';
-import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/models/price_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_Contract/models/documenttype_json.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Order/views/screens/crm_edit_sales_order.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Order/views/screens/crm_sales_order_filter_screen.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/contractarticle_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/models/sales_order_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_edithtml_sales_order.dart';
 //import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/print_pos_page.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/signature_page.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Request/models/purchase_request_json.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Request/views/screens/purchase_request_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Request/views/screens/purchase_request_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -50,18 +36,10 @@ import 'package:idempiere_app/components/rounded_button.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-// ignore: depend_on_referenced_packages
-import 'package:pdf/pdf.dart';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
-import 'package:printing/printing.dart';
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:step_progress_indicator/step_progress_indicator.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-//model for sales_order_controller
-import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 
 // binding
 part '../../bindings/purchase_request_creation_binding.dart';
@@ -331,7 +309,8 @@ class PurchaseRequestCreationScreen
                 ),
               ),
               Visibility(
-                  visible: controller.filterCount.value == 1, child: Divider()),
+                  visible: controller.filterCount.value == 1,
+                  child: const Divider()),
               Obx(
                 () => Visibility(
                   visible: controller.filterCount.value == 1 &&
@@ -489,7 +468,7 @@ class PurchaseRequestCreationScreen
                                                           },
                                                           content: Column(
                                                             children: [
-                                                              Divider(),
+                                                              const Divider(),
                                                               Container(
                                                                 width: 100,
                                                                 margin:
@@ -556,7 +535,8 @@ class PurchaseRequestCreationScreen
                 ),
               ),
               Visibility(
-                  visible: controller.filterCount.value == 1, child: Divider()),
+                  visible: controller.filterCount.value == 1,
+                  child: const Divider()),
               Obx(
                 () => Visibility(
                   visible: controller.filterCount.value == 1,
@@ -618,7 +598,7 @@ class PurchaseRequestCreationScreen
               Obx(
                 () => Visibility(
                   visible: controller.filterCount.value == 1,
-                  child: SizedBox(
+                  child: const SizedBox(
                     height: 10,
                   ),
                 ),
@@ -626,10 +606,10 @@ class PurchaseRequestCreationScreen
             ]);
           },
           tabletBuilder: (context, constraints) {
-            return Column(children: []);
+            return Column(children: const []);
           },
           desktopBuilder: (context, constraints) {
-            return Column(children: []);
+            return Column(children: const []);
           },
         ),
       ),
@@ -655,7 +635,7 @@ class PurchaseRequestCreationScreen
             },
             content: Column(
               children: [
-                Divider(),
+                const Divider(),
                 Container(
                   width: 100,
                   margin: const EdgeInsets.all(10),
@@ -710,7 +690,7 @@ class PurchaseRequestCreationScreen
                   "${controller._trx.records![index].value}_${controller._trx.records![index].name!.tr}",
                 ),
                 subtitle: Column(
-                  children: [],
+                  children: const [],
                 ),
               ),
             ],

@@ -13,18 +13,14 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/product_category_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Price_List/models/price_list_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Product_List/views/screens/crm_product_list_detail.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order/views/screens/crm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/doctype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_rule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/payment_term_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/product_list_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/productcheckout.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation/models/salesorder_defaults_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
@@ -336,7 +332,7 @@ class PortalMpSalesOrderFromPriceListScreen
                     margin: const EdgeInsets.only(
                         left: 10, right: 10, bottom: 10, top: 10),
                     child: TextField(
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                       readOnly: true,
                       controller: controller.bpFieldController,
                       decoration: InputDecoration(
@@ -948,7 +944,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           100,
                                                                       child:
@@ -1008,7 +1004,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -1018,9 +1014,10 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              top: 10),
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
                                                                       width:
                                                                           100,
                                                                       child:
@@ -1165,7 +1162,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                         ),
                                                                       )),
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -1174,7 +1171,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                       CrossAxisAlignment
                                                                           .center,
                                                                   children: [
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                         width:
                                                                             100),
                                                                     Container(
@@ -1824,7 +1821,7 @@ class PortalMpSalesOrderFromPriceListScreen
                     margin: const EdgeInsets.only(
                         left: 10, right: 10, bottom: 10, top: 10),
                     child: TextField(
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                       readOnly: true,
                       controller: controller.bpFieldController,
                       decoration: InputDecoration(
@@ -2436,7 +2433,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           100,
                                                                       child:
@@ -2496,7 +2493,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -2506,9 +2503,10 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              top: 10),
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
                                                                       width:
                                                                           100,
                                                                       child:
@@ -2653,7 +2651,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                         ),
                                                                       )),
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -2662,7 +2660,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                       CrossAxisAlignment
                                                                           .center,
                                                                   children: [
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                         width:
                                                                             100),
                                                                     Container(
@@ -3312,7 +3310,7 @@ class PortalMpSalesOrderFromPriceListScreen
                     margin: const EdgeInsets.only(
                         left: 10, right: 10, bottom: 10, top: 10),
                     child: TextField(
-                      style: TextStyle(color: Colors.grey),
+                      style: const TextStyle(color: Colors.grey),
                       readOnly: true,
                       controller: controller.bpFieldController,
                       decoration: InputDecoration(
@@ -3924,7 +3922,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                         ),
                                                                       ),
                                                                     ),
-                                                                    Container(
+                                                                    SizedBox(
                                                                       width:
                                                                           100,
                                                                       child:
@@ -3984,7 +3982,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                     ),
                                                                   ],
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -3994,9 +3992,10 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                           .center,
                                                                   children: [
                                                                     Container(
-                                                                      margin: EdgeInsets
-                                                                          .only(
-                                                                              top: 10),
+                                                                      margin: const EdgeInsets
+                                                                              .only(
+                                                                          top:
+                                                                              10),
                                                                       width:
                                                                           100,
                                                                       child:
@@ -4141,7 +4140,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                         ),
                                                                       )),
                                                                 ),
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Row(
                                                                   mainAxisAlignment:
                                                                       MainAxisAlignment
@@ -4150,7 +4149,7 @@ class PortalMpSalesOrderFromPriceListScreen
                                                                       CrossAxisAlignment
                                                                           .center,
                                                                   children: [
-                                                                    SizedBox(
+                                                                    const SizedBox(
                                                                         width:
                                                                             100),
                                                                     Container(
@@ -4844,7 +4843,7 @@ class PortalMpSalesOrderFromPriceListScreen
                           ),
                         ),
                       ),
-                      Container(
+                      SizedBox(
                         width: 100,
                         child: TextField(
                           textAlign: TextAlign.center,
@@ -4892,7 +4891,7 @@ class PortalMpSalesOrderFromPriceListScreen
                       ),
                     ],
                   ),
-                  Divider(),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -5022,12 +5021,12 @@ class PortalMpSalesOrderFromPriceListScreen
                           ),
                         )),
                   ),
-                  Divider(),
+                  const Divider(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      SizedBox(width: 100),
+                      const SizedBox(width: 100),
                       Container(
                         margin: const EdgeInsets.only(top: 10),
                         width: 100,

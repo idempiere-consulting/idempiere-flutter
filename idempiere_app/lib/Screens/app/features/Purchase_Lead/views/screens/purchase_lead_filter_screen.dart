@@ -1,21 +1,17 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/campaign_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/sector_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
 
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/features/Purchase_Lead/views/screens/purchase_lead_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
-import 'package:path_provider/path_provider.dart';
 
 //models
 

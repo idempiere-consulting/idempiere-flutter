@@ -1,7 +1,6 @@
 import 'dart:convert';
 //import 'dart:developer';
 
-import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,7 +9,6 @@ import 'package:http/http.dart' as http;
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource/models/employeepresence_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class HumanResourceAttendanceListScreen extends StatefulWidget {
   const HumanResourceAttendanceListScreen({Key? key}) : super(key: key);
@@ -88,7 +86,7 @@ class _HumanResourceAttendanceListScreenState
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
+    //Size size = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -181,7 +179,9 @@ class _HumanResourceAttendanceListScreenState
                                               ),
                                             ),
                                             subtitle: Text(
-                                              "${employeePresence.records![index2].day!.substring(0, 10)}",
+                                              employeePresence
+                                                  .records![index2].day!
+                                                  .substring(0, 10),
                                               style: TextStyle(
                                                 fontSize: 11,
                                                 color: kFontColorPallets[2],
@@ -190,7 +190,7 @@ class _HumanResourceAttendanceListScreenState
                                             trailing: Text(
                                                 '${employeePresence.records![index2].qty ?? 0} Ore'),
                                           )
-                                        : SizedBox();
+                                        : const SizedBox();
                                   }),
                             ],
                           ),
@@ -202,8 +202,8 @@ class _HumanResourceAttendanceListScreenState
           },
           tabletBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],
@@ -211,8 +211,8 @@ class _HumanResourceAttendanceListScreenState
           },
           desktopBuilder: (context, constraints) {
             return Column(
-              children: [
-                const SizedBox(
+              children: const [
+                SizedBox(
                   height: 10,
                 ),
               ],

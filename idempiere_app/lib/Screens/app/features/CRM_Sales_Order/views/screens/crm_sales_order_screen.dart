@@ -5,7 +5,6 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
@@ -797,7 +796,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 'Asset Used'.tr,
                                                             content: Column(
                                                               children: [
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Container(
                                                                     margin: const EdgeInsets
                                                                             .only(
@@ -1474,7 +1473,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 'Asset Used'.tr,
                                                             content: Column(
                                                               children: [
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Container(
                                                                     margin: const EdgeInsets
                                                                             .only(
@@ -2151,7 +2150,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                 'Asset Used'.tr,
                                                             content: Column(
                                                               children: [
-                                                                Divider(),
+                                                                const Divider(),
                                                                 Container(
                                                                     margin: const EdgeInsets
                                                                             .only(

@@ -17,8 +17,6 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/invoice_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_edit_invoice.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Invoice/views/screens/crm_invoice_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Invoice/views/screens/crm_edit_invoice.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Invoice/views/screens/crm_invoice_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Line/models/salesorderline_json.dart';

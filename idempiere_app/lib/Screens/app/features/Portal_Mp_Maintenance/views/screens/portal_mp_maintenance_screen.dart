@@ -4,8 +4,6 @@ library dashboard;
 
 //import 'dart:convert';
 import 'dart:convert';
-import 'dart:developer';
-
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -13,15 +11,10 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/models/contract_json.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/models/contract_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Contract/views/screens/portal_mp_contract_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Maintenance/models/lit_maintain_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Maintenance/models/mp_maintain_resources_json.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Contract/views/screens/crm_contract_filter_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Purchase_Contract/views/screens/crm_edit_contract.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -38,7 +31,7 @@ import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -203,7 +196,7 @@ class PortalMpMaintenanceMpScreen
         body: SingleChildScrollView(
           child: ResponsiveBuilder(
             mobileBuilder: (context, constraints) {
-              return Column(children: [
+              return Column(children: const [
                 /*  const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                 _buildHeader2(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -853,7 +846,7 @@ class PortalMpMaintenanceMpScreen
                                       crossAxisCellCount: 3,
                                       mainAxisCellCount: 3,
                                       child: Column(
-                                        children: [],
+                                        children: const [],
                                       ),
                                     ),
                                     StaggeredGridTile.count(

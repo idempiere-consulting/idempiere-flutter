@@ -5,7 +5,6 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:typed_data';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -14,12 +13,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/models/employee_json.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_filter_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_create_ticket.dart';
-import 'package:idempiere_app/Screens/app/features/Human_Resource_Ticket/views/screens/humanresource_ticket_filter_screen.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_chat_ticket.dart';
-import 'package:idempiere_app/Screens/app/features/Ticket_Internal_Ticket/views/screens/ticketinternal_image_ticket.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -285,7 +278,7 @@ class HumanResourceEmployeeSheetScreen
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: Icon(
+                                      icon: const Icon(
                                         Icons.edit,
                                         color: Colors.green,
                                       ),
@@ -309,8 +302,8 @@ class HumanResourceEmployeeSheetScreen
 
                                   subtitle: Column(children: [
                                     Row(
-                                      children: <Widget>[
-                                        const Icon(
+                                      children: const <Widget>[
+                                        Icon(
                                           Icons.event,
                                           color: Colors.white,
                                         ),
@@ -414,10 +407,10 @@ class HumanResourceEmployeeSheetScreen
               ]);
             },
             tabletBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
             desktopBuilder: (context, constraints) {
-              return Column(children: []);
+              return Column(children: const []);
             },
           ),
         ),

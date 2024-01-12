@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'dart:convert';
 //import 'dart:developer';
 
@@ -356,8 +358,6 @@ class _CreatePurchaseLeadState extends State<CreatePurchaseLead> {
     //getAllCampaigns();
     getAllLeadSources();
   }
-
-  static String _displayStringForOption(CRecords option) => option.name!;
   //late List<Records> salesrepRecord;
   //bool isSalesRepLoading = false;
 

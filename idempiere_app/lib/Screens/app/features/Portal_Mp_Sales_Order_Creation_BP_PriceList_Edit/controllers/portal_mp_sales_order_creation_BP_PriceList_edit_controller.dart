@@ -185,7 +185,7 @@ class PortalMpSalesOrderCreationBPPriceListEditController
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var rowList = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (var element in rowList.records!) {
@@ -289,7 +289,7 @@ class PortalMpSalesOrderCreationBPPriceListEditController
         '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
     var jsondecoded = jsonDecode(file.readAsStringSync());
 
-    final List<dynamic> list = GetStorage().read('permission');
+    //final List<dynamic> list = GetStorage().read('permission');
 
     var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
 
@@ -318,12 +318,10 @@ class PortalMpSalesOrderCreationBPPriceListEditController
       //print(response.body);
       var json =
           DocTypeJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      var check = true;
       for (var element in json.records!) {
         //print(element.id);
         if (element.isDefault == true) {
           dropdownValue.value = element.id.toString();
-          check = false;
           //print("Dropdown: ${dropdownValue.value}");
         }
       }
@@ -514,8 +512,8 @@ class PortalMpSalesOrderCreationBPPriceListEditController
     if (response.statusCode == 200) {
       //print(utf8.decode(response.bodyBytes));
       //_trx = ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      var json = BusinessPartnerJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
+      /* var json = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes))); */
 
       //print(trx.rowcount);
       //print(response.body);
