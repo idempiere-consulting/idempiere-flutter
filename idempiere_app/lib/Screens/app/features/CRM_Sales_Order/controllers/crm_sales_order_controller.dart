@@ -38,6 +38,7 @@ class CRMSalesOrderController extends GetxController {
 
   var codeFieldController = TextEditingController();
   var assetQtyFieldController = TextEditingController();
+  var descriptionFieldController = TextEditingController();
 
   var searchFilterValue = "".obs;
 
@@ -64,6 +65,10 @@ class CRMSalesOrderController extends GetxController {
   void onInit() {
     dropDownList = getTypes()!;
     super.onInit();
+    print(int.parse(list[14], radix: 16)
+        .toRadixString(2)
+        .padLeft(8, "0")
+        .toString());
     selectedUserRadioTile.value =
         GetStorage().read('SalesOrder_selectedUserRadioTile') ?? 1;
     businessPartnerName =
@@ -186,6 +191,7 @@ class CRMSalesOrderController extends GetxController {
       "C_Order_ID": {"id": orderId},
       "A_Asset_ID": {"id": assetId},
       "DateDoc": formattedDate,
+      "Description": descriptionFieldController.text,
       "Qty": int.parse(assetQtyFieldController.text),
     });
 

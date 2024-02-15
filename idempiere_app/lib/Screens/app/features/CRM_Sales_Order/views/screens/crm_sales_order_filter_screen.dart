@@ -126,7 +126,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
 
     if (int.parse(list[14], radix: 16)
             .toRadixString(2)
-            .padLeft(4, "0")
+            .padLeft(8, "0")
             .toString()[7] !=
         "1") {
       jsonbps.records!.removeWhere(

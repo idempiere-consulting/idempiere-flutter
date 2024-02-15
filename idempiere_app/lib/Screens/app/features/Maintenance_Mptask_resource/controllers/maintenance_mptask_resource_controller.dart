@@ -2346,7 +2346,7 @@ class MaintenanceMpResourceController extends GetxController {
         jsonDecode(file.readAsStringSync()));
 
     for (var element in _trx.records!) {
-      if (element.mpMaintainID!.identifier!.contains('SEDE')) {
+      if ((element.mpMaintainID?.identifier ?? "").contains('SEDE')) {
         hqMaintainId = element.mpMaintainID!.id!;
       }
     }

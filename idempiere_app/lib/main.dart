@@ -19,6 +19,8 @@ import 'package:idempiere_app/Screens/app/features/Employee_Resource/views/scree
 import 'package:idempiere_app/Screens/app/features/Employee_Resource_Calendar_Slot/views/screens/employee_resource_calendar_slot_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Attendance/views/screens/humanresource_attendance_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_mptask_standard_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_Creation_BP_PriceList_Edit/views/screens/portal_mp_sales_order_creation_BP_PriceList_edit_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_order_From_Pricelist/views/screens/portal_mp_sales_orderfrom_pricelist_screen.dart';
@@ -448,6 +450,11 @@ class MyApp extends StatelessWidget {
           binding: MaintenanceMptaskBinding(),
         ),
         GetPage(
+          name: '/MaintenanceMptaskStandard',
+          page: () => const MaintenanceMptaskStandardScreen(),
+          binding: MaintenanceMptaskStandardBinding(),
+        ),
+        GetPage(
           name: '/MaintenanceMpContracts',
           page: () => const MaintenanceMpContractsScreen(),
           binding: MaintenanceMpContractsBinding(),
@@ -471,6 +478,11 @@ class MyApp extends StatelessWidget {
           name: '/MaintenanceMptaskLine',
           page: () => const MaintenanceMptaskLineScreen(),
           binding: MaintenanceMptaskLineBinding(),
+        ),
+        GetPage(
+          name: '/MaintenanceStandardMptaskLine',
+          page: () => const MaintenanceStandardMptaskLineScreen(),
+          binding: MaintenanceStandardMptaskLineBinding(),
         ),
         GetPage(
           name: '/MaintenanceMpResource',

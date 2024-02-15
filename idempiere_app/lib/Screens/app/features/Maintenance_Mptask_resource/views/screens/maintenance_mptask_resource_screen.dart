@@ -1678,11 +1678,11 @@ class MaintenanceMpResourceScreen
                                                       horizontal: 5,
                                                       vertical: 2.5),
                                                   child: Text(
-                                                    controller
-                                                        .trx
-                                                        .records![index]
-                                                        .doneAction!
-                                                        .tr
+                                                    (controller
+                                                                .trx
+                                                                .records![index]
+                                                                .doneAction ??
+                                                            "")
                                                         .tr,
                                                     style: const TextStyle(
                                                         fontSize: 11,
@@ -1699,7 +1699,7 @@ class MaintenanceMpResourceScreen
                                             visible: controller
                                                         .trx
                                                         .records![index]
-                                                        .toDoAction! !=
+                                                        .toDoAction !=
                                                     "OK" &&
                                                 controller.trx.records![index]
                                                         .doneAction ==
@@ -1710,39 +1710,39 @@ class MaintenanceMpResourceScreen
                                               children: [
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    color: controller.trx.records![index].toDoAction! == "OK" ||
+                                                    color: controller.trx.records![index].toDoAction == "OK" ||
                                                             controller
                                                                     .trx
                                                                     .records![
                                                                         index]
-                                                                    .toDoAction! ==
+                                                                    .toDoAction ==
                                                                 "NEW"
                                                         ? kNotifColor
-                                                        : controller.trx.records![index].toDoAction! == "PR" ||
-                                                                controller.trx.records![index].toDoAction! ==
+                                                        : controller.trx.records![index].toDoAction == "PR" ||
+                                                                controller.trx.records![index].toDoAction ==
                                                                     "PC" ||
-                                                                controller.trx.records![index].toDoAction! ==
+                                                                controller.trx.records![index].toDoAction ==
                                                                     "PRnow" ||
                                                                 controller
                                                                         .trx
                                                                         .records![
                                                                             index]
-                                                                        .toDoAction! ==
+                                                                        .toDoAction ==
                                                                     "PCnow"
                                                             ? const Color.fromARGB(
                                                                 255, 209, 189, 4)
-                                                            : controller.trx.records![index].toDoAction! ==
+                                                            : controller.trx.records![index].toDoAction ==
                                                                         "PT" ||
-                                                                    controller.trx.records![index].toDoAction! ==
+                                                                    controller.trx.records![index].toDoAction ==
                                                                         "PTnow"
                                                                 ? Colors.orange
                                                                 : controller
                                                                             .trx
                                                                             .records![index]
-                                                                            .toDoAction! ==
+                                                                            .toDoAction ==
                                                                         "PSG"
                                                                     ? Colors.red
-                                                                    : controller.trx.records![index].toDoAction! == "PX"
+                                                                    : controller.trx.records![index].toDoAction == "PX"
                                                                         ? Colors.black
                                                                         : kNotifColor,
                                                     borderRadius:
@@ -1754,10 +1754,11 @@ class MaintenanceMpResourceScreen
                                                       horizontal: 5,
                                                       vertical: 2.5),
                                                   child: Text(
-                                                    controller
-                                                        .trx
-                                                        .records![index]
-                                                        .toDoAction!
+                                                    (controller
+                                                                .trx
+                                                                .records![index]
+                                                                .toDoAction ??
+                                                            "")
                                                         .tr,
                                                     style: const TextStyle(
                                                         fontSize: 11,
@@ -1830,7 +1831,7 @@ class MaintenanceMpResourceScreen
                                             Row(children: [
                                               Text('Check Date: '.tr),
                                               Text(
-                                                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateFrom!))} - ${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateNext!))}"),
+                                                  "${DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateFrom!))} - ${DateTime.tryParse(controller.trx.records![index].lITControl1DateNext ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(controller.trx.records![index].lITControl1DateNext!)) : ''}"),
                                             ]),
                                             /* Row(children: [
                                           const Text('Revision Date: '),

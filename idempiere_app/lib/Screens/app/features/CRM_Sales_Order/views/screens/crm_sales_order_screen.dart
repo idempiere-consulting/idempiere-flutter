@@ -772,7 +772,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                         radix: 16)
                                                                     .toRadixString(
                                                                         2)
-                                                                    .padLeft(4, "0")
+                                                                    .padLeft(8, "0")
                                                                     .toString()[
                                                                 6] !=
                                                             "1" &&
@@ -872,6 +872,41 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                             RegExp("[0-9]"))
                                                                       ],
                                                                     )),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      minLines:
+                                                                          2,
+                                                                      maxLines:
+                                                                          2,
+                                                                      controller:
+                                                                          controller
+                                                                              .descriptionFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Description".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                    )),
                                                               ],
                                                             ),
                                                             onConfirm: () {
@@ -884,6 +919,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           Symbols.build),
                                                     ),
                                                   ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
                                                   Visibility(
                                                     visible: controller
                                                                 .trx
@@ -1449,7 +1490,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                         radix: 16)
                                                                     .toRadixString(
                                                                         2)
-                                                                    .padLeft(4, "0")
+                                                                    .padLeft(8, "0")
                                                                     .toString()[
                                                                 6] !=
                                                             "1" &&
@@ -1549,6 +1590,41 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                             RegExp("[0-9]"))
                                                                       ],
                                                                     )),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      minLines:
+                                                                          2,
+                                                                      maxLines:
+                                                                          2,
+                                                                      controller:
+                                                                          controller
+                                                                              .descriptionFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Description".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                    )),
                                                               ],
                                                             ),
                                                             onConfirm: () {
@@ -1561,6 +1637,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           Symbols.build),
                                                     ),
                                                   ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
                                                   Visibility(
                                                     visible: controller
                                                                 .trx
@@ -2126,7 +2208,7 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                         radix: 16)
                                                                     .toRadixString(
                                                                         2)
-                                                                    .padLeft(4, "0")
+                                                                    .padLeft(8, "0")
                                                                     .toString()[
                                                                 6] !=
                                                             "1" &&
@@ -2226,6 +2308,41 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                                             RegExp("[0-9]"))
                                                                       ],
                                                                     )),
+                                                                Container(
+                                                                    margin: const EdgeInsets
+                                                                            .only(
+                                                                        bottom:
+                                                                            10),
+                                                                    child:
+                                                                        TextField(
+                                                                      minLines:
+                                                                          2,
+                                                                      maxLines:
+                                                                          2,
+                                                                      controller:
+                                                                          controller
+                                                                              .descriptionFieldController,
+                                                                      decoration:
+                                                                          InputDecoration(
+                                                                        labelStyle:
+                                                                            const TextStyle(color: Colors.white),
+                                                                        labelText:
+                                                                            "Description".tr,
+                                                                        filled:
+                                                                            true,
+                                                                        border:
+                                                                            OutlineInputBorder(
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                          borderSide:
+                                                                              BorderSide.none,
+                                                                        ),
+                                                                        isDense:
+                                                                            true,
+                                                                        fillColor:
+                                                                            Theme.of(context).cardColor,
+                                                                      ),
+                                                                    )),
                                                               ],
                                                             ),
                                                             onConfirm: () {
@@ -2238,6 +2355,12 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           Symbols.build),
                                                     ),
                                                   ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.end,
+                                                children: [
                                                   Visibility(
                                                     visible: controller
                                                                 .trx

@@ -1578,7 +1578,7 @@ CRUD=1111=F
  29 Carico/scarico      : F
  30 carico scheda tecnica
  31 Contratti
- 32 ..
+ 32 Ordini di Lavoro (Standard)
  33 Portale cliente*****: 1 *** 4 Portale Cliente 
  -- sezione dashboard
  34 News                : R

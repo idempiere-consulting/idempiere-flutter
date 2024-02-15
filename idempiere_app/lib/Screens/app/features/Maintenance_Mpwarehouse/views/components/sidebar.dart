@@ -1,12 +1,15 @@
 part of dashboard;
 
+// ignore: unused_element
 class _Sidebar extends StatelessWidget {
-  const _Sidebar({
+  _Sidebar({
     required this.data,
     Key? key,
   }) : super(key: key);
 
   final ProjectCardData data;
+
+  final List<dynamic> list = GetStorage().read('permission');
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +27,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 4,
+              initialSelected: 5,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -35,36 +38,115 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceCalendar".tr,
+                  visible: int.parse(list[23], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMptask".tr,
+                  visible: int.parse(list[24], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Work Order (Standard)".tr,
+                  visible: int.parse(list[31], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMpanomaly".tr,
+                  visible: int.parse(list[25], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMpwarehouse".tr,
+                  visible: int.parse(list[26], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMppicking".tr,
+                  visible: int.parse(list[27], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
-                  label: "MaintenanceInternaluseinventory".tr,
+                  label: "Shipment Customer".tr,
+                  visible: int.parse(list[28], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "MaintenanceMpimportitem".tr,
+                  visible: int.parse(list[29], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "MaintenanceMpContracts".tr,
+                  visible: int.parse(list[30], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.logOut,
+                  icon: EvaIcons.logOutOutline,
+                  label: "Log Out",
+                  visible: true,
                 ),
               ],
               onSelected: (index, value) {
@@ -82,19 +164,28 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/MaintenanceMptask');
                     break;
                   case 3:
-                    Get.offNamed('/MaintenanceMpanomaly');
+                    Get.offNamed('/MaintenanceMptaskStandard');
                     break;
                   case 4:
-                    Get.offNamed('/MaintenanceMpwarehouse');
+                    Get.offNamed('/MaintenanceMpanomaly');
                     break;
                   case 5:
-                    Get.offNamed('/MaintenanceMppicking');
+                    Get.offNamed('/MaintenanceMpwarehouse');
                     break;
                   case 6:
-                    Get.offNamed('/MaintenanceInternaluseinventory');
+                    Get.offNamed('/MaintenanceMppicking');
                     break;
                   case 7:
+                    Get.offNamed('/MaintenanceShipment');
+                    break;
+                  case 8:
                     Get.offNamed('/MaintenanceMpimportitem');
+                    break;
+                  case 9:
+                    Get.offNamed('/MaintenanceMpContracts');
+                    break;
+                  case 10:
+                    Get.offAllNamed("/");
                     break;
 
                   default:

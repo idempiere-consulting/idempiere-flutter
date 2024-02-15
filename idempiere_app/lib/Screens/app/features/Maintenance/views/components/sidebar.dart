@@ -61,6 +61,18 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
+                  label: "Work Order (Standard)".tr,
+                  visible: int.parse(list[31], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
                   label: "MaintenanceMpanomaly".tr,
                   visible: int.parse(list[25], radix: 16)
                               .toRadixString(2)
@@ -152,24 +164,27 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/MaintenanceMptask');
                     break;
                   case 3:
-                    Get.offNamed('/MaintenanceMpanomaly');
+                    Get.offNamed('/MaintenanceMptaskStandard');
                     break;
                   case 4:
-                    Get.offNamed('/MaintenanceMpwarehouse');
+                    Get.offNamed('/MaintenanceMpanomaly');
                     break;
                   case 5:
-                    Get.offNamed('/MaintenanceMppicking');
+                    Get.offNamed('/MaintenanceMpwarehouse');
                     break;
                   case 6:
-                    Get.offNamed('/MaintenanceShipment');
+                    Get.offNamed('/MaintenanceMppicking');
                     break;
                   case 7:
-                    Get.offNamed('/MaintenanceMpimportitem');
+                    Get.offNamed('/MaintenanceShipment');
                     break;
                   case 8:
-                    Get.offNamed('/MaintenanceMpContracts');
+                    Get.offNamed('/MaintenanceMpimportitem');
                     break;
                   case 9:
+                    Get.offNamed('/MaintenanceMpContracts');
+                    break;
+                  case 10:
                     Get.offAllNamed("/");
                     break;
 

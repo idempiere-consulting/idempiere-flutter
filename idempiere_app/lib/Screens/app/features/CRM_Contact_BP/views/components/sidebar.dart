@@ -171,7 +171,7 @@ class _Sidebar extends StatelessWidget {
                   label: "Open Items".tr,
                   visible: int.parse(list[14], radix: 16)
                               .toRadixString(2)
-                              .padLeft(4, "0")
+                              .padLeft(8, "0")
                               .toString()[1] ==
                           "1"
                       ? true

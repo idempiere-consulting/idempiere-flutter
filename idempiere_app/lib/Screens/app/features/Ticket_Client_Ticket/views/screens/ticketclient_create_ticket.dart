@@ -86,7 +86,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "Name": titleFieldController.text,
       "Summary": nameFieldController.text,
       "AD_User_ID": userId,
-      "C_BPartner_ID": {"id": businessPartnerId}
+      "C_BPartner_ID": {"id": businessPartnerId},
+      "AD_Role_ID": {"id": -1}
     });
     //print(msg);
     final protocol = GetStorage().read('protocol');

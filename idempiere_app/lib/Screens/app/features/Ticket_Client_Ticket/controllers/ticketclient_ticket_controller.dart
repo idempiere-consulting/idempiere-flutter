@@ -55,6 +55,7 @@ class TicketClientTicketController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final msg = jsonEncode({
       "R_Status_ID": {"id": 1000042},
+      "IsConfirmed": true,
     });
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://' +
