@@ -1285,7 +1285,27 @@ class LocaleString extends Translations {
           'Last Week': 'Ultima Settimana',
           'Yesterday': 'Ieri',
           'All(singular)': 'Tutto',
-          'ABSENCES': 'ASSENZE'
+          'ABSENCES': 'ASSENZE',
+          'Show All Work Orders linked to this Maintenance':
+              'Mostra Tutti gli ODL collegati a questa Manutenzione',
+          'Insert Participant': 'Inserisci Partecipante',
+          'Surname': 'Cognome',
+          'participant-insertion': 'iscrizione-corsista',
+          'training-course': 'corso-e-formazione-cf00',
+          'Birth Place': 'Luogo di Nascita',
+          'Birth Date': 'Data di Nascita',
+          'Tax ID Code': 'Codice Fiscale',
+          'Work Role': 'Mansione',
+          'Course Date': 'Data Corso',
+          'Medic': 'Medico',
+          'Course Name': 'Nome Corso',
+          'Course Description': 'Descrizione Corso',
+          'Confirm Purchase Order': 'Conferma Ordine di Acquisto',
+          'S. Order': 'ODV',
+          'Hours': 'Ore',
+          'Hour': 'Ora',
+          'Ticket Type': 'Tipo Ticket',
+          'Add Ticket': 'Crea Ticket'
         },
       };
 }

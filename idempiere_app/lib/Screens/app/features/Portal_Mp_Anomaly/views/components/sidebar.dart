@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 7,
+              initialSelected: 8,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,
@@ -82,8 +82,18 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
+                  label: "Confirm Order".tr,
+                  visible: int.parse(list[49], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
                   label: "Training and Course".tr,
-                  visible: int.parse(list[50], radix: 16)
+                  visible: int.parse(list[56], radix: 16)
                           .toRadixString(2)
                           .padLeft(8, "0")
                           .toString()[1] ==
@@ -178,30 +188,33 @@ class _Sidebar extends StatelessWidget {
                   case 4:
                     Get.offNamed('/PortalMpSalesOrder');
                     break;
-
                   case 5:
+                    Get.offNamed('/PortalMpConfirmSalesOrder');
+                    break;
+
+                  case 6:
                     Get.offNamed('/PortalMpTrainingCourse');
                     break;
                   //Impianto
-                  case 6:
+                  case 7:
                     Get.offNamed('/PortalMpMaintenanceMp');
                     break;
                   //Impianti dettaglio
-                  case 7:
+                  case 8:
                     Get.offNamed('/PortalMpAnomaly');
                     break;
                   //Scadenze
-                  case 8:
+                  case 9:
                     Get.offNamed('/PortalMpInvoice');
                     break;
 
-                  case 9:
+                  case 10:
                     Get.offNamed('/PortalMpContract');
                     break;
-                  case 10:
+                  case 11:
                     Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
-                  case 11:
+                  case 12:
                     Get.offAllNamed("/");
                     break;
                   default:

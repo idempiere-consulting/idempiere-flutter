@@ -1310,6 +1310,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         case "24":
           Get.offAllNamed("/MaintenanceMptask");
           break;
+        case "31":
+          Get.offAllNamed("/MaintenanceMptaskStandard");
+          break;
         case "32":
           Get.offAllNamed("/PortalMp");
           break;

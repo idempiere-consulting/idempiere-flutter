@@ -60,6 +60,7 @@ class MaintenanceMpContractsScreen
 
   @override
   Widget build(BuildContext context) {
+    final List<dynamic> list = GetStorage().read('permission');
     return WillPopScope(
       onWillPop: () async {
         Get.offNamed('/Dashboard');
@@ -360,13 +361,33 @@ class MaintenanceMpContractsScreen
                                           if (controller._trx.records![index]
                                                   .latestWorkOrderId !=
                                               null) {
-                                            Get.offNamed('/MaintenanceMptask',
-                                                arguments: {
-                                                  'notificationId': controller
-                                                      ._trx
-                                                      .records![index]
-                                                      .latestWorkOrderId
-                                                });
+                                            if (int.parse(list[24], radix: 16)
+                                                    .toRadixString(2)
+                                                    .padLeft(4, "0")
+                                                    .toString()[1] ==
+                                                "1") {
+                                              Get.offNamed('/MaintenanceMptask',
+                                                  arguments: {
+                                                    'notificationId': controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .latestWorkOrderId
+                                                  });
+                                            } else if (int.parse(list[31],
+                                                        radix: 16)
+                                                    .toRadixString(2)
+                                                    .padLeft(4, "0")
+                                                    .toString()[1] ==
+                                                "1") {
+                                              Get.offNamed(
+                                                  '/MaintenanceMptaskStandard',
+                                                  arguments: {
+                                                    'notificationId': controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .latestWorkOrderId
+                                                  });
+                                            }
                                           }
                                         },
                                         icon: Icon(
@@ -583,23 +604,26 @@ class MaintenanceMpContractsScreen
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Get.offNamed('/Contract',
-                                                          arguments: {
-                                                            'notificationId':
-                                                                controller
-                                                                    ._trx
-                                                                    .records![
-                                                                        index]
-                                                                    .cContractID
-                                                                    ?.id,
-                                                          });
-                                                    },
-                                                    child: Text(
-                                                      '${controller._trx.records![index].cContractID?.identifier}',
-                                                      style: const TextStyle(
-                                                          color: kNotifColor),
+                                                  Expanded(
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/Contract',
+                                                            arguments: {
+                                                              'notificationId':
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cContractID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      child: Text(
+                                                        '${controller._trx.records![index].cContractID?.identifier}',
+                                                        style: const TextStyle(
+                                                            color: kNotifColor),
+                                                      ),
                                                     ),
                                                   )
                                                 ],
@@ -998,13 +1022,33 @@ class MaintenanceMpContractsScreen
                                           if (controller._trx.records![index]
                                                   .latestWorkOrderId !=
                                               null) {
-                                            Get.offNamed('/MaintenanceMptask',
-                                                arguments: {
-                                                  'notificationId': controller
-                                                      ._trx
-                                                      .records![index]
-                                                      .latestWorkOrderId
-                                                });
+                                            if (int.parse(list[24], radix: 16)
+                                                    .toRadixString(2)
+                                                    .padLeft(4, "0")
+                                                    .toString()[1] ==
+                                                "1") {
+                                              Get.offNamed('/MaintenanceMptask',
+                                                  arguments: {
+                                                    'notificationId': controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .latestWorkOrderId
+                                                  });
+                                            } else if (int.parse(list[31],
+                                                        radix: 16)
+                                                    .toRadixString(2)
+                                                    .padLeft(4, "0")
+                                                    .toString()[1] ==
+                                                "1") {
+                                              Get.offNamed(
+                                                  '/MaintenanceMptaskStandard',
+                                                  arguments: {
+                                                    'notificationId': controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .latestWorkOrderId
+                                                  });
+                                            }
                                           }
                                         },
                                         icon: Icon(
@@ -1221,23 +1265,26 @@ class MaintenanceMpContractsScreen
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Get.offNamed('/Contract',
-                                                          arguments: {
-                                                            'notificationId':
-                                                                controller
-                                                                    ._trx
-                                                                    .records![
-                                                                        index]
-                                                                    .cContractID
-                                                                    ?.id,
-                                                          });
-                                                    },
-                                                    child: Text(
-                                                      '${controller._trx.records![index].cContractID?.identifier}',
-                                                      style: const TextStyle(
-                                                          color: kNotifColor),
+                                                  Expanded(
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/Contract',
+                                                            arguments: {
+                                                              'notificationId':
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cContractID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      child: Text(
+                                                        '${controller._trx.records![index].cContractID?.identifier}',
+                                                        style: const TextStyle(
+                                                            color: kNotifColor),
+                                                      ),
                                                     ),
                                                   )
                                                 ],
@@ -1355,7 +1402,7 @@ class MaintenanceMpContractsScreen
               ]);
             },
             desktopBuilder: (context, constraints) {
-             return Column(children: [
+              return Column(children: [
                 const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
                 _buildHeader(
                     onPressedMenu: () => Scaffold.of(context).openDrawer()),
@@ -1636,13 +1683,33 @@ class MaintenanceMpContractsScreen
                                           if (controller._trx.records![index]
                                                   .latestWorkOrderId !=
                                               null) {
-                                            Get.offNamed('/MaintenanceMptask',
-                                                arguments: {
-                                                  'notificationId': controller
-                                                      ._trx
-                                                      .records![index]
-                                                      .latestWorkOrderId
-                                                });
+                                            if (int.parse(list[24], radix: 16)
+                                                    .toRadixString(2)
+                                                    .padLeft(4, "0")
+                                                    .toString()[1] ==
+                                                "1") {
+                                              Get.offNamed('/MaintenanceMptask',
+                                                  arguments: {
+                                                    'notificationId': controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .latestWorkOrderId
+                                                  });
+                                            } else if (int.parse(list[31],
+                                                        radix: 16)
+                                                    .toRadixString(2)
+                                                    .padLeft(4, "0")
+                                                    .toString()[1] ==
+                                                "1") {
+                                              Get.offNamed(
+                                                  '/MaintenanceMptaskStandard',
+                                                  arguments: {
+                                                    'notificationId': controller
+                                                        ._trx
+                                                        .records![index]
+                                                        .latestWorkOrderId
+                                                  });
+                                            }
                                           }
                                         },
                                         icon: Icon(
@@ -1859,23 +1926,26 @@ class MaintenanceMpContractsScreen
                                                         fontWeight:
                                                             FontWeight.bold),
                                                   ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      Get.offNamed('/Contract',
-                                                          arguments: {
-                                                            'notificationId':
-                                                                controller
-                                                                    ._trx
-                                                                    .records![
-                                                                        index]
-                                                                    .cContractID
-                                                                    ?.id,
-                                                          });
-                                                    },
-                                                    child: Text(
-                                                      '${controller._trx.records![index].cContractID?.identifier}',
-                                                      style: const TextStyle(
-                                                          color: kNotifColor),
+                                                  Expanded(
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/Contract',
+                                                            arguments: {
+                                                              'notificationId':
+                                                                  controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cContractID
+                                                                      ?.id,
+                                                            });
+                                                      },
+                                                      child: Text(
+                                                        '${controller._trx.records![index].cContractID?.identifier}',
+                                                        style: const TextStyle(
+                                                            color: kNotifColor),
+                                                      ),
                                                     ),
                                                   )
                                                 ],

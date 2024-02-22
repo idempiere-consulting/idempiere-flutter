@@ -16,6 +16,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_create_mptask_standard_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_edit_mptask_standard_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
@@ -277,6 +278,18 @@ class MaintenanceStandardMptaskLineScreen
                                               ?.identifier,
                                           "prodId": controller._trx
                                               .records![index].mProductID?.id,
+                                          "priceList": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .priceList ??
+                                                  0.0)
+                                              .toString(),
+                                          "priceEntered": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .priceEntered ??
+                                                  0.0)
+                                              .toString(),
                                         });
                                   },
                                   icon: const Icon(
@@ -320,7 +333,6 @@ class MaintenanceStandardMptaskLineScreen
                                   children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.event),
                                         Text(
                                           "${"Qty".tr}: ${controller.trx.records![index].qty}",
                                           style: const TextStyle(
@@ -328,13 +340,38 @@ class MaintenanceStandardMptaskLineScreen
                                         ),
                                       ],
                                     ),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            "${"Description".tr}: ${controller.trx.records![index].description ?? ""}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Price".tr}: ${controller.trx.records![index].priceEntered ?? 0.00}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Prezzo Listino".tr}: ${controller.trx.records![index].priceList ?? 0.00}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                                /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
+
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 children: const [],
@@ -368,15 +405,18 @@ class MaintenanceStandardMptaskLineScreen
                   IconButton(
                     tooltip: "Add Task".tr,
                     onPressed: () {
-                      Get.to(const CreateMaintenanceMptask(), arguments: {
-                        "id": Get.arguments["id"],
-                      });
+                      Get.to(const CreateMaintenanceStandardMptask(),
+                          arguments: {
+                            "id": Get.arguments["id"],
+                          });
                     },
                     icon: const Icon(EvaIcons.fileAddOutline),
                   ),
                   IconButton(
                     tooltip: "Print".tr,
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.getDocument();
+                    },
                     icon: const Icon(EvaIcons.printerOutline),
                   ),
                   IconButton(
@@ -392,6 +432,28 @@ class MaintenanceStandardMptaskLineScreen
                     icon: const Icon(Icons.attach_file_outlined),
                   ),
                 ],
+              ),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.prodCountList.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  controller.setFilter(controller.prodCountList
+                                          .records![index].mProductID?.id ??
+                                      0);
+                                },
+                                child: Text(
+                                    "${controller.prodCountList.records![index].mProductID?.identifier} : ${controller.prodCountList.records![index].qty}")),
+                          );
+                        })
+                    : const SizedBox(),
               ),
               Container(
                 color: Colors.grey[600],
@@ -479,13 +541,17 @@ class MaintenanceStandardMptaskLineScreen
                                       }
                                     }
                                     //print(taskindex);
-                                    Get.to(const EditMaintenanceMptaskLine(),
+                                    Get.to(
+                                        const EditMaintenanceStandardMptaskLine(),
                                         arguments: {
                                           "index": taskindex,
                                           "id": controller
                                               ._trx.records![index].id,
-                                          "qtyEntered": controller
-                                              ._trx.records![index].qtyEntered
+                                          "qtyEntered": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .qtyEntered ??
+                                                  0)
                                               .toString(),
                                           "resourceQty": controller
                                               ._trx.records![index].resourceQty
@@ -504,6 +570,18 @@ class MaintenanceStandardMptaskLineScreen
                                               ?.identifier,
                                           "prodId": controller._trx
                                               .records![index].mProductID?.id,
+                                          "priceList": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .priceList ??
+                                                  0.0)
+                                              .toString(),
+                                          "priceEntered": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .priceEntered ??
+                                                  0.0)
+                                              .toString(),
                                         });
                                   },
                                   icon: const Icon(
@@ -547,7 +625,6 @@ class MaintenanceStandardMptaskLineScreen
                                   children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.event),
                                         Text(
                                           "${"Qty".tr}: ${controller.trx.records![index].qty}",
                                           style: const TextStyle(
@@ -555,13 +632,38 @@ class MaintenanceStandardMptaskLineScreen
                                         ),
                                       ],
                                     ),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            "${"Description".tr}: ${controller.trx.records![index].description ?? ""}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Price".tr}: ${controller.trx.records![index].priceEntered ?? 0.00}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Prezzo Listino".tr}: ${controller.trx.records![index].priceList ?? 0.00}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                                /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
+
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 children: const [],
@@ -595,15 +697,18 @@ class MaintenanceStandardMptaskLineScreen
                   IconButton(
                     tooltip: "Add Task".tr,
                     onPressed: () {
-                      Get.to(const CreateMaintenanceMptask(), arguments: {
-                        "id": Get.arguments["id"],
-                      });
+                      Get.to(const CreateMaintenanceStandardMptask(),
+                          arguments: {
+                            "id": Get.arguments["id"],
+                          });
                     },
                     icon: const Icon(EvaIcons.fileAddOutline),
                   ),
                   IconButton(
                     tooltip: "Print".tr,
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.getDocument();
+                    },
                     icon: const Icon(EvaIcons.printerOutline),
                   ),
                   IconButton(
@@ -619,6 +724,28 @@ class MaintenanceStandardMptaskLineScreen
                     icon: const Icon(Icons.attach_file_outlined),
                   ),
                 ],
+              ),
+              Obx(
+                () => controller.dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: controller.prodCountList.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Container(
+                            margin: const EdgeInsets.all(10),
+                            child: ElevatedButton(
+                                onPressed: () {
+                                  controller.setFilter(controller.prodCountList
+                                          .records![index].mProductID?.id ??
+                                      0);
+                                },
+                                child: Text(
+                                    "${controller.prodCountList.records![index].mProductID?.identifier} : ${controller.prodCountList.records![index].qty}")),
+                          );
+                        })
+                    : const SizedBox(),
               ),
               Container(
                 color: Colors.grey[600],
@@ -706,13 +833,17 @@ class MaintenanceStandardMptaskLineScreen
                                       }
                                     }
                                     //print(taskindex);
-                                    Get.to(const EditMaintenanceMptaskLine(),
+                                    Get.to(
+                                        const EditMaintenanceStandardMptaskLine(),
                                         arguments: {
                                           "index": taskindex,
                                           "id": controller
                                               ._trx.records![index].id,
-                                          "qtyEntered": controller
-                                              ._trx.records![index].qtyEntered
+                                          "qtyEntered": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .qtyEntered ??
+                                                  0)
                                               .toString(),
                                           "resourceQty": controller
                                               ._trx.records![index].resourceQty
@@ -731,6 +862,18 @@ class MaintenanceStandardMptaskLineScreen
                                               ?.identifier,
                                           "prodId": controller._trx
                                               .records![index].mProductID?.id,
+                                          "priceList": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .priceList ??
+                                                  0.0)
+                                              .toString(),
+                                          "priceEntered": (controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .priceEntered ??
+                                                  0.0)
+                                              .toString(),
                                         });
                                   },
                                   icon: const Icon(
@@ -774,7 +917,6 @@ class MaintenanceStandardMptaskLineScreen
                                   children: [
                                     Row(
                                       children: <Widget>[
-                                        const Icon(Icons.event),
                                         Text(
                                           "${"Qty".tr}: ${controller.trx.records![index].qty}",
                                           style: const TextStyle(
@@ -782,13 +924,38 @@ class MaintenanceStandardMptaskLineScreen
                                         ),
                                       ],
                                     ),
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            "${"Description".tr}: ${controller.trx.records![index].description ?? ""}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Price".tr}: ${controller.trx.records![index].priceEntered ?? 0.00}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Prezzo Listino".tr}: ${controller.trx.records![index].priceList ?? 0.00}",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
                                   ],
                                 ),
-                                /* trailing: const Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.white,
-                                    size: 30.0,
-                                  ), */
+
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
                                 children: const [],

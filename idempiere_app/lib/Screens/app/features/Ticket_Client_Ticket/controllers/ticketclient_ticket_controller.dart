@@ -149,7 +149,7 @@ class TicketClientTicketController extends GetxController {
 
   openTicketType() {
     Get.defaultDialog(
-      title: "Ticket Type",
+      title: "Ticket Type".tr,
       //middleText: "Choose the type of Ticket you want to create",
       //contentPadding: const EdgeInsets.all(2.0),
       content: DropdownButton(
@@ -317,6 +317,8 @@ class TicketClientTicketController extends GetxController {
   }
 
   Future<void> getTickets() async {
+    DateTime today = DateTime.now();
+    DateTime fiftyDaysAgo = today.subtract(Duration(days: 50));
     var apiUrlFilter = ["", " and AD_User_ID eq $adUserId"];
     var notificationFilter = "";
     if (Get.arguments != null) {
@@ -335,7 +337,7 @@ class TicketClientTicketController extends GetxController {
         '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)'); */
     var url = Uri.parse('$protocol://' +
         ip +
-        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Created desc, DocumentNo desc');
+        '/api/v1/models/r_request?\$filter= (R_Status_ID neq $closedTicketId or StartDate ge \'${DateFormat('yyyy-MM-dd').format(fiftyDaysAgo)}\') and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= Created desc, DocumentNo desc');
     var response = await http.get(
       url,
       headers: <String, String>{

@@ -1402,6 +1402,9 @@ class _BodyState extends State<Body> {
         case "24":
           Get.offAllNamed("/MaintenanceMptask");
           break;
+        case "31":
+          Get.offAllNamed("/MaintenanceMptaskStandard");
+          break;
         case "32":
           Get.offAllNamed("/PortalMp");
           break;

@@ -147,14 +147,16 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       "AD_User_ID": {"id": salesRepId},
       "Name": titleFieldController.text,
       "Description": nameFieldController.text,
-      "JP_ToDo_ScheduledStartDate": formattedDate,
-      "JP_ToDo_ScheduledEndDate": formattedDate,
+      "JP_ToDo_ScheduledStartDate": '${formattedDate}T${date.hour}:00:00Z',
+      "JP_ToDo_ScheduledEndDate": '${formattedDate}T${date.hour}:00:00Z',
       "JP_ToDo_ScheduledStartTime": '${date.hour}:00:00Z',
       "JP_ToDo_ScheduledEndTime": '${date.hour + 1}:00:00Z',
       "JP_ToDo_Status": {"id": "NY"},
       "IsOpenToDoJP": true,
       "JP_ToDo_Type": {"id": "S"},
       "C_BPartner_ID": {"id": businessPartnerId},
+      "RecipientTo": email,
+      "SendIt": true,
       "Qty": 1,
     });
     final protocol = GetStorage().read('protocol');
@@ -181,7 +183,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
         ),
       );
     } else {
-      //print(response.body);
+      print(response.body);
       //print(response.statusCode);
       Get.snackbar(
         "Error!".tr,
@@ -192,6 +194,32 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
           color: Colors.red,
         ),
       );
+    }
+  }
+
+  Future<void> getADUserID() async {
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\'');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      email = json["records"][0]["EMail"];
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
     }
   }
 
@@ -359,7 +387,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
       var slots = FreeSlotJson.fromJson(jsonDecode(response.body));
 
       for (var i = 0; i < slots.rowcount!; i++) {
@@ -507,6 +535,8 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
   // ignore: prefer_typing_uninitialized_variables
   var businessPartnerId;
   var userName = "";
+
+  String email = "";
   // ignore: prefer_typing_uninitialized_variables
   var userId;
   late EventJson eventJson;
@@ -538,6 +568,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
     getRStatus();
     getSalesRep();
     getAllBPs();
+    getADUserID();
     //fillFields();
   }
 
@@ -864,7 +895,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                               AsyncSnapshot<List<Types>> snapshot) =>
                           snapshot.hasData
                               ? DropdownButton(
-                                  //value: null,
+                                  value: slotDropdownValue == ""
+                                      ? null
+                                      : slotDropdownValue,
                                   elevation: 16,
                                   onChanged: (String? newValue) {
                                     setState(() {
@@ -1182,7 +1215,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                               AsyncSnapshot<List<Types>> snapshot) =>
                           snapshot.hasData
                               ? DropdownButton(
-                                  value: snapshot.data![0].id,
+                                  value: slotDropdownValue == ""
+                                      ? null
+                                      : slotDropdownValue,
                                   elevation: 16,
                                   onChanged: (String? newValue) {
                                     setState(() {
@@ -1500,7 +1535,9 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
                               AsyncSnapshot<List<Types>> snapshot) =>
                           snapshot.hasData
                               ? DropdownButton(
-                                  value: snapshot.data![0].id,
+                                  value: slotDropdownValue == ""
+                                      ? null
+                                      : slotDropdownValue,
                                   elevation: 16,
                                   onChanged: (String? newValue) {
                                     setState(() {

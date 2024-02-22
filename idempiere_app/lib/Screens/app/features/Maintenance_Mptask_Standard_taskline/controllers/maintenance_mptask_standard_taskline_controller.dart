@@ -346,7 +346,7 @@ class MaintenanceStandardMptaskLineController extends GetxController {
       if (response.statusCode == 200) {
         var data = jsonEncode(wo.toJson());
         file.writeAsStringSync(data);
-        Get.find<MaintenanceMptaskController>().getWorkOrders();
+        Get.find<MaintenanceMptaskStandardController>().getWorkOrders();
         //print("done!");
         //Get.back();
         Get.snackbar(

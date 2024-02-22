@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_mptask_standard_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
@@ -15,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/v
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 class EditMaintenanceStandardMptaskLine extends StatefulWidget {
@@ -80,6 +82,8 @@ class _EditMaintenanceStandardMptaskLineState
       "QtyEntered": double.parse(qtyEnteredFieldController.text),
       "Qty": double.parse(resourceQtyFieldController.text),
       "M_Product_ID": {"id": productId},
+      "PriceList": double.parse(priceListFieldController.text),
+      "PriceEntered": double.parse(priceEnteredFieldController.text),
     });
 
     WorkOrderTaskLocalJson trx =
@@ -112,7 +116,7 @@ class _EditMaintenanceStandardMptaskLineState
         if (response.statusCode == 200) {
           var data = jsonEncode(trx.toJson());
           file.writeAsStringSync(data);
-          Get.find<MaintenanceMptaskLineController>().getWorkOrders();
+          Get.find<MaintenanceStandardMptaskLineController>().getWorkOrders();
           //print("done!");
           //Get.back();
           Get.snackbar(
@@ -124,7 +128,7 @@ class _EditMaintenanceStandardMptaskLineState
             ),
           );
         } else {
-          //print(response.body);
+          print(response.body);
           //print(response.statusCode);
           Get.snackbar(
             "Errore!",
@@ -139,7 +143,7 @@ class _EditMaintenanceStandardMptaskLineState
         var data = jsonEncode(trx.toJson());
         //GetStorage().write('workOrderSync', data);
         file.writeAsStringSync(data);
-        Get.find<MaintenanceMptaskLineController>().getWorkOrders();
+        Get.find<MaintenanceStandardMptaskLineController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['$protocol://$ip/api/v1/models/mp_ot_task/${Get.arguments["id"]}'] =
@@ -267,6 +271,11 @@ class _EditMaintenanceStandardMptaskLineState
   // ignore: prefer_typing_uninitialized_variables
   var productFieldController;
 
+  // ignore: prefer_typing_uninitialized_variables
+  var priceEnteredFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var priceListFieldController;
+
   var offline = -1;
 
   var productId = 0;
@@ -278,7 +287,8 @@ class _EditMaintenanceStandardMptaskLineState
     dropdownValue = args["completed"] ?? "NS";
     dropDownList = getTypes()!;
     super.initState();
-    descriptionFieldController = TextEditingController();
+    descriptionFieldController =
+        TextEditingController(text: args["description"] ?? "");
     qtyFieldController =
         TextEditingController(text: args["resourceQty"] ?? "1.0");
     qtyEnteredFieldController =
@@ -290,6 +300,10 @@ class _EditMaintenanceStandardMptaskLineState
         TextEditingController(text: Get.arguments["prod"] ?? "");
     productName = Get.arguments["prod"] ?? "";
     productId = Get.arguments["prodId"] ?? 0;
+    priceEnteredFieldController =
+        TextEditingController(text: Get.arguments['priceEntered']);
+    priceListFieldController =
+        TextEditingController(text: Get.arguments['priceList']);
     //getDocType();
     //getResourceName();
     //getAllResources();
@@ -493,6 +507,36 @@ class _EditMaintenanceStandardMptaskLineState
                     ],
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceListFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Prezzo Listino'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
               ],
             );
           },
@@ -639,6 +683,36 @@ class _EditMaintenanceStandardMptaskLineState
                     ],
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceListFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Prezzo Listino'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
               ],
             );
           },
@@ -778,6 +852,36 @@ class _EditMaintenanceStandardMptaskLineState
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceListFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Prezzo Listino'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                     inputFormatters: [

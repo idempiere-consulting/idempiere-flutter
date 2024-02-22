@@ -65,6 +65,8 @@ class Records {
   ADUserID? aDUserID;
   ADUserID? aDUser2ID;
   int? mPMaintainID2;
+  String? litText1;
+  String? teacherName;
   String? modelname;
   CBPartnerID? cBPartnerID;
   MPMaintainParentID? mpMaintainParentID;
@@ -100,6 +102,8 @@ class Records {
     this.aDUserID,
     this.aDUser2ID,
     this.mPMaintainID2,
+    this.teacherName,
+    this.litText1,
     this.modelname,
     this.cBPartnerID,
     this.mpMaintainParentID,
@@ -157,6 +161,8 @@ class Records {
         ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
         : null;
     mPMaintainID2 = json['MP_Maintain_ID2'] as int?;
+    teacherName = json['teacher_name'] as String?;
+    litText1 = json['LIT_Text1'] as String?;
     modelname = json['model-name'] as String?;
     mpMaintainParentID =
         (json['MP_MaintainParent_ID'] as Map<String, dynamic>?) != null
@@ -199,6 +205,8 @@ class Records {
     json['Help'] = help;
     json['AD_User_ID'] = aDUserID?.toJson();
     json['MP_Maintain_ID2'] = mPMaintainID2;
+    json['teacher_name'] = teacherName;
+    json['LIT_Text1'] = litText1;
     json['model-name'] = modelname;
     json['C_BPartner_ID'] = cBPartnerID?.toJson();
     json['MP_MaintainParent_ID'] = mpMaintainParentID?.toJson();

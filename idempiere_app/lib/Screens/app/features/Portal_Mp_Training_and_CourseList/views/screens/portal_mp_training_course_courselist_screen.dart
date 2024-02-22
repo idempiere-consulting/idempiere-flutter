@@ -5,6 +5,9 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -14,6 +17,9 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/models/contract_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/models/contract_line_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/models/attachment_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/models/archive_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/models/courseparticipant_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/models/trainingcourse_student_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Training_and_CourseList/views/screens/portal_mp_training_course_courselist_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/models/courselist_json.dart';
@@ -30,11 +36,15 @@ import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
+import 'package:pdf/pdf.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
+import 'package:idempiere_app/constants.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -1097,6 +1107,930 @@ class PortalMpTrainingCourseCourseListScreen
                         _buildProfile(data: controller.getProfil()),
                         const Divider(thickness: 1),
                         const SizedBox(height: kSpacing),
+                        Obx(
+                          () => Visibility(
+                            visible:
+                                controller.desktopSelectedMaintainID.value != 0,
+                            child: Container(
+                              height: 250,
+                              margin: const EdgeInsets.only(
+                                  top: kSpacing, left: 5, right: 5),
+                              child: Card(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius:
+                                      BorderRadius.circular(kBorderRadius),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: kSpacing,
+                                        top: kSpacing,
+                                        bottom: 5,
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Text(
+                                                "${"Participants".tr}:    ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                              ),
+                                              ElevatedButton(
+                                                  onPressed: () {
+                                                    controller
+                                                        .desktopParticipantNameFieldController
+                                                        .text = "";
+                                                    controller
+                                                        .desktopParticipantSurnameFieldController
+                                                        .text = "";
+
+                                                    controller
+                                                        .desktopParticipantBirthPlaceFieldController
+                                                        .text = "";
+                                                    controller
+                                                        .desktopParticipantBirthDateFieldController
+                                                        .text = "";
+
+                                                    controller
+                                                        .desktopParticipantEmailFieldController
+                                                        .text = "";
+
+                                                    controller
+                                                        .desktopParticipantRoleFieldController
+                                                        .text = "";
+                                                    controller
+                                                        .desktopParticipantNationalIDNumberFieldController
+                                                        .text = "";
+                                                    controller
+                                                        .desktopIsConfirmedCheckBox
+                                                        .value = false;
+                                                    Get.defaultDialog(
+                                                        title:
+                                                            'Insert Participant'
+                                                                .tr,
+                                                        onConfirm: () {
+                                                          controller
+                                                              .insertParticipantDesktop();
+                                                        },
+                                                        onCancel: () {},
+                                                        content: Column(
+                                                          children: [
+                                                            TextField(
+                                                              controller: controller
+                                                                  .desktopParticipantNameFieldController,
+                                                              minLines: 1,
+                                                              maxLines: 1,
+                                                              //onTap: () {},
+                                                              //onSubmitted: (String? value) {},
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                                labelText:
+                                                                    'Name'.tr,
+                                                                labelStyle: const TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                                //hintText: 'Description..'.tr,
+                                                                filled: true,
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  borderSide:
+                                                                      BorderSide
+                                                                          .none,
+                                                                ),
+                                                                isDense: true,
+                                                                fillColor: Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantSurnameFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Surname'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantBirthPlaceFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Birth Place'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child:
+                                                                  DateTimePicker(
+                                                                locale: Locale(
+                                                                    'languageCalendar'
+                                                                        .tr),
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Birth Date'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                                type:
+                                                                    DateTimePickerType
+                                                                        .date,
+                                                                initialValue:
+                                                                    controller
+                                                                        .desktopParticipantBirthDateFieldController
+                                                                        .text,
+                                                                firstDate:
+                                                                    DateTime(
+                                                                        2000),
+                                                                lastDate:
+                                                                    DateTime(
+                                                                        2100),
+                                                                //dateLabelText: 'Ship Date'.tr,
+                                                                //icon: const Icon(Icons.event),
+                                                                onChanged:
+                                                                    (val) {
+                                                                  //print(DateTime.parse(val));
+                                                                  //print(val);
+
+                                                                  controller
+                                                                          .desktopParticipantBirthDateFieldController
+                                                                          .text =
+                                                                      val.substring(
+                                                                          0,
+                                                                          10);
+
+                                                                  //print(date);
+                                                                },
+                                                                validator:
+                                                                    (val) {
+                                                                  //print(val);
+                                                                  return null;
+                                                                },
+                                                                // ignore: avoid_print
+                                                                onSaved: (val) =>
+                                                                    print(val),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantEmailFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Email'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantRoleFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Work Role'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantNationalIDNumberFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Tax ID Code'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Obx(
+                                                              () =>
+                                                                  CheckboxListTile(
+                                                                title: Text(
+                                                                    'Confirmed'
+                                                                        .tr),
+                                                                value: controller
+                                                                    .desktopIsConfirmedCheckBox
+                                                                    .value,
+                                                                activeColor:
+                                                                    kPrimaryColor,
+                                                                onChanged:
+                                                                    (bool?
+                                                                        value) {
+                                                                  controller
+                                                                      .desktopIsConfirmedCheckBox
+                                                                      .value = value!;
+                                                                },
+                                                                controlAffinity:
+                                                                    ListTileControlAffinity
+                                                                        .leading,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ));
+                                                  },
+                                                  child:
+                                                      const Icon(Symbols.add)),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    Obx(
+                                      () => Visibility(
+                                        visible: controller
+                                            .participantsDataAvailable.value,
+                                        replacement: const Divider(),
+                                        child: Expanded(
+                                          child: ListView.builder(
+                                              //shrinkWrap: true,
+                                              itemCount: controller
+                                                  ._participantDesktop
+                                                  .records!
+                                                  .length,
+                                              itemBuilder:
+                                                  (BuildContext context,
+                                                      int index) {
+                                                return ListTile(
+                                                  contentPadding:
+                                                      const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: kSpacing),
+                                                  title: Text(
+                                                    "${controller._participantDesktop.records![index].name ?? 'N/A'} ${controller._participantDesktop.records![index].surName ?? 'N/A'}",
+                                                    style: TextStyle(
+                                                      fontSize: 13,
+                                                      color: controller
+                                                              ._participantDesktop
+                                                              .records![index]
+                                                              .isConfirmed!
+                                                          ? kNotifColor
+                                                          : Colors.yellow,
+                                                    ),
+                                                  ),
+                                                  onTap: () {
+                                                    controller
+                                                        .desktopParticipantNameFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .name ??
+                                                        '';
+                                                    controller
+                                                        .desktopParticipantSurnameFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .surName ??
+                                                        '';
+
+                                                    controller
+                                                        .desktopParticipantBirthPlaceFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .birthCity ??
+                                                        '';
+                                                    controller
+                                                        .desktopParticipantBirthDateFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .birthday ??
+                                                        '';
+
+                                                    controller
+                                                        .desktopParticipantEmailFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .eMailUser ??
+                                                        '';
+
+                                                    controller
+                                                        .desktopParticipantRoleFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .description ??
+                                                        '';
+                                                    controller
+                                                        .desktopParticipantNationalIDNumberFieldController
+                                                        .text = controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .note ??
+                                                        '';
+                                                    controller
+                                                            .desktopIsConfirmedCheckBox
+                                                            .value =
+                                                        controller
+                                                            ._participantDesktop
+                                                            .records![index]
+                                                            .isConfirmed!;
+                                                    Get.defaultDialog(
+                                                        title:
+                                                            'Edit Participant'
+                                                                .tr,
+                                                        onConfirm: () {
+                                                          controller
+                                                              .editParticipantDesktop(
+                                                                  controller
+                                                                      ._participantDesktop
+                                                                      .records![
+                                                                          index]
+                                                                      .id!);
+                                                        },
+                                                        onCancel: () {},
+                                                        content: Column(
+                                                          children: [
+                                                            TextField(
+                                                              controller: controller
+                                                                  .desktopParticipantNameFieldController,
+                                                              minLines: 1,
+                                                              maxLines: 1,
+                                                              //onTap: () {},
+                                                              //onSubmitted: (String? value) {},
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                                labelText:
+                                                                    'Name'.tr,
+                                                                labelStyle: const TextStyle(
+                                                                    color: Colors
+                                                                        .white),
+                                                                //hintText: 'Description..'.tr,
+                                                                filled: true,
+                                                                border:
+                                                                    OutlineInputBorder(
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              10),
+                                                                  borderSide:
+                                                                      BorderSide
+                                                                          .none,
+                                                                ),
+                                                                isDense: true,
+                                                                fillColor: Theme.of(
+                                                                        context)
+                                                                    .cardColor,
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantSurnameFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Surname'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantBirthPlaceFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Birth Place'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child:
+                                                                  DateTimePicker(
+                                                                locale: Locale(
+                                                                    'languageCalendar'
+                                                                        .tr),
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Birth Date'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                                type:
+                                                                    DateTimePickerType
+                                                                        .date,
+                                                                initialValue:
+                                                                    controller
+                                                                        .desktopParticipantBirthDateFieldController
+                                                                        .text,
+                                                                firstDate:
+                                                                    DateTime(
+                                                                        2000),
+                                                                lastDate:
+                                                                    DateTime(
+                                                                        2100),
+                                                                //dateLabelText: 'Ship Date'.tr,
+                                                                //icon: const Icon(Icons.event),
+                                                                onChanged:
+                                                                    (val) {
+                                                                  //print(DateTime.parse(val));
+                                                                  //print(val);
+
+                                                                  controller
+                                                                          .desktopParticipantBirthDateFieldController
+                                                                          .text =
+                                                                      val.substring(
+                                                                          0,
+                                                                          10);
+
+                                                                  //print(date);
+                                                                },
+                                                                validator:
+                                                                    (val) {
+                                                                  //print(val);
+                                                                  return null;
+                                                                },
+                                                                // ignore: avoid_print
+                                                                onSaved: (val) =>
+                                                                    print(val),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantEmailFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Email'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantRoleFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Work Role'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      top: 10),
+                                                              child: TextField(
+                                                                controller:
+                                                                    controller
+                                                                        .desktopParticipantNationalIDNumberFieldController,
+                                                                minLines: 1,
+                                                                maxLines: 1,
+                                                                //onTap: () {},
+                                                                //onSubmitted: (String? value) {},
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  floatingLabelBehavior:
+                                                                      FloatingLabelBehavior
+                                                                          .always,
+                                                                  labelText:
+                                                                      'Tax ID Code'
+                                                                          .tr,
+                                                                  labelStyle:
+                                                                      const TextStyle(
+                                                                          color:
+                                                                              Colors.white),
+                                                                  //hintText: 'Description..'.tr,
+                                                                  filled: true,
+                                                                  border:
+                                                                      OutlineInputBorder(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            10),
+                                                                    borderSide:
+                                                                        BorderSide
+                                                                            .none,
+                                                                  ),
+                                                                  isDense: true,
+                                                                  fillColor: Theme.of(
+                                                                          context)
+                                                                      .cardColor,
+                                                                ),
+                                                              ),
+                                                            ),
+                                                            Obx(
+                                                              () =>
+                                                                  CheckboxListTile(
+                                                                title: Text(
+                                                                    'Confirmed'
+                                                                        .tr),
+                                                                value: controller
+                                                                    .desktopIsConfirmedCheckBox
+                                                                    .value,
+                                                                activeColor:
+                                                                    kPrimaryColor,
+                                                                onChanged:
+                                                                    (bool?
+                                                                        value) {
+                                                                  controller
+                                                                      .desktopIsConfirmedCheckBox
+                                                                      .value = value!;
+                                                                },
+                                                                controlAffinity:
+                                                                    ListTileControlAffinity
+                                                                        .leading,
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ));
+                                                  },
+                                                  trailing: IconButton(
+                                                    onPressed: () async {
+                                                      controller
+                                                          .deleteParticipantDesktop(
+                                                              controller
+                                                                  ._participantDesktop
+                                                                  .records![
+                                                                      index]
+                                                                  .id!);
+                                                    },
+                                                    icon: const Icon(
+                                                      Symbols.delete,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10),
+                                                  ),
+                                                );
+                                              }),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   )

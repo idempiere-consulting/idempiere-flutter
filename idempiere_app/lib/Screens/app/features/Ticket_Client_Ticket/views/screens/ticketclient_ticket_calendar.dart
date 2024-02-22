@@ -36,7 +36,7 @@ class _TicketClientTicketCalendarState
       },
     );
     if (response.statusCode == 200) {
-      //print(response.body);
+      print(response.body);
       _trx = EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       setState(() {
         dataAvailable = true;
@@ -141,7 +141,7 @@ class _TicketClientTicketCalendarState
                                         ),
                                         Expanded(
                                           child: Text(
-                                            "${DateTime.tryParse(_trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(_trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${_trx.records![index].jPToDoScheduledStartTime == null ? "" : _trx.records![index].jPToDoScheduledStartTime!.substring(0, 5)} - ${_trx.records![index].jPToDoScheduledEndTime == null ? "" : _trx.records![index].jPToDoScheduledEndTime!.substring(0, 5)}",
+                                            "${DateTime.tryParse(_trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(_trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${_trx.records![index].qty != 1 ? '${_trx.records![index].qty} ${'Hours'.tr}' : '${_trx.records![index].qty} ${'Hour'.tr}'}",
                                             style: const TextStyle(
                                                 color: Colors.white),
                                           ),
@@ -235,6 +235,154 @@ class _TicketClientTicketCalendarState
                 const SizedBox(
                   height: 10,
                 ),
+                dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: _trx.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.task,
+                                      color: Colors.white,
+                                    ),
+                                    //tooltip: 'Edit Task'.tr,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                title: Text(
+                                  _trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            _trx.records![index].description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(_trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(_trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${_trx.records![index].qty != 1 ? '${_trx.records![index].qty} ${'Hours'.tr}' : '${_trx.records![index].qty} ${'Hour'.tr}'}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            _trx.records![index].cBPartnerID
+                                                    ?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Visibility(
+                                        visible:
+                                            _trx.records![index].cProjectID !=
+                                                null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(_trx.records![index]
+                                                      .cProjectID?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible:
+                                            _trx.records![index].aDUserID !=
+                                                null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(_trx.records![index]
+                                                      .aDUserID?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
               ],
             );
           },
@@ -244,6 +392,154 @@ class _TicketClientTicketCalendarState
                 const SizedBox(
                   height: 10,
                 ),
+                dataAvailable
+                    ? ListView.builder(
+                        primary: false,
+                        scrollDirection: Axis.vertical,
+                        shrinkWrap: true,
+                        itemCount: _trx.records!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return Card(
+                            elevation: 8.0,
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 10.0, vertical: 6.0),
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromRGBO(64, 75, 96, .9)),
+                              child: ExpansionTile(
+                                tilePadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                leading: Container(
+                                  padding: const EdgeInsets.only(right: 12.0),
+                                  decoration: const BoxDecoration(
+                                      border: Border(
+                                          right: BorderSide(
+                                              width: 1.0,
+                                              color: Colors.white24))),
+                                  child: IconButton(
+                                    icon: const Icon(
+                                      Icons.task,
+                                      color: Colors.white,
+                                    ),
+                                    //tooltip: 'Edit Task'.tr,
+                                    onPressed: () {},
+                                  ),
+                                ),
+                                title: Text(
+                                  _trx.records![index].name ?? "???",
+                                  style: const TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
+
+                                subtitle: Column(
+                                  children: [
+                                    Row(
+                                      children: <Widget>[
+                                        Expanded(
+                                          child: Text(
+                                            _trx.records![index].description ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.calendar_month,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            "${DateTime.tryParse(_trx.records![index].jPToDoScheduledStartDate ?? "") != null ? DateFormat('dd-MM-yyyy').format(DateTime.parse(_trx.records![index].jPToDoScheduledStartDate!)) : ""}  ${_trx.records![index].qty != 1 ? '${_trx.records![index].qty} ${'Hours'.tr}' : '${_trx.records![index].qty} ${'Hour'.tr}'}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.handshake,
+                                          color: Colors.white,
+                                        ),
+                                        Expanded(
+                                          child: Text(
+                                            _trx.records![index].cBPartnerID
+                                                    ?.identifier ??
+                                                "??",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                                /* trailing: const Icon(
+                                    Icons.keyboard_arrow_right,
+                                    color: Colors.white,
+                                    size: 30.0,
+                                  ), */
+                                childrenPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 10.0),
+                                children: [
+                                  Column(
+                                    children: [
+                                      Visibility(
+                                        visible:
+                                            _trx.records![index].cProjectID !=
+                                                null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'Project'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(_trx.records![index]
+                                                      .cProjectID?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible:
+                                            _trx.records![index].aDUserID !=
+                                                null,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              '${'User'.tr}: ',
+                                              style: const TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white),
+                                            ),
+                                            Expanded(
+                                              child: Text(_trx.records![index]
+                                                      .aDUserID?.identifier ??
+                                                  ""),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : const Center(child: CircularProgressIndicator()),
               ],
             );
           },

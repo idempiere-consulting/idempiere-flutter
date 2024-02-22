@@ -54,6 +54,8 @@ class TRecords {
   int? offlineId;
   num? resourceQty;
   num? qtyEntered;
+  num? priceEntered;
+  num? priceList;
   final String? modelname;
 
   TRecords({
@@ -79,6 +81,8 @@ class TRecords {
     this.offlineId,
     this.resourceQty,
     this.qtyEntered,
+    this.priceEntered,
+    this.priceList,
     this.modelname,
   });
 
@@ -126,6 +130,8 @@ class TRecords {
         offlineId = json['offlineId'] as int?,
         resourceQty = json['ResourceQty'] as num?,
         qtyEntered = json['QtyEntered'] as num?,
+        priceEntered = json['PriceEntered'] as num?,
+        priceList = json['PriceList'] as num?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -151,6 +157,8 @@ class TRecords {
         'offlineId': offlineId,
         'ResourceQty': resourceQty,
         'QtyEntered': qtyEntered,
+        'PriceEntered': priceEntered,
+        'PriceList': priceList,
         'model-name': modelname
       };
 }

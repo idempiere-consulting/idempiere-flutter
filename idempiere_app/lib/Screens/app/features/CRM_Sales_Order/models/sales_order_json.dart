@@ -98,6 +98,7 @@ class Records {
   final LITLastOrderID? lITLastOrderID;
   final String? lITLastDateOrdered;
   final bool? lITIsDisplaySuppProduct;
+  final bool? isConfirmed;
   final num? qtyToInvoice;
   final bool? lITIsAdvancedView;
   final ADUserID? adUserID;
@@ -171,6 +172,7 @@ class Records {
     this.lITLastOrderID,
     this.lITLastDateOrdered,
     this.lITIsDisplaySuppProduct,
+    this.isConfirmed,
     this.qtyToInvoice,
     this.lITIsAdvancedView,
     this.adUserID,
@@ -324,6 +326,7 @@ class Records {
                 : null,
         lITLastDateOrdered = json['LIT_LastDateOrdered'] as String?,
         lITIsDisplaySuppProduct = json['LIT_IsDisplaySuppProduct'] as bool?,
+        isConfirmed = json['IsConfirmed'] as bool?,
         qtyToInvoice = json['QtyToInvoice'] as num?,
         lITIsAdvancedView = json['LIT_IsAdvancedView'] as bool?,
         adUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
@@ -397,6 +400,7 @@ class Records {
         'LIT_IsDisplaySuppProduct': lITIsDisplaySuppProduct,
         'QtyToInvoice': qtyToInvoice,
         'LIT_IsAdvancedView': lITIsAdvancedView,
+        'IsConfirmed': isConfirmed,
         'AD_User_ID': adUserID?.toJson(),
         'model-name': modelname,
         'IsPaid': isPaid,

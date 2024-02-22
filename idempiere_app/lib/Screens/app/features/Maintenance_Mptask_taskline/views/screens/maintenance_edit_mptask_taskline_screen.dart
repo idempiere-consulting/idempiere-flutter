@@ -277,7 +277,8 @@ class _EditMaintenanceMptaskLineState extends State<EditMaintenanceMptaskLine> {
     dropdownValue = args["completed"] ?? "NS";
     dropDownList = getTypes()!;
     super.initState();
-    descriptionFieldController = TextEditingController();
+    descriptionFieldController =
+        TextEditingController(text: args["description"] ?? "");
     qtyFieldController =
         TextEditingController(text: args["resourceQty"] ?? "1.0");
     qtyEnteredFieldController =

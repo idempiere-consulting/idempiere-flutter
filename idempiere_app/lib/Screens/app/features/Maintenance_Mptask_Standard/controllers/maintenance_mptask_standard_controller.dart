@@ -50,6 +50,59 @@ class MaintenanceMptaskStandardController extends GetxController {
     getWorkOrders();
   }
 
+  getDocumentAttachments(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/mp_maintain/${trx.records![index].mPMaintainID?.id}/attachments');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json =
+          AttachmentJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.attachments!.isNotEmpty) {
+        getAttachment(index, json.attachments![0].name!);
+      }
+    }
+  }
+
+  getAttachment(int index, String name) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/mp_maintain/${trx.records![index].mPMaintainID?.id}/attachments/$name');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var image64 = base64.encode(response.bodyBytes);
+      Get.to(const MaintenanceMPTaskImage(), arguments: {"base64": image64});
+    } else {
+      print(response.body);
+    }
+  }
+
   completeToDo(int index) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -481,6 +534,57 @@ class MaintenanceMptaskStandardController extends GetxController {
       if (kDebugMode) {
         print(response.body);
       }
+    }
+  }
+
+  Future<void> syncWorkOrderByMaintainID(int maintainID) async {
+    _dataAvailable.value = false;
+    var isConnected = await checkConnection();
+
+    //print(isConnected);
+
+    if (isConnected) {
+      emptyAPICallStak();
+      _dataAvailable.value = false;
+      String ip = GetStorage().read('ip');
+      var userId = GetStorage().read('userId');
+      String authorization = 'Bearer ${GetStorage().read('token')}';
+      final protocol = GetStorage().read('protocol');
+      var url = Uri.parse(
+          '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= MP_Maintain_ID eq $maintainID');
+
+      var response = await http.get(
+        url,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        //print(response.body);
+        const filename = "workorder";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsStringSync(utf8.decode(response.bodyBytes));
+        //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
+        //isWorkOrderSyncing.value = false;
+        //getWorkOrders();
+        syncWorkOrderResource();
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+    } else {
+      Get.snackbar(
+        "Connessione Internet assente!",
+        "Impossibile aggiornare i record.",
+        icon: const Icon(
+          Icons.signal_wifi_connected_no_internet_4,
+          color: Colors.red,
+        ),
+      );
     }
   }
 

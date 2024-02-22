@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:idempiere_app/constants.dart';
+import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -272,7 +273,8 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                   title: Column(
                                     children: [
                                       Text(
-                                        controller.trx.records![index].documentNo ??
+                                        controller.trx.records![index]
+                                                .documentNo ??
                                             "???",
                                         style: const TextStyle(
                                             color: Colors.white,
@@ -356,7 +358,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Type: ".tr,
+                                              "${'Type'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -373,7 +375,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Summary: ".tr,
+                                              "${'Summary'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -389,7 +391,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Priority: ".tr,
+                                              "${'Priority'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -410,7 +412,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "Product: ".tr,
+                                                "${'Product'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -433,7 +435,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "S. Order: ".tr,
+                                                "${'S. Order'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -778,12 +780,24 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        controller.trx.records![index]
+                                                .documentNo ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -854,7 +868,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Type: ".tr,
+                                              "${'Type'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -871,7 +885,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Summary: ".tr,
+                                              "${'Summary'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -887,7 +901,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Priority: ".tr,
+                                              "${'Priority'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -908,7 +922,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "Product: ".tr,
+                                                "${'Product'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -931,7 +945,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "S. Order: ".tr,
+                                                "${'S. Order'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -1276,12 +1290,24 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Text(
+                                        controller.trx.records![index]
+                                                .documentNo ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                      Text(
+                                        controller.trx.records![index].name ??
+                                            "???",
+                                        style: const TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -1352,7 +1378,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Type: ".tr,
+                                              "${'Type'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1369,7 +1395,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Summary: ".tr,
+                                              "${'Summary'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1385,7 +1411,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         Row(
                                           children: [
                                             Text(
-                                              "Priority: ".tr,
+                                              "${'Priority'.tr}: ",
                                               style: const TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ),
@@ -1406,7 +1432,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "Product: ".tr,
+                                                "${'Product'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
@@ -1429,7 +1455,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           child: Row(
                                             children: [
                                               Text(
-                                                "S. Order: ".tr,
+                                                "${'S. Order'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),

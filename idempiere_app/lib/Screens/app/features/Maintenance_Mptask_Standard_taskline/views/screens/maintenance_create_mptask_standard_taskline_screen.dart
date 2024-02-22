@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.d
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 
 class CreateMaintenanceStandardMptask extends StatefulWidget {
@@ -41,6 +42,8 @@ class _CreateMaintenanceStandardMptaskState
       "C_UOM_ID": {"id": 100},
       "ResourceQty": double.parse(resourceQtyFieldController.text),
       "QtyEntered": double.parse(qtyEnteredFieldController.text),
+      "PriceList": double.parse(priceListFieldController.text),
+      "PriceEntered": double.parse(priceEnteredFieldController.text),
     });
 
     WorkOrderTaskLocalJson trx =
@@ -203,6 +206,11 @@ class _CreateMaintenanceStandardMptaskState
   var resourceQtyFieldController;
 
   // ignore: prefer_typing_uninitialized_variables
+  var priceEnteredFieldController;
+  // ignore: prefer_typing_uninitialized_variables
+  var priceListFieldController;
+
+  // ignore: prefer_typing_uninitialized_variables
   var resourceFieldController;
   String dropdownValue = "";
   String salesrepValue = "";
@@ -221,6 +229,8 @@ class _CreateMaintenanceStandardMptaskState
     qtyFieldController = TextEditingController(text: "1");
     qtyEnteredFieldController = TextEditingController(text: "1");
     resourceQtyFieldController = TextEditingController(text: "1");
+    priceEnteredFieldController = TextEditingController(text: "0.0");
+    priceListFieldController = TextEditingController(text: "0.0");
   }
 
   static String _displayStringForOption(Records option) =>
@@ -383,6 +393,36 @@ class _CreateMaintenanceStandardMptaskState
                     ],
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceListFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Prezzo Listino'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
               ],
             );
           },
@@ -517,6 +557,36 @@ class _CreateMaintenanceStandardMptaskState
                     ],
                   ),
                 ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceListFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Prezzo Listino'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
               ],
             );
           },
@@ -644,6 +714,36 @@ class _CreateMaintenanceStandardMptaskState
                       prefixIcon: const Icon(Icons.person_pin_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Total Quantity'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceEnteredFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Price'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    controller: priceListFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Symbols.price_check),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Prezzo Listino'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                     inputFormatters: [

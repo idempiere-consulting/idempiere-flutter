@@ -13,6 +13,8 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_info_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_product_unloaded_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/models/attachment_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_image_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Signature_WorkOrder/signature_page.dart';
@@ -35,6 +37,7 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -191,76 +194,50 @@ class MaintenanceMptaskStandardScreen
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      if (controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              'Special Order'.tr ||
-                                          controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              "Special Order with Material"
-                                                  .tr ||
-                                          controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              'Shipment Order'.tr) {
-                                        Get.toNamed(
-                                            '/MaintenanceStandardMptaskLine',
-                                            arguments: {
-                                              "isSpecialOrder": true,
-                                              "bPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docN": controller.trx
-                                                  .records![index].documentNo,
-                                              "docType": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cDocTypeID
-                                                  ?.identifier,
-                                              "id": controller.trx
-                                                  .records![index].mPOTID!.id,
-                                              "note": controller
-                                                  .trx.records![index].note,
-                                              "manualNote": controller.trx
-                                                  .records![index].manualNote,
-                                              "request": controller.trx
-                                                  .records![index].description,
-                                              "index": index,
-                                              "date": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .dateWorkStart,
-                                              "org": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .aDOrgID
-                                                  ?.identifier,
-                                              "hasAttachment": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .attachment ??
-                                                  "false",
-                                              "maintenanceId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPMaintainID
-                                                  ?.id,
-                                            });
-                                      } else {
-                                        Get.toNamed('/MaintenanceMpResource',
-                                            arguments: {
-                                              "docN": controller.trx
-                                                  .records![index].documentNo,
-                                              "orderId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cOrderID
-                                                      ?.id ??
-                                                  0,
-                                              "dateWorkStart": controller.trx
-                                                  .records![index].dateWorkStart
-                                            });
-                                      }
+
+                                      Get.toNamed(
+                                          '/MaintenanceStandardMptaskLine',
+                                          arguments: {
+                                            "isSpecialOrder": true,
+                                            "bPartner": controller
+                                                .trx
+                                                .records![index]
+                                                .cBPartnerID
+                                                ?.identifier,
+                                            "docN": controller
+                                                .trx.records![index].documentNo,
+                                            "docType": controller
+                                                .trx
+                                                .records![index]
+                                                .cDocTypeID
+                                                ?.identifier,
+                                            "id": controller
+                                                .trx.records![index].mPOTID!.id,
+                                            "note": controller
+                                                .trx.records![index].note,
+                                            "manualNote": controller
+                                                .trx.records![index].manualNote,
+                                            "request": controller.trx
+                                                .records![index].description,
+                                            "index": index,
+                                            "date": controller.trx
+                                                .records![index].dateWorkStart,
+                                            "org": controller
+                                                .trx
+                                                .records![index]
+                                                .aDOrgID
+                                                ?.identifier,
+                                            "hasAttachment": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .attachment ??
+                                                "false",
+                                            "maintenanceId": controller
+                                                .trx
+                                                .records![index]
+                                                .mPMaintainID
+                                                ?.id,
+                                          });
                                     },
                                     icon: Icon(
                                       controller.trx.records![index].docStatus
@@ -574,7 +551,7 @@ class MaintenanceMptaskStandardScreen
                                               ),
                                               TextButton(
                                                 onPressed: () {
-                                                  Get.offNamed(
+                                                  /* Get.offNamed(
                                                       '/MaintenanceMpContracts',
                                                       arguments: {
                                                         'notificationId':
@@ -583,14 +560,31 @@ class MaintenanceMptaskStandardScreen
                                                                 .records![index]
                                                                 .mPMaintainID
                                                                 ?.id,
-                                                      });
+                                                      }); */
                                                 },
                                                 child: Text(
                                                   '${controller._trx.records![index].documentNo2}',
                                                   style: const TextStyle(
                                                       color: kNotifColor),
                                                 ),
-                                              )
+                                              ),
+                                              IconButton(
+                                                  tooltip:
+                                                      'Show All Work Orders linked to this Maintenance'
+                                                          .tr,
+                                                  onPressed: () {
+                                                    controller
+                                                        .syncWorkOrderByMaintainID(
+                                                            controller
+                                                                    ._trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mPMaintainID
+                                                                    ?.id ??
+                                                                0);
+                                                  },
+                                                  icon: Icon(
+                                                      Symbols.search_check)),
                                             ],
                                           ),
                                         ),
@@ -646,14 +640,16 @@ class MaintenanceMptaskStandardScreen
                                           child: Row(
                                             children: [
                                               Text(
-                                                "${'Location Note'.tr}: ",
+                                                "${'Desc. Impianto'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text(
-                                                  "${controller.trx.records![index].name}"
-                                                      .tr),
+                                              Expanded(
+                                                child: Text(
+                                                    "${controller.trx.records![index].name}"
+                                                        .tr),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -922,6 +918,16 @@ class MaintenanceMptaskStandardScreen
                                                   },
                                                   icon: const Icon(Icons
                                                       .screen_search_desktop)), */
+                                              IconButton(
+                                                tooltip: "Attachment".tr,
+                                                onPressed: () {
+                                                  controller
+                                                      .getDocumentAttachments(
+                                                          index);
+                                                },
+                                                icon:
+                                                    const Icon(EvaIcons.attach),
+                                              ),
                                               IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {
@@ -1327,76 +1333,50 @@ class MaintenanceMptaskStandardScreen
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      if (controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              'Special Order'.tr ||
-                                          controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              "Special Order with Material"
-                                                  .tr ||
-                                          controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              'Shipment Order'.tr) {
-                                        Get.toNamed(
-                                            '/MaintenanceStandardMptaskLine',
-                                            arguments: {
-                                              "isSpecialOrder": true,
-                                              "bPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docN": controller.trx
-                                                  .records![index].documentNo,
-                                              "docType": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cDocTypeID
-                                                  ?.identifier,
-                                              "id": controller.trx
-                                                  .records![index].mPOTID!.id,
-                                              "note": controller
-                                                  .trx.records![index].note,
-                                              "manualNote": controller.trx
-                                                  .records![index].manualNote,
-                                              "request": controller.trx
-                                                  .records![index].description,
-                                              "index": index,
-                                              "date": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .dateWorkStart,
-                                              "org": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .aDOrgID
-                                                  ?.identifier,
-                                              "hasAttachment": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .attachment ??
-                                                  "false",
-                                              "maintenanceId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPMaintainID
-                                                  ?.id,
-                                            });
-                                      } else {
-                                        Get.toNamed('/MaintenanceMpResource',
-                                            arguments: {
-                                              "docN": controller.trx
-                                                  .records![index].documentNo,
-                                              "orderId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cOrderID
-                                                      ?.id ??
-                                                  0,
-                                              "dateWorkStart": controller.trx
-                                                  .records![index].dateWorkStart
-                                            });
-                                      }
+
+                                      Get.toNamed(
+                                          '/MaintenanceStandardMptaskLine',
+                                          arguments: {
+                                            "isSpecialOrder": true,
+                                            "bPartner": controller
+                                                .trx
+                                                .records![index]
+                                                .cBPartnerID
+                                                ?.identifier,
+                                            "docN": controller
+                                                .trx.records![index].documentNo,
+                                            "docType": controller
+                                                .trx
+                                                .records![index]
+                                                .cDocTypeID
+                                                ?.identifier,
+                                            "id": controller
+                                                .trx.records![index].mPOTID!.id,
+                                            "note": controller
+                                                .trx.records![index].note,
+                                            "manualNote": controller
+                                                .trx.records![index].manualNote,
+                                            "request": controller.trx
+                                                .records![index].description,
+                                            "index": index,
+                                            "date": controller.trx
+                                                .records![index].dateWorkStart,
+                                            "org": controller
+                                                .trx
+                                                .records![index]
+                                                .aDOrgID
+                                                ?.identifier,
+                                            "hasAttachment": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .attachment ??
+                                                "false",
+                                            "maintenanceId": controller
+                                                .trx
+                                                .records![index]
+                                                .mPMaintainID
+                                                ?.id,
+                                          });
                                     },
                                     icon: Icon(
                                       controller.trx.records![index].docStatus
@@ -1710,7 +1690,7 @@ class MaintenanceMptaskStandardScreen
                                               ),
                                               TextButton(
                                                 onPressed: () {
-                                                  Get.offNamed(
+                                                  /* Get.offNamed(
                                                       '/MaintenanceMpContracts',
                                                       arguments: {
                                                         'notificationId':
@@ -1719,14 +1699,31 @@ class MaintenanceMptaskStandardScreen
                                                                 .records![index]
                                                                 .mPMaintainID
                                                                 ?.id,
-                                                      });
+                                                      }); */
                                                 },
                                                 child: Text(
                                                   '${controller._trx.records![index].documentNo2}',
                                                   style: const TextStyle(
                                                       color: kNotifColor),
                                                 ),
-                                              )
+                                              ),
+                                              IconButton(
+                                                  tooltip:
+                                                      'Show All Work Orders linked to this Maintenance'
+                                                          .tr,
+                                                  onPressed: () {
+                                                    controller
+                                                        .syncWorkOrderByMaintainID(
+                                                            controller
+                                                                    ._trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mPMaintainID
+                                                                    ?.id ??
+                                                                0);
+                                                  },
+                                                  icon: Icon(
+                                                      Symbols.search_check)),
                                             ],
                                           ),
                                         ),
@@ -1782,14 +1779,16 @@ class MaintenanceMptaskStandardScreen
                                           child: Row(
                                             children: [
                                               Text(
-                                                "${'Location Note'.tr}: ",
+                                                "${'Desc. Impianto'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text(
-                                                  "${controller.trx.records![index].name}"
-                                                      .tr),
+                                              Expanded(
+                                                child: Text(
+                                                    "${controller.trx.records![index].name}"
+                                                        .tr),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -2058,6 +2057,16 @@ class MaintenanceMptaskStandardScreen
                                                   },
                                                   icon: const Icon(Icons
                                                       .screen_search_desktop)), */
+                                              IconButton(
+                                                tooltip: "Attachment".tr,
+                                                onPressed: () {
+                                                  controller
+                                                      .getDocumentAttachments(
+                                                          index);
+                                                },
+                                                icon:
+                                                    const Icon(EvaIcons.attach),
+                                              ),
                                               IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {
@@ -2463,76 +2472,50 @@ class MaintenanceMptaskStandardScreen
                                           'selectedTaskId',
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
-                                      if (controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              'Special Order'.tr ||
-                                          controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              "Special Order with Material"
-                                                  .tr ||
-                                          controller.trx.records![index]
-                                                  .cDocTypeID?.identifier ==
-                                              'Shipment Order'.tr) {
-                                        Get.toNamed(
-                                            '/MaintenanceStandardMptaskLine',
-                                            arguments: {
-                                              "isSpecialOrder": true,
-                                              "bPartner": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBPartnerID
-                                                  ?.identifier,
-                                              "docN": controller.trx
-                                                  .records![index].documentNo,
-                                              "docType": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cDocTypeID
-                                                  ?.identifier,
-                                              "id": controller.trx
-                                                  .records![index].mPOTID!.id,
-                                              "note": controller
-                                                  .trx.records![index].note,
-                                              "manualNote": controller.trx
-                                                  .records![index].manualNote,
-                                              "request": controller.trx
-                                                  .records![index].description,
-                                              "index": index,
-                                              "date": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .dateWorkStart,
-                                              "org": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .aDOrgID
-                                                  ?.identifier,
-                                              "hasAttachment": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .attachment ??
-                                                  "false",
-                                              "maintenanceId": controller
-                                                  .trx
-                                                  .records![index]
-                                                  .mPMaintainID
-                                                  ?.id,
-                                            });
-                                      } else {
-                                        Get.toNamed('/MaintenanceMpResource',
-                                            arguments: {
-                                              "docN": controller.trx
-                                                  .records![index].documentNo,
-                                              "orderId": controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cOrderID
-                                                      ?.id ??
-                                                  0,
-                                              "dateWorkStart": controller.trx
-                                                  .records![index].dateWorkStart
-                                            });
-                                      }
+
+                                      Get.toNamed(
+                                          '/MaintenanceStandardMptaskLine',
+                                          arguments: {
+                                            "isSpecialOrder": true,
+                                            "bPartner": controller
+                                                .trx
+                                                .records![index]
+                                                .cBPartnerID
+                                                ?.identifier,
+                                            "docN": controller
+                                                .trx.records![index].documentNo,
+                                            "docType": controller
+                                                .trx
+                                                .records![index]
+                                                .cDocTypeID
+                                                ?.identifier,
+                                            "id": controller
+                                                .trx.records![index].mPOTID!.id,
+                                            "note": controller
+                                                .trx.records![index].note,
+                                            "manualNote": controller
+                                                .trx.records![index].manualNote,
+                                            "request": controller.trx
+                                                .records![index].description,
+                                            "index": index,
+                                            "date": controller.trx
+                                                .records![index].dateWorkStart,
+                                            "org": controller
+                                                .trx
+                                                .records![index]
+                                                .aDOrgID
+                                                ?.identifier,
+                                            "hasAttachment": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .attachment ??
+                                                "false",
+                                            "maintenanceId": controller
+                                                .trx
+                                                .records![index]
+                                                .mPMaintainID
+                                                ?.id,
+                                          });
                                     },
                                     icon: Icon(
                                       controller.trx.records![index].docStatus
@@ -2846,7 +2829,7 @@ class MaintenanceMptaskStandardScreen
                                               ),
                                               TextButton(
                                                 onPressed: () {
-                                                  Get.offNamed(
+                                                  /* Get.offNamed(
                                                       '/MaintenanceMpContracts',
                                                       arguments: {
                                                         'notificationId':
@@ -2855,14 +2838,31 @@ class MaintenanceMptaskStandardScreen
                                                                 .records![index]
                                                                 .mPMaintainID
                                                                 ?.id,
-                                                      });
+                                                      }); */
                                                 },
                                                 child: Text(
                                                   '${controller._trx.records![index].documentNo2}',
                                                   style: const TextStyle(
                                                       color: kNotifColor),
                                                 ),
-                                              )
+                                              ),
+                                              IconButton(
+                                                  tooltip:
+                                                      'Show All Work Orders linked to this Maintenance'
+                                                          .tr,
+                                                  onPressed: () {
+                                                    controller
+                                                        .syncWorkOrderByMaintainID(
+                                                            controller
+                                                                    ._trx
+                                                                    .records![
+                                                                        index]
+                                                                    .mPMaintainID
+                                                                    ?.id ??
+                                                                0);
+                                                  },
+                                                  icon: Icon(
+                                                      Symbols.search_check)),
                                             ],
                                           ),
                                         ),
@@ -2918,14 +2918,16 @@ class MaintenanceMptaskStandardScreen
                                           child: Row(
                                             children: [
                                               Text(
-                                                "${'Location Note'.tr}: ",
+                                                "${'Desc. Impianto'.tr}: ",
                                                 style: const TextStyle(
                                                     fontWeight:
                                                         FontWeight.bold),
                                               ),
-                                              Text(
-                                                  "${controller.trx.records![index].name}"
-                                                      .tr),
+                                              Expanded(
+                                                child: Text(
+                                                    "${controller.trx.records![index].name}"
+                                                        .tr),
+                                              ),
                                             ],
                                           ),
                                         ),
@@ -3194,6 +3196,16 @@ class MaintenanceMptaskStandardScreen
                                                   },
                                                   icon: const Icon(Icons
                                                       .screen_search_desktop)), */
+                                              IconButton(
+                                                tooltip: "Attachment".tr,
+                                                onPressed: () {
+                                                  controller
+                                                      .getDocumentAttachments(
+                                                          index);
+                                                },
+                                                icon:
+                                                    const Icon(EvaIcons.attach),
+                                              ),
                                               IconButton(
                                                 tooltip: "Sign".tr,
                                                 onPressed: () {
