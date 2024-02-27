@@ -234,7 +234,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           primary: false,
                           shrinkWrap: true,
                           itemCount: controller.trx.records?.length ?? 0,
-                          crossAxisCount: 2,
+                          crossAxisCount: 3,
                           mainAxisSpacing: 8,
                           crossAxisSpacing: 8,
                           itemBuilder: (context, index) {
@@ -261,7 +261,7 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                           primary: false,
                           shrinkWrap: true,
                           itemCount: controller.trx.records?.length ?? 0,
-                          crossAxisCount: 2,
+                          crossAxisCount: 4,
                           mainAxisSpacing: 8,
                           crossAxisSpacing: 8,
                           itemBuilder: (context, index) {

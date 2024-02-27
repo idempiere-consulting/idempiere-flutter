@@ -12,7 +12,9 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/models/courselist_json.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/views/screens/training_course_courselist_analysis.dart';
 import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/views/screens/training_course_courselist_filters.dart';
+import 'package:idempiere_app/Screens/app/features/Training_and_Course_CourseList/views/screens/training_course_courselist_participant_scores.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -235,15 +237,15 @@ class TrainingCourseCourseListScreen
                                     child: IconButton(
                                       icon: const Icon(
                                         Icons.auto_stories,
-                                        color: Colors.green,
+                                        color: Colors.grey,
                                       ),
                                       tooltip: 'Take the Quiz'.tr,
                                       onPressed: () {
                                         //log("info button pressed");
-                                        Get.toNamed('/QuizCourse', arguments: {
+                                        /* Get.toNamed('/QuizCourse', arguments: {
                                           "id":
                                               controller.trx.records![index].id,
-                                        });
+                                        }); */
                                       },
                                     ),
                                   ),
@@ -335,6 +337,42 @@ class TrainingCourseCourseListScreen
                                                       ?.identifier ??
                                                   "??"),
                                             ),
+                                          ],
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                                tooltip: 'Exam Analysis'.tr,
+                                                onPressed: () {
+                                                  Get.to(
+                                                      () =>
+                                                          const TrainingCourseCourseListAnalysis(),
+                                                      arguments: {
+                                                        "maintainId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .id
+                                                      });
+                                                },
+                                                icon: Icon(Symbols.analytics)),
+                                            IconButton(
+                                                tooltip:
+                                                    'Participants Score'.tr,
+                                                onPressed: () {
+                                                  Get.to(
+                                                      () =>
+                                                          const TrainingCourseCourseListParticipantScores(),
+                                                      arguments: {
+                                                        "maintainId": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .id
+                                                      });
+                                                },
+                                                icon: Icon(
+                                                    Symbols.card_membership)),
                                           ],
                                         ),
                                       ],

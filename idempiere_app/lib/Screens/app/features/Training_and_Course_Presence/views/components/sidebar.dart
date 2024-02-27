@@ -63,7 +63,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.contact_mail,
                   icon: Icons.contact_mail_outlined,
-                  label: "Score".tr,
+                  label: "Exam Analysis".tr,
                   visible: int.parse(list[55], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")

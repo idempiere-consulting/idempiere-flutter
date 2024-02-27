@@ -461,51 +461,343 @@ class DashboardScreen extends GetView<DashboardController> {
                   counter: controller.notificationCounter.value)),
               //_buildProfile(data: controller.getProfil(), counter: 0),
               const SizedBox(height: kSpacing),
-              Obx(() => Visibility(
-                    visible: int.parse(controller.list[105], radix: 16)
-                                .toRadixString(2)
-                                .padLeft(4, "0")
-                                .toString()[1] ==
-                            "1"
-                        ? true
-                        : false,
-                    child: _buildProgress(
-                      axis: Axis.vertical,
-                      text: controller.value.value,
-                      function: controller.changeFilter,
-                      done: controller.doneCount.value,
-                      inprogress: controller.inProgressCount.value,
-                      notYetStarted: controller.notDoneCount.value,
-                    ),
-                  )),
 
-              const SizedBox(height: kSpacing * 1),
-
-              Obx(
-                () => Visibility(
-                  visible: controller.workStartHour.value != "N/A" &&
-                          int.parse(controller.list[105], radix: 16)
-                                  .toRadixString(2)
-                                  .padLeft(4, "0")
-                                  .toString()[1] ==
-                              "1"
-                      ? true
-                      : false,
-                  child: ElevatedButton.icon(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.green)),
-                    onPressed: () {},
-                    icon: const Icon(
-                      // <-- Icon
-                      Icons.pending_actions_rounded,
-                      size: 24.0,
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Obx(() => Visibility(
+                          visible: int.parse(controller.list[105], radix: 16)
+                                      .toRadixString(2)
+                                      .padLeft(4, "0")
+                                      .toString()[1] ==
+                                  "1"
+                              ? true
+                              : false,
+                          child: _buildProgress(
+                            axis: Axis.vertical,
+                            text: controller.value.value,
+                            function: controller.changeFilter,
+                            done: controller.doneCount.value,
+                            inprogress: controller.inProgressCount.value,
+                            notYetStarted: controller.notDoneCount.value,
+                          ),
+                        )),
+                    const SizedBox(height: kSpacing * 1),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.workStartHour.value != "N/A" &&
+                                int.parse(controller.list[105], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(4, "0")
+                                        .toString()[1] ==
+                                    "1"
+                            ? true
+                            : false,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green)),
+                            onPressed: () {},
+                            icon: const Icon(
+                              // <-- Icon
+                              Icons.pending_actions_rounded,
+                              size: 24.0,
+                            ),
+                            label: Text('You Started at '.tr +
+                                controller.workStartHour.value), // <-- Text
+                          ),
+                        ),
+                      ),
                     ),
-                    label: Text('You Started at '.tr +
-                        controller.workStartHour.value), // <-- Text
-                  ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.workStartHour.value != "N/A" &&
+                                int.parse(controller.list[105], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(4, "0")
+                                        .toString()[1] ==
+                                    "1"
+                            ? true
+                            : false,
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green)),
+                            onPressed: () {},
+                            icon: const Icon(
+                              // <-- Icon
+                              Icons.pending_actions_rounded,
+                              size: 24.0,
+                            ),
+                            label: Text(
+                                "${"You've done".tr} ${controller.totWorkHour.value} ${"hours today".tr}"), // <-- Text
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 250,
+                      margin: const EdgeInsets.only(
+                          top: kSpacing, left: kSpacing, right: kSpacing),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kBorderRadius),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: kSpacing,
+                                top: kSpacing,
+                                bottom: 5,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "${"Messages".tr}: ".tr,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Obx(
+                              () => Visibility(
+                                visible:
+                                    controller.broadcastMessageAvailable.value,
+                                replacement: const Divider(),
+                                child: Expanded(
+                                  child: ListView.builder(
+                                      //shrinkWrap: true,
+                                      itemCount: controller
+                                          .broadcastMessage.records!.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing),
+                                          leading: const Icon(Symbols
+                                              .mark_email_unread_rounded),
+                                          title: Text(
+                                            controller.broadcastMessage
+                                                    .records![index].title ??
+                                                'N/A',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: kFontColorPallets[0],
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            "${"From".tr} ${controller.broadcastMessage.records![index].aDUser3ID != null ? controller.broadcastMessage.records![index].aDUser3ID!.identifier : controller.broadcastMessage.records![index].aDUserID!.identifier} ${'on'.tr} ${controller.broadcastMessage.records![index].created!.substring(0, 10)}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: kFontColorPallets[2],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            controller
+                                                .messageContentFieldController
+                                                .text = controller
+                                                    .broadcastMessage
+                                                    .records![index]
+                                                    .broadcastMessage ??
+                                                'N/A';
+                                            Get.defaultDialog(
+                                              title: 'Message'.tr,
+                                              textConfirm: 'Mark as Read'.tr,
+                                              onConfirm: () {
+                                                controller.markAsRead(index);
+                                              },
+                                              content: Column(
+                                                children: [
+                                                  TextField(
+                                                    minLines: 1,
+                                                    maxLines: 10,
+                                                    decoration: InputDecoration(
+                                                      //labelText: '',
+                                                      labelStyle:
+                                                          const TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                      //hintText: 'Description..'.tr,
+                                                      filled: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        borderSide:
+                                                            BorderSide.none,
+                                                      ),
+                                                      isDense: true,
+                                                      fillColor:
+                                                          Theme.of(context)
+                                                              .cardColor,
+                                                    ),
+                                                    readOnly: true,
+                                                    controller: controller
+                                                        .messageContentFieldController,
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          trailing: controller.broadcastMessage
+                                                      .records![index].url !=
+                                                  null
+                                              ? IconButton(
+                                                  onPressed: () async {
+                                                    final Uri launchUri =
+                                                        Uri.parse(controller
+                                                            .broadcastMessage
+                                                            .records![index]
+                                                            .url!);
+                                                    await launchUrl(launchUri);
+                                                  },
+                                                  icon: const Icon(
+                                                    Symbols.link,
+                                                  ),
+                                                )
+                                              : const Icon(
+                                                  Icons.check,
+                                                  color: Colors.grey,
+                                                ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.employeePresenceAvailable.value,
+                        child: Container(
+                          height: 180,
+                          margin: const EdgeInsets.only(
+                              top: kSpacing, left: kSpacing, right: kSpacing),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(kBorderRadius),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: kSpacing,
+                                    top: kSpacing,
+                                    bottom: 5,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Attendances".tr}: ".tr,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 10,
+                                          top: kSpacing,
+                                          bottom: 5,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Symbols.no_accounts_rounded,
+                                                  size: 25,
+                                                  color: Colors.redAccent,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                SizedBox(
+                                                  width: 180,
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/HumanResourceAttendance',
+                                                            arguments: {
+                                                              "presenceValue":
+                                                                  "ABSENT".tr
+                                                            });
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                              '${controller.employeeNonAttendances} Assenze'),
+                                                        ],
+                                                      )),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Symbols.person_alert_rounded,
+                                                  size: 25,
+                                                  color: Colors.yellowAccent,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Get.offNamed(
+                                                          '/HumanResourceAttendance',
+                                                          arguments: {
+                                                            "presenceValue":
+                                                                "ATTENDED".tr
+                                                          });
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                            '${controller.employeeLatenesses} Ritardi/Anomalie'),
+                                                      ],
+                                                    )),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),
@@ -542,51 +834,343 @@ class DashboardScreen extends GetView<DashboardController> {
                   counter: controller.notificationCounter.value)),
               //_buildProfile(data: controller.getProfil(), counter: 0),
               const SizedBox(height: kSpacing),
-              Obx(() => Visibility(
-                    visible: int.parse(controller.list[105], radix: 16)
-                                .toRadixString(2)
-                                .padLeft(4, "0")
-                                .toString()[1] ==
-                            "1"
-                        ? true
-                        : false,
-                    child: _buildProgress(
-                      axis: Axis.vertical,
-                      text: controller.value.value,
-                      function: controller.changeFilter,
-                      done: controller.doneCount.value,
-                      inprogress: controller.inProgressCount.value,
-                      notYetStarted: controller.notDoneCount.value,
-                    ),
-                  )),
 
-              const SizedBox(height: kSpacing * 1),
-
-              Obx(
-                () => Visibility(
-                  visible: controller.workStartHour.value != "N/A" &&
-                          int.parse(controller.list[105], radix: 16)
-                                  .toRadixString(2)
-                                  .padLeft(4, "0")
-                                  .toString()[1] ==
-                              "1"
-                      ? true
-                      : false,
-                  child: ElevatedButton.icon(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all<Color>(Colors.green)),
-                    onPressed: () {},
-                    icon: const Icon(
-                      // <-- Icon
-                      Icons.pending_actions_rounded,
-                      size: 24.0,
+              Expanded(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    Obx(() => Visibility(
+                          visible: int.parse(controller.list[105], radix: 16)
+                                      .toRadixString(2)
+                                      .padLeft(4, "0")
+                                      .toString()[1] ==
+                                  "1"
+                              ? true
+                              : false,
+                          child: _buildProgress(
+                            axis: Axis.vertical,
+                            text: controller.value.value,
+                            function: controller.changeFilter,
+                            done: controller.doneCount.value,
+                            inprogress: controller.inProgressCount.value,
+                            notYetStarted: controller.notDoneCount.value,
+                          ),
+                        )),
+                    const SizedBox(height: kSpacing * 1),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.workStartHour.value != "N/A" &&
+                                int.parse(controller.list[105], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(4, "0")
+                                        .toString()[1] ==
+                                    "1"
+                            ? true
+                            : false,
+                        child: Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green)),
+                            onPressed: () {},
+                            icon: const Icon(
+                              // <-- Icon
+                              Icons.pending_actions_rounded,
+                              size: 24.0,
+                            ),
+                            label: Text('You Started at '.tr +
+                                controller.workStartHour.value), // <-- Text
+                          ),
+                        ),
+                      ),
                     ),
-                    label: Text('You Started at '.tr +
-                        controller.workStartHour.value), // <-- Text
-                  ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.workStartHour.value != "N/A" &&
+                                int.parse(controller.list[105], radix: 16)
+                                        .toRadixString(2)
+                                        .padLeft(4, "0")
+                                        .toString()[1] ==
+                                    "1"
+                            ? true
+                            : false,
+                        child: Container(
+                          padding: const EdgeInsets.only(top: 10),
+                          margin: const EdgeInsets.symmetric(horizontal: 30),
+                          child: ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:
+                                    MaterialStateProperty.all<Color>(
+                                        Colors.green)),
+                            onPressed: () {},
+                            icon: const Icon(
+                              // <-- Icon
+                              Icons.pending_actions_rounded,
+                              size: 24.0,
+                            ),
+                            label: Text(
+                                "${"You've done".tr} ${controller.totWorkHour.value} ${"hours today".tr}"), // <-- Text
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      height: 250,
+                      margin: const EdgeInsets.only(
+                          top: kSpacing, left: kSpacing, right: kSpacing),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kBorderRadius),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: kSpacing,
+                                top: kSpacing,
+                                bottom: 5,
+                              ),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "${"Messages".tr}: ".tr,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Obx(
+                              () => Visibility(
+                                visible:
+                                    controller.broadcastMessageAvailable.value,
+                                replacement: const Divider(),
+                                child: Expanded(
+                                  child: ListView.builder(
+                                      //shrinkWrap: true,
+                                      itemCount: controller
+                                          .broadcastMessage.records!.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return ListTile(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  horizontal: kSpacing),
+                                          leading: const Icon(Symbols
+                                              .mark_email_unread_rounded),
+                                          title: Text(
+                                            controller.broadcastMessage
+                                                    .records![index].title ??
+                                                'N/A',
+                                            style: TextStyle(
+                                              fontSize: 13,
+                                              color: kFontColorPallets[0],
+                                            ),
+                                          ),
+                                          subtitle: Text(
+                                            "${"From".tr} ${controller.broadcastMessage.records![index].aDUser3ID != null ? controller.broadcastMessage.records![index].aDUser3ID!.identifier : controller.broadcastMessage.records![index].aDUserID!.identifier} ${'on'.tr} ${controller.broadcastMessage.records![index].created!.substring(0, 10)}",
+                                            style: TextStyle(
+                                              fontSize: 11,
+                                              color: kFontColorPallets[2],
+                                            ),
+                                          ),
+                                          onTap: () {
+                                            controller
+                                                .messageContentFieldController
+                                                .text = controller
+                                                    .broadcastMessage
+                                                    .records![index]
+                                                    .broadcastMessage ??
+                                                'N/A';
+                                            Get.defaultDialog(
+                                              title: 'Message'.tr,
+                                              textConfirm: 'Mark as Read'.tr,
+                                              onConfirm: () {
+                                                controller.markAsRead(index);
+                                              },
+                                              content: Column(
+                                                children: [
+                                                  TextField(
+                                                    minLines: 1,
+                                                    maxLines: 10,
+                                                    decoration: InputDecoration(
+                                                      //labelText: '',
+                                                      labelStyle:
+                                                          const TextStyle(
+                                                              color:
+                                                                  Colors.white),
+                                                      //hintText: 'Description..'.tr,
+                                                      filled: true,
+                                                      border:
+                                                          OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                        borderSide:
+                                                            BorderSide.none,
+                                                      ),
+                                                      isDense: true,
+                                                      fillColor:
+                                                          Theme.of(context)
+                                                              .cardColor,
+                                                    ),
+                                                    readOnly: true,
+                                                    controller: controller
+                                                        .messageContentFieldController,
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          },
+                                          trailing: controller.broadcastMessage
+                                                      .records![index].url !=
+                                                  null
+                                              ? IconButton(
+                                                  onPressed: () async {
+                                                    final Uri launchUri =
+                                                        Uri.parse(controller
+                                                            .broadcastMessage
+                                                            .records![index]
+                                                            .url!);
+                                                    await launchUrl(launchUri);
+                                                  },
+                                                  icon: const Icon(
+                                                    Symbols.link,
+                                                  ),
+                                                )
+                                              : const Icon(
+                                                  Icons.check,
+                                                  color: Colors.grey,
+                                                ),
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(10),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    Obx(
+                      () => Visibility(
+                        visible: controller.employeePresenceAvailable.value,
+                        child: Container(
+                          height: 180,
+                          margin: const EdgeInsets.only(
+                              top: kSpacing, left: kSpacing, right: kSpacing),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(kBorderRadius),
+                            ),
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                    left: kSpacing,
+                                    top: kSpacing,
+                                    bottom: 5,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Text(
+                                            "${"Attendances".tr}: ".tr,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500),
+                                          ),
+                                        ],
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 10,
+                                          top: kSpacing,
+                                          bottom: 5,
+                                        ),
+                                        child: Column(
+                                          children: [
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Symbols.no_accounts_rounded,
+                                                  size: 25,
+                                                  color: Colors.redAccent,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                SizedBox(
+                                                  width: 180,
+                                                  child: ElevatedButton(
+                                                      onPressed: () {
+                                                        Get.offNamed(
+                                                            '/HumanResourceAttendance',
+                                                            arguments: {
+                                                              "presenceValue":
+                                                                  "ABSENT".tr
+                                                            });
+                                                      },
+                                                      child: Row(
+                                                        children: [
+                                                          Text(
+                                                              '${controller.employeeNonAttendances} Assenze'),
+                                                        ],
+                                                      )),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 20),
+                                            Row(
+                                              children: [
+                                                const Icon(
+                                                  Symbols.person_alert_rounded,
+                                                  size: 25,
+                                                  color: Colors.yellowAccent,
+                                                ),
+                                                const SizedBox(
+                                                  width: 10,
+                                                ),
+                                                ElevatedButton(
+                                                    onPressed: () {
+                                                      Get.offNamed(
+                                                          '/HumanResourceAttendance',
+                                                          arguments: {
+                                                            "presenceValue":
+                                                                "ATTENDED".tr
+                                                          });
+                                                    },
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                            '${controller.employeeLatenesses} Ritardi/Anomalie'),
+                                                      ],
+                                                    )),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
+
               //  const SizedBox(height: kSpacing),
               //  _buildTeamMember(data: controller.getMember()),
               //  const SizedBox(height: kSpacing),

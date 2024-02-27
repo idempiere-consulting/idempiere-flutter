@@ -1305,7 +1305,14 @@ class LocaleString extends Translations {
           'Hours': 'Ore',
           'Hour': 'Ora',
           'Ticket Type': 'Tipo Ticket',
-          'Add Ticket': 'Crea Ticket'
+          'Add Ticket': 'Crea Ticket',
+          'Exam Analysis': 'Analisi test',
+          'Participants Score': 'Punteggio Partecipanti',
+          'Score Review': 'Revisione Punteggio',
+          'Answer': 'Risposta',
+          'Points': 'Punti',
+          'Exam Correction': 'Correzione Esame',
+          'Open Answers left to correct': 'Risposte Aperte da correggere',
         },
       };
 }

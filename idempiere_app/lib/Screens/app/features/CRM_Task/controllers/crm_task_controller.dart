@@ -155,7 +155,7 @@ class CRMTaskController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/JP_ToDo?\$filter=AD_Client_ID eq ${GetStorage().read("clientid")}$userFilter$statusFilter$businessPartnerFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= JP_ToDo_ScheduledStartDate desc');
+        '$protocol://$ip/api/v1/models/JP_ToDo?\$filter= JP_ToDo_Type eq \'S\' and AD_Client_ID eq ${GetStorage().read("clientid")}$userFilter$statusFilter$businessPartnerFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}&\$orderby= JP_ToDo_ScheduledStartDate desc');
     var response = await http.get(
       url,
       headers: <String, String>{
