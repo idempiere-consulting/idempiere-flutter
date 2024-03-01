@@ -1563,11 +1563,11 @@ CRUD=1111=F
  14 Provvigione		    : 4
  15 Partite Aperte      : F3 
  16 Listino Prezzi	    : F3
- 17 Ticket**************: 1 *** 2 Ticket 
+ 17 Ticket**************: 1 *** 2 Scrivania 
  18 Ticketnew/Request	: F3
  19 TaskTodo		    : F3
  20 Ore			        : F3
- 21 ..
+ 21 Gestione Documenti  : F3
  22 Contratti CRM       : F3 *** 1 CRM
  23 Manut. Tecnico******: 1 *** 3 Man.Tecnico
  24 Cal. Tecnico        : F3

@@ -203,7 +203,7 @@ class _TrainingCourseCourseListCorrectionState
                                     Expanded(
                                       child: Text(
                                         quizLines.records![index].name ?? 'N/A',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontWeight: FontWeight.bold),
                                       ),
                                     ),

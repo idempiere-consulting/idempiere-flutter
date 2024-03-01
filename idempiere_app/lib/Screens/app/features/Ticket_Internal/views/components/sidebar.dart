@@ -38,6 +38,17 @@ class _Sidebar extends StatelessWidget {
                     icon: EvaIcons.personOutline,
                     label: "Ticket",
                     visible: true),
+                SelectionButtonData(
+                    activeIcon: Icons.person_add,
+                    icon: EvaIcons.personOutline,
+                    label: "Document Management".tr,
+                    visible: int.parse(list[20], radix: 16)
+                                .toRadixString(2)
+                                .padLeft(4, "0")
+                                .toString()[1] ==
+                            "1"
+                        ? true
+                        : false),
               ],
               onSelected: (index, value) {
                 //log("index : $index | label : ${value.label}");
@@ -48,6 +59,9 @@ class _Sidebar extends StatelessWidget {
                     break;
                   case 1:
                     Get.offNamed('/TicketInternalTicket');
+                    break;
+                  case 2:
+                    Get.offNamed('/DeskDocAttachments');
                     break;
                   default:
                 }

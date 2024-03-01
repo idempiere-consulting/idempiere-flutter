@@ -1313,6 +1313,16 @@ class LocaleString extends Translations {
           'Points': 'Punti',
           'Exam Correction': 'Correzione Esame',
           'Open Answers left to correct': 'Risposte Aperte da correggere',
+          'Document Management': 'Gestione Documenti',
+          'MP_Maintain': 'Impianto',
+          'MP_OT': 'Ordine di Lavoro',
+          'C_Contract': 'Contratto',
+          'C_Bpartner': 'Business Partner',
+          'M_Product': 'Prodotto',
+          'C_Project': 'Progetto',
+          'C_Order': 'Ordine',
+          'S_Resource': 'Risorsa',
+          'Attachments': 'Allegati'
         },
       };
 }

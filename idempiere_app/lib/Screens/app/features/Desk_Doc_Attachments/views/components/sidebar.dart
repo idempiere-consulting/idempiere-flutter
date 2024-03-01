@@ -26,7 +26,7 @@ class _Sidebar extends StatelessWidget {
             ),
             const Divider(thickness: 1),
             SelectionButton(
-              initialSelected: 1,
+              initialSelected: 2,
               data: [
                 SelectionButtonData(
                   activeIcon: EvaIcons.arrowBack,

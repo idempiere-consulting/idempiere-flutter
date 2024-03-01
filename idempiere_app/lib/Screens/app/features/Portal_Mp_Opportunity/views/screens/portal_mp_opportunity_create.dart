@@ -41,7 +41,7 @@ class _PortalMPCreateOpportunityState extends State<PortalMPCreateOpportunity> {
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "C_SalesStage_ID": {"id": int.parse(dropdownValue)},
       "SalesRep_ID": {"id": Get.arguments["salesRepId"]},
-      "M_Product_ID": {"id": productId},
+      //"M_Product_ID": {"id": productId},
       "OpportunityAmt": double.parse(amtFieldController.text),
       "C_BPartner_ID": {"id": Get.arguments["businessPartnerId"]},
       "Description": descriptionFieldController.text,
@@ -54,6 +54,12 @@ class _PortalMPCreateOpportunityState extends State<PortalMPCreateOpportunity> {
     if (campaignId != 0) {
       msg.addAll({
         "C_Campaign_ID": {"id": campaignId},
+      });
+    }
+
+    if (productId != 0) {
+      msg.addAll({
+        "M_Product_ID": {"id": productId},
       });
     }
     final protocol = GetStorage().read('protocol');

@@ -15,6 +15,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/cr
 import 'package:idempiere_app/Screens/app/features/CRM_POS/views/screens/crm_pos_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList/views/screens/crm_sales_order_creation_bp_pricelist_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList_Edit/views/screens/crm_sales_order_creation_bp_priceList_edit_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Desk_Doc_Attachments/views/screens/desk_doc_attachments_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Resource/views/screens/employee_resource_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Employee_Resource_Calendar_Slot/views/screens/employee_resource_calendar_slot_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Attendance/views/screens/humanresource_attendance_screen.dart';
@@ -373,6 +374,11 @@ class MyApp extends StatelessWidget {
           name: '/TicketInternalTicket',
           page: () => const TicketInternalTicketScreen(),
           binding: TicketInternalTicketBinding(),
+        ),
+        GetPage(
+          name: '/DeskDocAttachments',
+          page: () => const DeskDocAttachmentsScreen(),
+          binding: DeskDocAttachmentsBinding(),
         ),
         GetPage(
           name: '/Ticket',
