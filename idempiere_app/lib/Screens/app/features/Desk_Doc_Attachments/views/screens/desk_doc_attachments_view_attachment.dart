@@ -262,6 +262,88 @@ class _DeskDocAttachmentsViewAttachmentScreenState
                 const SizedBox(
                   height: 10,
                 ),
+                ListView.builder(
+                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: attachments.attachments!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kBorderRadius),
+                        ),
+                        child: ListTile(
+                          onTap: () async {
+                            final ip = GetStorage().read('ip');
+                            String authorization =
+                                'Bearer ${GetStorage().read('token')}';
+                            final protocol = GetStorage().read('protocol');
+                            var url = Uri.parse(
+                                '$protocol://$ip/api/v1/models/${args['tableName']}/${args['recordId']}/attachments/${attachments.attachments![index].name!}');
+                            var response = await http.get(
+                              url,
+                              headers: <String, String>{
+                                'Content-Type': 'application/json',
+                                'Authorization': authorization,
+                              },
+                            );
+                            if (response.statusCode == 200) {
+                              if (attachments
+                                      .attachments![index].contentType! ==
+                                  "application/pdf") {
+                                final bytes = response.bodyBytes;
+
+                                if (Platform.isAndroid) {
+                                  await Printing.layoutPdf(
+                                      onLayout: (PdfPageFormat format) async =>
+                                          bytes);
+                                } else {
+                                  final dir =
+                                      await getApplicationDocumentsDirectory();
+                                  final file = File(
+                                      '${dir.path}/${attachments.attachments![index].name!}');
+                                  await file.writeAsBytes(bytes, flush: true);
+                                  await launchUrl(
+                                      Uri.parse(
+                                          'file://${'${dir.path}/${attachments.attachments![index].name!}'}'),
+                                      mode: LaunchMode
+                                          .externalNonBrowserApplication);
+                                }
+                              }
+
+                              if (attachments
+                                      .attachments![index].contentType! ==
+                                  "image/jpeg") {
+                                var image64 = base64.encode(response.bodyBytes);
+                                Get.to(const DeskDocAttachmentsImage(),
+                                    arguments: {"base64": image64});
+                              }
+                            }
+                          },
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          title: Text(attachments.attachments![index].name!),
+                          subtitle: Text(
+                            attachments.attachments![index].contentType!,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: kFontColorPallets[2],
+                            ),
+                          ),
+                          leading: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Symbols.delete,
+                                color: Colors.red,
+                              )),
+                          /* trailing: IconButton(
+                              onPressed: () {}, icon: Icon(Symbols.image)), */
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      );
+                    })
               ],
             );
           },
@@ -271,6 +353,88 @@ class _DeskDocAttachmentsViewAttachmentScreenState
                 const SizedBox(
                   height: 10,
                 ),
+                ListView.builder(
+                    primary: false,
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    itemCount: attachments.attachments!.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kBorderRadius),
+                        ),
+                        child: ListTile(
+                          onTap: () async {
+                            final ip = GetStorage().read('ip');
+                            String authorization =
+                                'Bearer ${GetStorage().read('token')}';
+                            final protocol = GetStorage().read('protocol');
+                            var url = Uri.parse(
+                                '$protocol://$ip/api/v1/models/${args['tableName']}/${args['recordId']}/attachments/${attachments.attachments![index].name!}');
+                            var response = await http.get(
+                              url,
+                              headers: <String, String>{
+                                'Content-Type': 'application/json',
+                                'Authorization': authorization,
+                              },
+                            );
+                            if (response.statusCode == 200) {
+                              if (attachments
+                                      .attachments![index].contentType! ==
+                                  "application/pdf") {
+                                final bytes = response.bodyBytes;
+
+                                if (Platform.isAndroid) {
+                                  await Printing.layoutPdf(
+                                      onLayout: (PdfPageFormat format) async =>
+                                          bytes);
+                                } else {
+                                  final dir =
+                                      await getApplicationDocumentsDirectory();
+                                  final file = File(
+                                      '${dir.path}/${attachments.attachments![index].name!}');
+                                  await file.writeAsBytes(bytes, flush: true);
+                                  await launchUrl(
+                                      Uri.parse(
+                                          'file://${'${dir.path}/${attachments.attachments![index].name!}'}'),
+                                      mode: LaunchMode
+                                          .externalNonBrowserApplication);
+                                }
+                              }
+
+                              if (attachments
+                                      .attachments![index].contentType! ==
+                                  "image/jpeg") {
+                                var image64 = base64.encode(response.bodyBytes);
+                                Get.to(const DeskDocAttachmentsImage(),
+                                    arguments: {"base64": image64});
+                              }
+                            }
+                          },
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: kSpacing),
+                          title: Text(attachments.attachments![index].name!),
+                          subtitle: Text(
+                            attachments.attachments![index].contentType!,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: kFontColorPallets[2],
+                            ),
+                          ),
+                          leading: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Symbols.delete,
+                                color: Colors.red,
+                              )),
+                          /* trailing: IconButton(
+                              onPressed: () {}, icon: Icon(Symbols.image)), */
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                      );
+                    })
               ],
             );
           },

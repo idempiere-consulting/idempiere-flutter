@@ -33,6 +33,74 @@ class DeskDocAttachmentsController extends GetxController {
   late List<Types> dropDownList;
   var dropdownValue = "1".obs;
 
+  //DESKTOP VIEW VARIABLES
+
+  int selectedHeaderId = 0;
+  int selectedHeaderIndex = 0;
+
+  DocAttachmentsJSON _trxDesktop = DocAttachmentsJSON(records: []);
+
+  AttachmentJSON _attachmentsDesktop = AttachmentJSON(attachments: []);
+
+  ContractLineJSON _trxDesktopLines = ContractLineJSON(records: []);
+
+  var desktopDocNosearchFieldController = TextEditingController();
+
+  TextEditingController desktopDocNoFieldController = TextEditingController();
+  TextEditingController desktopDocTypeFieldController = TextEditingController();
+  TextEditingController desktopBusinessPartnerFieldController =
+      TextEditingController();
+  TextEditingController desktopNameFieldController = TextEditingController();
+  TextEditingController desktopDescriptionFieldController =
+      TextEditingController();
+  TextEditingController desktopDateFromFieldController =
+      TextEditingController();
+  TextEditingController desktopDateToFieldController = TextEditingController();
+  TextEditingController desktopFrequencyFieldController =
+      TextEditingController();
+
+  TextEditingController desktopParticipantNameFieldController =
+      TextEditingController();
+  TextEditingController desktopParticipantSurnameFieldController =
+      TextEditingController();
+  TextEditingController desktopParticipantBirthPlaceFieldController =
+      TextEditingController();
+  TextEditingController desktopParticipantBirthDateFieldController =
+      TextEditingController();
+  TextEditingController desktopParticipantEmailFieldController =
+      TextEditingController();
+  TextEditingController desktopParticipantRoleFieldController =
+      TextEditingController();
+  TextEditingController desktopParticipantNationalIDNumberFieldController =
+      TextEditingController();
+  var desktopIsConfirmedCheckBox = false.obs;
+
+  var desktopSelectedMaintainID = 0.obs;
+
+  List<DataRow> headerRows = [];
+
+  List<DataRow> lineRows = [];
+  // ignore: prefer_final_fields
+  // ignore: prefer_final_fields
+  var _desktopDataAvailable = false.obs;
+
+  var desktopPagesCount = 1.obs;
+  var desktopPagesTot = 1.obs;
+  var desktopLinePagesCount = 1.obs;
+  var desktopLinePagesTot = 1.obs;
+
+  var showHeader = true.obs;
+  var headerDataAvailable = false.obs;
+  var participantsDataAvailable = false.obs;
+
+  var showLines = false.obs;
+  var linesDataAvailable = false.obs;
+
+  var selectedDocumentId = 0.obs;
+  var selectedDocumentTable = "".obs;
+
+  //END DESKTOP VIEW VARIABLES
+
   final json = {
     "types": [
       {"id": "1", "name": "Doc N°"},
@@ -58,6 +126,7 @@ class DeskDocAttachmentsController extends GetxController {
     docTypeId.value = GetStorage().read('DocAttachments_docTypeId') ?? "0";
 
     getDocs();
+    getDocsDesktop();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -209,6 +278,209 @@ class DeskDocAttachmentsController extends GetxController {
       }
     }
   }
+
+  // DESKTOP FUNCTIONS
+
+  Future<void> getDocsDesktop() async {
+    _desktopDataAvailable.value = false;
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and MP_Maintain_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
+    // ignore: unused_local_variable
+    var searchFilter = "";
+    if (desktopDocNosearchFieldController.text != "") {
+      searchFilter =
+          " and contains(DocumentNo,'${desktopDocNosearchFieldController.text}')";
+    }
+    //var userFilters = [];
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_docdms_v?\$filter=  AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter&\$skip=${(desktopPagesCount.value - 1) * 100}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        //C_BPartner_ID eq $businessPartnerId and
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      _trxDesktop = DocAttachmentsJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      desktopPagesTot.value = _trxDesktop.pagecount!;
+
+      headerRows = [];
+
+      for (var i = 0; i < _trxDesktop.records!.length; i++) {
+        headerRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(Text(_trxDesktop.records![i].name ?? ''), onTap: () {}),
+          DataCell(Text(_trxDesktop.records![i].documentNo ?? '??'), onTap: () {
+            selectedDocumentId.value = _trxDesktop.records![i].recordID!;
+            selectedDocumentTable.value = _trxDesktop.records![i].name!;
+            getAttachmentsDesktop();
+          }),
+          DataCell(Text(_trxDesktop.records![i].cBPartnerID?.identifier ?? ''),
+              onTap: () {}),
+        ]));
+      }
+      //print(trx.records!.length);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _desktopDataAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getAttachmentsDesktop() async {
+    participantsDataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/$selectedDocumentTable/$selectedDocumentId/attachments');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        //C_BPartner_ID eq $businessPartnerId and
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      _attachmentsDesktop =
+          AttachmentJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      participantsDataAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  desktopAttachFile() async {
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.any, withData: true);
+
+    if (result != null) {
+      //File file = File(result.files.first.bytes!);
+      desktopSendAttachedFile(result);
+      //print(image64);
+      //print(imageName);
+    }
+  }
+
+  desktopSendAttachedFile(FilePickerResult? result) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    final msg = jsonEncode({
+      "name": result!.files.first.name,
+      "data": base64.encode(result.files.first.bytes!)
+    });
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/$selectedDocumentTable/$selectedDocumentId/attachments');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      getDocs();
+    } else {
+      print(response.body);
+    }
+  }
+
+  desktopDeleteAttachedFile(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/$selectedDocumentTable/$selectedDocumentId/attachments/${_attachmentsDesktop.attachments![index].name}');
+
+    var response = await http.delete(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print(response.body);
+      getAttachmentsDesktop();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getContractLineDesktop() async {
+    linesDataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_ContractLine?\$filter= C_Contract_ID eq $selectedHeaderId and  AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(desktopLinePagesCount.value - 1) * 100}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trxDesktopLines = ContractLineJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      desktopLinePagesTot.value = _trxDesktopLines.pagecount!;
+
+      lineRows = [];
+
+      for (var i = 0; i < _trxDesktopLines.records!.length; i++) {
+        lineRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(
+            Text(_trxDesktopLines.records![i].name ?? '??'),
+          ),
+          DataCell(Text(
+              _trxDesktopLines.records![i].durationUnit?.identifier ?? '??')),
+          DataCell(
+            Text((_trxDesktopLines.records![i].qty ?? '??').toString()),
+          ),
+          DataCell(
+            Text((_trxDesktopLines.records![i].amount ?? '??').toString()),
+          ),
+        ]));
+      }
+
+      linesDataAvailable.value = true;
+    } else {
+      //print(response.body);
+    }
+  }
+
+  // END DESKTOP FUNCTIONS
 
   /* void openDrawer() {
     if (scaffoldKey.currentState != null) {

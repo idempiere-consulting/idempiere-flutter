@@ -1322,7 +1322,8 @@ class LocaleString extends Translations {
           'C_Project': 'Progetto',
           'C_Order': 'Ordine',
           'S_Resource': 'Risorsa',
-          'Attachments': 'Allegati'
+          'Attachments': 'Allegati',
+          'Window': 'Finestra',
         },
       };
 }
