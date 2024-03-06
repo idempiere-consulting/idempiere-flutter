@@ -422,7 +422,7 @@ class TicketInternalTicketController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "Ticket",
+      projectName: "Desk".tr,
       releaseTime: DateTime.now(),
     );
   }

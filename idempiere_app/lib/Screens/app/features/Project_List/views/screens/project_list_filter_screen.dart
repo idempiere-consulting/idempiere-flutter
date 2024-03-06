@@ -10,8 +10,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact
 import 'package:idempiere_app/Screens/app/features/CRM_Contract/views/screens/crm_contract_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:http/http.dart' as http;
-import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
-import 'package:idempiere_app/Screens/app/features/Desk_Doc_Attachments/views/screens/desk_doc_attachments_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Project_List/views/screens/project_list_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
@@ -20,81 +19,64 @@ import 'package:path_provider/path_provider.dart';
 
 //screens
 
-class DeskDocAttachmentsFilter extends StatefulWidget {
-  const DeskDocAttachmentsFilter({Key? key}) : super(key: key);
+class ProjectListFilter extends StatefulWidget {
+  const ProjectListFilter({Key? key}) : super(key: key);
 
   @override
-  State<DeskDocAttachmentsFilter> createState() =>
-      _DeskDocAttachmentsFilterState();
+  State<ProjectListFilter> createState() => _ProjectListFilterState();
 }
 
-class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
+class _ProjectListFilterState extends State<ProjectListFilter> {
   applyFilters() {
     if (businessPartnerId > 0) {
-      Get.find<DeskDocAttachmentsController>().businessPartnerFilter =
+      Get.find<ProjectListController>().businessPartnerFilter =
           " and C_BPartner_ID eq $businessPartnerId";
     } else {
-      Get.find<DeskDocAttachmentsController>().businessPartnerFilter = "";
+      Get.find<ProjectListController>().businessPartnerFilter = "";
     }
 
     if (docNoFieldController.text != "") {
-      Get.find<DeskDocAttachmentsController>().docNoFilter =
+      Get.find<ProjectListController>().docNoFilter =
           " and contains(DocumentNo,'${docNoFieldController.text}')";
     } else {
-      Get.find<DeskDocAttachmentsController>().docNoFilter = "";
+      Get.find<ProjectListController>().docNoFilter = "";
     }
 
-    if (docTypeId != "0") {
-      Get.find<DeskDocAttachmentsController>().docTypeFilter =
-          " and Name eq '$docTypeId'";
-    } else {
-      Get.find<DeskDocAttachmentsController>().docTypeFilter = "";
-    }
-
-    Get.find<DeskDocAttachmentsController>().businessPartnerId.value =
+    Get.find<ProjectListController>().businessPartnerId.value =
         businessPartnerId;
 
     if (businessPartnerId > 0) {
-      Get.find<DeskDocAttachmentsController>().businessPartnerName =
+      Get.find<ProjectListController>().businessPartnerName =
           bpSearchFieldController.text;
     } else {
-      Get.find<DeskDocAttachmentsController>().businessPartnerName = "";
+      Get.find<ProjectListController>().businessPartnerName = "";
     }
-    Get.find<DeskDocAttachmentsController>().docNoValue.value =
+    Get.find<ProjectListController>().docNoValue.value =
         docNoFieldController.text;
-    Get.find<DeskDocAttachmentsController>().docTypeId.value = docTypeId;
 
-    Get.find<DeskDocAttachmentsController>().getDocs();
+    Get.find<ProjectListController>().getProjects();
     Get.back();
   }
 
   saveFilters() {
     if (businessPartnerId > 0) {
-      GetStorage().write('DocAttachments_businessPartnerFilter',
+      GetStorage().write('ProjectList_businessPartnerFilter',
           " and C_BPartner_ID eq $businessPartnerId");
     } else {
-      GetStorage().write('DocAttachments_businessPartnerFilter', "");
+      GetStorage().write('ProjectList_businessPartnerFilter', "");
     }
 
     if (docNoFieldController.text != "") {
-      GetStorage().write('DocAttachments_docNoFilter',
+      GetStorage().write('ProjectList_docNoFilter',
           " and contains(DocumentNo,'${docNoFieldController.text}')");
     } else {
-      GetStorage().write('DocAttachments_docNoFilter', "");
+      GetStorage().write('ProjectList_docNoFilter', "");
     }
 
-    if (docTypeId != "0") {
-      GetStorage()
-          .write('DocAttachments_docTypeFilter', " and Name eq '$docTypeId'");
-    } else {
-      GetStorage().write('DocAttachments_docTypeFilter', "");
-    }
-
-    GetStorage().write('DocAttachments_businessPartnerId', businessPartnerId);
-    GetStorage().write(
-        'DocAttachments_businessPartnerName', bpSearchFieldController.text);
-    GetStorage().write('DocAttachments_docNo', docNoFieldController.text);
-    GetStorage().write('DocAttachments_docTypeId', docTypeId);
+    GetStorage().write('ProjectList_businessPartnerId', businessPartnerId);
+    GetStorage()
+        .write('ProjectList_businessPartnerName', bpSearchFieldController.text);
+    GetStorage().write('ProjectList_docNo', docNoFieldController.text);
   }
 
   Future<List<BPRecords>> getAllBPs() async {
@@ -146,27 +128,11 @@ class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
     //print(json.);
   }
 
-  final json = {
-    "types": [
-      {"id": "0", "name": "All".tr},
-      {"id": "MP_Maintain", "name": "MP_Maintain".tr},
-      {"id": "MP_OT", "name": "MP_OT".tr},
-      {"id": "C_Order", "name": "C_Order".tr},
-    ]
-  };
-
-  List<Types>? getTypes() {
-    var dJson = TypeJson.fromJson(json);
-
-    return dJson.types;
-  }
-
   dynamic args = Get.arguments;
 
   int businessPartnerId = 0;
   late TextEditingController bpSearchFieldController;
   late TextEditingController docNoFieldController;
-  String docTypeId = "0";
 
   @override
   void initState() {
@@ -175,7 +141,7 @@ class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
         TextEditingController(text: args['businessPartnerName'] ?? "");
     businessPartnerId = args['businessPartnerId'] ?? 0;
     docNoFieldController = TextEditingController(text: args['docNo'] ?? "");
-    docTypeId = (args["docTypeId"] ?? 0).toString();
+
     //getAllDocType();
     //getAllBPartners();
   }
@@ -197,7 +163,6 @@ class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
                   businessPartnerId = 0;
                   bpSearchFieldController.text = "";
                   docNoFieldController.text = "";
-                  docTypeId = "0";
                 });
               },
               icon: const Icon(
@@ -315,46 +280,6 @@ class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
                         maxLines: 4,
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'Document Type'.tr,
-                          //filled: true,
-                          border: const OutlineInputBorder(
-                              /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                              ),
-                          prefixIcon: const Icon(EvaIcons.list),
-                          //hintText: "search..",
-                          isDense: true,
-                          //fillColor: Theme.of(context).cardColor,
-                        ),
-                        child: DropdownButton(
-                          isDense: true,
-                          underline: const SizedBox(),
-                          hint: Text("Select a Document Type".tr),
-                          isExpanded: true,
-                          value: docTypeId == "" ? null : docTypeId,
-                          elevation: 16,
-                          onChanged: (newValue) {
-                            setState(() {
-                              docTypeId = newValue as String;
-                            });
-
-                            //print(dropdownValue);
-                          },
-                          items: getTypes()!.map((list) {
-                            return DropdownMenuItem<String>(
-                              value: list.id.toString(),
-                              child: Text(
-                                list.name.toString(),
-                              ),
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(
@@ -452,55 +377,6 @@ class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
                         maxLines: 4,
                       ),
                     ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: FutureBuilder(
-                        future: getAllContractDocTypes(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
-                            snapshot.hasData
-                                ? InputDecorator(
-                                    decoration: InputDecoration(
-                                      labelText: 'Document Type'.tr,
-                                      //filled: true,
-                                      border: const OutlineInputBorder(
-                                          /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                          ),
-                                      prefixIcon: const Icon(EvaIcons.list),
-                                      //hintText: "search..",
-                                      isDense: true,
-                                      //fillColor: Theme.of(context).cardColor,
-                                    ),
-                                    child: DropdownButton(
-                                      isDense: true,
-                                      underline: const SizedBox(),
-                                      hint: Text("Select a Lead Size".tr),
-                                      isExpanded: true,
-                                      value: docTypeId == "" ? null : docTypeId,
-                                      elevation: 16,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          docTypeId = newValue as String;
-                                        });
-
-                                        //print(dropdownValue);
-                                      },
-                                      items: snapshot.data!.map((list) {
-                                        return DropdownMenuItem<String>(
-                                          value: list.id.toString(),
-                                          child: Text(
-                                            list.name.toString(),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                      ),
-                    ),
                   ],
                 ),
                 const SizedBox(
@@ -596,55 +472,6 @@ class _DeskDocAttachmentsFilterState extends State<DeskDocAttachmentsFilter> {
                         ),
                         minLines: 1,
                         maxLines: 4,
-                      ),
-                    ),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      child: FutureBuilder(
-                        future: getAllContractDocTypes(),
-                        builder: (BuildContext ctx,
-                                AsyncSnapshot<List<CRecords>> snapshot) =>
-                            snapshot.hasData
-                                ? InputDecorator(
-                                    decoration: InputDecoration(
-                                      labelText: 'Document Type'.tr,
-                                      //filled: true,
-                                      border: const OutlineInputBorder(
-                                          /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                          ),
-                                      prefixIcon: const Icon(EvaIcons.list),
-                                      //hintText: "search..",
-                                      isDense: true,
-                                      //fillColor: Theme.of(context).cardColor,
-                                    ),
-                                    child: DropdownButton(
-                                      isDense: true,
-                                      underline: const SizedBox(),
-                                      hint: Text("Select a Lead Size".tr),
-                                      isExpanded: true,
-                                      value: docTypeId == "" ? null : docTypeId,
-                                      elevation: 16,
-                                      onChanged: (newValue) {
-                                        setState(() {
-                                          docTypeId = newValue as String;
-                                        });
-
-                                        //print(dropdownValue);
-                                      },
-                                      items: snapshot.data!.map((list) {
-                                        return DropdownMenuItem<String>(
-                                          value: list.id.toString(),
-                                          child: Text(
-                                            list.name.toString(),
-                                          ),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  )
-                                : const Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
                       ),
                     ),
                   ],

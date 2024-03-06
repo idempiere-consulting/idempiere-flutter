@@ -1324,6 +1324,7 @@ class LocaleString extends Translations {
           'S_Resource': 'Risorsa',
           'Attachments': 'Allegati',
           'Window': 'Finestra',
+          'Desk': 'Scrivania'
         },
       };
 }

@@ -677,6 +677,76 @@ class DeskDocAttachmentsScreen extends GetView<DeskDocAttachmentsController> {
                                                         maxLines: 1,
                                                       ),
                                                     ),
+                                                    Container(
+                                                      width: 200,
+                                                      margin:
+                                                          const EdgeInsets.only(
+                                                              left: 20),
+                                                      child: InputDecorator(
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText:
+                                                              'Document Type'
+                                                                  .tr,
+                                                          //filled: true,
+                                                          border: const OutlineInputBorder(
+                                                              /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                                              ),
+                                                          prefixIcon:
+                                                              const Icon(
+                                                                  EvaIcons
+                                                                      .list),
+                                                          //hintText: "search..",
+                                                          isDense: true,
+                                                          //fillColor: Theme.of(context).cardColor,
+                                                        ),
+                                                        child: Obx(
+                                                          () => DropdownButton(
+                                                            isDense: true,
+                                                            underline:
+                                                                const SizedBox(),
+                                                            hint: Text(
+                                                                "Select a Document Type"
+                                                                    .tr),
+                                                            isExpanded: true,
+                                                            value: controller
+                                                                        .desktopDocTypeId
+                                                                        .value ==
+                                                                    ""
+                                                                ? null
+                                                                : controller
+                                                                    .desktopDocTypeId
+                                                                    .value,
+                                                            elevation: 16,
+                                                            onChanged:
+                                                                (newValue) {
+                                                              controller
+                                                                      .desktopDocTypeId
+                                                                      .value =
+                                                                  newValue
+                                                                      as String;
+                                                              controller
+                                                                  .getDocsDesktop();
+                                                              //print(dropdownValue);
+                                                            },
+                                                            items: controller
+                                                                .getTypes()!
+                                                                .map((list) {
+                                                              return DropdownMenuItem<
+                                                                  String>(
+                                                                value: list.id
+                                                                    .toString(),
+                                                                child: Text(
+                                                                  list.name
+                                                                      .toString(),
+                                                                ),
+                                                              );
+                                                            }).toList(),
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ],
                                                 )
                                               ],

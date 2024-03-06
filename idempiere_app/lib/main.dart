@@ -26,6 +26,8 @@ import 'package:idempiere_app/Screens/app/features/Portal_Mp_Confirm_Sales_Order
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_Creation_BP_PriceList_Edit/views/screens/portal_mp_sales_order_creation_BP_PriceList_edit_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_order_From_Pricelist/views/screens/portal_mp_sales_orderfrom_pricelist_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Project_Dashboard/views/screens/project_dashboard_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Project_List/views/screens/project_list_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Purchase_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contract_Line/views/screens/crm_contract_line_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Customer_BP/views/screens/crm_customer_bp_screen.dart';
@@ -349,6 +351,16 @@ class MyApp extends StatelessWidget {
           name: '/ProductionOrder',
           page: () => const ProductionOrderScreen(),
           binding: ProductionOrderBinding(),
+        ),
+        GetPage(
+          name: '/ProjectDashboard',
+          page: () => const ProjectDashboardScreen(),
+          binding: ProjectDashboardBinding(),
+        ),
+        GetPage(
+          name: '/ProjectList',
+          page: () => const ProjectListScreen(),
+          binding: ProjectListBinding(),
         ),
         GetPage(
           name: '/OpenItems',

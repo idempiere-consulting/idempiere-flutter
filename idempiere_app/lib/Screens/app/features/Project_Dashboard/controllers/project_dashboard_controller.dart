@@ -1,6 +1,6 @@
 part of dashboard;
 
-class TicketInternalController extends GetxController {
+class ProjectDashboardController extends GetxController {
   /* final scaffoldKey = GlobalKey<ScaffoldState>();
 
   void openDrawer() {
@@ -9,7 +9,63 @@ class TicketInternalController extends GetxController {
     }
   } */
 
+  @override
+  void onInit() {
+    getFunnelChartData();
+    super.onInit();
+  }
+
+  //late LeadFunnelDataJson _trx;
+  // ignore: prefer_final_fields
+  var _dataAvailable = false.obs;
+  List<Map> funnelData = [];
+  int charScale = 1;
+
+  bool get dataAvailable => _dataAvailable.value;
+  //LeadFunnelDataJson get trx => _trx;
+
+  Future<void> getFunnelChartData() async {
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/lit_mobile_lead_funnel_v/');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      /* _trx = LeadFunnelDataJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes))); */
+      var json = LeadFunnelDataJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.records!.isNotEmpty) {
+        for (int i = 0; i < json.records!.length; i++) {
+          if (int.parse(json.records![i].tot!) > charScale) {
+            charScale = int.parse(json.records![i].tot!);
+          }
+
+          var funnelMap = {
+            "Name": json.records![i].name,
+            "tot": num.parse(json.records![i].tot!)
+          };
+          //print('Name : ${json.records![i].name}, tot: ${num.parse(json.records![i].tot!)} ');
+          funnelData.add(funnelMap);
+        }
+        //_dataAvailable.value = _trx != null;
+        _dataAvailable.value = true;
+      }
+    } else {
+      //print(utf8.decode(response.bodyBytes));
+    }
+  }
+
   // Data
+  // ignore: library_private_types_in_public_api
   _Profile getProfil() {
     //"userName": "Flavia Lonardi", "password": "Fl@via2021"
     String userName = GetStorage().read('user') as String;
@@ -209,7 +265,7 @@ class TicketInternalController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "Desk".tr,
+      projectName: "CRM",
       releaseTime: DateTime.now(),
     );
   }

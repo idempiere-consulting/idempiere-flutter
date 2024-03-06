@@ -73,7 +73,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.sell,
                   icon: Icons.sell_outlined,
-                  label: "Ticket".tr,
+                  label: "Desk".tr,
                   visible: int.parse(list[16], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")

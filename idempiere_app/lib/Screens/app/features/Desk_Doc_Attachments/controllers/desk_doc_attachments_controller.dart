@@ -99,12 +99,16 @@ class DeskDocAttachmentsController extends GetxController {
   var selectedDocumentId = 0.obs;
   var selectedDocumentTable = "".obs;
 
+  var desktopDocTypeId = "0".obs;
+
   //END DESKTOP VIEW VARIABLES
 
   final json = {
     "types": [
-      {"id": "1", "name": "Doc N°"},
-      {"id": "2", "name": "Business Partner"},
+      {"id": "0", "name": "All".tr},
+      {"id": "MP_Maintain", "name": "MP_Maintain".tr},
+      {"id": "MP_OT", "name": "MP_OT".tr},
+      {"id": "C_Order", "name": "C_Order".tr},
     ]
   };
 
@@ -297,13 +301,19 @@ class DeskDocAttachmentsController extends GetxController {
       searchFilter =
           " and contains(DocumentNo,'${desktopDocNosearchFieldController.text}')";
     }
+
+    var dropDownFilter = "";
+    if (desktopDocTypeId.value != "0") {
+      searchFilter = " and Name eq '${desktopDocTypeId.value}'";
+    }
+
     //var userFilters = [];
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_docdms_v?\$filter=  AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter&\$skip=${(desktopPagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_docdms_v?\$filter=  AD_Client_ID eq ${GetStorage().read("clientid")}$notificationFilter$searchFilter$dropDownFilter&\$skip=${(desktopPagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -562,7 +572,7 @@ class DeskDocAttachmentsController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "CRM",
+      projectName: "Desk".tr,
       releaseTime: DateTime.now(),
     );
   }

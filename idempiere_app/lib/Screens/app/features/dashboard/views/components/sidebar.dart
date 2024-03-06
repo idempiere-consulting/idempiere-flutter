@@ -70,9 +70,9 @@ class _Sidebar extends StatelessWidget {
                       : false,
                 ),
                 SelectionButtonData(
-                  activeIcon: Icons.sell,
-                  icon: Icons.sell_outlined,
-                  label: "Ticket".tr,
+                  activeIcon: Icons.desk,
+                  icon: Icons.desk_outlined,
+                  label: "Desk".tr,
                   visible: int.parse(list[16], radix: 16)
                                   .toRadixString(2)
                                   .padLeft(4, "0")
@@ -225,6 +225,19 @@ class _Sidebar extends StatelessWidget {
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.personAdd,
+                  icon: EvaIcons.bookOpenOutline,
+                  label: "Project".tr,
+                  visible: int.parse(list[135], radix: 16)
+                                  .toRadixString(2)
+                                  .padLeft(4, "0")
+                                  .toString()[1] ==
+                              "1" &&
+                          GetStorage().read("isOffline") == false
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.personAdd,
                   icon: EvaIcons.personOutline,
                   label: "Profil".tr,
                   visible:
@@ -297,12 +310,15 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Accounting');
                     break;
                   case 16:
-                    Get.offNamed('/Profil');
+                    Get.offNamed('/ProjectDashboard');
                     break;
                   case 17:
-                    Get.offNamed('/Settings');
+                    Get.offNamed('/Profil');
                     break;
                   case 18:
+                    Get.offNamed('/Settings');
+                    break;
+                  case 19:
                     Get.offAllNamed("/");
                     break;
                   default:
