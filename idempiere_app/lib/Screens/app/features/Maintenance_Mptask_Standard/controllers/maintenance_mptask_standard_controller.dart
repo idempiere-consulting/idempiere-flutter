@@ -547,7 +547,6 @@ class MaintenanceMptaskStandardController extends GetxController {
       emptyAPICallStak();
       _dataAvailable.value = false;
       String ip = GetStorage().read('ip');
-      var userId = GetStorage().read('userId');
       String authorization = 'Bearer ${GetStorage().read('token')}';
       final protocol = GetStorage().read('protocol');
       var url = Uri.parse(

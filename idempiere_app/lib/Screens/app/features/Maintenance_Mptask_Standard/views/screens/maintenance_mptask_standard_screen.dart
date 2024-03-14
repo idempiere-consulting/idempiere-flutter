@@ -14,6 +14,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/scre
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_info_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_product_unloaded_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/models/attachment_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_image_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
@@ -314,7 +315,8 @@ class MaintenanceMptaskStandardScreen
                                         //log("info button pressed");
                                         /* print(controller.trx.records![index]
                                             .jpToDoStartDate); */
-                                        Get.to(const EditMaintenanceMptask(),
+                                        Get.to(
+                                            const EditMaintenanceMptaskStandard(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
@@ -1453,7 +1455,8 @@ class MaintenanceMptaskStandardScreen
                                         //log("info button pressed");
                                         /* print(controller.trx.records![index]
                                             .jpToDoStartDate); */
-                                        Get.to(const EditMaintenanceMptask(),
+                                        Get.to(
+                                            const EditMaintenanceMptaskStandard(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
@@ -2592,7 +2595,8 @@ class MaintenanceMptaskStandardScreen
                                         //log("info button pressed");
                                         /* print(controller.trx.records![index]
                                             .jpToDoStartDate); */
-                                        Get.to(const EditMaintenanceMptask(),
+                                        Get.to(
+                                            const EditMaintenanceMptaskStandard(),
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,

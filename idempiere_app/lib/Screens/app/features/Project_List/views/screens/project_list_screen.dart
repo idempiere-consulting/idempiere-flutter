@@ -27,6 +27,7 @@ import 'package:idempiere_app/Screens/app/shared_components/search_field.dart';
 import 'package:idempiere_app/Screens/app/shared_components/selection_button.dart';
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
+import 'package:idempiere_app/Screens/app/shared_components/webviewer_screen.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
@@ -285,7 +286,13 @@ class ProjectListScreen extends GetView<ProjectListController> {
                                       horizontal: 20.0, vertical: 10.0),
                                   children: [
                                     Column(
-                                      children: [],
+                                      children: [
+                                        IconButton(
+                                            onPressed: () {
+                                              Get.to(() => WebViewerScreen());
+                                            },
+                                            icon: Icon(Symbols.web))
+                                      ],
                                     ),
                                   ],
                                 ),

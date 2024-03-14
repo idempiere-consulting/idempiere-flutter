@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/adreflist_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
@@ -41,7 +42,7 @@ class _EditMaintenanceMptaskStandardState
       },
     );
     if (response.statusCode == 200) {
-      Get.find<MaintenanceMptaskController>().getWorkOrders();
+      Get.find<MaintenanceMptaskStandardController>().getWorkOrders();
       //print("done!");
       Get.back();
       Get.back();
@@ -148,7 +149,7 @@ class _EditMaintenanceMptaskStandardState
         if (response.statusCode == 200) {
           var data = jsonEncode(trx.toJson());
           file.writeAsStringSync(data);
-          Get.find<MaintenanceMptaskController>().getWorkOrders();
+          Get.find<MaintenanceMptaskStandardController>().syncWorkOrder();
           //print("done!");
           //Get.back();
           Get.snackbar(
@@ -176,7 +177,7 @@ class _EditMaintenanceMptaskStandardState
       } else {
         var data = jsonEncode(trx.toJson());
         file.writeAsStringSync(data);
-        Get.find<MaintenanceMptaskController>().getWorkOrders();
+        Get.find<MaintenanceMptaskStandardController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
           calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;

@@ -252,15 +252,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'Date'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.event),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.date,
                       initialValue: date,
@@ -285,15 +290,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'Start Time'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.access_time),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeStart,
@@ -316,15 +326,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'End Time'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.access_time),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeEnd,
@@ -347,31 +362,40 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Status'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.list),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
                       ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          value: list.id,
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                        );
-                      }).toList(),
+                      child: DropdownButton(
+                        isDense: true,
+                        underline: SizedBox(),
+                        value: dropdownValue,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                          //print(dropdownValue);
+                        },
+                        items: dropDownList.map((list) {
+                          return DropdownMenuItem<String>(
+                            value: list.id,
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],
@@ -409,15 +433,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'Date'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.event),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.date,
                       initialValue: date,
@@ -442,15 +471,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'Start Time'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.access_time),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeStart,
@@ -473,15 +507,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'End Time'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.access_time),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeEnd,
@@ -504,31 +543,40 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Status'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.list),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
                       ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          value: list.id,
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                        );
-                      }).toList(),
+                      child: DropdownButton(
+                        isDense: true,
+                        underline: SizedBox(),
+                        value: dropdownValue,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                          //print(dropdownValue);
+                        },
+                        items: dropDownList.map((list) {
+                          return DropdownMenuItem<String>(
+                            value: list.id,
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],
@@ -566,15 +614,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'Date'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.event),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.date,
                       initialValue: date,
@@ -599,15 +652,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'Start Time'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.access_time),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeStart,
@@ -630,15 +688,20 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
                     child: DateTimePicker(
+                      decoration: InputDecoration(
+                        labelText: 'End Time'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.access_time),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
                       //locale: Locale('languageCalendar'.tr),
                       type: DateTimePickerType.time,
                       initialValue: timeEnd,
@@ -661,31 +724,40 @@ class _EditWorkOrderCalendarEventState
                   ),
                   Container(
                     margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
                     width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Status'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(Icons.list),
+                        //hintText: "search..",
+                        //isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
                       ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          value: list.id,
-                          child: Text(
-                            list.name.toString(),
-                          ),
-                        );
-                      }).toList(),
+                      child: DropdownButton(
+                        isDense: true,
+                        underline: const SizedBox(),
+                        value: dropdownValue,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                          //print(dropdownValue);
+                        },
+                        items: dropDownList.map((list) {
+                          return DropdownMenuItem<String>(
+                            value: list.id,
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],
