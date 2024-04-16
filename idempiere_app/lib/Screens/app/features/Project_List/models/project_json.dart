@@ -51,7 +51,7 @@ class Records {
   final CCurrencyID? cCurrencyID;
   final CBPartnerID? cBPartnerID;
   final bool? isCommitment;
-  final int? committedAmt;
+  final num? committedAmt;
   final String? dateContract;
   final String? dateFinish;
   final bool? processed;
@@ -148,7 +148,7 @@ class Records {
                 json['C_BPartner_ID'] as Map<String, dynamic>)
             : null,
         isCommitment = json['IsCommitment'] as bool?,
-        committedAmt = json['CommittedAmt'] as int?,
+        committedAmt = json['CommittedAmt'] as num?,
         dateContract = json['DateContract'] as String?,
         dateFinish = json['DateFinish'] as String?,
         processed = json['Processed'] as bool?,

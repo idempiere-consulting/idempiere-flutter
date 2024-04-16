@@ -5,14 +5,16 @@ import 'package:photo_view/photo_view.dart';
 
 // For the testing purposes, you should probably use https://pub.dev/packages/uuid
 
-class MaintenanceMPTaskImage extends StatefulWidget {
-  const MaintenanceMPTaskImage({Key? key}) : super(key: key);
+class MaintenanceMPStandardTaskImage extends StatefulWidget {
+  const MaintenanceMPStandardTaskImage({Key? key}) : super(key: key);
 
   @override
-  State<MaintenanceMPTaskImage> createState() => MaintenanceMPTaskImageState();
+  State<MaintenanceMPStandardTaskImage> createState() =>
+      MaintenanceMPStandardTaskImageState();
 }
 
-class MaintenanceMPTaskImageState extends State<MaintenanceMPTaskImage> {
+class MaintenanceMPStandardTaskImageState
+    extends State<MaintenanceMPStandardTaskImage> {
   @override
   void initState() {
     super.initState();

@@ -357,7 +357,7 @@ class DeskDocAttachmentsScreen extends GetView<DeskDocAttachmentsController> {
                                           const EdgeInsets.symmetric(
                                               horizontal: 20.0, vertical: 10.0),
                                       children: [
-                                        Column(
+                                        /* Column(
                                           children: [
                                             IconButton(
                                                 onPressed: () {
@@ -367,7 +367,7 @@ class DeskDocAttachmentsScreen extends GetView<DeskDocAttachmentsController> {
                                                 icon: Icon(
                                                     Symbols.video_camera_front))
                                           ],
-                                        ),
+                                        ), */
                                       ],
                                     ),
                                   ),

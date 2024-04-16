@@ -130,7 +130,7 @@ class MaintenanceMptaskStandardScreen
                         ),
                       ),
                     ),
-                    Tooltip(
+                    /* Tooltip(
                       message: 'All Devices'.tr,
                       child: Obx(
                         () => Checkbox(
@@ -140,7 +140,7 @@ class MaintenanceMptaskStandardScreen
                               controller.allDevices.value = value ?? true;
                             }),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(
@@ -344,6 +344,11 @@ class MaintenanceMptaskStandardScreen
                                                   .trx
                                                   .records![index]
                                                   .litMpMaintainHelp,
+                                              "maintainId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mPMaintainID
+                                                  ?.id,
                                               "noteWO": controller.trx
                                                   .records![index].description,
                                               "address":
@@ -382,13 +387,46 @@ class MaintenanceMptaskStandardScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    DateFormat('dd-MM-yyyy').format(
-                                        DateTime.parse(controller.trx
-                                            .records![index].jpToDoStartDate!)),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .cDocTypeID?.identifier ??
+                                                  "N/A",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.event,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            DateFormat('dd-MM-yyyy').format(
+                                                DateTime.parse(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jpToDoStartDate!)),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -433,28 +471,6 @@ class MaintenanceMptaskStandardScreen
                                             ),
                                           ),
                                         ],
-                                      ),
-                                      Visibility(
-                                        visible: controller
-                                                .trx.records![index].name !=
-                                            null,
-                                        child: Row(
-                                          children: [
-                                            /* const Text(
-                                                "BPartner: ",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ), */
-                                            const Icon(Icons.location_city,
-                                                color: Colors.white),
-                                            Expanded(
-                                              child: Text(
-                                                  "${controller.trx.records![index].name}",
-                                                  style: const TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                          ],
-                                        ),
                                       ),
                                       Row(
                                         children: [
@@ -518,7 +534,7 @@ class MaintenanceMptaskStandardScreen
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(1, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(1, 5) : "N/A"}")
+                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
                                           ],
                                         ),
                                         Row(
@@ -702,6 +718,43 @@ class MaintenanceMptaskStandardScreen
                                               ),
                                               Text(controller.trx
                                                       .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBpartnerLocationPhone !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBpartnerLocationPhone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBpartnerLocationPhone!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBpartnerLocationPhone ??
                                                   ""),
                                             ],
                                           ),
@@ -1270,7 +1323,7 @@ class MaintenanceMptaskStandardScreen
                         ),
                       ),
                     ),
-                    Tooltip(
+                    /* Tooltip(
                       message: 'All Devices'.tr,
                       child: Obx(
                         () => Checkbox(
@@ -1280,7 +1333,7 @@ class MaintenanceMptaskStandardScreen
                               controller.allDevices.value = value ?? true;
                             }),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(
@@ -1484,6 +1537,11 @@ class MaintenanceMptaskStandardScreen
                                                   .trx
                                                   .records![index]
                                                   .litMpMaintainHelp,
+                                              "maintainId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mPMaintainID
+                                                  ?.id,
                                               "noteWO": controller.trx
                                                   .records![index].description,
                                               "address":
@@ -1522,13 +1580,46 @@ class MaintenanceMptaskStandardScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    DateFormat('dd-MM-yyyy').format(
-                                        DateTime.parse(controller.trx
-                                            .records![index].jpToDoStartDate!)),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .cDocTypeID?.identifier ??
+                                                  "N/A",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.event,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            DateFormat('dd-MM-yyyy').format(
+                                                DateTime.parse(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jpToDoStartDate!)),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -1573,28 +1664,6 @@ class MaintenanceMptaskStandardScreen
                                             ),
                                           ),
                                         ],
-                                      ),
-                                      Visibility(
-                                        visible: controller
-                                                .trx.records![index].name !=
-                                            null,
-                                        child: Row(
-                                          children: [
-                                            /* const Text(
-                                                "BPartner: ",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ), */
-                                            const Icon(Icons.location_city,
-                                                color: Colors.white),
-                                            Expanded(
-                                              child: Text(
-                                                  "${controller.trx.records![index].name}",
-                                                  style: const TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                          ],
-                                        ),
                                       ),
                                       Row(
                                         children: [
@@ -1658,7 +1727,7 @@ class MaintenanceMptaskStandardScreen
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(1, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(1, 5) : "N/A"}")
+                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
                                           ],
                                         ),
                                         Row(
@@ -1842,6 +1911,43 @@ class MaintenanceMptaskStandardScreen
                                               ),
                                               Text(controller.trx
                                                       .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBpartnerLocationPhone !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBpartnerLocationPhone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBpartnerLocationPhone!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBpartnerLocationPhone ??
                                                   ""),
                                             ],
                                           ),
@@ -2410,7 +2516,7 @@ class MaintenanceMptaskStandardScreen
                         ),
                       ),
                     ),
-                    Tooltip(
+                    /* Tooltip(
                       message: 'All Devices'.tr,
                       child: Obx(
                         () => Checkbox(
@@ -2420,7 +2526,7 @@ class MaintenanceMptaskStandardScreen
                               controller.allDevices.value = value ?? true;
                             }),
                       ),
-                    ),
+                    ), */
                     Container(
                       margin: const EdgeInsets.only(left: 30),
                       child: Obx(
@@ -2624,6 +2730,11 @@ class MaintenanceMptaskStandardScreen
                                                   .trx
                                                   .records![index]
                                                   .litMpMaintainHelp,
+                                              "maintainId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mPMaintainID
+                                                  ?.id,
                                               "noteWO": controller.trx
                                                   .records![index].description,
                                               "address":
@@ -2662,13 +2773,46 @@ class MaintenanceMptaskStandardScreen
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    DateFormat('dd-MM-yyyy').format(
-                                        DateTime.parse(controller.trx
-                                            .records![index].jpToDoStartDate!)),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .cDocTypeID?.identifier ??
+                                                  "N/A",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Divider(),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        children: [
+                                          Icon(
+                                            Icons.event,
+                                            color: Colors.white,
+                                          ),
+                                          Text(
+                                            DateFormat('dd-MM-yyyy').format(
+                                                DateTime.parse(controller
+                                                    .trx
+                                                    .records![index]
+                                                    .jpToDoStartDate!)),
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -2713,28 +2857,6 @@ class MaintenanceMptaskStandardScreen
                                             ),
                                           ),
                                         ],
-                                      ),
-                                      Visibility(
-                                        visible: controller
-                                                .trx.records![index].name !=
-                                            null,
-                                        child: Row(
-                                          children: [
-                                            /* const Text(
-                                                "BPartner: ",
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold),
-                                              ), */
-                                            const Icon(Icons.location_city,
-                                                color: Colors.white),
-                                            Expanded(
-                                              child: Text(
-                                                  "${controller.trx.records![index].name}",
-                                                  style: const TextStyle(
-                                                      color: Colors.white)),
-                                            ),
-                                          ],
-                                        ),
                                       ),
                                       Row(
                                         children: [
@@ -2798,7 +2920,7 @@ class MaintenanceMptaskStandardScreen
                                                   fontWeight: FontWeight.bold),
                                             ),
                                             Text(
-                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(1, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(1, 5) : "N/A"}")
+                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
                                           ],
                                         ),
                                         Row(
@@ -2982,6 +3104,43 @@ class MaintenanceMptaskStandardScreen
                                               ),
                                               Text(controller.trx
                                                       .records![index].phone ??
+                                                  ""),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .trx
+                                                  .records![index]
+                                                  .cBpartnerLocationPhone !=
+                                              null,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.call,
+                                                  color: Colors.green,
+                                                ),
+                                                tooltip: 'Call',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .cBpartnerLocationPhone !=
+                                                      null) {
+                                                    controller.makePhoneCall(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .cBpartnerLocationPhone!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cBpartnerLocationPhone ??
                                                   ""),
                                             ],
                                           ),

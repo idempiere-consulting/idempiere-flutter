@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/m
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_survey_lines_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/businespartnerjson.dart';
 import 'package:idempiere_app/constants.dart';
@@ -192,7 +193,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       index += 1;
       var pageJson = BusinessPartnerJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-      print(pageJson.records?.length);
+      //print(pageJson.records?.length);
       for (var element in pageJson.records!) {
         json.records!.add(element);
       }
@@ -667,7 +668,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     if (response.statusCode == 200) {
       //print(response.body);
       //print(utf8.decode(response.bodyBytes));
-      const filename = "workorder";
+      /* const filename = "workorder";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
       file.writeAsString(utf8.decode(response.bodyBytes));
@@ -675,7 +676,75 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (kDebugMode) {
         print('WorkOrder Checked');
       }
-      syncWorkOrderResource();
+      syncWorkOrderResource(); */
+      var json = WorkOrderLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderPages(json, index);
+      } else {
+        const filename = "workorder";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        syncWorkOrderResource();
+        if (kDebugMode) {
+          print('WorkOrder Checked');
+        }
+        //checkSyncData();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  Future<void> syncWorkOrderPages(WorkOrderLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId or maintain_documentno eq \'SEDE\'&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorder";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        syncWorkOrderResource();
+        if (kDebugMode) {
+          print('WorkOrder Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+      }
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -768,9 +837,6 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     );
 
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        //print(response.body);
-      }
       var json = WorkOrderResourceLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {

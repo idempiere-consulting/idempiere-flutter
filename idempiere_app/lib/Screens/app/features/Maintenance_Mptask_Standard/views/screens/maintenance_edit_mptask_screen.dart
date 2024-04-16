@@ -90,6 +90,28 @@ class _EditMaintenanceMptaskStandardState
     );
   }
 
+  editMaintainNote() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final msg = jsonEncode({
+      "Help": notePlantFieldController.text,
+    });
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/mp_maintain/${args["maintainId"]}');
+
+    // ignore: unused_local_variable
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+  }
+
   editWorkOrder(bool isConnected) async {
     //print(now);
 
@@ -314,6 +336,8 @@ class _EditMaintenanceMptaskStandardState
 
                 if (await checkConnection()) {
                   editWorkOrderDate();
+                  editMaintainNote();
+                  print(Get.arguments["maintainId"]);
                 }
               },
               icon: const Icon(
@@ -406,7 +430,6 @@ class _EditMaintenanceMptaskStandardState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    readOnly: true,
                     minLines: 1,
                     maxLines: 3,
                     controller: notePlantFieldController,
@@ -639,7 +662,6 @@ class _EditMaintenanceMptaskStandardState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    readOnly: true,
                     minLines: 1,
                     maxLines: 3,
                     controller: notePlantFieldController,
@@ -872,7 +894,6 @@ class _EditMaintenanceMptaskStandardState
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
-                    readOnly: true,
                     minLines: 1,
                     maxLines: 3,
                     controller: notePlantFieldController,

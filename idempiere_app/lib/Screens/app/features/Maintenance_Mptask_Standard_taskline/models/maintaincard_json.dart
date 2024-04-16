@@ -1,23 +1,26 @@
-class WorkOrderJson {
+class MaintainCardJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
+  final int? arraycount;
   final List<Records>? records;
 
-  WorkOrderJson({
+  MaintainCardJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
+    this.arraycount,
     this.records,
   });
 
-  WorkOrderJson.fromJson(Map<String, dynamic> json)
+  MaintainCardJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
+        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
             ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
@@ -27,6 +30,7 @@ class WorkOrderJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
+        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
@@ -35,44 +39,56 @@ class Records {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
-  final String? documentNo;
-  final UpdatedBy? updatedBy;
-  final ADUserID? aDUserID;
+  final ADOrgID? aDOrgID;
   final String? created;
   final CreatedBy? createdBy;
-  final String? dateTrx;
-  final DocStatus? docStatus;
+  final String? description;
+  final String? documentNo;
   final bool? isActive;
-  final bool? processed;
+  final String? name;
+  final String? revision;
   final String? updated;
-  final ADOrgID? aDOrgID;
-  final CDocTypeID? cDocTypeID;
-  final String? dateWorkStart;
+  final UpdatedBy? updatedBy;
+  final String? validFrom;
+  final String? validTo;
+  final String? dueDate;
+  final String? value;
+  final String? serNo;
+  final CUOMID? cUOMID;
+  final MProductID? mProductID;
   final CBPartnerID? cBPartnerID;
-  final SResourceID? sResourceID;
   final CBPartnerLocationID? cBPartnerLocationID;
+  final BillBPartnerID? billBPartnerID;
+  final BillLocationID? billLocationID;
+  final CContractTypeID? cContractTypeID;
   final String? modelname;
 
   Records({
     this.id,
     this.uid,
     this.aDClientID,
-    this.documentNo,
-    this.updatedBy,
-    this.aDUserID,
+    this.aDOrgID,
     this.created,
     this.createdBy,
-    this.dateTrx,
-    this.docStatus,
+    this.description,
+    this.documentNo,
     this.isActive,
-    this.processed,
+    this.name,
+    this.revision,
     this.updated,
-    this.aDOrgID,
-    this.cDocTypeID,
-    this.dateWorkStart,
+    this.updatedBy,
+    this.validFrom,
+    this.validTo,
+    this.dueDate,
+    this.value,
+    this.serNo,
+    this.cUOMID,
+    this.mProductID,
     this.cBPartnerID,
-    this.sResourceID,
     this.cBPartnerLocationID,
+    this.billBPartnerID,
+    this.billLocationID,
+    this.cContractTypeID,
     this.modelname,
   });
 
@@ -82,43 +98,56 @@ class Records {
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
-        documentNo = json['DocumentNo'] as String?,
-        updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
-            ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
-            : null,
-        aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
-            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+        aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
+            ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
-        dateTrx = json['DateTrx'] as String?,
-        docStatus = (json['DocStatus'] as Map<String, dynamic>?) != null
-            ? DocStatus.fromJson(json['DocStatus'] as Map<String, dynamic>)
-            : null,
+        description = json['Description'] as String?,
+        documentNo = json['DocumentNo'] as String?,
         isActive = json['IsActive'] as bool?,
-        processed = json['Processed'] as bool?,
+        name = json['Name'] as String?,
+        revision = json['Revision'] as String?,
         updated = json['Updated'] as String?,
-        aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
-            ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
+        updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
+            ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        cDocTypeID = (json['C_DocType_ID'] as Map<String, dynamic>?) != null
-            ? CDocTypeID.fromJson(json['C_DocType_ID'] as Map<String, dynamic>)
+        validFrom = json['ValidFrom'] as String?,
+        validTo = json['ValidTo'] as String?,
+        dueDate = json['DueDate'] as String?,
+        value = json['Value'] as String?,
+        serNo = json['SerNo'] as String?,
+        cUOMID = (json['C_UOM_ID'] as Map<String, dynamic>?) != null
+            ? CUOMID.fromJson(json['C_UOM_ID'] as Map<String, dynamic>)
             : null,
-        dateWorkStart = json['DateWorkStart'] as String?,
+        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
+            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+            : null,
         cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
             ? CBPartnerID.fromJson(
                 json['C_BPartner_ID'] as Map<String, dynamic>)
-            : null,
-        sResourceID = (json['S_Resource_ID'] as Map<String, dynamic>?) != null
-            ? SResourceID.fromJson(
-                json['S_Resource_ID'] as Map<String, dynamic>)
             : null,
         cBPartnerLocationID =
             (json['C_BPartner_Location_ID'] as Map<String, dynamic>?) != null
                 ? CBPartnerLocationID.fromJson(
                     json['C_BPartner_Location_ID'] as Map<String, dynamic>)
+                : null,
+        billBPartnerID =
+            (json['Bill_BPartner_ID'] as Map<String, dynamic>?) != null
+                ? BillBPartnerID.fromJson(
+                    json['Bill_BPartner_ID'] as Map<String, dynamic>)
+                : null,
+        billLocationID =
+            (json['Bill_Location_ID'] as Map<String, dynamic>?) != null
+                ? BillLocationID.fromJson(
+                    json['Bill_Location_ID'] as Map<String, dynamic>)
+                : null,
+        cContractTypeID =
+            (json['C_ContractType_ID'] as Map<String, dynamic>?) != null
+                ? CContractTypeID.fromJson(
+                    json['C_ContractType_ID'] as Map<String, dynamic>)
                 : null,
         modelname = json['model-name'] as String?;
 
@@ -126,22 +155,27 @@ class Records {
         'id': id,
         'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
-        'DocumentNo': documentNo,
-        'UpdatedBy': updatedBy?.toJson(),
-        'AD_User_ID': aDUserID?.toJson(),
+        'AD_Org_ID': aDOrgID?.toJson(),
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
-        'DateTrx': dateTrx,
-        'DocStatus': docStatus?.toJson(),
+        'Description': description,
+        'DocumentNo': documentNo,
         'IsActive': isActive,
-        'Processed': processed,
+        'Name': name,
+        'Revision': revision,
         'Updated': updated,
-        'AD_Org_ID': aDOrgID?.toJson(),
-        'C_DocType_ID': cDocTypeID?.toJson(),
-        'DateWorkStart': dateWorkStart,
+        'UpdatedBy': updatedBy?.toJson(),
+        'ValidFrom': validFrom,
+        'ValidTo': validTo,
+        'Value': value,
+        'SerNo': serNo,
+        'C_UOM_ID': cUOMID?.toJson(),
+        'M_Product_ID': mProductID?.toJson(),
         'C_BPartner_ID': cBPartnerID?.toJson(),
-        'S_Resource_ID': sResourceID?.toJson(),
         'C_BPartner_Location_ID': cBPartnerLocationID?.toJson(),
+        'Bill_BPartner_ID': billBPartnerID?.toJson(),
+        'Bill_Location_ID': billLocationID?.toJson(),
+        'C_ContractType_ID': cContractTypeID?.toJson(),
         'model-name': modelname
       };
 }
@@ -173,47 +207,20 @@ class ADClientID {
       };
 }
 
-class UpdatedBy {
+class ADOrgID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  UpdatedBy({
+  ADOrgID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  UpdatedBy.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class ADUserID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  ADUserID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  ADUserID.fromJson(Map<String, dynamic> json)
+  ADOrgID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -254,47 +261,20 @@ class CreatedBy {
       };
 }
 
-class DocStatus {
-  final String? propertyLabel;
-  final String? id;
-  final String? identifier;
-  final String? modelname;
-
-  DocStatus({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  DocStatus.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class ADOrgID {
+class UpdatedBy {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  ADOrgID({
+  UpdatedBy({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  ADOrgID.fromJson(Map<String, dynamic> json)
+  UpdatedBy.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -308,20 +288,47 @@ class ADOrgID {
       };
 }
 
-class CDocTypeID {
+class CUOMID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  CDocTypeID({
+  CUOMID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  CDocTypeID.fromJson(Map<String, dynamic> json)
+  CUOMID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MProductID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -362,33 +369,6 @@ class CBPartnerID {
       };
 }
 
-class SResourceID {
-  final String? propertyLabel;
-  final int? id;
-  final String? identifier;
-  final String? modelname;
-
-  SResourceID({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  SResourceID.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as int?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
 class CBPartnerLocationID {
   final String? propertyLabel;
   final int? id;
@@ -403,6 +383,87 @@ class CBPartnerLocationID {
   });
 
   CBPartnerLocationID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class BillBPartnerID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  BillBPartnerID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  BillBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class BillLocationID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  BillLocationID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  BillLocationID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CContractTypeID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CContractTypeID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CContractTypeID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

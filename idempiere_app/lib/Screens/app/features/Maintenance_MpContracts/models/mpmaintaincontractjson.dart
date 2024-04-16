@@ -70,6 +70,7 @@ class Records {
   int? latestWorkOrderId;
   String? latestWorkOrderDocNo;
   CContractID? cContractID;
+  LITProductCardID? litProductCardID;
 
   Records({
     this.id,
@@ -110,6 +111,7 @@ class Records {
     this.latestWorkOrderId,
     this.latestWorkOrderDocNo,
     this.cContractID,
+    this.litProductCardID,
   });
 
   Records.fromJson(Map<String, dynamic> json)
@@ -184,6 +186,11 @@ class Records {
             ? CContractID.fromJson(
                 json['C_Contract_ID'] as Map<String, dynamic>)
             : null,
+        litProductCardID =
+            (json['LIT_ProductCard_ID'] as Map<String, dynamic>?) != null
+                ? LITProductCardID.fromJson(
+                    json['LIT_ProductCard_ID'] as Map<String, dynamic>)
+                : null,
         latestWorkOrderId = json['latest_workorder_id'] as int?;
 
   Map<String, dynamic> toJson() => {
@@ -345,6 +352,33 @@ class ADClientID {
   });
 
   ADClientID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITProductCardID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITProductCardID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITProductCardID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

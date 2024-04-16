@@ -72,12 +72,12 @@ class MaintenanceMptaskStandardController extends GetxController {
           AttachmentJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (json.attachments!.isNotEmpty) {
-        getAttachment(index, json.attachments![0].name!);
+        getAttachment(index, json.attachments![0].name!, json);
       }
     }
   }
 
-  getAttachment(int index, String name) async {
+  getAttachment(int index, String name, AttachmentJSON attachments) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
 
@@ -95,11 +95,38 @@ class MaintenanceMptaskStandardController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      //print(response.body);
-      var image64 = base64.encode(response.bodyBytes);
-      Get.to(const MaintenanceMPTaskImage(), arguments: {"base64": image64});
-    } else {
       print(response.body);
+
+      if (attachments.attachments![0].contentType! == "application/pdf") {
+        final bytes = response.bodyBytes;
+
+        if (Platform.isAndroid) {
+          await Printing.layoutPdf(
+              onLayout: (PdfPageFormat format) async => bytes);
+        } else {
+          final dir = await getApplicationDocumentsDirectory();
+          final file = File('${dir.path}/${attachments.attachments![0].name!}');
+          await file.writeAsBytes(bytes, flush: true);
+          await launchUrl(
+              Uri.parse(
+                  'file://${'${dir.path}/${attachments.attachments![0].name!}'}'),
+              mode: LaunchMode.externalNonBrowserApplication);
+        }
+      }
+
+      if (attachments.attachments![0].contentType! == "image/jpeg") {
+        var image64 = base64.encode(response.bodyBytes);
+        Get.to(const MaintenanceMPStandardTaskImage(),
+            arguments: {"base64": image64});
+      }
+
+      //print(response.body);
+      /* var image64 = base64.encode(response.bodyBytes);
+      Get.to(const MaintenanceMPTaskImage(), arguments: {"base64": image64}); */
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -394,63 +421,12 @@ class MaintenanceMptaskStandardController extends GetxController {
   }
 
   Future<void> syncWorkOrder() async {
-    _dataAvailable.value = false;
-    var isConnected = await checkConnection();
-
-    //print(isConnected);
-
-    if (isConnected) {
-      emptyAPICallStak();
-      _dataAvailable.value = false;
-      String ip = GetStorage().read('ip');
-      var userId = GetStorage().read('userId');
-      String authorization = 'Bearer ${GetStorage().read('token')}';
-      final protocol = GetStorage().read('protocol');
-      var url = Uri.parse(
-          '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId');
-
-      var response = await http.get(
-        url,
-        headers: <String, String>{
-          'Content-Type': 'application/json',
-          'Authorization': authorization,
-        },
-      );
-
-      if (response.statusCode == 200) {
-        //print(response.body);
-        const filename = "workorder";
-        final file = File(
-            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsStringSync(utf8.decode(response.bodyBytes));
-        //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
-        //isWorkOrderSyncing.value = false;
-        //getWorkOrders();
-        syncWorkOrderResource();
-      } else {
-        if (kDebugMode) {
-          print(response.body);
-        }
-      }
-    } else {
-      Get.snackbar(
-        "Connessione Internet assente!",
-        "Impossibile aggiornare i record.",
-        icon: const Icon(
-          Icons.signal_wifi_connected_no_internet_4,
-          color: Colors.red,
-        ),
-      );
-    }
-  }
-
-  Future<void> syncWorkOrderResource() async {
     String ip = GetStorage().read('ip');
-    //var userId = GetStorage().read('userId');
+    var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= ${allDevices.value ? "" : "mp_maintain_documentno neq 'SEDE' and"} (AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null) and AD_Client_ID eq ${GetStorage().read('clientid')}');
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId or maintain_documentno eq \'SEDE\'');
 
     var response = await http.get(
       url,
@@ -461,27 +437,34 @@ class MaintenanceMptaskStandardController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      //print(response.body);
+      //print(utf8.decode(response.bodyBytes));
+      /* const filename = "workorder";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(utf8.decode(response.bodyBytes));
+      //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
       if (kDebugMode) {
-        //print(response.body);
+        print('WorkOrder Checked');
       }
-      var json = WorkOrderResourceLocalJson.fromJson(
+      syncWorkOrderResource(); */
+      var json = WorkOrderLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {
         int index = 1;
-        syncWorkOrderResourcePages(json, index);
+        syncWorkOrderPages(json, index);
       } else {
-        const filename = "workorderresource";
+        const filename = "workorder";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsStringSync(utf8.decode(response.bodyBytes));
+        file.writeAsString(utf8.decode(response.bodyBytes));
         //productSync = false;
         getWorkOrders();
         if (kDebugMode) {
-          print('WorkOrderResource Checked');
+          print('WorkOrder Checked');
         }
         //checkSyncData();
       }
-      //syncWorkOrderResourceSurveyLines();
     } else {
       if (kDebugMode) {
         print(response.body);
@@ -489,12 +472,13 @@ class MaintenanceMptaskStandardController extends GetxController {
     }
   }
 
-  syncWorkOrderResourcePages(WorkOrderResourceLocalJson json, int index) async {
+  Future<void> syncWorkOrderPages(WorkOrderLocalJson json, int index) async {
     String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mp_maintain_resource_v?\$filter= ${allDevices.value ? "" : "mp_maintain_documentno neq 'SEDE' and"} (AD_User_ID eq ${GetStorage().read('userId')} or AD_User_ID eq null) and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId or maintain_documentno eq \'SEDE\'&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -506,26 +490,26 @@ class MaintenanceMptaskStandardController extends GetxController {
 
     if (response.statusCode == 200) {
       index += 1;
-      var pageJson = WorkOrderResourceLocalJson.fromJson(
+      var pageJson = WorkOrderLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       for (var element in pageJson.records!) {
         json.records!.add(element);
       }
 
       if (json.pagecount! > index) {
-        syncWorkOrderResourcePages(json, index);
+        syncWorkOrderPages(json, index);
       } else {
         if (kDebugMode) {
           print(json.records!.length);
         }
-        const filename = "workorderresource";
+        const filename = "workorder";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsStringSync(jsonEncode(json.toJson()));
+        file.writeAsString(jsonEncode(json.toJson()));
         //workOrderSync = false;
         getWorkOrders();
         if (kDebugMode) {
-          print('WorkOrderResource Checked');
+          print('WorkOrder Checked');
         }
         //checkSyncData();
         //syncWorkOrderResourceSurveyLines();
@@ -569,7 +553,7 @@ class MaintenanceMptaskStandardController extends GetxController {
         //GetStorage().write('workOrderSync', utf8.decode(response.bodyBytes));
         //isWorkOrderSyncing.value = false;
         //getWorkOrders();
-        syncWorkOrderResource();
+        getWorkOrders();
       } else {
         if (kDebugMode) {
           print(response.body);

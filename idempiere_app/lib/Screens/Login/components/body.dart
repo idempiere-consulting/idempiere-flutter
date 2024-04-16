@@ -11,6 +11,7 @@ import 'package:idempiere_app/Screens/LoginClient/loginclient_screen.dart';
 import 'package:idempiere_app/Screens/LoginOrganizations/loginorganizations_screen.dart';
 import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
 import 'package:idempiere_app/Screens/LoginWarehouses/loginwarehouses.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 //import 'package:idempiere_app/Screens/LoginRoles/loginroles_screen.dart';
 import 'package:idempiere_app/components/rounded_button.dart';
 import 'package:idempiere_app/components/rounded_input_field.dart';
@@ -796,7 +797,7 @@ class _BodyState extends State<Body> {
     if (response.statusCode == 200) {
       //print(response.body);
       //print(utf8.decode(response.bodyBytes));
-      const filename = "workorder";
+      /* const filename = "workorder";
       final file = File(
           '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
       file.writeAsString(utf8.decode(response.bodyBytes));
@@ -804,7 +805,75 @@ class _BodyState extends State<Body> {
       if (kDebugMode) {
         print('WorkOrder Checked');
       }
-      syncWorkOrderResource();
+      syncWorkOrderResource(); */
+      var json = WorkOrderLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (json.pagecount! > 1) {
+        int index = 1;
+        syncWorkOrderPages(json, index);
+      } else {
+        const filename = "workorder";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(utf8.decode(response.bodyBytes));
+        //productSync = false;
+        syncWorkOrderResource();
+        if (kDebugMode) {
+          print('WorkOrder Checked');
+        }
+        //checkSyncData();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      workOrderSync = false;
+      checkSyncData();
+    }
+  }
+
+  Future<void> syncWorkOrderPages(WorkOrderLocalJson json, int index) async {
+    String ip = GetStorage().read('ip');
+    var userId = GetStorage().read('userId');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mp_ot_v?\$filter= mp_ot_ad_user_id eq $userId or maintain_documentno eq \'SEDE\'&\$skip=${(index * 100)}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+      var pageJson = WorkOrderLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        syncWorkOrderPages(json, index);
+      } else {
+        if (kDebugMode) {
+          print(json.records!.length);
+        }
+        const filename = "workorder";
+        final file = File(
+            '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+        file.writeAsString(jsonEncode(json.toJson()));
+        //workOrderSync = false;
+        syncWorkOrderResource();
+        if (kDebugMode) {
+          print('WorkOrder Checked');
+        }
+        //checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
+      }
     } else {
       if (kDebugMode) {
         print(response.body);

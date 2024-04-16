@@ -19,6 +19,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/scre
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_create_mptask_standard_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_edit_mptask_standard_taskline_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_mptask_standard_maintcard.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_create_mptask_taskline_screen.dart';
@@ -40,6 +41,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -135,9 +137,16 @@ class MaintenanceStandardMptaskLineScreen
                     icon: const Icon(Icons.receipt),
                   ),
                   IconButton(
-                    tooltip: "Attach Image".tr,
-                    onPressed: () {},
-                    icon: const Icon(Icons.attach_file_outlined),
+                    tooltip: "Maintenance Card".tr,
+                    onPressed: () {
+                      Get.to(
+                          () =>
+                              const MaintenanceStandardMptaskMaintenanceCard(),
+                          arguments: {
+                            "maintainId": controller.args["maintenanceId"]
+                          });
+                    },
+                    icon: const Icon(Symbols.info),
                   ),
                 ],
               ),
@@ -427,9 +436,16 @@ class MaintenanceStandardMptaskLineScreen
                     icon: const Icon(Icons.receipt),
                   ),
                   IconButton(
-                    tooltip: "Attach Image".tr,
-                    onPressed: () {},
-                    icon: const Icon(Icons.attach_file_outlined),
+                    tooltip: "Maintenance Card".tr,
+                    onPressed: () {
+                      Get.to(
+                          () =>
+                              const MaintenanceStandardMptaskMaintenanceCard(),
+                          arguments: {
+                            "maintainId": controller.args["maintenanceId"]
+                          });
+                    },
+                    icon: const Icon(Symbols.info),
                   ),
                 ],
               ),
@@ -719,9 +735,16 @@ class MaintenanceStandardMptaskLineScreen
                     icon: const Icon(Icons.receipt),
                   ),
                   IconButton(
-                    tooltip: "Attach Image".tr,
-                    onPressed: () {},
-                    icon: const Icon(Icons.attach_file_outlined),
+                    tooltip: "Maintenance Card".tr,
+                    onPressed: () {
+                      Get.to(
+                          () =>
+                              const MaintenanceStandardMptaskMaintenanceCard(),
+                          arguments: {
+                            "maintainId": controller.args["maintenanceId"]
+                          });
+                    },
+                    icon: const Icon(Symbols.info),
                   ),
                 ],
               ),

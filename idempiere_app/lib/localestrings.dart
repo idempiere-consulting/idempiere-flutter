@@ -1324,7 +1324,15 @@ class LocaleString extends Translations {
           'S_Resource': 'Risorsa',
           'Attachments': 'Allegati',
           'Window': 'Finestra',
-          'Desk': 'Scrivania'
+          'Desk': 'Scrivania',
+          'Maintenance Card': 'Scheda Impianto',
+          'Extra Costs': 'Costi Extra',
+          'Maintain Card Rows': 'Righe Scheda Impianto',
+          'Add Row': 'Aggiungi Riga',
+          'Line N°': 'N° Linea',
+          'To Product': 'Al Prodotto',
+          'Edit Row': 'Modifica Riga',
+          'Validity': 'Validità'
         },
       };
 }
