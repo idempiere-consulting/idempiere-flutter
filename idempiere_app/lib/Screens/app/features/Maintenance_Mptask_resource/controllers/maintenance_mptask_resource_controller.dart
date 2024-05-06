@@ -1162,7 +1162,7 @@ class MaintenanceMpResourceController extends GetxController {
       }
     } else {
       if (kDebugMode) {
-        print(response.bodyBytes);
+        print(response.body);
       }
     }
   }

@@ -743,13 +743,48 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          trxLines.records![index].qty
+                                          (trxLines.records![index].qtyBOM ?? 0)
                                               .toString(),
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
                                       ],
                                     ),
+                                    const Divider(),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Product".tr} 2: ",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          trxLines.records![index].mProductToID
+                                                  ?.identifier ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Qty".tr}: ",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          (trxLines.records![index].qty ?? 0)
+                                              .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
                                     Row(
                                       children: <Widget>[
                                         Text(
@@ -760,7 +795,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                         ),
                                         Expanded(
                                           child: Text(
-                                            "${trxLines.records![index].validFrom} - ${trxLines.records![index].validTo}",
+                                            "${trxLines.records![index].validFrom} ${trxLines.records![index].validTo != null ? "- ${trxLines.records![index].validTo}" : "- N/A"}",
                                             style: const TextStyle(
                                                 color: Colors.white),
                                           ),
@@ -1215,13 +1250,48 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                               fontWeight: FontWeight.bold),
                                         ),
                                         Text(
-                                          trxLines.records![index].qty
+                                          (trxLines.records![index].qtyBOM ?? 0)
                                               .toString(),
                                           style: const TextStyle(
                                               color: Colors.white),
                                         ),
                                       ],
                                     ),
+                                    const Divider(),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Product".tr} 2: ",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          trxLines.records![index].mProductToID
+                                                  ?.identifier ??
+                                              "",
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "${"Qty".tr}: ",
+                                          style: const TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          (trxLines.records![index].qty ?? 0)
+                                              .toString(),
+                                          style: const TextStyle(
+                                              color: Colors.white),
+                                        ),
+                                      ],
+                                    ),
+                                    const Divider(),
                                     Row(
                                       children: <Widget>[
                                         Text(
@@ -1232,7 +1302,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                         ),
                                         Expanded(
                                           child: Text(
-                                            "${trxLines.records![index].validFrom} - ${trxLines.records![index].validTo}",
+                                            "${trxLines.records![index].validFrom} ${trxLines.records![index].validTo != null ? "- ${trxLines.records![index].validTo}" : "- N/A"}",
                                             style: const TextStyle(
                                                 color: Colors.white),
                                           ),
@@ -1665,7 +1735,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 DataColumn(
                                   label: Expanded(
                                     child: Text(
-                                      'To Product'.tr,
+                                      '${'Product'.tr} 2',
                                       style: const TextStyle(
                                           fontStyle: FontStyle.italic),
                                     ),
@@ -1674,7 +1744,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 DataColumn(
                                   label: Expanded(
                                     child: Text(
-                                      'Qty'.tr,
+                                      '${'Qty'.tr} 2',
                                       style: const TextStyle(
                                           fontStyle: FontStyle.italic),
                                     ),
@@ -1741,13 +1811,14 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                         DataCell(
                                           Text(e.mProductID?.identifier ?? ""),
                                         ),
-                                        DataCell(Text(e.qtyBOM.toString())),
+                                        DataCell(
+                                            Text((e.qtyBOM ?? 0).toString())),
                                         DataCell(
                                           Text(
                                               e.mProductToID?.identifier ?? ""),
                                         ),
-                                        DataCell(Text(e.qtyBOM.toString())),
-                                        DataCell(Text(e.validFrom ?? "")),
+                                        DataCell(Text((e.qty ?? 0).toString())),
+                                        DataCell(Text(e.validFrom ?? "0")),
                                         DataCell(Text(e.validTo ?? "")),
                                       ]))
                                   .toList(),

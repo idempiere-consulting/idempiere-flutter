@@ -38,7 +38,7 @@ class _CRMFilterCustomerState extends State<CRMFilterCustomer> {
 
     if (nameFieldController.text != "") {
       Get.find<CRMCustomerBPController>().nameFilter =
-          " and contains(tolower(Name),'${nameFieldController.text}')";
+          " and contains(tolower(Name),'${nameFieldController.text.toLowerCase()}')";
     } else {
       Get.find<CRMCustomerBPController>().nameFilter = "";
     }

@@ -1332,7 +1332,8 @@ class LocaleString extends Translations {
           'Line N°': 'N° Linea',
           'To Product': 'Al Prodotto',
           'Edit Row': 'Modifica Riga',
-          'Validity': 'Validità'
+          'Validity': 'Validità',
+          'Add + Sell': 'Vendita'
         },
       };
 }

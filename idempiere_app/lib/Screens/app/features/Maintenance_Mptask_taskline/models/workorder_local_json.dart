@@ -71,6 +71,8 @@ class WORecords {
   final String? modelname;
   final String? phone;
   final String? phone2;
+  final String? mail;
+  final String? mail2;
   final String? refname;
   final String? ref2name;
   final String? team;
@@ -135,6 +137,8 @@ class WORecords {
       this.modelname,
       this.phone,
       this.phone2,
+      this.mail,
+      this.mail2,
       this.refname,
       this.ref2name,
       this.team,
@@ -236,6 +240,8 @@ class WORecords {
                 : null,
         phone = json['Phone'] as String?,
         phone2 = json['Phone2'] as String?,
+        mail = json['mail'] as String?,
+        mail2 = json['mail2'] as String?,
         refname = json['ref_name'] as String?,
         ref2name = json['ref2_name'] as String?,
         modelname = json['model-name'] as String?,
@@ -310,6 +316,8 @@ class WORecords {
         'MP_Maintain_Task_ID': mPMaintainTaskID?.toJson(),
         'Phone': phone,
         'Phone2': phone2,
+        'mail': mail,
+        'mail2': mail2,
         'ref_name': refname,
         'ref2_name': ref2name,
         'model-name': modelname,

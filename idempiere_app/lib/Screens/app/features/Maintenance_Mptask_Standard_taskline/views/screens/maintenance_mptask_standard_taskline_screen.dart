@@ -81,8 +81,8 @@ class MaintenanceStandardMptaskLineScreen
         centerTitle: true,
         title: Column(
           children: [
-            Text("${Get.arguments["docN"]}"),
-            Text("${Get.arguments["bPartner"]}"),
+            Text("${controller.args["docN"]}"),
+            Text("${controller.args["bPartner"]}"),
           ],
         ),
         leading: IconButton(
@@ -117,7 +117,7 @@ class MaintenanceStandardMptaskLineScreen
                     onPressed: () {
                       Get.to(const CreateMaintenanceStandardMptask(),
                           arguments: {
-                            "id": Get.arguments["id"],
+                            "id": controller.args["id"],
                           });
                     },
                     icon: const Icon(EvaIcons.fileAddOutline),
@@ -416,7 +416,7 @@ class MaintenanceStandardMptaskLineScreen
                     onPressed: () {
                       Get.to(const CreateMaintenanceStandardMptask(),
                           arguments: {
-                            "id": Get.arguments["id"],
+                            "id": controller.args["id"],
                           });
                     },
                     icon: const Icon(EvaIcons.fileAddOutline),
@@ -715,7 +715,7 @@ class MaintenanceStandardMptaskLineScreen
                     onPressed: () {
                       Get.to(const CreateMaintenanceStandardMptask(),
                           arguments: {
-                            "id": Get.arguments["id"],
+                            "id": controller.args["id"],
                           });
                     },
                     icon: const Icon(EvaIcons.fileAddOutline),

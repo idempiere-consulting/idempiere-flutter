@@ -328,7 +328,7 @@ class _EditMaintainCardRowState extends State<EditMaintainCardRow> {
                                   //autofocus: true,
 
                                   decoration: InputDecoration(
-                                    labelText: 'To Product'.tr,
+                                    labelText: '${'Product'.tr} 2',
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -631,7 +631,7 @@ class _EditMaintainCardRowState extends State<EditMaintainCardRow> {
                                   //autofocus: true,
 
                                   decoration: InputDecoration(
-                                    labelText: 'To Product'.tr,
+                                    labelText: '${'Product'.tr} 2',
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -934,7 +934,7 @@ class _EditMaintainCardRowState extends State<EditMaintainCardRow> {
                                   //autofocus: true,
 
                                   decoration: InputDecoration(
-                                    labelText: 'To Product'.tr,
+                                    labelText: '${'Product'.tr} 2',
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),

@@ -457,7 +457,7 @@ class MaintenanceMptaskStandardController extends GetxController {
         const filename = "workorder";
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
-        file.writeAsString(utf8.decode(response.bodyBytes));
+        file.writeAsStringSync(utf8.decode(response.bodyBytes));
         //productSync = false;
         getWorkOrders();
         if (kDebugMode) {

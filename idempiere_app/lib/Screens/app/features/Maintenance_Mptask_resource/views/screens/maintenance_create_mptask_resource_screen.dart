@@ -519,11 +519,7 @@ class _CreateMaintenanceMpResourceState
       "Height": int.parse(
           heightFieldController.text != "" ? heightFieldController.text : "0"),
       "Color": colorFieldController.text,
-      "LIT_ResourceStatus": {
-        "id": args["property"] == null || args["property"] == false
-            ? "INS"
-            : "NEW"
-      },
+      "LIT_ResourceStatus": {"id": isPropertyValue ? "INS" : "NEW"},
       "IsOwned": isPropertyValue,
     };
 

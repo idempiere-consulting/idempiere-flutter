@@ -433,6 +433,8 @@ class MaintenanceMptaskStandardScreen
                                   subtitle: Column(
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: <Widget>[
                                           Icon(
                                             Icons.handshake,
@@ -459,16 +461,34 @@ class MaintenanceMptaskStandardScreen
                                                 : Colors.yellow,
                                           ),
                                           Expanded(
-                                            child: Text(
-                                              controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
+                                            child: TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/CustomerBP',
+                                                      arguments: {
+                                                        'notificationId':
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.id,
+                                                      });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "",
+                                                        style: TextStyle(
+                                                            color: kNotifColor),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
                                           ),
                                         ],
                                       ),
@@ -686,6 +706,42 @@ class MaintenanceMptaskStandardScreen
                                               Text(
                                                   "${controller.trx.records![index].refname}"
                                                       .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                      .records![index].mail2 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .mail2 !=
+                                                  "",
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.mail,
+                                                  color: Colors.white,
+                                                ),
+                                                tooltip: 'Mail',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone !=
+                                                      null) {
+                                                    controller.writeMailTo(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mail2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].mail2 ??
+                                                  ""),
                                             ],
                                           ),
                                         ),
@@ -1626,6 +1682,8 @@ class MaintenanceMptaskStandardScreen
                                   subtitle: Column(
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: <Widget>[
                                           Icon(
                                             Icons.handshake,
@@ -1652,16 +1710,34 @@ class MaintenanceMptaskStandardScreen
                                                 : Colors.yellow,
                                           ),
                                           Expanded(
-                                            child: Text(
-                                              controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
+                                            child: TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/CustomerBP',
+                                                      arguments: {
+                                                        'notificationId':
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.id,
+                                                      });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "",
+                                                        style: TextStyle(
+                                                            color: kNotifColor),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
                                           ),
                                         ],
                                       ),
@@ -1879,6 +1955,42 @@ class MaintenanceMptaskStandardScreen
                                               Text(
                                                   "${controller.trx.records![index].refname}"
                                                       .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                      .records![index].mail2 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .mail2 !=
+                                                  "",
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.mail,
+                                                  color: Colors.white,
+                                                ),
+                                                tooltip: 'Mail',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone !=
+                                                      null) {
+                                                    controller.writeMailTo(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mail2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].mail2 ??
+                                                  ""),
                                             ],
                                           ),
                                         ),
@@ -2819,6 +2931,8 @@ class MaintenanceMptaskStandardScreen
                                   subtitle: Column(
                                     children: [
                                       Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
                                         children: <Widget>[
                                           Icon(
                                             Icons.handshake,
@@ -2845,16 +2959,34 @@ class MaintenanceMptaskStandardScreen
                                                 : Colors.yellow,
                                           ),
                                           Expanded(
-                                            child: Text(
-                                              controller
-                                                      .trx
-                                                      .records![index]
-                                                      .cBPartnerID
-                                                      ?.identifier ??
-                                                  "??",
-                                              style: const TextStyle(
-                                                  color: Colors.white),
-                                            ),
+                                            child: TextButton(
+                                                onPressed: () {
+                                                  Get.offNamed('/CustomerBP',
+                                                      arguments: {
+                                                        'notificationId':
+                                                            controller
+                                                                ._trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.id,
+                                                      });
+                                                },
+                                                child: Row(
+                                                  children: [
+                                                    Expanded(
+                                                      child: Text(
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .cBPartnerID
+                                                                ?.identifier ??
+                                                            "",
+                                                        style: TextStyle(
+                                                            color: kNotifColor),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                )),
                                           ),
                                         ],
                                       ),
@@ -3072,6 +3204,42 @@ class MaintenanceMptaskStandardScreen
                                               Text(
                                                   "${controller.trx.records![index].refname}"
                                                       .tr),
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller.trx
+                                                      .records![index].mail2 !=
+                                                  null &&
+                                              controller.trx.records![index]
+                                                      .mail2 !=
+                                                  "",
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(
+                                                  Icons.mail,
+                                                  color: Colors.white,
+                                                ),
+                                                tooltip: 'Mail',
+                                                onPressed: () {
+                                                  //log("info button pressed");
+                                                  if (controller
+                                                          .trx
+                                                          .records![index]
+                                                          .phone !=
+                                                      null) {
+                                                    controller.writeMailTo(
+                                                        controller
+                                                            .trx
+                                                            .records![index]
+                                                            .mail2!);
+                                                  }
+                                                },
+                                              ),
+                                              Text(controller.trx
+                                                      .records![index].mail2 ??
+                                                  ""),
                                             ],
                                           ),
                                         ),

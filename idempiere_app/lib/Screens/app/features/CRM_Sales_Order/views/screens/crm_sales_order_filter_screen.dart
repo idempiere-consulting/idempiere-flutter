@@ -256,7 +256,7 @@ class _CRMFilterSalesOrderState extends State<CRMFilterSalesOrder> {
                 Visibility(
                   visible: int.parse(list[8], radix: 16)
                               .toRadixString(2)
-                              .padLeft(4, "0")
+                              .padLeft(8, "0")
                               .toString()[7] ==
                           "1"
                       ? true
