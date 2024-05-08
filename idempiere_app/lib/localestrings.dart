@@ -1333,7 +1333,15 @@ class LocaleString extends Translations {
           'To Product': 'Al Prodotto',
           'Edit Row': 'Modifica Riga',
           'Validity': 'Validità',
-          'Add + Sell': 'Vendita'
+          'Add + Sell': 'Vendita',
+          'Fidelity Card Added to the Order':
+              'Carta Fedeltà aggiunta all\' Ordine',
+          'Fidelity Card not found': 'Carta Fedeltà non trovata',
+          'Code': 'Codice',
+          'Discounted Price': 'Prezzo Scontato',
+          'Total + VAT': 'Totale + IVA',
+          'Invoice Document N°': 'N° Documento Fattura',
+          'RETURN': 'RESO',
         },
       };
 }

@@ -4,6 +4,10 @@ class CRMPOSController extends GetxController {
   //final scaffoldKey = GlobalKey<ScaffoldState>();
 
   late SalesOrderDefaultsJson defValues;
+
+  TextEditingController fidelityFieldController =
+      TextEditingController(text: "");
+
   int businessPartnerId = 0;
   var bpLocationId = "0".obs;
   var paymentTermId = "0".obs;
@@ -14,6 +18,10 @@ class CRMPOSController extends GetxController {
   ProductCategoryJSON prodCategoryList = ProductCategoryJSON(records: []);
 
   PosButtonLayoutJSON prodCategoryButtonList = PosButtonLayoutJSON(records: []);
+
+  List<String> functionButtonNameList = ['RETURN'.tr];
+
+  var isReturnButtonActive = false.obs;
 
   List<DataRow> rows = [];
 
@@ -59,7 +67,7 @@ class CRMPOSController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -68,9 +76,9 @@ class CRMPOSController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
+      /* if (kDebugMode) {
         print(response.body);
-      }
+      } */
       _trx =
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -89,7 +97,7 @@ class CRMPOSController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= Value eq \'$barcode\' and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= (Value eq \'$barcode\' or UPC eq \'$barcode\') and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -114,13 +122,92 @@ class CRMPOSController extends GetxController {
     }
   }
 
+  Future<void> getFidelityCard(String barcode) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= LIT_FidelityCard eq \'$barcode\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      print('fidelity');
+      var json =
+          ContactJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.records!.isNotEmpty) {
+        fidelityFieldController.text = barcode;
+        Get.snackbar(
+          "Done!".tr,
+          "Fidelity Card Added to the Order".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+      } else {
+        Get.snackbar(
+          "Error".tr,
+          "Fidelity Card not found".tr,
+          icon: const Icon(
+            Icons.warning,
+            color: Colors.yellow,
+          ),
+        );
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getProductByProductCategory(int categoryId) async {
     dataAvailable.value = false;
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list_v?\$filter= M_Product_Category_ID eq $categoryId and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= M_Product_Category_ID eq $categoryId and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      _trx =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      pagesTot.value = _trx.pagecount!;
+
+      dataAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getProductBySearchField(String search) async {
+    dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        "$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= (contains(tolower(Name),'${search.toLowerCase()}') or contains(tolower(Value),'${search.toLowerCase()}')) and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}");
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -150,10 +237,13 @@ class CRMPOSController extends GetxController {
     rowNumber++;
     productList.add(POSTableRowJSON.fromJson({
       "number": rowNumber,
+      "productCode": product.value,
       "productName": product.name,
       "productId": product.id,
       "qty": int.parse("1"),
-      "price": product.price!.toDouble(),
+      "price": product.priceList!.toDouble(),
+      "discount": product.discount!.toDouble(),
+      "discountedPrice": product.price!.toDouble(),
       "tot": double.parse("1") * product.price!.toDouble(),
     }));
     currentProductName.value = product.name!;
@@ -227,52 +317,6 @@ class CRMPOSController extends GetxController {
     totalRows.value = tot;
   }
 
-  refreshRows() {
-    tableAvailable.value = false;
-
-    rows.add(DataRow(cells: [
-      DataCell(Text("$rowNumber")),
-      DataCell(Text(currentProductName.value)),
-      DataCell(Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-              ),
-              textAlign: TextAlign.end,
-              //readOnly: true,
-              controller: rowQtyFieldController[rowNumber - 1],
-            ),
-          )
-        ],
-      )),
-      DataCell(Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text("${currentProductPrice.value}"),
-        ],
-      )),
-      DataCell(Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Expanded(
-            child: TextField(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-              ),
-              textAlign: TextAlign.end,
-              readOnly: true,
-              controller: totalFieldController[rowNumber - 1],
-            ),
-          )
-        ],
-      ))
-    ]));
-    tableAvailable.value = true;
-  }
-
   Future<void> createSalesOrder() async {
     Get.back();
     final ip = GetStorage().read('ip');
@@ -317,6 +361,7 @@ class CRMPOSController extends GetxController {
       "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
       "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
       "PaymentRule": {"id": paymentRuleId.value},
+      "LIT_FidelityCard": fidelityFieldController.text,
       "order-line".tr: list,
     });
 

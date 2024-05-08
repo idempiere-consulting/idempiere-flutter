@@ -82,6 +82,8 @@ class PLRecords {
   final String? productCategoryName1;
   final String? productCategoryName2;
   final num? price;
+  final num? priceList;
+  final num? discount;
   final num? qtyAvailable;
   final ADPrintColorID? adPrintColorID;
   final LitProductSizeID? litProductSizeID;
@@ -141,6 +143,8 @@ class PLRecords {
       this.productCategoryName1,
       this.productCategoryName2,
       this.price,
+      this.priceList,
+      this.discount,
       this.qtyAvailable,
       this.litProductSizeID,
       this.adPrintColorID,
@@ -238,7 +242,9 @@ class PLRecords {
         sku = json['SKU'] as String?,
         dateRestock = json['lit_DateReStock'] as String?,
         sizes = json['sizes'] as String?,
-        price = json['PriceStd'] as num?;
+        price = json['PriceStd'] as num?,
+        priceList = json['PriceList'] as num?,
+        discount = json['Discount'] as num?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -291,6 +297,8 @@ class PLRecords {
         'product_category_name1': productCategoryName1,
         'product_category_name2': productCategoryName2,
         'Price': price,
+        'PriceList': priceList,
+        'Discount': discount,
         'AD_PrintColor_ID': adPrintColorID?.toJson(),
         'lit_ProductSize_ID': litProductSizeID?.toJson(),
         'QtyAvailable': qtyAvailable,

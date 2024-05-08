@@ -13,6 +13,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/pos_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/posbuttonlayout_json.dart';
@@ -84,7 +85,16 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
         body: BarcodeKeyboardListener(
           bufferDuration: const Duration(milliseconds: 200),
           onBarcodeScanned: (barcode) {
-            controller.getProductByBarcode(barcode);
+            print(barcode);
+            switch (barcode.substring(0, 3)) {
+              case 'fdy':
+                controller.getFidelityCard(barcode);
+                break;
+              case 'aDM':
+                break;
+              default:
+                controller.getProductByBarcode(barcode);
+            }
           },
           child: SingleChildScrollView(
             child: ResponsiveBuilder(
@@ -117,9 +127,10 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                     children: [
                                       Obx(() => Text(
                                             controller.currentProductName.value,
+                                            overflow: TextOverflow.fade,
                                             style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
-                                                fontSize: 35),
+                                                fontSize: 30),
                                           )),
                                     ],
                                   ),
@@ -141,27 +152,37 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                             StaggeredGridTile.count(
                               crossAxisCellCount: 55,
                               mainAxisCellCount: 20,
-                              child: Obx(
-                                () => controller.tableAvailable.value
-                                    ? DataTable2(
-                                        //minWidth: 10,
-                                        columns: <DataColumn>[
-                                          DataColumn(
-                                            label: Row(
-                                              children: [
-                                                Text(
-                                                  'N°'.tr,
+                              child: SingleChildScrollView(
+                                child: Obx(
+                                  () => controller.tableAvailable.value
+                                      ? DataTable(
+                                          //minWidth: 10,
+                                          columns: <DataColumn>[
+                                            DataColumn(
+                                              label: Expanded(
+                                                child: Text(
+                                                  ''.tr,
                                                   style: const TextStyle(
                                                       fontStyle:
                                                           FontStyle.italic),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                          DataColumn(
-                                            label: Row(
-                                              children: [
-                                                Text(
+                                            DataColumn(
+                                              label: Expanded(
+                                                child: Text(
+                                                  'Code'.tr,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                ),
+                                              ),
+                                            ),
+                                            DataColumn(
+                                              label: Expanded(
+                                                child: Text(
                                                   'Product'.tr,
                                                   style: const TextStyle(
                                                       fontWeight:
@@ -169,15 +190,12 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                       fontStyle:
                                                           FontStyle.italic),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                          DataColumn(
-                                            label: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Text(
+                                            DataColumn(
+                                              numeric: true,
+                                              label: Expanded(
+                                                child: Text(
                                                   'Qty'.tr,
                                                   style: const TextStyle(
                                                       fontWeight:
@@ -185,15 +203,12 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                       fontStyle:
                                                           FontStyle.italic),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                          DataColumn(
-                                            label: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Text(
+                                            DataColumn(
+                                              numeric: true,
+                                              label: Expanded(
+                                                child: Text(
                                                   'Price'.tr,
                                                   style: const TextStyle(
                                                       fontWeight:
@@ -201,15 +216,38 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                       fontStyle:
                                                           FontStyle.italic),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                          DataColumn(
-                                            label: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                Text(
+                                            DataColumn(
+                                              numeric: true,
+                                              label: Expanded(
+                                                child: Text(
+                                                  'Discount'.tr,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                ),
+                                              ),
+                                            ),
+                                            DataColumn(
+                                              numeric: true,
+                                              label: Expanded(
+                                                child: Text(
+                                                  'Discounted Price'.tr,
+                                                  style: const TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontStyle:
+                                                          FontStyle.italic),
+                                                ),
+                                              ),
+                                            ),
+                                            DataColumn(
+                                              numeric: true,
+                                              label: Expanded(
+                                                child: Text(
                                                   'Total'.tr,
                                                   style: const TextStyle(
                                                       fontWeight:
@@ -217,203 +255,244 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                       fontStyle:
                                                           FontStyle.italic),
                                                 ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
-                                        ],
-                                        rows: controller.productList
-                                            .map(
-                                                (e) => DataRow(
-                                                        selected: e.number ==
+                                          ],
+                                          rows: controller.productList
+                                              .map((e) => DataRow(
+                                                      color:
+                                                          MaterialStateProperty
+                                                              .resolveWith(
+                                                                  (states) {
+                                                        // If the button is pressed, return green, otherwise blue
+                                                        if (e.discount == 0.0) {
+                                                          return null;
+                                                        }
+                                                        return null;
+                                                      }),
+                                                      selected: e.number ==
+                                                          controller.rowNumber,
+                                                      cells: [
+                                                        DataCell(IconButton(
+                                                          onPressed: () {
                                                             controller
-                                                                .rowNumber,
-                                                        cells: [
-                                                          DataCell(Row(
-                                                            children: [
-                                                              IconButton(
-                                                                  onPressed:
-                                                                      () {
-                                                                    controller
-                                                                        .tableAvailable
-                                                                        .value = false;
+                                                                .tableAvailable
+                                                                .value = false;
 
-                                                                    controller
-                                                                        .productList
-                                                                        .removeAt(
-                                                                            e.number! -
-                                                                                1);
-                                                                    controller
-                                                                        .rowQtyFieldController
-                                                                        .removeAt(
-                                                                            e.number! -
-                                                                                1);
-                                                                    controller
-                                                                        .totalFieldController
-                                                                        .removeAt(
-                                                                            e.number! -
-                                                                                1);
-                                                                    var last =
-                                                                        0;
-                                                                    for (var i =
-                                                                            0;
-                                                                        i < controller.productList.length;
-                                                                        i++) {
-                                                                      last = i;
+                                                            controller
+                                                                .productList
+                                                                .removeAt(
+                                                                    e.number! -
+                                                                        1);
+                                                            controller
+                                                                .rowQtyFieldController
+                                                                .removeAt(
+                                                                    e.number! -
+                                                                        1);
+                                                            controller
+                                                                .totalFieldController
+                                                                .removeAt(
+                                                                    e.number! -
+                                                                        1);
+                                                            var last = 0;
+                                                            if (controller
+                                                                .productList
+                                                                .isNotEmpty) {
+                                                              for (var i = 0;
+                                                                  i <
                                                                       controller
-                                                                          .productList[
-                                                                              i]
-                                                                          .number = i + 1;
-                                                                    }
-                                                                    controller
-                                                                            .rowNumber =
-                                                                        last +
-                                                                            1;
+                                                                          .productList
+                                                                          .length;
+                                                                  i++) {
+                                                                last = i;
+                                                                controller
+                                                                    .productList[
+                                                                        i]
+                                                                    .number = i + 1;
+                                                              }
+                                                              controller
+                                                                      .rowNumber =
+                                                                  last + 1;
+                                                            } else {
+                                                              controller
+                                                                  .rowNumber = 0;
+                                                            }
 
+                                                            print(controller
+                                                                .rowNumber);
+
+                                                            if (controller
+                                                                .productList
+                                                                .isNotEmpty) {
+                                                              controller
+                                                                      .currentProductName
+                                                                      .value =
+                                                                  controller
+                                                                      .productList[
+                                                                          last]
+                                                                      .productName!;
+                                                              controller
+                                                                      .currentProductQuantity
+                                                                      .value =
+                                                                  controller
+                                                                      .productList[
+                                                                          last]
+                                                                      .qty
+                                                                      .toString();
+                                                              controller
+                                                                      .quantityCounted =
+                                                                  controller
+                                                                      .productList[
+                                                                          last]
+                                                                      .qty
+                                                                      .toString();
+                                                              controller
+                                                                      .currentProductPrice
+                                                                      .value =
+                                                                  controller
+                                                                      .productList[
+                                                                          last]
+                                                                      .price!;
+                                                            }
+                                                            controller
+                                                                .tableAvailable
+                                                                .value = true;
+
+                                                            controller
+                                                                .updateTotal();
+                                                          },
+                                                          icon: const Icon(
+                                                              Icons.delete,
+                                                              color:
+                                                                  Colors.red),
+                                                        )),
+                                                        DataCell(Text(
+                                                            e.productCode ??
+                                                                "N/A")),
+                                                        DataCell(Text(
+                                                            e.productName ??
+                                                                "N/A")),
+                                                        DataCell(Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Expanded(
+                                                              child: TextField(
+                                                                readOnly: e
+                                                                        .number! ==
                                                                     controller
-                                                                            .currentProductName
-                                                                            .value =
-                                                                        controller
-                                                                            .productList[last]
-                                                                            .productName!;
+                                                                        .rowNumber,
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (int.tryParse(
+                                                                          value) !=
+                                                                      null) {
                                                                     controller
-                                                                            .currentProductQuantity
-                                                                            .value =
-                                                                        controller
-                                                                            .productList[last]
-                                                                            .qty
-                                                                            .toString();
-                                                                    controller.quantityCounted = controller
-                                                                        .productList[
-                                                                            last]
-                                                                        .qty
+                                                                        .totalFieldController[
+                                                                            e.number! -
+                                                                                1]
+                                                                        .text = (double.parse(value) *
+                                                                            e.price!)
                                                                         .toString();
                                                                     controller
-                                                                            .currentProductPrice
-                                                                            .value =
-                                                                        controller
-                                                                            .productList[last]
-                                                                            .price!;
+                                                                        .productList[
+                                                                            e.number! -
+                                                                                1]
+                                                                        .tot = double.parse(
+                                                                            value) *
+                                                                        e.price!;
+                                                                  } else {
                                                                     controller
-                                                                        .tableAvailable
-                                                                        .value = true;
-
+                                                                        .rowQtyFieldController[
+                                                                            e.number! -
+                                                                                1]
+                                                                        .text = "1";
                                                                     controller
-                                                                        .updateTotal();
-                                                                  },
-                                                                  icon: const Icon(
-                                                                      Icons
-                                                                          .delete,
-                                                                      color: Colors
-                                                                          .red)),
-                                                              Text(
-                                                                  "${e.number}"),
-                                                            ],
-                                                          )),
-                                                          DataCell(Text(
-                                                              e.productName ??
-                                                                  "N/A")),
-                                                          DataCell(Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              Expanded(
-                                                                child:
-                                                                    TextField(
-                                                                  readOnly: e
-                                                                          .number! ==
-                                                                      controller
-                                                                          .rowNumber,
-                                                                  onChanged:
-                                                                      (value) {
-                                                                    if (int.tryParse(
-                                                                            value) !=
-                                                                        null) {
-                                                                      controller
-                                                                          .totalFieldController[e.number! -
-                                                                              1]
-                                                                          .text = (double.parse(value) *
-                                                                              e.price!)
-                                                                          .toString();
-                                                                      controller
-                                                                          .productList[e.number! -
-                                                                              1]
-                                                                          .tot = double.parse(
-                                                                              value) *
-                                                                          e.price!;
-                                                                    } else {
-                                                                      controller
-                                                                          .rowQtyFieldController[e.number! -
-                                                                              1]
-                                                                          .text = "1";
-                                                                      controller
-                                                                          .totalFieldController[e.number! -
-                                                                              1]
-                                                                          .text = (double.parse(value) *
-                                                                              e.price!)
-                                                                          .toString();
-                                                                    }
-                                                                    controller
-                                                                        .updateTotal();
-                                                                  },
-                                                                  decoration:
-                                                                      const InputDecoration(
-                                                                    border:
-                                                                        InputBorder
-                                                                            .none,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .end,
-                                                                  //readOnly: true,
-                                                                  controller: controller
-                                                                          .rowQtyFieldController[
-                                                                      e.number! -
-                                                                          1],
+                                                                        .totalFieldController[
+                                                                            e.number! -
+                                                                                1]
+                                                                        .text = (double.parse(value) *
+                                                                            e.price!)
+                                                                        .toString();
+                                                                  }
+                                                                  controller
+                                                                      .updateTotal();
+                                                                },
+                                                                decoration:
+                                                                    const InputDecoration(
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
                                                                 ),
-                                                              )
-                                                            ],
-                                                          )),
-                                                          DataCell(Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              Text(
-                                                                  "${e.price}"),
-                                                            ],
-                                                          )),
-                                                          DataCell(Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .end,
-                                                            children: [
-                                                              Expanded(
-                                                                child:
-                                                                    TextField(
-                                                                  decoration:
-                                                                      const InputDecoration(
-                                                                    border:
-                                                                        InputBorder
-                                                                            .none,
-                                                                  ),
-                                                                  textAlign:
-                                                                      TextAlign
-                                                                          .end,
-                                                                  readOnly:
-                                                                      true,
-                                                                  controller: controller
-                                                                          .totalFieldController[
-                                                                      e.number! -
-                                                                          1],
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
+                                                                //readOnly: true,
+                                                                controller: controller
+                                                                    .rowQtyFieldController[e
+                                                                        .number! -
+                                                                    1],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        )),
+                                                        DataCell(Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Text("${e.price}"),
+                                                          ],
+                                                        )),
+                                                        DataCell(Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Text(
+                                                                "${e.discount ?? 0.0}%"),
+                                                          ],
+                                                        )),
+                                                        DataCell(Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Text(
+                                                                "${e.discountedPrice ?? 0.0}"),
+                                                          ],
+                                                        )),
+                                                        DataCell(Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .end,
+                                                          children: [
+                                                            Expanded(
+                                                              child: TextField(
+                                                                decoration:
+                                                                    const InputDecoration(
+                                                                  border:
+                                                                      InputBorder
+                                                                          .none,
                                                                 ),
-                                                              )
-                                                            ],
-                                                          ))
-                                                        ]))
-                                            .toList(),
-                                      )
-                                    : const SizedBox(),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .end,
+                                                                readOnly: true,
+                                                                controller: controller
+                                                                    .totalFieldController[e
+                                                                        .number! -
+                                                                    1],
+                                                              ),
+                                                            )
+                                                          ],
+                                                        ))
+                                                      ]))
+                                              .toList(),
+                                        )
+                                      : const SizedBox(),
+                                ),
                               ),
                             ),
                             StaggeredGridTile.count(
@@ -434,7 +513,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                         prefixIcon:
                                             const Icon(Icons.text_fields),
                                         border: const OutlineInputBorder(),
-                                        labelText: 'Document N°'.tr,
+                                        labelText: 'Invoice Document N°'.tr,
                                         floatingLabelBehavior:
                                             FloatingLabelBehavior.always,
                                       ),
@@ -446,14 +525,15 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10),
                                     child: TextField(
-                                      //controller: nameFieldController,
+                                      controller:
+                                          controller.fidelityFieldController,
                                       decoration: InputDecoration(
                                         isDense: true,
                                         //hintStyle: TextStyle(fontStyle: FontStyle.italic),
                                         prefixIcon:
                                             const Icon(Icons.text_fields),
                                         border: const OutlineInputBorder(),
-                                        labelText: 'Document Type'.tr,
+                                        labelText: 'Fidelity Card'.tr,
                                         floatingLabelBehavior:
                                             FloatingLabelBehavior.always,
                                       ),
@@ -475,7 +555,9 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                     padding: const EdgeInsets.only(
                                         left: 10, right: 10),
                                     child: TextField(
-                                      //controller: nameFieldController,
+                                      readOnly: true,
+                                      controller: TextEditingController(
+                                          text: GetStorage().read('user')),
                                       decoration: InputDecoration(
                                         isDense: true,
                                         //hintStyle: TextStyle(fontStyle: FontStyle.italic),
@@ -553,7 +635,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                             const EdgeInsets.only(right: 50),
                                         width: 90,
                                         child: Text(
-                                          'Total'.tr,
+                                          'Total + VAT'.tr,
                                           textAlign: TextAlign.end,
                                         ),
                                       ),
@@ -628,6 +710,10 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                       ),
                                       minLines: 1,
                                       maxLines: 1,
+                                      onSubmitted: (value) {
+                                        controller
+                                            .getProductBySearchField(value);
+                                      },
                                     ),
                                     const Divider(),
                                     Flexible(
@@ -654,6 +740,11 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               .records![index]
                                                               .name ??
                                                           'N/A'),
+                                                      subtitle: Text(controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .value ??
+                                                          "N/A"),
                                                     ),
                                                   );
                                                 })
@@ -668,10 +759,46 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                 ),
                               ),
                             ),
-                            const StaggeredGridTile.count(
+                            StaggeredGridTile.count(
                               crossAxisCellCount: 18,
                               mainAxisCellCount: 20,
-                              child: Tile(index: 99),
+                              child: MasonryGridView.count(
+                                shrinkWrap: true,
+                                itemCount: 1,
+                                crossAxisCount: 2,
+                                mainAxisSpacing: 2,
+                                crossAxisSpacing: 2,
+                                itemBuilder: (context, index) {
+                                  return SizedBox(
+                                    height: 60,
+                                    child: ElevatedButton(
+                                        style: ButtonStyle(backgroundColor:
+                                            MaterialStateProperty.resolveWith(
+                                                (states) {
+                                          // If the button is pressed, return green, otherwise blue
+                                          if (controller
+                                              .isReturnButtonActive.value) {
+                                            return kNotifColor;
+                                          }
+                                          return null;
+                                        })),
+                                        onPressed: () {
+                                          controller
+                                                  .isReturnButtonActive.value =
+                                              !controller
+                                                  .isReturnButtonActive.value;
+                                        },
+                                        child: Text(
+                                          controller
+                                              .functionButtonNameList[index],
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 10),
+                                        )),
+                                  );
+                                },
+                              ),
                             ),
                             StaggeredGridTile.count(
                               crossAxisCellCount: 17,
