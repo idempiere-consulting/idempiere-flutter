@@ -674,7 +674,7 @@ class PortalMpSalesOrderB2BController extends GetxController {
         tableQtyOnHandRow.add(DataCell(Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Text(rowqtyOnHandList[i]),
+            Text(rowqtyOnHandList[i].contains('-') ? "0" : rowqtyOnHandList[i]),
           ],
         )));
       }

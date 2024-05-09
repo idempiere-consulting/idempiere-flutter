@@ -6,7 +6,6 @@ library dashboard;
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:data_table_2/data_table_2.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter_barcode_listener/flutter_barcode_listener.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -90,7 +89,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
               case 'fdy':
                 controller.getFidelityCard(barcode);
                 break;
-              case 'aDM':
+              case 'adm':
                 break;
               default:
                 controller.getProductByBarcode(barcode);
@@ -265,8 +264,9 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               .resolveWith(
                                                                   (states) {
                                                         // If the button is pressed, return green, otherwise blue
-                                                        if (e.discount == 0.0) {
-                                                          return null;
+                                                        if (e.rowType == "R") {
+                                                          return Color.fromARGB(
+                                                              255, 80, 83, 29);
                                                         }
                                                         return null;
                                                       }),

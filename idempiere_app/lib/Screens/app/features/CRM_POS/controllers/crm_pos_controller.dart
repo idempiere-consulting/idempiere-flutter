@@ -235,22 +235,32 @@ class CRMPOSController extends GetxController {
   setCurrentProduct(PLRecords product) {
     tableAvailable.value = false;
     rowNumber++;
+
+    var rowType = "";
+    if (isReturnButtonActive.value) {
+      rowType = "R";
+    }
     productList.add(POSTableRowJSON.fromJson({
       "number": rowNumber,
+      "rowType": rowType,
       "productCode": product.value,
       "productName": product.name,
       "productId": product.id,
-      "qty": int.parse("1"),
+      "qty": int.parse(rowType == "R" ? "-1" : "1"),
       "price": product.priceList!.toDouble(),
       "discount": product.discount!.toDouble(),
       "discountedPrice": product.price!.toDouble(),
-      "tot": double.parse("1") * product.price!.toDouble(),
+      "tot":
+          double.parse(rowType == "R" ? "-1" : "1") * product.price!.toDouble(),
     }));
     currentProductName.value = product.name!;
 
-    rowQtyFieldController.add(TextEditingController(text: "1"));
+    rowQtyFieldController
+        .add(TextEditingController(text: rowType == "R" ? "-1" : "1"));
     totalFieldController.add(TextEditingController(
-        text: (double.parse("1") * product.price!.toDouble()).toString()));
+        text: (double.parse(rowType == "R" ? "-1" : "1") *
+                product.price!.toDouble())
+            .toString()));
     currentProductPrice.value = product.price!.toDouble();
     updateTotal();
     currentProductName.value = product.name ?? "N/A";
@@ -267,12 +277,18 @@ class CRMPOSController extends GetxController {
 
       currentProductQuantity.value = quantityCounted;
       productList[rowNumber - 1].qty = int.parse(quantityCounted);
-      rowQtyFieldController[rowNumber - 1].text = quantityCounted;
+      rowQtyFieldController[rowNumber - 1].text =
+          productList[rowNumber - 1].rowType == "R"
+              ? "-$quantityCounted"
+              : quantityCounted;
       totalFieldController[rowNumber - 1].text =
-          (double.parse(quantityCounted) * currentProductPrice.value)
+          (double.parse(quantityCounted) *
+                  currentProductPrice.value *
+                  (productList[rowNumber - 1].rowType == "R" ? -1 : 1))
               .toString();
-      productList[rowNumber - 1].tot =
-          double.parse(quantityCounted) * currentProductPrice.value;
+      productList[rowNumber - 1].tot = double.parse(quantityCounted) *
+          currentProductPrice.value *
+          (productList[rowNumber - 1].rowType == "R" ? -1 : 1);
 
       updateTotal();
     }
