@@ -1342,6 +1342,8 @@ class LocaleString extends Translations {
           'Total + VAT': 'Totale + IVA',
           'Invoice Document N°': 'N° Documento Fattura',
           'RETURN': 'RESO',
+          'AVAILABILITY': 'DISPONIBILITA\'',
+          'SALES STAT.': 'STAT. VENDITA'
         },
       };
 }

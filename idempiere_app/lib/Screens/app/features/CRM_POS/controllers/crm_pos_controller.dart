@@ -19,7 +19,7 @@ class CRMPOSController extends GetxController {
 
   PosButtonLayoutJSON prodCategoryButtonList = PosButtonLayoutJSON(records: []);
 
-  List<String> functionButtonNameList = ['RETURN'.tr];
+  List<String> functionButtonNameList = ['RETURN'.tr, 'SALES STAT.'.tr];
 
   var isReturnButtonActive = false.obs;
 

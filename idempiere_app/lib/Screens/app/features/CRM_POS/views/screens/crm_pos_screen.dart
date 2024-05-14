@@ -764,7 +764,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                               mainAxisCellCount: 20,
                               child: MasonryGridView.count(
                                 shrinkWrap: true,
-                                itemCount: 1,
+                                itemCount: 2,
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
@@ -777,16 +777,23 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                 (states) {
                                           // If the button is pressed, return green, otherwise blue
                                           if (controller
-                                              .isReturnButtonActive.value) {
+                                                  .isReturnButtonActive.value &&
+                                              controller.functionButtonNameList[
+                                                      index] ==
+                                                  "RETURN".tr) {
                                             return kNotifColor;
                                           }
                                           return null;
                                         })),
                                         onPressed: () {
-                                          controller
-                                                  .isReturnButtonActive.value =
-                                              !controller
-                                                  .isReturnButtonActive.value;
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "RETURN".tr) {
+                                            controller.isReturnButtonActive
+                                                    .value =
+                                                !controller
+                                                    .isReturnButtonActive.value;
+                                          }
                                         },
                                         child: Text(
                                           controller

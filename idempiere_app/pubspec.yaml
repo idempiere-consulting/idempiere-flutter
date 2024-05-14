@@ -84,15 +84,6 @@ dependencies:
   video_player: ^2.7.2
   webview_flutter: ^4.4.2
 
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/images/raster/logo-1.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-  windows:
-    generate: true
-    image_path: "assets/images/raster/logo-1.png"
-    icon_size: 48 # min:48, max:256, default: 48
     
 
 dev_dependencies:
