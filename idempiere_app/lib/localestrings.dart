@@ -1343,7 +1343,8 @@ class LocaleString extends Translations {
           'Invoice Document N°': 'N° Documento Fattura',
           'RETURN': 'RESO',
           'AVAILABILITY': 'DISPONIBILITA\'',
-          'SALES STAT.': 'STAT. VENDITA'
+          'SALES STAT.': 'STAT. VENDITA',
+          'PURCH. PRICE': 'PREZZO ACQ.'
         },
       };
 }

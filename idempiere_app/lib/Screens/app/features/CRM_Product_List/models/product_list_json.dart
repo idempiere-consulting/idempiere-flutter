@@ -51,6 +51,7 @@ class PLRecords {
   final num? weight;
   final String? value;
   final MProductCategoryID? mProductCategoryID;
+  final MProductID? mProductID;
   final CTaxCategoryID? cTaxCategoryID;
   final bool? discontinued;
   final bool? isBOM;
@@ -112,6 +113,7 @@ class PLRecords {
       this.weight,
       this.value,
       this.mProductCategoryID,
+      this.mProductID,
       this.cTaxCategoryID,
       this.discontinued,
       this.isBOM,
@@ -187,6 +189,9 @@ class PLRecords {
                 ? MProductCategoryID.fromJson(
                     json['M_Product_Category_ID'] as Map<String, dynamic>)
                 : null,
+        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
+            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+            : null,
         cTaxCategoryID =
             (json['C_TaxCategory_ID'] as Map<String, dynamic>?) != null
                 ? CTaxCategoryID.fromJson(
@@ -265,6 +270,7 @@ class PLRecords {
         'Volume': volume,
         'Weight': weight,
         'Value': value,
+        'M_Product_ID': mProductID?.toJson(),
         'M_Product_Category_ID': mProductCategoryID?.toJson(),
         'C_TaxCategory_ID': cTaxCategoryID?.toJson(),
         'Discontinued': discontinued,
@@ -509,6 +515,33 @@ class MProductCategoryID {
   });
 
   MProductCategoryID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MProductID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

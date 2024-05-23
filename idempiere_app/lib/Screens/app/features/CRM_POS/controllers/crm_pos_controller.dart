@@ -19,7 +19,7 @@ class CRMPOSController extends GetxController {
 
   PosButtonLayoutJSON prodCategoryButtonList = PosButtonLayoutJSON(records: []);
 
-  List<String> functionButtonNameList = ['RETURN'.tr, 'SALES STAT.'.tr];
+  List<String> functionButtonNameList = ['RETURN'.tr, 'PURCH. PRICE'.tr];
 
   var isReturnButtonActive = false.obs;
 
@@ -230,6 +230,33 @@ class CRMPOSController extends GetxController {
         print(response.body);
       }
     }
+  }
+
+  Future<int> getSelectedProductPurchasePriceListPrice(int prodId) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        "$protocol://$ip/api/v1/models/lit_product_purchase_list_v?\$filter= M_Product_ID eq $prodId and AD_Client_ID eq ${GetStorage().read("clientid")}");
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.records!.isNotEmpty) {
+        return (json.records![0].price ?? 0).toInt();
+      }
+    } else {
+      print(response.body);
+    }
+
+    return 0;
   }
 
   setCurrentProduct(PLRecords product) {

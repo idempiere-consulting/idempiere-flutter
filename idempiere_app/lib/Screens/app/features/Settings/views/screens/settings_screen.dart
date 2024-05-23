@@ -12,6 +12,7 @@ import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/Settings/views/screens/serial_example.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -194,6 +195,20 @@ class SettingsScreen extends GetView<SettingsController> {
                                   if (Platform.isAndroid) {
                                     controller.getBluetooth(context);
                                   }
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Serial Test'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(controller.posPrinterName.value),
+                                leading: const Icon(Icons.private_connectivity),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  Get.to(() => const ExampleApp());
                                 },
                               ),
                             ],

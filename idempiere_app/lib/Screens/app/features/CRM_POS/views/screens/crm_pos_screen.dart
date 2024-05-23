@@ -84,15 +84,17 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
         body: BarcodeKeyboardListener(
           bufferDuration: const Duration(milliseconds: 200),
           onBarcodeScanned: (barcode) {
-            print(barcode);
-            switch (barcode.substring(0, 3)) {
-              case 'fdy':
-                controller.getFidelityCard(barcode);
-                break;
-              case 'adm':
-                break;
-              default:
-                controller.getProductByBarcode(barcode);
+            //print(barcode);
+            if (barcode.length > 5) {
+              switch (barcode.substring(0, 3)) {
+                case 'fdy':
+                  controller.getFidelityCard(barcode);
+                  break;
+                case 'adm':
+                  break;
+                default:
+                  controller.getProductByBarcode(barcode);
+              }
             }
           },
           child: SingleChildScrollView(
@@ -785,7 +787,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                           }
                                           return null;
                                         })),
-                                        onPressed: () {
+                                        onPressed: () async {
                                           if (controller.functionButtonNameList[
                                                   index] ==
                                               "RETURN".tr) {
@@ -793,6 +795,74 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                     .value =
                                                 !controller
                                                     .isReturnButtonActive.value;
+                                          }
+
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "PURCH. PRICE".tr) {
+                                            List<String> products = [];
+                                            List<int> purchasePrices = [];
+                                            for (var element
+                                                in controller.productList) {
+                                              products.add(
+                                                  element.productName ?? "N/A");
+                                              purchasePrices.add(await controller
+                                                  .getSelectedProductPurchasePriceListPrice(
+                                                      element.productId!));
+                                            }
+                                            /* Get.defaultDialog(
+                                              title: 'PURCH. PRICE'.tr,
+                                              content: ListView.builder(
+                                                  itemCount: controller
+                                                      .productList.length,
+                                                  itemBuilder:
+                                                      (BuildContext context,
+                                                          int index) {
+                                                    return Card(
+                                                      child: ListTile(
+                                                        onTap: () {},
+                                                        title: Text(
+                                                            products[index]),
+                                                        subtitle: Text(
+                                                            purchasePrices[
+                                                                    index]
+                                                                .toString()),
+                                                      ),
+                                                    );
+                                                  }),
+                                            ); */
+
+                                            // ignore: use_build_context_synchronously
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  child: SizedBox(
+                                                    width: 200,
+                                                    height: 400,
+                                                    child: ListView.builder(
+                                                        itemCount: controller
+                                                            .productList.length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return Card(
+                                                            child: ListTile(
+                                                              onTap: () {},
+                                                              title: Text(
+                                                                  products[
+                                                                      index]),
+                                                              subtitle: Text(
+                                                                  "${purchasePrices[index]} EUR"),
+                                                            ),
+                                                          );
+                                                        }),
+                                                  ),
+                                                );
+                                              },
+                                            );
                                           }
                                         },
                                         child: Text(
