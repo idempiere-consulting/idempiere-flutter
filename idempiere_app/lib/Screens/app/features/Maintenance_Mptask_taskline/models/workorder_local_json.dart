@@ -95,6 +95,9 @@ class WORecords {
   bool? isPaid;
   String? contracttypename;
   String? name;
+  String? lITNationalIdNumberID;
+  String? lITFEPAIPA;
+  String? lITTaxID;
   bool? isPrinted;
 
   WORecords(
@@ -161,6 +164,9 @@ class WORecords {
       this.isPaid,
       this.name,
       this.contracttypename,
+      this.lITNationalIdNumberID,
+      this.lITFEPAIPA,
+      this.lITTaxID,
       this.isPrinted});
 
   WORecords.fromJson(Map<String, dynamic> json)
@@ -274,6 +280,9 @@ class WORecords {
         contracttypename = json['contracttypename'] as String?,
         name = json['Name'] as String?,
         isPrinted = json['IsPrinted'] as bool?,
+        lITNationalIdNumberID = json['LIT_NationalIdNumber_ID'] as String?,
+        lITFEPAIPA = json['LIT_FEPA_IPA'] as String?,
+        lITTaxID = json['LIT_TaxID'] as String?,
         litMpMaintainHelp = json['mp_maintain_help'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -338,6 +347,10 @@ class WORecords {
         'Name': name,
         'IsPrinted': isPrinted,
         'contracttypename': contracttypename,
+        'PaidAmt': paidAmt,
+        'LIT_NationalIdNumber_ID': lITNationalIdNumberID,
+        'LIT_FEPA_IPA': lITFEPAIPA,
+        'LIT_TaxID': lITTaxID,
       };
 }
 

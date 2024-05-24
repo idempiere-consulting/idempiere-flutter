@@ -238,6 +238,19 @@ class MaintenanceMptaskStandardScreen
                                                 .records![index]
                                                 .mPMaintainID
                                                 ?.id,
+                                            "paidAmt": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .paidAmt !=
+                                                        0 &&
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .paidAmt !=
+                                                        null
+                                                ? controller
+                                                    .trx.records![index].paidAmt
+                                                : 0,
                                           });
                                     },
                                     icon: Icon(
@@ -336,10 +349,10 @@ class MaintenanceMptaskStandardScreen
                                                   .trx
                                                   .records![index]
                                                   .jpToDoStartTime
-                                                  ?.substring(1, 5),
+                                                  ?.substring(0, 5),
                                               "timeEnd": controller.trx
                                                   .records![index].jpToDoEndTime
-                                                  ?.substring(1, 5),
+                                                  ?.substring(0, 5),
                                               "notePlant": controller
                                                   .trx
                                                   .records![index]
@@ -510,6 +523,12 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ],
                                       ),
+                                      Row(children: [
+                                        Expanded(
+                                          child: Text(
+                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}"),
+                                        )
+                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -1487,6 +1506,19 @@ class MaintenanceMptaskStandardScreen
                                                 .records![index]
                                                 .mPMaintainID
                                                 ?.id,
+                                            "paidAmt": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .paidAmt !=
+                                                        0 &&
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .paidAmt !=
+                                                        null
+                                                ? controller
+                                                    .trx.records![index].paidAmt
+                                                : 0,
                                           });
                                     },
                                     icon: Icon(
@@ -1585,10 +1617,10 @@ class MaintenanceMptaskStandardScreen
                                                   .trx
                                                   .records![index]
                                                   .jpToDoStartTime
-                                                  ?.substring(1, 5),
+                                                  ?.substring(0, 5),
                                               "timeEnd": controller.trx
                                                   .records![index].jpToDoEndTime
-                                                  ?.substring(1, 5),
+                                                  ?.substring(0, 5),
                                               "notePlant": controller
                                                   .trx
                                                   .records![index]
@@ -1759,6 +1791,12 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ],
                                       ),
+                                      Row(children: [
+                                        Expanded(
+                                          child: Text(
+                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}"),
+                                        )
+                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -2736,6 +2774,19 @@ class MaintenanceMptaskStandardScreen
                                                 .records![index]
                                                 .mPMaintainID
                                                 ?.id,
+                                            "paidAmt": controller
+                                                            .trx
+                                                            .records![index]
+                                                            .paidAmt !=
+                                                        0 &&
+                                                    controller
+                                                            .trx
+                                                            .records![index]
+                                                            .paidAmt !=
+                                                        null
+                                                ? controller
+                                                    .trx.records![index].paidAmt
+                                                : 0,
                                           });
                                     },
                                     icon: Icon(
@@ -2834,10 +2885,10 @@ class MaintenanceMptaskStandardScreen
                                                   .trx
                                                   .records![index]
                                                   .jpToDoStartTime
-                                                  ?.substring(1, 5),
+                                                  ?.substring(0, 5),
                                               "timeEnd": controller.trx
                                                   .records![index].jpToDoEndTime
-                                                  ?.substring(1, 5),
+                                                  ?.substring(0, 5),
                                               "notePlant": controller
                                                   .trx
                                                   .records![index]
@@ -3008,6 +3059,12 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ],
                                       ),
+                                      Row(children: [
+                                        Expanded(
+                                          child: Text(
+                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}"),
+                                        )
+                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(

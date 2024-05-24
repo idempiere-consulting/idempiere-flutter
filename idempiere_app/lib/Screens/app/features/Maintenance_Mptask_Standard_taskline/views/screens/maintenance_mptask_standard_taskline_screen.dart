@@ -11,6 +11,7 @@ import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:esc_pos_utils/esc_pos_utils.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -109,6 +110,7 @@ class MaintenanceStandardMptaskLineScreen
                     tooltip: "Save".tr,
                     onPressed: () {
                       controller.editManualNote();
+                      controller.editPaidAmt();
                     },
                     icon: const Icon(Icons.save),
                   ),
@@ -176,6 +178,26 @@ class MaintenanceStandardMptaskLineScreen
                 color: Colors.grey[600],
                 width: screenSize.width,
                 height: 0.25,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  //readOnly: true,
+                  minLines: 1,
+                  maxLines: 1,
+                  controller: controller.paidAmtFieldController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                  ],
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.text_fields),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Paid Amt'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
               ),
               Visibility(
                 visible: controller.args["isSpecialOrder"],
@@ -408,6 +430,7 @@ class MaintenanceStandardMptaskLineScreen
                     tooltip: "Save".tr,
                     onPressed: () {
                       controller.editManualNote();
+                      controller.editPaidAmt();
                     },
                     icon: const Icon(Icons.save),
                   ),
@@ -475,6 +498,26 @@ class MaintenanceStandardMptaskLineScreen
                 color: Colors.grey[600],
                 width: screenSize.width,
                 height: 0.25,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  //readOnly: true,
+                  minLines: 1,
+                  maxLines: 1,
+                  controller: controller.paidAmtFieldController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                  ],
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.text_fields),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Paid Amt'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
               ),
               Visibility(
                 visible: controller.args["isSpecialOrder"],
@@ -707,6 +750,7 @@ class MaintenanceStandardMptaskLineScreen
                     tooltip: "Save".tr,
                     onPressed: () {
                       controller.editManualNote();
+                      controller.editPaidAmt();
                     },
                     icon: const Icon(Icons.save),
                   ),
@@ -774,6 +818,26 @@ class MaintenanceStandardMptaskLineScreen
                 color: Colors.grey[600],
                 width: screenSize.width,
                 height: 0.25,
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  //readOnly: true,
+                  minLines: 1,
+                  maxLines: 1,
+                  controller: controller.paidAmtFieldController,
+                  keyboardType: const TextInputType.numberWithOptions(
+                      signed: true, decimal: true),
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                  ],
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.text_fields),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Paid Amt'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
               ),
               Visibility(
                 visible: controller.args["isSpecialOrder"],

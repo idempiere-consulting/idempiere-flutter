@@ -16,6 +16,8 @@ class MaintenanceStandardMptaskLineController extends GetxController {
   //var args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   //var adUserId;
+  TextEditingController paidAmtFieldController =
+      TextEditingController(text: (Get.arguments["paidAmt"]).toString());
   TextEditingController noteFieldController =
       TextEditingController(text: Get.arguments["note"]);
   TextEditingController manualNoteFieldController =
@@ -391,6 +393,40 @@ class MaintenanceStandardMptaskLineController extends GetxController {
           color: Colors.red,
         ),
       );
+    }
+  }
+
+  editPaidAmt() async {
+    //print(now);
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    var msg = jsonEncode({
+      "PaidAmt": double.parse(paidAmtFieldController.text),
+    });
+
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<MaintenanceMptaskStandardController>().syncWorkOrder();
+      //print("done!");
+      //Get.back();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      //print(response.statusCode);
     }
   }
 
