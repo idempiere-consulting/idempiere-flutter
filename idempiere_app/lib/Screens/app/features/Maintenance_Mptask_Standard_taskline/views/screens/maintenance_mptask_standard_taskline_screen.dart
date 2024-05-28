@@ -145,7 +145,13 @@ class MaintenanceStandardMptaskLineScreen
                           () =>
                               const MaintenanceStandardMptaskMaintenanceCard(),
                           arguments: {
-                            "maintainId": controller.args["maintenanceId"]
+                            "MpOTID": controller.args["id"],
+                            "maintainId": controller.args["maintenanceId"],
+                            "paidAmt": controller.paidAmtFieldController.text,
+                            "request": controller.requestFieldController.text,
+                            "note": controller.noteFieldController.text,
+                            "manualNote":
+                                controller.manualNoteFieldController.text,
                           });
                     },
                     icon: const Icon(Symbols.info),
@@ -465,7 +471,13 @@ class MaintenanceStandardMptaskLineScreen
                           () =>
                               const MaintenanceStandardMptaskMaintenanceCard(),
                           arguments: {
-                            "maintainId": controller.args["maintenanceId"]
+                            "MpOTID": controller.args["id"],
+                            "maintainId": controller.args["maintenanceId"],
+                            "paidAmt": controller.paidAmtFieldController.text,
+                            "request": controller.requestFieldController.text,
+                            "note": controller.noteFieldController.text,
+                            "manualNote":
+                                controller.manualNoteFieldController.text,
                           });
                     },
                     icon: const Icon(Symbols.info),
@@ -785,7 +797,13 @@ class MaintenanceStandardMptaskLineScreen
                           () =>
                               const MaintenanceStandardMptaskMaintenanceCard(),
                           arguments: {
-                            "maintainId": controller.args["maintenanceId"]
+                            "MpOTID": controller.args["id"],
+                            "maintainId": controller.args["maintenanceId"],
+                            "paidAmt": controller.paidAmtFieldController.text,
+                            "request": controller.requestFieldController.text,
+                            "note": controller.noteFieldController.text,
+                            "manualNote":
+                                controller.manualNoteFieldController.text,
                           });
                     },
                     icon: const Icon(Symbols.info),

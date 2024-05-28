@@ -15,11 +15,14 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/sector_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/models/mpmaintaincontractjson.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/models/contracttype_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/models/maintaincard_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/models/maintaincardline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_create_standard_maintaincard_row.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_edit_standard_maintaincard_row.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -92,11 +95,114 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     }
   }
 
+  editManualNote() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final msg = jsonEncode({
+      "ManualNote": manualNoteFieldController.text,
+    });
+    final protocol = GetStorage().read('protocol');
+
+    const filename = "workorder";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    WorkOrderLocalJson wo =
+        WorkOrderLocalJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    for (var element in wo.records!) {
+      if (element.id == args["id"]) {
+        element.manualNote = manualNoteFieldController.text;
+      }
+    }
+
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["MpOTID"]}');
+    if (await checkConnection()) {
+      emptyAPICallStak();
+      var response = await http.put(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 200) {
+        var data = jsonEncode(wo.toJson());
+        file.writeAsStringSync(data);
+        Get.find<MaintenanceMptaskStandardController>().getWorkOrders();
+        //print("done!");
+        //Get.back();
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+        //print(response.statusCode);
+      }
+    } else {
+      var data = jsonEncode(wo.toJson());
+      file.writeAsStringSync(data);
+      Get.find<MaintenanceMptaskController>().getWorkOrders();
+      Map calls = {};
+      if (GetStorage().read('storedEditAPICalls') == null) {
+        calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
+      } else {
+        calls = GetStorage().read('storedEditAPICalls');
+        calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
+      }
+      GetStorage().write('storedEditAPICalls', calls);
+      Get.snackbar(
+        "Salvato!",
+        "Il record è stato salvato localmente in attesa di connessione internet.",
+        icon: const Icon(
+          Icons.save,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  editPaidAmt() async {
+    //print(now);
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    var msg = jsonEncode({
+      "PaidAmt": double.parse(paidAmtFieldController.text),
+    });
+
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.find<MaintenanceMptaskStandardController>().syncWorkOrder();
+      //print("done!");
+      //Get.back();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      //print(response.statusCode);
+    }
+  }
+
   Future<List<CTRecords>> getAllContracttypes() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/C_ContractType');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_ContractType?\$orderby= Name');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -258,6 +364,10 @@ class _MaintenanceStandardMptaskMaintenanceCardState
   int businessPartnerId = 0;
   late TextEditingController nameFieldController;
   late TextEditingController descriptionFieldController;
+  late TextEditingController paidAmtFieldController;
+  late TextEditingController requestFieldController;
+  late TextEditingController noteFieldController;
+  late TextEditingController manualNoteFieldController;
   String contractTypeId = "";
   bool dateAvailable = false;
   String dateFrom = "";
@@ -281,6 +391,13 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     dateFrom = "";
     dateTo = "";
     dueDate = "";
+    paidAmtFieldController =
+        TextEditingController(text: (Get.arguments["paidAmt"]).toString());
+    requestFieldController =
+        TextEditingController(text: Get.arguments["request"]);
+    noteFieldController = TextEditingController(text: Get.arguments["note"]);
+    manualNoteFieldController =
+        TextEditingController(text: Get.arguments["manualNote"]);
     dateAvailable = false;
     serNoFieldController = TextEditingController();
     revisionFieldController = TextEditingController();
@@ -304,6 +421,8 @@ class _MaintenanceStandardMptaskMaintenanceCardState
             child: IconButton(
               onPressed: () async {
                 mobileEditHeader();
+                editManualNote();
+                editPaidAmt();
               },
               icon: const Icon(
                 Icons.save,
@@ -606,8 +725,74 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                               )
                             : const CircularProgressIndicator(),
                       ),
-                      const Flexible(child: SizedBox()),
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.only(right: 10, left: 2.5),
+                        child: TextField(
+                          //readOnly: true,
+
+                          minLines: 1,
+                          maxLines: 1,
+                          controller: paidAmtFieldController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                          ],
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.text_fields),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Paid Amt'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      )),
                     ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: requestFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Request Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity To Do'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: manualNoteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity Done'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
                 const Divider(),
@@ -754,7 +939,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          "${"Product".tr} 2: ",
+                                          "${"Component".tr}: ",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -1113,8 +1298,74 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                               )
                             : const CircularProgressIndicator(),
                       ),
-                      const Flexible(child: SizedBox()),
+                      Flexible(
+                          child: Padding(
+                        padding: const EdgeInsets.only(right: 10, left: 2.5),
+                        child: TextField(
+                          //readOnly: true,
+
+                          minLines: 1,
+                          maxLines: 1,
+                          controller: paidAmtFieldController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9.-]"))
+                          ],
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.text_fields),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Paid Amt'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      )),
                     ],
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: requestFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Request Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: noteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity To Do'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 4,
+                    controller: manualNoteFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person_pin_outlined),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Activity Done'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
                   ),
                 ),
                 const Divider(),
@@ -1261,7 +1512,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          "${"Product".tr} 2: ",
+                                          "${"Component".tr}: ",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -1660,8 +1911,8 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     child: Container(
                                       margin: const EdgeInsets.only(top: 10),
                                       child: TextField(
-                                        minLines: 1,
-                                        maxLines: 5,
+                                        minLines: 3,
+                                        maxLines: 3,
                                         controller: serNoFieldController,
                                         decoration: InputDecoration(
                                           isDense: true,
@@ -1677,15 +1928,46 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   ),
                                   Flexible(
                                     child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
-                                        child: const SizedBox()),
+                                      margin: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: TextField(
+                                        readOnly: true,
+                                        minLines: 3,
+                                        maxLines: 3,
+                                        controller: requestFieldController,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          prefixIcon:
+                                              const Icon(Icons.text_fields),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Request Description'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                   Flexible(
                                     child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
-                                        child: const SizedBox()),
+                                      margin: const EdgeInsets.only(
+                                          top: 10, left: 10),
+                                      child: Container(
+                                        child: TextField(
+                                          minLines: 3,
+                                          maxLines: 3,
+                                          controller: manualNoteFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Activity Done'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                   )
                                 ],
                               ),
@@ -1698,130 +1980,138 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                       crossAxisCellCount: 4,
                       mainAxisCellCount: 1,
                       child: linesAvailable
-                          ? DataTable(
-                              columns: <DataColumn>[
-                                DataColumn(
-                                  label: IconButton(
-                                      onPressed: () {
-                                        Get.to(
-                                            () => CreateMaintainCardRow(
-                                                  getMaintainCardLines:
-                                                      getmaintainCardLines,
-                                                ),
-                                            arguments: {
-                                              "cardId": cardId,
-                                            });
-                                      },
-                                      icon: const Icon(Icons.add)),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Text(
-                                      'Product'.tr,
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic),
+                          ? SingleChildScrollView(
+                              child: DataTable(
+                                columns: <DataColumn>[
+                                  DataColumn(
+                                    label: IconButton(
+                                        onPressed: () {
+                                          Get.to(
+                                              () => CreateMaintainCardRow(
+                                                    getMaintainCardLines:
+                                                        getmaintainCardLines,
+                                                  ),
+                                              arguments: {
+                                                "cardId": cardId,
+                                              });
+                                        },
+                                        icon: const Icon(Icons.add)),
+                                  ),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(
+                                        'Product'.tr,
+                                        style: const TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Text(
-                                      'Qty'.tr,
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(
+                                        'Qty'.tr,
+                                        style: const TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Text(
-                                      '${'Product'.tr} 2',
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(
+                                        '${'Component'.tr}',
+                                        style: const TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Text(
-                                      '${'Qty'.tr} 2',
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(
+                                        '${'Qty'.tr} 2',
+                                        style: const TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Text(
-                                      'Date From'.tr,
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(
+                                        'Date From'.tr,
+                                        style: const TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                                DataColumn(
-                                  label: Expanded(
-                                    child: Text(
-                                      'Date To'.tr,
-                                      style: const TextStyle(
-                                          fontStyle: FontStyle.italic),
+                                  DataColumn(
+                                    label: Expanded(
+                                      child: Text(
+                                        'Date To'.tr,
+                                        style: const TextStyle(
+                                            fontStyle: FontStyle.italic),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ],
-                              rows: trxLines.records!
-                                  .map((e) => DataRow(cells: [
-                                        DataCell(
-                                          IconButton(
-                                              onPressed: () {
-                                                Get.to(
-                                                    () => EditMaintainCardRow(
-                                                          getMaintainCardLines:
-                                                              getmaintainCardLines,
-                                                        ),
-                                                    arguments: {
-                                                      "cardId": cardId,
-                                                      "cardLineId": e.id,
-                                                      "lineNo": e.line ?? 0,
-                                                      "productId":
-                                                          e.mProductID?.id ?? 0,
-                                                      "productName": e
-                                                              .mProductID
-                                                              ?.identifier ??
-                                                          "",
-                                                      "qtyBOM": e.qtyBOM ?? 1.0,
-                                                      "name": e.name ?? "",
-                                                      "description":
-                                                          e.description ?? "",
-                                                      "productToId":
-                                                          e.mProductToID?.id ??
-                                                              0,
-                                                      "productToName": e
-                                                              .mProductToID
-                                                              ?.identifier ??
-                                                          "",
-                                                      "qty": e.qty ?? 0,
-                                                      "dateFrom":
-                                                          e.validFrom ?? "",
-                                                      "dateTo": e.validTo ?? "",
-                                                    });
-                                              },
-                                              icon: const Icon(Icons.edit)),
-                                        ),
-                                        DataCell(
-                                          Text(e.mProductID?.identifier ?? ""),
-                                        ),
-                                        DataCell(
-                                            Text((e.qtyBOM ?? 0).toString())),
-                                        DataCell(
-                                          Text(
-                                              e.mProductToID?.identifier ?? ""),
-                                        ),
-                                        DataCell(Text((e.qty ?? 0).toString())),
-                                        DataCell(Text(e.validFrom ?? "0")),
-                                        DataCell(Text(e.validTo ?? "")),
-                                      ]))
-                                  .toList(),
+                                ],
+                                rows: trxLines.records!
+                                    .map((e) => DataRow(cells: [
+                                          DataCell(
+                                            IconButton(
+                                                onPressed: () {
+                                                  Get.to(
+                                                      () => EditMaintainCardRow(
+                                                            getMaintainCardLines:
+                                                                getmaintainCardLines,
+                                                          ),
+                                                      arguments: {
+                                                        "cardId": cardId,
+                                                        "cardLineId": e.id,
+                                                        "lineNo": e.line ?? 0,
+                                                        "productId":
+                                                            e.mProductID?.id ??
+                                                                0,
+                                                        "productName": e
+                                                                .mProductID
+                                                                ?.identifier ??
+                                                            "",
+                                                        "qtyBOM":
+                                                            e.qtyBOM ?? 1.0,
+                                                        "name": e.name ?? "",
+                                                        "description":
+                                                            e.description ?? "",
+                                                        "productToId": e
+                                                                .mProductToID
+                                                                ?.id ??
+                                                            0,
+                                                        "productToName": e
+                                                                .mProductToID
+                                                                ?.identifier ??
+                                                            "",
+                                                        "qty": e.qty ?? 0,
+                                                        "dateFrom":
+                                                            e.validFrom ?? "",
+                                                        "dateTo":
+                                                            e.validTo ?? "",
+                                                      });
+                                                },
+                                                icon: const Icon(Icons.edit)),
+                                          ),
+                                          DataCell(
+                                            Text(
+                                                e.mProductID?.identifier ?? ""),
+                                          ),
+                                          DataCell(
+                                              Text((e.qtyBOM ?? 0).toString())),
+                                          DataCell(
+                                            Text(e.mProductToID?.identifier ??
+                                                ""),
+                                          ),
+                                          DataCell(
+                                              Text((e.qty ?? 0).toString())),
+                                          DataCell(Text(e.validFrom ?? "0")),
+                                          DataCell(Text(e.validTo ?? "")),
+                                        ]))
+                                    .toList(),
+                              ),
                             )
                           : const SizedBox(),
                     ),

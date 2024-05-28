@@ -1344,7 +1344,8 @@ class LocaleString extends Translations {
           'RETURN': 'RESO',
           'AVAILABILITY': 'DISPONIBILITA\'',
           'SALES STAT.': 'STAT. VENDITA',
-          'PURCH. PRICE': 'PREZZO ACQ.'
+          'PURCH. PRICE': 'PREZZO ACQ.',
+          'Component': 'Componente'
         },
       };
 }

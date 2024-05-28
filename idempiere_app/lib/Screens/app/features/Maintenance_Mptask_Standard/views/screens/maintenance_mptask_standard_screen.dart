@@ -418,12 +418,12 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ],
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.event,
                                             color: Colors.white,
                                           ),
@@ -496,7 +496,7 @@ class MaintenanceMptaskStandardScreen
                                                                 .cBPartnerID
                                                                 ?.identifier ??
                                                             "",
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             color: kNotifColor),
                                                       ),
                                                     ),
@@ -526,7 +526,10 @@ class MaintenanceMptaskStandardScreen
                                       Row(children: [
                                         Expanded(
                                           child: Text(
-                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}"),
+                                            "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
                                         )
                                       ]),
                                     ],
@@ -640,7 +643,7 @@ class MaintenanceMptaskStandardScreen
                                                                     ?.id ??
                                                                 0);
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                       Symbols.search_check)),
                                             ],
                                           ),
@@ -730,10 +733,10 @@ class MaintenanceMptaskStandardScreen
                                         ),
                                         Visibility(
                                           visible: controller.trx
-                                                      .records![index].mail2 !=
+                                                      .records![index].mail !=
                                                   null &&
                                               controller.trx.records![index]
-                                                      .mail2 !=
+                                                      .mail !=
                                                   "",
                                           child: Row(
                                             children: [
@@ -754,12 +757,12 @@ class MaintenanceMptaskStandardScreen
                                                         controller
                                                             .trx
                                                             .records![index]
-                                                            .mail2!);
+                                                            .mail!);
                                                   }
                                                 },
                                               ),
                                               Text(controller.trx
-                                                      .records![index].mail2 ??
+                                                      .records![index].mail ??
                                                   ""),
                                             ],
                                           ),
@@ -1686,12 +1689,12 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ],
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.event,
                                             color: Colors.white,
                                           ),
@@ -1764,7 +1767,7 @@ class MaintenanceMptaskStandardScreen
                                                                 .cBPartnerID
                                                                 ?.identifier ??
                                                             "",
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             color: kNotifColor),
                                                       ),
                                                     ),
@@ -1794,7 +1797,10 @@ class MaintenanceMptaskStandardScreen
                                       Row(children: [
                                         Expanded(
                                           child: Text(
-                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}"),
+                                            "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
                                         )
                                       ]),
                                     ],
@@ -1908,7 +1914,7 @@ class MaintenanceMptaskStandardScreen
                                                                     ?.id ??
                                                                 0);
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                       Symbols.search_check)),
                                             ],
                                           ),
@@ -1998,10 +2004,10 @@ class MaintenanceMptaskStandardScreen
                                         ),
                                         Visibility(
                                           visible: controller.trx
-                                                      .records![index].mail2 !=
+                                                      .records![index].mail !=
                                                   null &&
                                               controller.trx.records![index]
-                                                      .mail2 !=
+                                                      .mail !=
                                                   "",
                                           child: Row(
                                             children: [
@@ -2022,12 +2028,12 @@ class MaintenanceMptaskStandardScreen
                                                         controller
                                                             .trx
                                                             .records![index]
-                                                            .mail2!);
+                                                            .mail!);
                                                   }
                                                 },
                                               ),
                                               Text(controller.trx
-                                                      .records![index].mail2 ??
+                                                      .records![index].mail ??
                                                   ""),
                                             ],
                                           ),
@@ -2954,12 +2960,12 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ],
                                       ),
-                                      Divider(),
+                                      const Divider(),
                                       Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Icon(
+                                          const Icon(
                                             Icons.event,
                                             color: Colors.white,
                                           ),
@@ -3032,7 +3038,7 @@ class MaintenanceMptaskStandardScreen
                                                                 .cBPartnerID
                                                                 ?.identifier ??
                                                             "",
-                                                        style: TextStyle(
+                                                        style: const TextStyle(
                                                             color: kNotifColor),
                                                       ),
                                                     ),
@@ -3062,7 +3068,10 @@ class MaintenanceMptaskStandardScreen
                                       Row(children: [
                                         Expanded(
                                           child: Text(
-                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}"),
+                                            "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
+                                            style: const TextStyle(
+                                                color: Colors.white),
+                                          ),
                                         )
                                       ]),
                                     ],
@@ -3176,7 +3185,7 @@ class MaintenanceMptaskStandardScreen
                                                                     ?.id ??
                                                                 0);
                                                   },
-                                                  icon: Icon(
+                                                  icon: const Icon(
                                                       Symbols.search_check)),
                                             ],
                                           ),
@@ -3266,10 +3275,10 @@ class MaintenanceMptaskStandardScreen
                                         ),
                                         Visibility(
                                           visible: controller.trx
-                                                      .records![index].mail2 !=
+                                                      .records![index].mail !=
                                                   null &&
                                               controller.trx.records![index]
-                                                      .mail2 !=
+                                                      .mail !=
                                                   "",
                                           child: Row(
                                             children: [
@@ -3290,12 +3299,12 @@ class MaintenanceMptaskStandardScreen
                                                         controller
                                                             .trx
                                                             .records![index]
-                                                            .mail2!);
+                                                            .mail!);
                                                   }
                                                 },
                                               ),
                                               Text(controller.trx
-                                                      .records![index].mail2 ??
+                                                      .records![index].mail ??
                                                   ""),
                                             ],
                                           ),
