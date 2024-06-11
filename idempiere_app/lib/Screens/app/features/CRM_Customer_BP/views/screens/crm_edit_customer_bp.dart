@@ -1236,11 +1236,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 margin: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: nameFieldController,
+                  controller: valueController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.badge),
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
                     border: const OutlineInputBorder(),
-                    labelText: 'Name'.tr,
+                    labelText: 'Value'.tr,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
@@ -1248,11 +1248,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 margin: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: valueController,
+                  controller: nameFieldController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    prefixIcon: const Icon(Icons.badge),
                     border: const OutlineInputBorder(),
-                    labelText: 'Value'.tr,
+                    labelText: 'Name'.tr,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
@@ -1283,7 +1283,9 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
                           ? DropdownButton(
-                              value: dropdownValue,
+                              underline: const SizedBox(),
+                              value: dropdownValue == "" ? null : dropdownValue,
+                              isExpanded: true,
                               elevation: 16,
                               onChanged: (String? newValue) {
                                 setState(() {
@@ -1304,6 +1306,426 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                               child: CircularProgressIndicator(),
                             ),
                 ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: taxFieldController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                  ],
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Tax ID'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: sdiCodeFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'SDI Code'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Payment Term'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getPaymentTerms(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<PTRecords>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              underline: const SizedBox(),
+                              hint: Text("Select Payment Term".tr),
+                              isExpanded: true,
+                              value: paymentTermId == "" ? null : paymentTermId,
+                              elevation: 16,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  paymentTermId = newValue as String;
+                                });
+
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Payment Rule'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getPaymentRules(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<PRRecords>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              underline: const SizedBox(),
+                              hint: Text("Select Payment Rule".tr),
+                              isExpanded: true,
+                              value: paymentRuleId == "" ? null : paymentRuleId,
+                              elevation: 16,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  paymentRuleId = newValue as String;
+                                });
+
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.value.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 5,
+                  controller: addressFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.location_on),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Address'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              const Divider(),
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      createAddress = !createAddress;
+                    });
+                    //openAddressCreation();
+                  },
+                  child: createAddress
+                      ? Text('Close Address Creation'.tr)
+                      : Text('Open Address Creation'.tr)),
+              Visibility(
+                visible: createAddress,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        minLines: 1,
+                        maxLines: 5,
+                        controller: address1FieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.edit_road),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Street'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                    countriesDataAvailable
+                        ? /* Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            margin: const EdgeInsets.all(10),
+                            child: Autocomplete<CtrRecords>(
+                              //initialValue: TextEditingValue(text: args["salesRep"]),
+                              displayStringForOption:
+                                  _displayCountryStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<CtrRecords>.empty();
+                                }
+                                return countries.records!
+                                    .where((CtrRecords option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (CtrRecords selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  countryId = selection.id!;
+                                  regionId = 0;
+                                  cityId = 0;
+                                  citiesDataAvailable = false;
+                                });
+                                getAllRegions();
+
+                                //print(salesrepValue);
+                              },
+                            ),
+                          ) */
+                        Container(
+                            margin: const EdgeInsets.all(10),
+                            child: TypeAheadField<CtrRecords>(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                minLines: 1,
+                                maxLines: 4,
+                                controller: countryFieldController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Country'.tr,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return countries.records!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                setState(() {
+                                  countryId = suggestion.id!;
+                                  regionId = 0;
+                                  cityId = 0;
+                                  citiesDataAvailable = false;
+                                  countryFieldController.text =
+                                      suggestion.name ?? '';
+                                });
+                                getAllRegions();
+                                //productName = selection.name;
+                              },
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                    regionsDataAvailable
+                        ? Container(
+                            margin: const EdgeInsets.all(10),
+                            child: /* Autocomplete<RegRecords>(
+                              //initialValue: TextEditingValue(text: args["salesRep"]),
+                              displayStringForOption:
+                                  _displayRegionStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<RegRecords>.empty();
+                                }
+                                return regions.records!
+                                    .where((RegRecords option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (RegRecords selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  regionId = selection.id!;
+                                  cityId = 0;
+                                  region = selection.name ?? "";
+                                });
+                                getAllCities();
+                                //getAllRegions();
+
+                                //print(salesrepValue);
+                              },
+                            ), */
+                                TypeAheadField<RegRecords>(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                minLines: 1,
+                                maxLines: 4,
+                                controller: regionFieldController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Region'.tr,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return regions.records!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                setState(() {
+                                  regionId = suggestion.id!;
+                                  cityId = 0;
+                                  region = suggestion.name ?? "";
+                                  regionFieldController.text =
+                                      suggestion.name ?? '';
+                                });
+                                getAllCities();
+                                //productName = selection.name;
+                              },
+                            ))
+                        : const SizedBox(),
+                    citiesDataAvailable
+                        ? Container(
+                            margin: const EdgeInsets.all(10),
+                            child: /* Autocomplete<CitRecords>(
+                              //initialValue: TextEditingValue(text: args["salesRep"]),
+                              displayStringForOption:
+                                  _displayCityStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<CitRecords>.empty();
+                                }
+                                return cities.records!
+                                    .where((CitRecords option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (CitRecords selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  cityId = selection.id!;
+                                  postalCode = selection.postal ?? "";
+                                  city = selection.name ?? "";
+                                });
+                                //getAllCities();
+                                //getAllRegions();
+
+                                //print(salesrepValue);
+                              },
+                            ), */
+                                TypeAheadField<CitRecords>(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                minLines: 1,
+                                maxLines: 4,
+                                controller: cityFieldController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'City'.tr,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return cities.records!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                setState(() {
+                                  cityId = suggestion.id!;
+                                  postalCode = suggestion.postal ?? "";
+                                  city = suggestion.name ?? "";
+                                  cityFieldController.text =
+                                      suggestion.name ?? '';
+                                });
+                                //productName = selection.name;
+                              },
+                            ))
+                        : const SizedBox(),
+                    Visibility(
+                        visible: countryId != 0 && regionId != 0 && cityId != 0,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              createNewLocation();
+                            },
+                            child: Text('Create Address'.tr))),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 100,
               ),
             ],
           );
@@ -1316,11 +1738,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 margin: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: nameFieldController,
+                  controller: valueController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.badge),
+                    prefixIcon: const Icon(Icons.person_pin_outlined),
                     border: const OutlineInputBorder(),
-                    labelText: 'Name'.tr,
+                    labelText: 'Value'.tr,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
@@ -1328,11 +1750,11 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
               Container(
                 margin: const EdgeInsets.all(10),
                 child: TextField(
-                  controller: valueController,
+                  controller: nameFieldController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.person_pin_outlined),
+                    prefixIcon: const Icon(Icons.badge),
                     border: const OutlineInputBorder(),
-                    labelText: 'Value'.tr,
+                    labelText: 'Name'.tr,
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                 ),
@@ -1363,7 +1785,9 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                           AsyncSnapshot<List<Records>> snapshot) =>
                       snapshot.hasData
                           ? DropdownButton(
-                              value: dropdownValue,
+                              underline: const SizedBox(),
+                              value: dropdownValue == "" ? null : dropdownValue,
+                              isExpanded: true,
                               elevation: 16,
                               onChanged: (String? newValue) {
                                 setState(() {
@@ -1384,6 +1808,426 @@ class _EditCRMCustomerBP extends State<EditCRMCustomerBP> {
                               child: CircularProgressIndicator(),
                             ),
                 ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: taxFieldController,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                  ],
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Tax ID'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  controller: sdiCodeFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.badge),
+                    border: const OutlineInputBorder(),
+                    labelText: 'SDI Code'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Payment Term'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getPaymentTerms(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<PTRecords>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              underline: const SizedBox(),
+                              hint: Text("Select Payment Term".tr),
+                              isExpanded: true,
+                              value: paymentTermId == "" ? null : paymentTermId,
+                              elevation: 16,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  paymentTermId = newValue as String;
+                                });
+
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.id.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.only(left: 40),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Payment Rule'.tr,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: size.width,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                margin: const EdgeInsets.all(10),
+                child: FutureBuilder(
+                  future: getPaymentRules(),
+                  builder: (BuildContext ctx,
+                          AsyncSnapshot<List<PRRecords>> snapshot) =>
+                      snapshot.hasData
+                          ? DropdownButton(
+                              underline: const SizedBox(),
+                              hint: Text("Select Payment Rule".tr),
+                              isExpanded: true,
+                              value: paymentRuleId == "" ? null : paymentRuleId,
+                              elevation: 16,
+                              onChanged: (newValue) {
+                                setState(() {
+                                  paymentRuleId = newValue as String;
+                                });
+
+                                //print(dropdownValue);
+                              },
+                              items: snapshot.data!.map((list) {
+                                return DropdownMenuItem<String>(
+                                  value: list.value.toString(),
+                                  child: Text(
+                                    list.name.toString(),
+                                  ),
+                                );
+                              }).toList(),
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                ),
+              ),
+              Container(
+                margin: const EdgeInsets.all(10),
+                child: TextField(
+                  readOnly: true,
+                  minLines: 1,
+                  maxLines: 5,
+                  controller: addressFieldController,
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.location_on),
+                    border: const OutlineInputBorder(),
+                    labelText: 'Address'.tr,
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                ),
+              ),
+              const Divider(),
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      createAddress = !createAddress;
+                    });
+                    //openAddressCreation();
+                  },
+                  child: createAddress
+                      ? Text('Close Address Creation'.tr)
+                      : Text('Open Address Creation'.tr)),
+              Visibility(
+                visible: createAddress,
+                child: Column(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.all(10),
+                      child: TextField(
+                        minLines: 1,
+                        maxLines: 5,
+                        controller: address1FieldController,
+                        decoration: InputDecoration(
+                          prefixIcon: const Icon(Icons.edit_road),
+                          border: const OutlineInputBorder(),
+                          labelText: 'Street'.tr,
+                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                        ),
+                      ),
+                    ),
+                    countriesDataAvailable
+                        ? /* Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            margin: const EdgeInsets.all(10),
+                            child: Autocomplete<CtrRecords>(
+                              //initialValue: TextEditingValue(text: args["salesRep"]),
+                              displayStringForOption:
+                                  _displayCountryStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<CtrRecords>.empty();
+                                }
+                                return countries.records!
+                                    .where((CtrRecords option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (CtrRecords selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  countryId = selection.id!;
+                                  regionId = 0;
+                                  cityId = 0;
+                                  citiesDataAvailable = false;
+                                });
+                                getAllRegions();
+
+                                //print(salesrepValue);
+                              },
+                            ),
+                          ) */
+                        Container(
+                            margin: const EdgeInsets.all(10),
+                            child: TypeAheadField<CtrRecords>(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                minLines: 1,
+                                maxLines: 4,
+                                controller: countryFieldController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Country'.tr,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return countries.records!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                setState(() {
+                                  countryId = suggestion.id!;
+                                  regionId = 0;
+                                  cityId = 0;
+                                  citiesDataAvailable = false;
+                                  countryFieldController.text =
+                                      suggestion.name ?? '';
+                                });
+                                getAllRegions();
+                                //productName = selection.name;
+                              },
+                            ),
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                    regionsDataAvailable
+                        ? Container(
+                            margin: const EdgeInsets.all(10),
+                            child: /* Autocomplete<RegRecords>(
+                              //initialValue: TextEditingValue(text: args["salesRep"]),
+                              displayStringForOption:
+                                  _displayRegionStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<RegRecords>.empty();
+                                }
+                                return regions.records!
+                                    .where((RegRecords option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (RegRecords selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  regionId = selection.id!;
+                                  cityId = 0;
+                                  region = selection.name ?? "";
+                                });
+                                getAllCities();
+                                //getAllRegions();
+
+                                //print(salesrepValue);
+                              },
+                            ), */
+                                TypeAheadField<RegRecords>(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                minLines: 1,
+                                maxLines: 4,
+                                controller: regionFieldController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'Region'.tr,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return regions.records!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                setState(() {
+                                  regionId = suggestion.id!;
+                                  cityId = 0;
+                                  region = suggestion.name ?? "";
+                                  regionFieldController.text =
+                                      suggestion.name ?? '';
+                                });
+                                getAllCities();
+                                //productName = selection.name;
+                              },
+                            ))
+                        : const SizedBox(),
+                    citiesDataAvailable
+                        ? Container(
+                            margin: const EdgeInsets.all(10),
+                            child: /* Autocomplete<CitRecords>(
+                              //initialValue: TextEditingValue(text: args["salesRep"]),
+                              displayStringForOption:
+                                  _displayCityStringForOption,
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<CitRecords>.empty();
+                                }
+                                return cities.records!
+                                    .where((CitRecords option) {
+                                  return option.name!
+                                      .toString()
+                                      .toLowerCase()
+                                      .contains(
+                                          textEditingValue.text.toLowerCase());
+                                });
+                              },
+                              onSelected: (CitRecords selection) {
+                                //debugPrint(
+                                //'You just selected ${_displayStringForOption(selection)}');
+                                setState(() {
+                                  cityId = selection.id!;
+                                  postalCode = selection.postal ?? "";
+                                  city = selection.name ?? "";
+                                });
+                                //getAllCities();
+                                //getAllRegions();
+
+                                //print(salesrepValue);
+                              },
+                            ), */
+                                TypeAheadField<CitRecords>(
+                              textFieldConfiguration: TextFieldConfiguration(
+                                minLines: 1,
+                                maxLines: 4,
+                                controller: cityFieldController,
+                                decoration: InputDecoration(
+                                  prefixIcon: const Icon(Icons.person_outline),
+                                  border: const OutlineInputBorder(),
+                                  labelText: 'City'.tr,
+                                  floatingLabelBehavior:
+                                      FloatingLabelBehavior.always,
+                                ),
+                              ),
+                              suggestionsCallback: (pattern) async {
+                                return cities.records!.where((element) =>
+                                    (element.name ?? "")
+                                        .toLowerCase()
+                                        .contains(pattern.toLowerCase()));
+                              },
+                              itemBuilder: (context, suggestion) {
+                                return ListTile(
+                                  //leading: Icon(Icons.shopping_cart),
+                                  title: Text(suggestion.name ?? ""),
+                                );
+                              },
+                              onSuggestionSelected: (suggestion) {
+                                setState(() {
+                                  cityId = suggestion.id!;
+                                  postalCode = suggestion.postal ?? "";
+                                  city = suggestion.name ?? "";
+                                  cityFieldController.text =
+                                      suggestion.name ?? '';
+                                });
+                                //productName = selection.name;
+                              },
+                            ))
+                        : const SizedBox(),
+                    Visibility(
+                        visible: countryId != 0 && regionId != 0 && cityId != 0,
+                        child: ElevatedButton(
+                            onPressed: () {
+                              createNewLocation();
+                            },
+                            child: Text('Create Address'.tr))),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 100,
               ),
             ],
           );

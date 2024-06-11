@@ -200,6 +200,11 @@ class MaintenanceMptaskStandardScreen
                                           '/MaintenanceStandardMptaskLine',
                                           arguments: {
                                             "isSpecialOrder": true,
+                                            "paymentRuleId": controller
+                                                .trx
+                                                .records![index]
+                                                .paymentRule
+                                                ?.id,
                                             "bPartner": controller
                                                 .trx
                                                 .records![index]
@@ -516,7 +521,7 @@ class MaintenanceMptaskStandardScreen
                                               color: Colors.red.shade700),
                                           Expanded(
                                             child: Text(
-                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}",
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -1471,6 +1476,11 @@ class MaintenanceMptaskStandardScreen
                                           '/MaintenanceStandardMptaskLine',
                                           arguments: {
                                             "isSpecialOrder": true,
+                                            "paymentRuleId": controller
+                                                .trx
+                                                .records![index]
+                                                .paymentRule
+                                                ?.id,
                                             "bPartner": controller
                                                 .trx
                                                 .records![index]
@@ -1787,7 +1797,7 @@ class MaintenanceMptaskStandardScreen
                                               color: Colors.red.shade700),
                                           Expanded(
                                             child: Text(
-                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}",
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -2742,6 +2752,11 @@ class MaintenanceMptaskStandardScreen
                                           '/MaintenanceStandardMptaskLine',
                                           arguments: {
                                             "isSpecialOrder": true,
+                                            "paymentRuleId": controller
+                                                .trx
+                                                .records![index]
+                                                .paymentRule
+                                                ?.id,
                                             "bPartner": controller
                                                 .trx
                                                 .records![index]
@@ -3058,7 +3073,7 @@ class MaintenanceMptaskStandardScreen
                                               color: Colors.red.shade700),
                                           Expanded(
                                             child: Text(
-                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity}",
+                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),

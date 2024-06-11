@@ -152,6 +152,7 @@ class MaintenanceStandardMptaskLineScreen
                             "note": controller.noteFieldController.text,
                             "manualNote":
                                 controller.manualNoteFieldController.text,
+                            "paymentRuleId": controller.args["paymentRuleId"],
                           });
                     },
                     icon: const Icon(Symbols.info),
@@ -478,6 +479,7 @@ class MaintenanceStandardMptaskLineScreen
                             "note": controller.noteFieldController.text,
                             "manualNote":
                                 controller.manualNoteFieldController.text,
+                            "paymentRuleId": controller.args["paymentRuleId"],
                           });
                     },
                     icon: const Icon(Symbols.info),
@@ -804,6 +806,7 @@ class MaintenanceStandardMptaskLineScreen
                             "note": controller.noteFieldController.text,
                             "manualNote":
                                 controller.manualNoteFieldController.text,
+                            "paymentRuleId": controller.args["paymentRuleId"],
                           });
                     },
                     icon: const Icon(Symbols.info),

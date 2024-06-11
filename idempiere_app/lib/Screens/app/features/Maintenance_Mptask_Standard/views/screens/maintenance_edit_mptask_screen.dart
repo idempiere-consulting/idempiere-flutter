@@ -4,6 +4,7 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -117,17 +118,22 @@ class _EditMaintenanceMptaskStandardState
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    var msg = jsonEncode({
+    var msg = {
       "Description": noteWOFieldController.text,
       "IsPrinted": sendWorkOrder,
-    });
+    };
 
     if (paidAmtFieldController.text != "0") {
-      msg = jsonEncode({
+      msg = {
         "Description": noteWOFieldController.text,
-        "PaymentRule": {"id": dropdownValue},
         "PaidAmt": double.parse(paidAmtFieldController.text),
         "IsPrinted": sendWorkOrder,
+      };
+    }
+
+    if (dropdownValue != "") {
+      msg.addAll({
+        "PaymentRule": {"id": dropdownValue},
       });
     }
     final protocol = GetStorage().read('protocol');
@@ -150,7 +156,10 @@ class _EditMaintenanceMptaskStandardState
       trx.records![Get.arguments["index"]].isPrinted = sendWorkOrder;
 
       if (paidAmtFieldController.text != "0") {
-        trx.records![Get.arguments["index"]].paymentRule?.id = dropdownValue;
+        if (dropdownValue != "") {
+          trx.records![Get.arguments["index"]].paymentRule?.id = dropdownValue;
+        }
+
         trx.records![Get.arguments["index"]].paymentRule?.identifier =
             dropdownValue;
         trx.records![Get.arguments["index"]].paidAmt =
@@ -162,7 +171,7 @@ class _EditMaintenanceMptaskStandardState
         emptyAPICallStak();
         var response = await http.put(
           url,
-          body: msg,
+          body: jsonEncode(msg),
           headers: <String, String>{
             'Content-Type': 'application/json',
             'Authorization': authorization,
@@ -202,10 +211,12 @@ class _EditMaintenanceMptaskStandardState
         Get.find<MaintenanceMptaskStandardController>().getWorkOrders();
         Map calls = {};
         if (GetStorage().read('storedEditAPICalls') == null) {
-          calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
+          calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] =
+              jsonEncode(msg);
         } else {
           calls = GetStorage().read('storedEditAPICalls');
-          calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
+          calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] =
+              jsonEncode(msg);
         }
         GetStorage().write('storedEditAPICalls', calls);
         Get.snackbar(
@@ -220,7 +231,7 @@ class _EditMaintenanceMptaskStandardState
     }
   }
 
-  Future<List<Records>> getAllPaymentRule() async {
+  Future<List<ADRRecords>> getAllPaymentRule() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -258,7 +269,7 @@ class _EditMaintenanceMptaskStandardState
   var representativeFieldController;
   var teamFieldController;
   var paidAmtFieldController;
-  var dropdownValue = "T";
+  var dropdownValue = "";
   bool sendWorkOrder = false;
 
   dynamic args = Get.arguments;
@@ -266,7 +277,7 @@ class _EditMaintenanceMptaskStandardState
   @override
   void initState() {
     super.initState();
-    dropdownValue = Get.arguments["paymentRuleId"] ?? "T";
+    dropdownValue = Get.arguments["paymentRuleId"] ?? "";
     docNoFieldController = TextEditingController(text: args["docNo"] ?? "");
     bPartnerFieldController =
         TextEditingController(text: args["businessPartner"] ?? "");
@@ -477,47 +488,52 @@ class _EditMaintenanceMptaskStandardState
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Payment Rule".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   child: FutureBuilder(
                     future: getAllPaymentRule(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
                         snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.value.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: dropdownValue == ""
+                                      ? null
+                                      : dropdownValue,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    print(dropdownValue);
+                                    setState(() {
+                                      dropdownValue = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),
@@ -731,7 +747,7 @@ class _EditMaintenanceMptaskStandardState
                   child: FutureBuilder(
                     future: getAllPaymentRule(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
@@ -941,47 +957,51 @@ class _EditMaintenanceMptaskStandardState
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.only(left: 40),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      "Payment Rule".tr,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                  margin: const EdgeInsets.all(10),
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                   child: FutureBuilder(
                     future: getAllPaymentRule(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
                         snapshot.hasData
-                            ? DropdownButton(
-                                value: dropdownValue,
-                                elevation: 16,
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    dropdownValue = newValue!;
-                                  });
-                                  //print(dropdownValue);
-                                },
-                                items: snapshot.data!.map((list) {
-                                  return DropdownMenuItem<String>(
-                                    value: list.value.toString(),
-                                    child: Text(
-                                      list.name.toString(),
-                                    ),
-                                  );
-                                }).toList(),
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: dropdownValue == ""
+                                      ? null
+                                      : dropdownValue,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      dropdownValue = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
                               )
                             : const Center(
                                 child: CircularProgressIndicator(),

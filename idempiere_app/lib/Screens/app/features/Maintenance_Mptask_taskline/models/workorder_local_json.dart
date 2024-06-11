@@ -66,6 +66,7 @@ class WORecords {
   final String? cLocationCity;
   final String? cLocationPostal;
   final String? cCountryTrlName;
+  final String? regionName;
   final MPOTTaskID? mPOTTaskID;
   final MPMaintainTaskID? mPMaintainTaskID;
   final String? modelname;
@@ -135,6 +136,7 @@ class WORecords {
       this.cLocationCity,
       this.cLocationPostal,
       this.cCountryTrlName,
+      this.regionName,
       this.mPOTTaskID,
       this.mPMaintainTaskID,
       this.modelname,
@@ -230,6 +232,7 @@ class WORecords {
         cLocationCity = json['c_location_city'] as String?,
         cLocationPostal = json['c_location_postal'] as String?,
         cCountryTrlName = json['c_country_trl_name'] as String?,
+        regionName = json['c_location_regionname'] as String?,
         mPOTTaskID = (json['MP_OT_Task_ID'] as Map<String, dynamic>?) != null
             ? MPOTTaskID.fromJson(json['MP_OT_Task_ID'] as Map<String, dynamic>)
             : null,
@@ -321,6 +324,7 @@ class WORecords {
         'c_location_city': cLocationCity,
         'c_location_postal': cLocationPostal,
         'c_country_trl_name': cCountryTrlName,
+        'c_location_regionname': regionName,
         'MP_OT_Task_ID': mPOTTaskID?.toJson(),
         'MP_Maintain_Task_ID': mPMaintainTaskID?.toJson(),
         'Phone': phone,

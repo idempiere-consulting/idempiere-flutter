@@ -1345,7 +1345,11 @@ class LocaleString extends Translations {
           'AVAILABILITY': 'DISPONIBILITA\'',
           'SALES STAT.': 'STAT. VENDITA',
           'PURCH. PRICE': 'PREZZO ACQ.',
-          'Component': 'Componente'
+          'Component': 'Componente',
+          "Select a Payment Rule": "Seleziona il Metodo di Pagamento",
+          'Alarm Height': 'Altezza Sirena',
+          'Date Start': 'Data Inizio',
+          'Date End': 'Data Fine',
         },
       };
 }

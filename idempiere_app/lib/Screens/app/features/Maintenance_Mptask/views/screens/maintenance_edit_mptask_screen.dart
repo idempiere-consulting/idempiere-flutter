@@ -195,7 +195,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
     }
   }
 
-  Future<List<Records>> getAllPaymentRule() async {
+  Future<List<ADRRecords>> getAllPaymentRule() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -473,7 +473,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   child: FutureBuilder(
                     future: getAllPaymentRule(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
@@ -706,7 +706,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   child: FutureBuilder(
                     future: getAllPaymentRule(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,
@@ -939,7 +939,7 @@ class _EditMaintenanceMptaskState extends State<EditMaintenanceMptask> {
                   child: FutureBuilder(
                     future: getAllPaymentRule(),
                     builder: (BuildContext ctx,
-                            AsyncSnapshot<List<Records>> snapshot) =>
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
                         snapshot.hasData
                             ? DropdownButton(
                                 value: dropdownValue,

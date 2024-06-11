@@ -61,6 +61,7 @@ class Records {
   final BillBPartnerID? billBPartnerID;
   final BillLocationID? billLocationID;
   final CContractTypeID? cContractTypeID;
+  final String? note2;
   final String? modelname;
 
   Records({
@@ -89,6 +90,7 @@ class Records {
     this.billBPartnerID,
     this.billLocationID,
     this.cContractTypeID,
+    this.note2,
     this.modelname,
   });
 
@@ -149,6 +151,7 @@ class Records {
                 ? CContractTypeID.fromJson(
                     json['C_ContractType_ID'] as Map<String, dynamic>)
                 : null,
+        note2 = json['note2'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -176,6 +179,7 @@ class Records {
         'Bill_BPartner_ID': billBPartnerID?.toJson(),
         'Bill_Location_ID': billLocationID?.toJson(),
         'C_ContractType_ID': cContractTypeID?.toJson(),
+        'note2': note2,
         'model-name': modelname
       };
 }

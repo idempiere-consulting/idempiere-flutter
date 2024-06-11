@@ -8,13 +8,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
-import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/sector_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_MpContracts/models/mpmaintaincontractjson.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/models/adreflist_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/models/contracttype_json.dart';
@@ -23,11 +22,9 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_t
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_create_standard_maintaincard_row.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_edit_standard_maintaincard_row.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_task_local_json.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/views/screens/maintenance_mptask_taskline_screen.dart';
+
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
-import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/product_json.dart';
-import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/views/screens/portal_mp_sales_order_b2b_screen.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
 import 'package:material_symbols_icons/symbols.dart';
@@ -60,6 +57,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       "DueDate": dueDate,
       "ValidFrom": dateFrom,
       "ValidTo": dateTo,
+      "note2": note2FieldController.text,
     };
 
     var response = await http.put(
@@ -98,9 +96,15 @@ class _MaintenanceStandardMptaskMaintenanceCardState
   editManualNote() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    final msg = jsonEncode({
+    Map<String, dynamic> msg = {
       "ManualNote": manualNoteFieldController.text,
-    });
+    };
+
+    if (paymentRuleId != "") {
+      msg.addAll({
+        "PaymentRule": {"id": paymentRuleId},
+      });
+    }
     final protocol = GetStorage().read('protocol');
 
     const filename = "workorder";
@@ -122,7 +126,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       emptyAPICallStak();
       var response = await http.put(
         url,
-        body: msg,
+        body: jsonEncode(msg),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': authorization,
@@ -146,7 +150,8 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       Get.find<MaintenanceMptaskController>().getWorkOrders();
       Map calls = {};
       if (GetStorage().read('storedEditAPICalls') == null) {
-        calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
+        calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] =
+            jsonEncode(msg);
       } else {
         calls = GetStorage().read('storedEditAPICalls');
         calls['$protocol://$ip/api/v1/models/mp_ot/${args["id"]}'] = msg;
@@ -175,7 +180,8 @@ class _MaintenanceStandardMptaskMaintenanceCardState
 
     final protocol = GetStorage().read('protocol');
 
-    var url = Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["id"]}');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/mp_ot/${args["MpOTID"]}');
 
     var response = await http.put(
       url,
@@ -228,6 +234,34 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     //print(list[0].eMail);
 
     //print(json.);
+  }
+
+  Future<List<ADRRecords>> getAllPaymentRule() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_ref_list?\$filter= AD_Reference_ID eq 195');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          ADRefListJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      return json.records!;
+    } else {
+      //print(response.body);
+      throw Exception("Failed to load sales reps");
+    }
   }
 
   Future<List<BPRecords>> getAllBPs() async {
@@ -314,6 +348,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
           dateAvailable = true;
           serNoFieldController.text = trx.records![0].serNo ?? "";
           revisionFieldController.text = trx.records![0].revision ?? "";
+          note2FieldController.text = trx.records![0].note2 ?? "";
         });
 
         getmaintainCardLines();
@@ -343,7 +378,9 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       trxLines = MaintainCardLineJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
@@ -351,7 +388,9 @@ class _MaintenanceStandardMptaskMaintenanceCardState
         linesAvailable = true;
       });
     } else {
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 
@@ -368,7 +407,9 @@ class _MaintenanceStandardMptaskMaintenanceCardState
   late TextEditingController requestFieldController;
   late TextEditingController noteFieldController;
   late TextEditingController manualNoteFieldController;
+  late TextEditingController note2FieldController;
   String contractTypeId = "";
+  String paymentRuleId = "";
   bool dateAvailable = false;
   String dateFrom = "";
   String dateTo = "";
@@ -388,6 +429,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     nameFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
     contractTypeId = "";
+    paymentRuleId = Get.arguments["paymentRuleId"] ?? "";
     dateFrom = "";
     dateTo = "";
     dueDate = "";
@@ -398,6 +440,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     noteFieldController = TextEditingController(text: Get.arguments["note"]);
     manualNoteFieldController =
         TextEditingController(text: Get.arguments["manualNote"]);
+    note2FieldController = TextEditingController();
     dateAvailable = false;
     serNoFieldController = TextEditingController();
     revisionFieldController = TextEditingController();
@@ -518,6 +561,22 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                       isDense: true,
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
+                      labelText: 'Alarm Height'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: note2FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
                       labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
@@ -592,6 +651,59 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                   ),
                 ),
                 Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllPaymentRule(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: paymentRuleId == ""
+                                      ? null
+                                      : paymentRuleId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    print(newValue);
+                                    setState(() {
+                                      paymentRuleId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: [
@@ -603,7 +715,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 child: DateTimePicker(
                                   locale: Locale('language'.tr, 'LANGUAGE'.tr),
                                   decoration: InputDecoration(
-                                    labelText: 'Date From'.tr,
+                                    labelText: 'Date Start'.tr,
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -619,7 +731,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   initialValue: dateFrom,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  timeLabelText: 'Date From'.tr,
+                                  timeLabelText: 'Date Start'.tr,
                                   icon: const Icon(Icons.event),
                                   onChanged: (val) {
                                     setState(() {
@@ -644,7 +756,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 child: DateTimePicker(
                                   locale: Locale('language'.tr, 'LANGUAGE'.tr),
                                   decoration: InputDecoration(
-                                    labelText: 'Date To'.tr,
+                                    labelText: 'Date End'.tr,
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -660,7 +772,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   initialValue: dateTo,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  timeLabelText: 'Date To'.tr,
+                                  timeLabelText: 'Date End'.tr,
                                   icon: const Icon(Icons.event),
                                   onChanged: (val) {
                                     setState(() {
@@ -996,7 +1108,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                children: [],
+                                children: const [],
                               ),
                             ),
                           );
@@ -1091,6 +1203,22 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                       isDense: true,
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
+                      labelText: 'Alarm Height'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: note2FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
                       labelText: 'Note'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
@@ -1165,6 +1293,58 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                   ),
                 ),
                 Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllPaymentRule(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<ADRRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  labelText: 'Payment Rule'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+                                  isDense: true,
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  hint: Text("Select a Payment Rule".tr),
+                                  isExpanded: true,
+                                  value: paymentRuleId == ""
+                                      ? null
+                                      : paymentRuleId,
+                                  elevation: 16,
+                                  onChanged: (newValue) {
+                                    setState(() {
+                                      paymentRuleId = newValue as String;
+                                    });
+
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.value.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.only(bottom: 10),
                   child: Row(
                     children: [
@@ -1176,7 +1356,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 child: DateTimePicker(
                                   locale: Locale('language'.tr, 'LANGUAGE'.tr),
                                   decoration: InputDecoration(
-                                    labelText: 'Date From'.tr,
+                                    labelText: 'Date Start'.tr,
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -1192,7 +1372,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   initialValue: dateFrom,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  timeLabelText: 'Date From'.tr,
+                                  timeLabelText: 'Date Start'.tr,
                                   icon: const Icon(Icons.event),
                                   onChanged: (val) {
                                     setState(() {
@@ -1217,7 +1397,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 child: DateTimePicker(
                                   locale: Locale('language'.tr, 'LANGUAGE'.tr),
                                   decoration: InputDecoration(
-                                    labelText: 'Date To'.tr,
+                                    labelText: 'Date End'.tr,
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -1233,7 +1413,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   initialValue: dateTo,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  timeLabelText: 'Date To'.tr,
+                                  timeLabelText: 'Date End'.tr,
                                   icon: const Icon(Icons.event),
                                   onChanged: (val) {
                                     setState(() {
@@ -1569,7 +1749,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   ), */
                                 childrenPadding: const EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 10.0),
-                                children: [],
+                                children: const [],
                               ),
                             ),
                           );
@@ -1593,18 +1773,18 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                     StaggeredGridTile.count(
                       crossAxisCellCount: 4,
                       mainAxisCellCount: 1,
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(kBorderRadius),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(10.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: Container(
+                      child: SingleChildScrollView(
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kBorderRadius),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Flexible(
                                       //margin: const EdgeInsets.all(10),
                                       child: TextField(
                                         minLines: 1,
@@ -1621,337 +1801,337 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
-                                        child: TextField(
-                                          readOnly: true,
-                                          minLines: 1,
-                                          maxLines: 1,
-                                          controller: bpSearchFieldController,
-                                          decoration: InputDecoration(
-                                            labelText: 'Business Partner'.tr,
-                                            //filled: true,
-                                            border: const OutlineInputBorder(
-                                                /* borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide.none, */
-                                                ),
-                                            prefixIcon:
-                                                const Icon(EvaIcons.search),
-                                            //hintText: "search..",
-                                            isDense: true,
-                                            //fillColor: Theme.of(context).cardColor,
-                                          ),
-                                        )),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: FutureBuilder(
-                                        future: getAllContracttypes(),
-                                        builder: (BuildContext ctx,
-                                                AsyncSnapshot<List<CTRecords>>
-                                                    snapshot) =>
-                                            snapshot.hasData
-                                                ? InputDecorator(
-                                                    decoration: InputDecoration(
-                                                      labelText:
-                                                          'Contract Type'.tr,
-                                                      //filled: true,
-                                                      border: const OutlineInputBorder(
-                                                          /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                                          ),
-                                                      prefixIcon: const Icon(
-                                                          EvaIcons.list),
-                                                      //hintText: "search..",
-                                                      isDense: true,
-                                                      //fillColor: Theme.of(context).cardColor,
-                                                    ),
-                                                    child: DropdownButton(
-                                                      isDense: true,
-                                                      underline:
-                                                          const SizedBox(),
-                                                      hint: Text(
-                                                          "Select a Contract Type"
-                                                              .tr),
-                                                      isExpanded: true,
-                                                      value:
-                                                          contractTypeId == ""
-                                                              ? null
-                                                              : contractTypeId,
-                                                      elevation: 16,
-                                                      onChanged: (newValue) {
-                                                        setState(() {
-                                                          contractTypeId =
-                                                              newValue
-                                                                  as String;
-                                                        });
-
-                                                        //print(dropdownValue);
-                                                      },
-                                                      items: snapshot.data!
-                                                          .map((list) {
-                                                        return DropdownMenuItem<
-                                                            String>(
-                                                          value: list.id
-                                                              .toString(),
-                                                          child: Text(
-                                                            list.name
-                                                                .toString(),
-                                                          ),
-                                                        );
-                                                      }).toList(),
-                                                    ),
-                                                  )
-                                                : const Center(
-                                                    child:
-                                                        CircularProgressIndicator(),
-                                                  ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: TextField(
-                                      minLines: 1,
-                                      maxLines: 5,
-                                      controller: nameFieldController,
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        prefixIcon:
-                                            const Icon(Icons.text_fields),
-                                        border: const OutlineInputBorder(),
-                                        labelText: 'Name'.tr,
-                                        floatingLabelBehavior:
-                                            FloatingLabelBehavior.always,
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: TextField(
-                                        minLines: 1,
-                                        maxLines: 5,
-                                        controller: descriptionFieldController,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          prefixIcon:
-                                              const Icon(Icons.text_fields),
-                                          border: const OutlineInputBorder(),
-                                          labelText: 'Extra Costs'.tr,
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.always,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: TextField(
-                                        minLines: 1,
-                                        maxLines: 5,
-                                        controller: revisionFieldController,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          prefixIcon:
-                                              const Icon(Icons.text_fields),
-                                          border: const OutlineInputBorder(),
-                                          labelText: 'Password'.tr,
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.always,
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: dateAvailable
-                                        ? DateTimePicker(
-                                            locale: Locale(
-                                                'language'.tr, 'LANGUAGE'.tr),
+                                    Flexible(
+                                      child: Container(
+                                          margin: const EdgeInsets.only(
+                                              top: 10, bottom: 10, left: 10),
+                                          child: TextField(
+                                            readOnly: true,
+                                            minLines: 1,
+                                            maxLines: 1,
+                                            controller: bpSearchFieldController,
                                             decoration: InputDecoration(
-                                              labelText: 'Date From'.tr,
+                                              labelText: 'Business Partner'.tr,
                                               //filled: true,
                                               border: const OutlineInputBorder(
                                                   /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
+                                            borderSide: BorderSide.none, */
                                                   ),
                                               prefixIcon:
-                                                  const Icon(Icons.event),
+                                                  const Icon(EvaIcons.search),
                                               //hintText: "search..",
                                               isDense: true,
                                               //fillColor: Theme.of(context).cardColor,
                                             ),
-
-                                            type: DateTimePickerType.date,
-                                            initialValue: dateFrom,
-                                            firstDate: DateTime(2000),
-                                            lastDate: DateTime(2100),
-                                            timeLabelText: 'Date From'.tr,
-                                            icon: const Icon(Icons.event),
-                                            onChanged: (val) {
-                                              setState(() {
-                                                dateFrom = val;
-                                              });
-                                            },
-                                            validator: (val) {
-                                              //print(val);
-                                              return null;
-                                            },
-                                            // ignore: avoid_print
-                                            onSaved: (val) => print(val),
-                                          )
-                                        : const CircularProgressIndicator(),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: dateAvailable
-                                          ? DateTimePicker(
-                                              locale: Locale(
-                                                  'language'.tr, 'LANGUAGE'.tr),
-                                              decoration: InputDecoration(
-                                                labelText: 'Date To'.tr,
-                                                //filled: true,
-                                                border: const OutlineInputBorder(
-                                                    /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                                    ),
-                                                prefixIcon:
-                                                    const Icon(Icons.event),
-                                                //hintText: "search..",
-                                                isDense: true,
-                                                //fillColor: Theme.of(context).cardColor,
-                                              ),
-
-                                              type: DateTimePickerType.date,
-                                              initialValue: dateTo,
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime(2100),
-                                              timeLabelText: 'Date To'.tr,
-                                              icon: const Icon(Icons.event),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  dateTo = val;
-                                                });
-                                              },
-                                              validator: (val) {
-                                                //print(val);
-                                                return null;
-                                              },
-                                              // ignore: avoid_print
-                                              onSaved: (val) => print(val),
-                                            )
-                                          : const CircularProgressIndicator(),
+                                          )),
                                     ),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, bottom: 10, left: 10),
-                                      child: dateAvailable
-                                          ? DateTimePicker(
-                                              locale: Locale(
-                                                  'language'.tr, 'LANGUAGE'.tr),
-                                              decoration: InputDecoration(
-                                                labelText: 'Due Date'.tr,
-                                                //filled: true,
-                                                border: const OutlineInputBorder(
-                                                    /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                                    ),
-                                                prefixIcon:
-                                                    const Icon(Icons.event),
-                                                //hintText: "search..",
-                                                isDense: true,
-                                                //fillColor: Theme.of(context).cardColor,
-                                              ),
-
-                                              type: DateTimePickerType.date,
-                                              initialValue: dueDate,
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime(2100),
-                                              timeLabelText: 'Due Date'.tr,
-                                              icon: const Icon(Icons.event),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  dueDate = val;
-                                                });
-                                              },
-                                              validator: (val) {
-                                                //print(val);
-                                                return null;
-                                              },
-                                              // ignore: avoid_print
-                                              onSaved: (val) => print(val),
-                                            )
-                                          : const CircularProgressIndicator(),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(top: 10),
-                                      child: TextField(
-                                        minLines: 3,
-                                        maxLines: 3,
-                                        controller: serNoFieldController,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          prefixIcon:
-                                              const Icon(Icons.text_fields),
-                                          border: const OutlineInputBorder(),
-                                          labelText: 'Note'.tr,
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.always,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, left: 10),
-                                      child: TextField(
-                                        readOnly: true,
-                                        minLines: 3,
-                                        maxLines: 3,
-                                        controller: requestFieldController,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          prefixIcon:
-                                              const Icon(Icons.text_fields),
-                                          border: const OutlineInputBorder(),
-                                          labelText: 'Request Description'.tr,
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.always,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                    child: Container(
-                                      margin: const EdgeInsets.only(
-                                          top: 10, left: 10),
+                                    Flexible(
                                       child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, bottom: 10, left: 10),
+                                        child: FutureBuilder(
+                                          future: getAllContracttypes(),
+                                          builder: (BuildContext ctx,
+                                                  AsyncSnapshot<List<CTRecords>>
+                                                      snapshot) =>
+                                              snapshot.hasData
+                                                  ? InputDecorator(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText:
+                                                            'Contract Type'.tr,
+                                                        //filled: true,
+                                                        border: const OutlineInputBorder(
+                                                            /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                                            ),
+                                                        prefixIcon: const Icon(
+                                                            EvaIcons.list),
+                                                        //hintText: "search..",
+                                                        isDense: true,
+                                                        //fillColor: Theme.of(context).cardColor,
+                                                      ),
+                                                      child: DropdownButton(
+                                                        isDense: true,
+                                                        underline:
+                                                            const SizedBox(),
+                                                        hint: Text(
+                                                            "Select a Contract Type"
+                                                                .tr),
+                                                        isExpanded: true,
+                                                        value: contractTypeId ==
+                                                                ""
+                                                            ? null
+                                                            : contractTypeId,
+                                                        elevation: 16,
+                                                        onChanged: (newValue) {
+                                                          setState(() {
+                                                            contractTypeId =
+                                                                newValue
+                                                                    as String;
+                                                          });
+
+                                                          //print(dropdownValue);
+                                                        },
+                                                        items: snapshot.data!
+                                                            .map((list) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            value: list.id
+                                                                .toString(),
+                                                            child: Text(
+                                                              list.name
+                                                                  .toString(),
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    )
+                                                  : const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: TextField(
+                                        minLines: 1,
+                                        maxLines: 5,
+                                        controller: nameFieldController,
+                                        decoration: InputDecoration(
+                                          isDense: true,
+                                          prefixIcon:
+                                              const Icon(Icons.text_fields),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Name'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, bottom: 10, left: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 5,
+                                          controller:
+                                              descriptionFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Extra Costs'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, bottom: 10, left: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 5,
+                                          controller: revisionFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Password'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: dateAvailable
+                                          ? DateTimePicker(
+                                              locale: Locale(
+                                                  'language'.tr, 'LANGUAGE'.tr),
+                                              decoration: InputDecoration(
+                                                labelText: 'Date Start'.tr,
+                                                //filled: true,
+                                                border: const OutlineInputBorder(
+                                                    /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                                    ),
+                                                prefixIcon:
+                                                    const Icon(Icons.event),
+                                                //hintText: "search..",
+                                                isDense: true,
+                                                //fillColor: Theme.of(context).cardColor,
+                                              ),
+
+                                              type: DateTimePickerType.date,
+                                              initialValue: dateFrom,
+                                              firstDate: DateTime(2000),
+                                              lastDate: DateTime(2100),
+                                              timeLabelText: 'Date Start'.tr,
+                                              icon: const Icon(Icons.event),
+                                              onChanged: (val) {
+                                                setState(() {
+                                                  dateFrom = val;
+                                                });
+                                              },
+                                              validator: (val) {
+                                                //print(val);
+                                                return null;
+                                              },
+                                              // ignore: avoid_print
+                                              onSaved: (val) => print(val),
+                                            )
+                                          : const CircularProgressIndicator(),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, bottom: 10, left: 10),
+                                        child: dateAvailable
+                                            ? DateTimePicker(
+                                                locale: Locale('language'.tr,
+                                                    'LANGUAGE'.tr),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Date End'.tr,
+                                                  //filled: true,
+                                                  border: const OutlineInputBorder(
+                                                      /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                                      ),
+                                                  prefixIcon:
+                                                      const Icon(Icons.event),
+                                                  //hintText: "search..",
+                                                  isDense: true,
+                                                  //fillColor: Theme.of(context).cardColor,
+                                                ),
+
+                                                type: DateTimePickerType.date,
+                                                initialValue: dateTo,
+                                                firstDate: DateTime(2000),
+                                                lastDate: DateTime(2100),
+                                                timeLabelText: 'Date End'.tr,
+                                                icon: const Icon(Icons.event),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    dateTo = val;
+                                                  });
+                                                },
+                                                validator: (val) {
+                                                  //print(val);
+                                                  return null;
+                                                },
+                                                // ignore: avoid_print
+                                                onSaved: (val) => print(val),
+                                              )
+                                            : const CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, bottom: 10, left: 10),
+                                        child: dateAvailable
+                                            ? DateTimePicker(
+                                                locale: Locale('language'.tr,
+                                                    'LANGUAGE'.tr),
+                                                decoration: InputDecoration(
+                                                  labelText: 'Due Date'.tr,
+                                                  //filled: true,
+                                                  border: const OutlineInputBorder(
+                                                      /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                                      ),
+                                                  prefixIcon:
+                                                      const Icon(Icons.event),
+                                                  //hintText: "search..",
+                                                  isDense: true,
+                                                  //fillColor: Theme.of(context).cardColor,
+                                                ),
+
+                                                type: DateTimePickerType.date,
+                                                initialValue: dueDate,
+                                                firstDate: DateTime(2000),
+                                                lastDate: DateTime(2100),
+                                                timeLabelText: 'Due Date'.tr,
+                                                icon: const Icon(Icons.event),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    dueDate = val;
+                                                  });
+                                                },
+                                                validator: (val) {
+                                                  //print(val);
+                                                  return null;
+                                                },
+                                                // ignore: avoid_print
+                                                onSaved: (val) => print(val),
+                                              )
+                                            : const CircularProgressIndicator(),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: TextField(
+                                          minLines: 3,
+                                          maxLines: 3,
+                                          controller: note2FieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Note'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, left: 10),
+                                        child: TextField(
+                                          readOnly: true,
+                                          minLines: 3,
+                                          maxLines: 3,
+                                          controller: requestFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Request Description'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, left: 10),
                                         child: TextField(
                                           minLines: 3,
                                           maxLines: 3,
@@ -1967,11 +2147,135 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                           ),
                                         ),
                                       ),
+                                    )
+                                  ],
+                                ),
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                          top: 10,
+                                        ),
+                                        child: TextField(
+                                          //readOnly: true,
+
+                                          minLines: 1,
+                                          maxLines: 1,
+                                          controller: paidAmtFieldController,
+                                          keyboardType: const TextInputType
+                                                  .numberWithOptions(
+                                              signed: true, decimal: true),
+                                          inputFormatters: [
+                                            FilteringTextInputFormatter.allow(
+                                                RegExp("[0-9.-]"))
+                                          ],
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Paid Amt'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                                  )
-                                ],
-                              ),
-                            ],
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 10),
+                                        child: FutureBuilder(
+                                          future: getAllPaymentRule(),
+                                          builder: (BuildContext ctx,
+                                                  AsyncSnapshot<
+                                                          List<ADRRecords>>
+                                                      snapshot) =>
+                                              snapshot.hasData
+                                                  ? InputDecorator(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText:
+                                                            'Payment Rule'.tr,
+                                                        //filled: true,
+                                                        border: const OutlineInputBorder(
+                                                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                                            ),
+                                                        prefixIcon: const Icon(
+                                                            EvaIcons.list),
+                                                        //hintText: "search..",
+                                                        isDense: true,
+                                                        //fillColor: Theme.of(context).cardColor,
+                                                      ),
+                                                      child: DropdownButton(
+                                                        isDense: true,
+                                                        underline:
+                                                            const SizedBox(),
+                                                        hint: Text(
+                                                            "Select a Payment Rule"
+                                                                .tr),
+                                                        isExpanded: true,
+                                                        value:
+                                                            paymentRuleId == ""
+                                                                ? null
+                                                                : paymentRuleId,
+                                                        elevation: 16,
+                                                        onChanged: (newValue) {
+                                                          setState(() {
+                                                            paymentRuleId =
+                                                                newValue
+                                                                    as String;
+                                                          });
+
+                                                          //print(dropdownValue);
+                                                        },
+                                                        items: snapshot.data!
+                                                            .map((list) {
+                                                          return DropdownMenuItem<
+                                                              String>(
+                                                            value: list.value
+                                                                .toString(),
+                                                            child: Text(
+                                                              list.name
+                                                                  .toString(),
+                                                            ),
+                                                          );
+                                                        }).toList(),
+                                                      ),
+                                                    )
+                                                  : const Center(
+                                                      child:
+                                                          CircularProgressIndicator(),
+                                                    ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, left: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 5,
+                                          controller: serNoFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Alarm Height'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -2018,7 +2322,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   DataColumn(
                                     label: Expanded(
                                       child: Text(
-                                        '${'Component'.tr}',
+                                        'Component'.tr,
                                         style: const TextStyle(
                                             fontStyle: FontStyle.italic),
                                       ),

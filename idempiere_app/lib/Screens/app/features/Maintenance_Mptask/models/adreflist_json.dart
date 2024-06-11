@@ -3,7 +3,7 @@ class ADRefListJSON {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  final List<ADRRecords>? records;
 
   ADRefListJSON({
     this.pagecount,
@@ -19,7 +19,7 @@ class ADRefListJSON {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => ADRRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class ADRefListJSON {
       };
 }
 
-class Records {
+class ADRRecords {
   final int? id;
   final String? uid;
   final String? name;
@@ -48,7 +48,7 @@ class Records {
   final String? parameterValue;
   final String? modelname;
 
-  Records({
+  ADRRecords({
     this.id,
     this.uid,
     this.name,
@@ -66,7 +66,7 @@ class Records {
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  ADRRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         name = json['Name'] as String?,
