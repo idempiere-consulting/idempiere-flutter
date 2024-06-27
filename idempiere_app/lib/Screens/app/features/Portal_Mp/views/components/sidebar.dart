@@ -153,6 +153,16 @@ class _Sidebar extends StatelessWidget {
                       "1",
                 ),
                 SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Hours Review".tr,
+                  visible: int.parse(list[44], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                SelectionButtonData(
                   activeIcon: EvaIcons.logOut,
                   icon: EvaIcons.logOutOutline,
                   label: "Log Out",
@@ -215,6 +225,9 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
                   case 12:
+                    Get.offNamed('/PortalMpHoursReview');
+                    break;
+                  case 13:
                     Get.offAllNamed("/");
                     break;
                   default:

@@ -1595,7 +1595,7 @@ CRUD=1111=F
  42 Corsi di Formazione : R 
  43 Corsisti e Attestati: R
  44 Proposta Nuovi Corsi: R
- 45 
+ 45 Riepilogo Ore 
  46
  47
  48

@@ -677,6 +677,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         print('WorkOrder Checked');
       }
       syncWorkOrderResource(); */
+      print('pagine wo');
       var json = WorkOrderLocalJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
       if (json.pagecount! > 1) {

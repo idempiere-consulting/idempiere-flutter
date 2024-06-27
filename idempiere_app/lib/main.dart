@@ -23,6 +23,7 @@ import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_mptask_standard_taskline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Confirm_Sales_Order/views/screens/portal_mp_confirm_sales_order_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Hours_Review/views/screens/portal_mp_hoursreview_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_Creation_BP_PriceList_Edit/views/screens/portal_mp_sales_order_creation_BP_PriceList_edit_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_order_From_Pricelist/views/screens/portal_mp_sales_orderfrom_pricelist_screen.dart';
@@ -596,6 +597,11 @@ class MyApp extends StatelessWidget {
           name: '/PortalMpSalesOffer',
           page: () => const PortalMpSalesOfferScreen(),
           binding: PortalMpSalesOfferBinding(),
+        ),
+        GetPage(
+          name: '/PortalMpHoursReview',
+          page: () => const PortalMpHoursReviewScreen(),
+          binding: PortalMpHoursReviewBinding(),
         ),
         GetPage(
           name: '/PortalMpSalesOrderB2B',

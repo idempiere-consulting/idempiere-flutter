@@ -60,37 +60,87 @@ class _Sidebar extends StatelessWidget {
                       "1",
                 ),
                 SelectionButtonData(
+                    activeIcon: Icons.person,
+                    icon: EvaIcons.personOutline,
+                    label: "Sales Offer".tr,
+                    visible: /* int.parse(list[36], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1", */
+                        false),
+                SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Purchase Order".tr,
+                  visible: int.parse(list[50], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Confirm Order".tr,
+                  visible: int.parse(list[49], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Training and Course".tr,
+                  visible: int.parse(list[56], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Impianto
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Maintenance".tr,
+                  visible: int.parse(list[41], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Impianti dettaglio
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Anomaly".tr,
+                  visible: int.parse(list[40], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 //Scadenze
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Invoice".tr,
+                  visible: int.parse(list[34], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Contract".tr,
+                  visible: int.parse(list[38], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person,
@@ -101,6 +151,22 @@ class _Sidebar extends StatelessWidget {
                           .padLeft(8, "0")
                           .toString()[1] ==
                       "1",
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.person,
+                  icon: EvaIcons.personOutline,
+                  label: "Hours Review".tr,
+                  visible: int.parse(list[44], radix: 16)
+                          .toRadixString(2)
+                          .padLeft(8, "0")
+                          .toString()[1] ==
+                      "1",
+                ),
+                SelectionButtonData(
+                  activeIcon: EvaIcons.logOut,
+                  icon: EvaIcons.logOutOutline,
+                  label: "Log Out",
+                  visible: true,
                 ),
               ],
               onSelected: (index, value) {
@@ -127,32 +193,43 @@ class _Sidebar extends StatelessWidget {
                     break;
 
                   case 3:
+                    Get.offNamed('/PortalMpSalesOffer');
+                    break;
+                  case 4:
                     Get.offNamed('/PortalMpSalesOrder');
                     break;
+                  case 5:
+                    Get.offNamed('/PortalMpConfirmSalesOrder');
+                    break;
 
-                  case 4:
+                  case 6:
                     Get.offNamed('/PortalMpTrainingCourse');
                     break;
                   //Impianto
-                  case 5:
+                  case 7:
                     Get.offNamed('/PortalMpMaintenanceMp');
                     break;
                   //Impianti dettaglio
-                  case 6:
+                  case 8:
                     Get.offNamed('/PortalMpAnomaly');
                     break;
                   //Scadenze
-                  case 7:
+                  case 9:
                     Get.offNamed('/PortalMpInvoice');
                     break;
 
-                  case 8:
+                  case 10:
                     Get.offNamed('/PortalMpContract');
                     break;
-                  case 9:
+                  case 11:
                     Get.offNamed('/PortalMpSalesOrderB2B');
                     break;
-
+                  case 12:
+                    Get.offNamed('/PortalMpHoursReview');
+                    break;
+                  case 13:
+                    Get.offAllNamed("/");
+                    break;
                   default:
                 }
               },

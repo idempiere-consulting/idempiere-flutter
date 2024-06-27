@@ -1350,6 +1350,13 @@ class LocaleString extends Translations {
           'Alarm Height': 'Altezza Sirena',
           'Date Start': 'Data Inizio',
           'Date End': 'Data Fine',
+          'TASKS: ': 'ATTIVITA\': ',
+          'Total Hours': 'Ore Totali',
+          'Invoiced Hours': 'Ore Fatturate',
+          'Hrs': 'Ore',
+          'Invoiced': 'Fatturato',
+          'Support': 'Supporto',
+          'Print Hours Review': 'Stampa Revisione Ore'
         },
       };
 }
