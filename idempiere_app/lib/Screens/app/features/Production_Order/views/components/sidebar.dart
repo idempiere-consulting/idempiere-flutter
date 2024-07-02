@@ -37,7 +37,19 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.paid,
                   icon: Icons.paid_outlined,
                   label: "Production Order".tr,
-                  visible: int.parse(list[7], radix: 16)
+                  visible: int.parse(list[78], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
+                ),
+                SelectionButtonData(
+                  activeIcon: Icons.paid,
+                  icon: Icons.paid_outlined,
+                  label: "Production Advancement State".tr,
+                  visible: int.parse(list[82], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==
@@ -56,6 +68,9 @@ class _Sidebar extends StatelessWidget {
 
                   case 1:
                     Get.offNamed('/ProductionOrder');
+                    break;
+                  case 2:
+                    Get.offNamed('/ProductionAdvancementState');
                     break;
                   default:
                 }
