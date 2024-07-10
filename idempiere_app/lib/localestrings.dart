@@ -497,7 +497,9 @@ class LocaleString extends Translations {
           'Maintenance Lock/Unlock Container':
               'Maintenance Lock/Unlock Container',
           'Availability:': 'Availability:',
-          'Lock/Unlock Container': 'Lock/Unlock Container'
+          'Lock/Unlock Container': 'Lock/Unlock Container',
+          'production-mask': 'production',
+          'production-line-mask': 'production-line'
         },
 
         //ITALIAN LANGUAGE
@@ -1356,7 +1358,17 @@ class LocaleString extends Translations {
           'Hrs': 'Ore',
           'Invoiced': 'Fatturato',
           'Support': 'Supporto',
-          'Print Hours Review': 'Stampa Revisione Ore'
+          'Print Hours Review': 'Stampa Revisione Ore',
+          'Select a Phase': 'Seleziona una Fase',
+          'Phase': 'Fase',
+          'Qty Planned': 'Qtà Pianificata',
+          'Qty Used': 'Qtà Usata',
+          'activity-control': 'avanzamento-di-produzione-adp00',
+          'Add Material': 'Aggiungi Materiale',
+          'Production Components': 'Componenti',
+          'Added Materials': 'Materiali Aggiunti',
+          'production-mask': 'produzione-prodotto-singolo-pps00',
+          'production-line-mask': 'production-line'
         },
       };
 }

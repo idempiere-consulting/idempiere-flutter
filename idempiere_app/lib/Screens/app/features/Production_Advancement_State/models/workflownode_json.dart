@@ -1,25 +1,28 @@
-class LeadStatusJson {
+class WorkFlowNodeJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<LSRecords>? records;
+  final int? arraycount;
+  final List<Records>? records;
 
-  LeadStatusJson({
+  WorkFlowNodeJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
+    this.arraycount,
     this.records,
   });
 
-  LeadStatusJson.fromJson(Map<String, dynamic> json)
+  WorkFlowNodeJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
+        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => LSRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -27,17 +30,16 @@ class LeadStatusJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
+        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
 
-class LSRecords {
+class Records {
   final int? id;
   final String? uid;
   final String? name;
-  final ADReferenceID? aDReferenceID;
-  final String? value;
-  final String? documentNo;
+  final ADWorkflowID? aDWorkflowID;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
   final bool? isActive;
@@ -45,16 +47,32 @@ class LSRecords {
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
+  final Action? action;
+  final bool? isCentrallyMaintained;
+  final int? yPosition;
   final EntityType? entityType;
+  final int? xPosition;
+  final int? limit;
+  final int? duration;
+  final num? cost;
+  final int? waitingTime;
+  final JoinElement? joinElement;
+  final SplitElement? splitElement;
+  final DocAction? docAction;
+  final String? value;
+  final int? dynPriorityChange;
+  final bool? isMilestone;
+  final bool? isSubcontracting;
+  final int? unitsCycles;
+  final int? yield;
+  final bool? isAttachedDocumentToEmail;
   final String? modelname;
 
-  LSRecords({
+  Records({
     this.id,
     this.uid,
     this.name,
-    this.aDReferenceID,
-    this.value,
-    this.documentNo,
+    this.aDWorkflowID,
     this.aDClientID,
     this.aDOrgID,
     this.isActive,
@@ -62,21 +80,36 @@ class LSRecords {
     this.createdBy,
     this.updated,
     this.updatedBy,
+    this.action,
+    this.isCentrallyMaintained,
+    this.yPosition,
     this.entityType,
+    this.xPosition,
+    this.limit,
+    this.duration,
+    this.cost,
+    this.waitingTime,
+    this.joinElement,
+    this.splitElement,
+    this.docAction,
+    this.value,
+    this.dynPriorityChange,
+    this.isMilestone,
+    this.isSubcontracting,
+    this.unitsCycles,
+    this.yield,
+    this.isAttachedDocumentToEmail,
     this.modelname,
   });
 
-  LSRecords.fromJson(Map<String, dynamic> json)
+  Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         name = json['Name'] as String?,
-        aDReferenceID =
-            (json['AD_Reference_ID'] as Map<String, dynamic>?) != null
-                ? ADReferenceID.fromJson(
-                    json['AD_Reference_ID'] as Map<String, dynamic>)
-                : null,
-        value = json['Value'] as String?,
-        documentNo = json['DocumentNo'] as String?,
+        aDWorkflowID = (json['AD_Workflow_ID'] as Map<String, dynamic>?) != null
+            ? ADWorkflowID.fromJson(
+                json['AD_Workflow_ID'] as Map<String, dynamic>)
+            : null,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
@@ -92,17 +125,43 @@ class LSRecords {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
+        action = (json['Action'] as Map<String, dynamic>?) != null
+            ? Action.fromJson(json['Action'] as Map<String, dynamic>)
+            : null,
+        isCentrallyMaintained = json['IsCentrallyMaintained'] as bool?,
+        yPosition = json['YPosition'] as int?,
         entityType = (json['EntityType'] as Map<String, dynamic>?) != null
             ? EntityType.fromJson(json['EntityType'] as Map<String, dynamic>)
             : null,
+        xPosition = json['XPosition'] as int?,
+        limit = json['Limit'] as int?,
+        duration = json['Duration'] as int?,
+        cost = json['Cost'] as num?,
+        waitingTime = json['WaitingTime'] as int?,
+        joinElement = (json['JoinElement'] as Map<String, dynamic>?) != null
+            ? JoinElement.fromJson(json['JoinElement'] as Map<String, dynamic>)
+            : null,
+        splitElement = (json['SplitElement'] as Map<String, dynamic>?) != null
+            ? SplitElement.fromJson(
+                json['SplitElement'] as Map<String, dynamic>)
+            : null,
+        docAction = (json['DocAction'] as Map<String, dynamic>?) != null
+            ? DocAction.fromJson(json['DocAction'] as Map<String, dynamic>)
+            : null,
+        value = json['Value'] as String?,
+        dynPriorityChange = json['DynPriorityChange'] as int?,
+        isMilestone = json['IsMilestone'] as bool?,
+        isSubcontracting = json['IsSubcontracting'] as bool?,
+        unitsCycles = json['UnitsCycles'] as int?,
+        yield = json['Yield'] as int?,
+        isAttachedDocumentToEmail = json['IsAttachedDocumentToEmail'] as bool?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'uid': uid,
         'Name': name,
-        'AD_Reference_ID': aDReferenceID?.toJson(),
-        'Value': value,
+        'AD_Workflow_ID': aDWorkflowID?.toJson(),
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
         'IsActive': isActive,
@@ -110,25 +169,43 @@ class LSRecords {
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
+        'Action': action?.toJson(),
+        'IsCentrallyMaintained': isCentrallyMaintained,
+        'YPosition': yPosition,
         'EntityType': entityType?.toJson(),
+        'XPosition': xPosition,
+        'Limit': limit,
+        'Duration': duration,
+        'Cost': cost,
+        'WaitingTime': waitingTime,
+        'JoinElement': joinElement?.toJson(),
+        'SplitElement': splitElement?.toJson(),
+        'DocAction': docAction?.toJson(),
+        'Value': value,
+        'DynPriorityChange': dynPriorityChange,
+        'IsMilestone': isMilestone,
+        'IsSubcontracting': isSubcontracting,
+        'UnitsCycles': unitsCycles,
+        'Yield': yield,
+        'IsAttachedDocumentToEmail': isAttachedDocumentToEmail,
         'model-name': modelname
       };
 }
 
-class ADReferenceID {
+class ADWorkflowID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  ADReferenceID({
+  ADWorkflowID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  ADReferenceID.fromJson(Map<String, dynamic> json)
+  ADWorkflowID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -250,6 +327,33 @@ class UpdatedBy {
       };
 }
 
+class Action {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  Action({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  Action.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
 class EntityType {
   final String? propertyLabel;
   final String? id;
@@ -264,6 +368,87 @@ class EntityType {
   });
 
   EntityType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class JoinElement {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  JoinElement({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  JoinElement.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class SplitElement {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  SplitElement({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  SplitElement.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class DocAction {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  DocAction({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  DocAction.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,

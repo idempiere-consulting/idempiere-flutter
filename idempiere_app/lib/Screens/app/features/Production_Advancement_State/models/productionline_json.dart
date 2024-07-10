@@ -1,25 +1,28 @@
-class ContactsJson {
+class ProductionLineJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<CRecords>? records;
+  final int? arraycount;
+  final List<PLRecords>? records;
 
-  ContactsJson({
+  ProductionLineJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
+    this.arraycount,
     this.records,
   });
 
-  ContactsJson.fromJson(Map<String, dynamic> json)
+  ProductionLineJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
+        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => CRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => PLRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -27,15 +30,14 @@ class ContactsJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
+        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
 
-class CRecords {
+class PLRecords {
   final int? id;
   final String? uid;
-  final String? name;
-  final String? description;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
   final bool? isActive;
@@ -43,38 +45,29 @@ class CRecords {
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final String? eMail;
-  final SupervisorID? supervisorID;
-  final NotificationType? notificationType;
-  final bool? isFullBPAccess;
-  final String? value;
-  final bool? isInPayroll;
-  final bool? isSalesLead;
-  final bool? isLocked;
-  final int? failedLoginCount;
-  final String? dateLastLogin;
-  final bool? isNoPasswordReset;
-  final bool? isExpired;
-  final bool? isAddMailTextAutomatically;
-  final bool? isNoExpire;
-  final bool? isSupportUser;
-  final bool? isShipTo;
-  final bool? isBillTo;
-  final bool? isVendorLead;
-  final bool? isLegalUser;
-  final bool? lITIsWebTicket;
-  final bool? lITIsMailReader;
-  final bool? lITIsPartner;
-  final bool? isPublic;
-  final bool? isFavourite;
+  final MLocatorID? mLocatorID;
+  final MProductID? mProductID;
+  final num? movementQty;
+  final int? line;
+  final MAttributeSetInstanceID? mAttributeSetInstanceID;
+  final bool? processed;
+  final MProductionID? mProductionID;
+  final MInventoryLineID? mInventoryLineID;
+  final num? plannedQty;
+  final num? qtyUsed;
+  final bool? isEndProduct;
+  final LITMLocatorFromID? lITMLocatorFromID;
+  final int? bOMQty;
+  final int? width;
+  final int? height;
+  final int? length;
+  final String? name;
+  final String? productValue;
   final String? modelname;
-  final CBPartnerID? cbPartnerID;
 
-  CRecords({
+  PLRecords({
     this.id,
     this.uid,
-    this.name,
-    this.description,
     this.aDClientID,
     this.aDOrgID,
     this.isActive,
@@ -82,44 +75,30 @@ class CRecords {
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.eMail,
-    this.supervisorID,
-    this.notificationType,
-    this.isFullBPAccess,
-    this.value,
-    this.isInPayroll,
-    this.isSalesLead,
-    this.isLocked,
-    this.failedLoginCount,
-    this.dateLastLogin,
-    this.isNoPasswordReset,
-    this.isExpired,
-    this.isAddMailTextAutomatically,
-    this.isNoExpire,
-    this.isSupportUser,
-    this.isShipTo,
-    this.isBillTo,
-    this.isVendorLead,
-    this.isLegalUser,
-    this.lITIsWebTicket,
-    this.lITIsMailReader,
-    this.lITIsPartner,
-    this.isPublic,
-    this.isFavourite,
+    this.mLocatorID,
+    this.mProductID,
+    this.movementQty,
+    this.line,
+    this.mAttributeSetInstanceID,
+    this.processed,
+    this.mProductionID,
+    this.mInventoryLineID,
+    this.plannedQty,
+    this.qtyUsed,
+    this.isEndProduct,
+    this.lITMLocatorFromID,
+    this.bOMQty,
+    this.width,
+    this.height,
+    this.length,
+    this.name,
+    this.productValue,
     this.modelname,
-    this.cbPartnerID,
   });
 
-  String get getname => name as String;
-
-  /*  @override
-  int get hashCode => hashValues(name); */
-
-  CRecords.fromJson(Map<String, dynamic> json)
+  PLRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
-        name = json['Name'] as String?,
-        description = json['Description'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
@@ -135,48 +114,49 @@ class CRecords {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        eMail = json['EMail'] as String?,
-        supervisorID = (json['Supervisor_ID'] as Map<String, dynamic>?) != null
-            ? SupervisorID.fromJson(
-                json['Supervisor_ID'] as Map<String, dynamic>)
+        mLocatorID = (json['M_Locator_ID'] as Map<String, dynamic>?) != null
+            ? MLocatorID.fromJson(json['M_Locator_ID'] as Map<String, dynamic>)
             : null,
-        notificationType =
-            (json['NotificationType'] as Map<String, dynamic>?) != null
-                ? NotificationType.fromJson(
-                    json['NotificationType'] as Map<String, dynamic>)
+        mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
+            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+            : null,
+        movementQty = json['MovementQty'] as num?,
+        line = json['Line'] as int?,
+        mAttributeSetInstanceID =
+            (json['M_AttributeSetInstance_ID'] as Map<String, dynamic>?) != null
+                ? MAttributeSetInstanceID.fromJson(
+                    json['M_AttributeSetInstance_ID'] as Map<String, dynamic>)
                 : null,
-        isFullBPAccess = json['IsFullBPAccess'] as bool?,
-        value = json['Value'] as String?,
-        isInPayroll = json['IsInPayroll'] as bool?,
-        isSalesLead = json['IsSalesLead'] as bool?,
-        isLocked = json['IsLocked'] as bool?,
-        failedLoginCount = json['FailedLoginCount'] as int?,
-        dateLastLogin = json['DateLastLogin'] as String?,
-        isNoPasswordReset = json['IsNoPasswordReset'] as bool?,
-        isExpired = json['IsExpired'] as bool?,
-        isAddMailTextAutomatically =
-            json['IsAddMailTextAutomatically'] as bool?,
-        isNoExpire = json['IsNoExpire'] as bool?,
-        isSupportUser = json['IsSupportUser'] as bool?,
-        isShipTo = json['IsShipTo'] as bool?,
-        isBillTo = json['IsBillTo'] as bool?,
-        isVendorLead = json['IsVendorLead'] as bool?,
-        isLegalUser = json['isLegalUser'] as bool?,
-        lITIsWebTicket = json['LIT_isWebTicket'] as bool?,
-        lITIsMailReader = json['LIT_isMailReader'] as bool?,
-        lITIsPartner = json['LIT_IsPartner'] as bool?,
-        isPublic = json['IsPublic'] as bool?,
-        isFavourite = json['IsFavourite'] as bool?,
-        cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
-            ? CBPartnerID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
-            : null,
+        processed = json['Processed'] as bool?,
+        mProductionID =
+            (json['M_Production_ID'] as Map<String, dynamic>?) != null
+                ? MProductionID.fromJson(
+                    json['M_Production_ID'] as Map<String, dynamic>)
+                : null,
+        mInventoryLineID =
+            (json['M_InventoryLine_ID'] as Map<String, dynamic>?) != null
+                ? MInventoryLineID.fromJson(
+                    json['M_InventoryLine_ID'] as Map<String, dynamic>)
+                : null,
+        plannedQty = json['PlannedQty'] as num?,
+        qtyUsed = json['QtyUsed'] as num?,
+        isEndProduct = json['IsEndProduct'] as bool?,
+        lITMLocatorFromID =
+            (json['LIT_M_LocatorFrom_ID'] as Map<String, dynamic>?) != null
+                ? LITMLocatorFromID.fromJson(
+                    json['LIT_M_LocatorFrom_ID'] as Map<String, dynamic>)
+                : null,
+        bOMQty = json['BOMQty'] as int?,
+        width = json['Width'] as int?,
+        height = json['Height'] as int?,
+        length = json['Length'] as int?,
+        name = json['Name'] as String?,
+        productValue = json['ProductValue'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'uid': uid,
-        'Name': name,
-        'Description': description,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
         'IsActive': isActive,
@@ -184,30 +164,21 @@ class CRecords {
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'EMail': eMail,
-        'Supervisor_ID': supervisorID?.toJson(),
-        'NotificationType': notificationType?.toJson(),
-        'IsFullBPAccess': isFullBPAccess,
-        'Value': value,
-        'IsInPayroll': isInPayroll,
-        'IsSalesLead': isSalesLead,
-        'IsLocked': isLocked,
-        'FailedLoginCount': failedLoginCount,
-        'DateLastLogin': dateLastLogin,
-        'IsNoPasswordReset': isNoPasswordReset,
-        'IsExpired': isExpired,
-        'IsAddMailTextAutomatically': isAddMailTextAutomatically,
-        'IsNoExpire': isNoExpire,
-        'IsSupportUser': isSupportUser,
-        'IsShipTo': isShipTo,
-        'IsBillTo': isBillTo,
-        'IsVendorLead': isVendorLead,
-        'isLegalUser': isLegalUser,
-        'LIT_isWebTicket': lITIsWebTicket,
-        'LIT_isMailReader': lITIsMailReader,
-        'LIT_IsPartner': lITIsPartner,
-        'IsPublic': isPublic,
-        'IsFavourite': isFavourite,
+        'M_Locator_ID': mLocatorID?.toJson(),
+        'M_Product_ID': mProductID?.toJson(),
+        'MovementQty': movementQty,
+        'Line': line,
+        'M_AttributeSetInstance_ID': mAttributeSetInstanceID?.toJson(),
+        'Processed': processed,
+        'M_Production_ID': mProductionID?.toJson(),
+        'M_InventoryLine_ID': mInventoryLineID?.toJson(),
+        'PlannedQty': plannedQty,
+        'QtyUsed': qtyUsed,
+        'IsEndProduct': isEndProduct,
+        'LIT_M_LocatorFrom_ID': lITMLocatorFromID?.toJson(),
+        'BOMQty': bOMQty,
+        'Name': name,
+        'ProductValue': productValue,
         'model-name': modelname
       };
 }
@@ -320,20 +291,20 @@ class UpdatedBy {
       };
 }
 
-class SupervisorID {
+class MLocatorID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  SupervisorID({
+  MLocatorID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  SupervisorID.fromJson(Map<String, dynamic> json)
+  MLocatorID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -347,22 +318,22 @@ class SupervisorID {
       };
 }
 
-class NotificationType {
+class MProductID {
   final String? propertyLabel;
-  final String? id;
+  final int? id;
   final String? identifier;
   final String? modelname;
 
-  NotificationType({
+  MProductID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  NotificationType.fromJson(Map<String, dynamic> json)
+  MProductID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
+        id = json['id'] as int?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 
@@ -374,20 +345,94 @@ class NotificationType {
       };
 }
 
-class CBPartnerID {
+class MInventoryLineID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  CBPartnerID({
+  MInventoryLineID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  CBPartnerID.fromJson(Map<String, dynamic> json)
+  MInventoryLineID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MAttributeSetInstanceID {
+  final String? propertyLabel;
+  final int? id;
+  final String? modelname;
+
+  MAttributeSetInstanceID({
+    this.propertyLabel,
+    this.id,
+    this.modelname,
+  });
+
+  MAttributeSetInstanceID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() =>
+      {'propertyLabel': propertyLabel, 'id': id, 'model-name': modelname};
+}
+
+class MProductionID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductionID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductionID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITMLocatorFromID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITMLocatorFromID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITMLocatorFromID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

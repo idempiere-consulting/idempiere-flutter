@@ -1526,6 +1526,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       //Get.offAllNamed('/Dashboard');
       getLoginPermission();
     } else {
+      print(response.body);
       // If the server did not return a 200 OK response,
       // then throw an exception.
       throw Exception('Failed to load Token');

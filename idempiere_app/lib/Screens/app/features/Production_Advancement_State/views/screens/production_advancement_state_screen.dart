@@ -5,10 +5,14 @@ library dashboard;
 //import 'dart:convert';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_barcode_listener/flutter_barcode_listener.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -17,8 +21,18 @@ import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_c
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_edit_leads.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_lead_create_tasks.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_lead_filters_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/salestagejson.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Course_Quiz/models/resource_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order_B2B/views/screens/portal_mp_sales_order_b2b_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Production_Advancement_State/models/locator_json.dart';
+import 'package:idempiere_app/Screens/app/features/Production_Advancement_State/models/ppcostcollector_json.dart';
+import 'package:idempiere_app/Screens/app/features/Production_Advancement_State/models/productionline_json.dart';
+import 'package:idempiere_app/Screens/app/features/Production_Advancement_State/models/workflownode_json.dart';
+import 'package:idempiere_app/Screens/app/features/Production_Order/models/productionorder_json.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload/models/loadunloadjson.dart';
+import 'package:idempiere_app/Screens/app/features/Supplychain_Load_Unload_Line/models/loadunloadjsonline.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -38,6 +52,7 @@ import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -79,17 +94,1054 @@ class ProductionAdvancementStateScreen
                   child: _Sidebar(data: controller.getSelectedProject()),
                 ),
               ),
-        body: SingleChildScrollView(
-          child: ResponsiveBuilder(
-            mobileBuilder: (context, constraints) {
-              return Column(children: []);
-            },
-            tabletBuilder: (context, constraints) {
-              return Column(children: []);
-            },
-            desktopBuilder: (context, constraints) {
-              return Column(children: []);
-            },
+        body: BarcodeKeyboardListener(
+          bufferDuration: const Duration(milliseconds: 200),
+          onBarcodeScanned: (barcode) {
+            print(barcode.replaceAll(RegExp(r'-'), "/"));
+            controller
+                .getProductionOrder(barcode.replaceAll(RegExp(r'-'), "/"));
+          },
+          child: SingleChildScrollView(
+            child: ResponsiveBuilder(
+              mobileBuilder: (context, constraints) {
+                return Column(children: []);
+              },
+              tabletBuilder: (context, constraints) {
+                return Column(children: []);
+              },
+              desktopBuilder: (context, constraints) {
+                return Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        height: 20,
+                      ),
+                      Flexible(
+                        child: StaggeredGrid.count(
+                          crossAxisCount: 20,
+                          mainAxisSpacing: 3,
+                          crossAxisSpacing: 2,
+                          children: [
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 10,
+                              mainAxisCellCount: 1,
+                              child: SizedBox(
+                                child: Card(
+                                  child: Row(
+                                    children: [
+                                      FutureBuilder(
+                                        future: controller.getAllResources(),
+                                        builder: (BuildContext ctx,
+                                                AsyncSnapshot<List<RRecords>>
+                                                    snapshot) =>
+                                            snapshot.hasData
+                                                ? Expanded(
+                                                    child: TypeAheadField<
+                                                        RRecords>(
+                                                      direction:
+                                                          AxisDirection.down,
+                                                      //getImmediateSuggestions: true,
+                                                      textFieldConfiguration:
+                                                          TextFieldConfiguration(
+                                                        onChanged: (value) {},
+                                                        controller: controller
+                                                            .resourceFieldController,
+                                                        //autofocus: true,
+
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText:
+                                                              'Resource'.tr,
+                                                          filled: true,
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            borderSide:
+                                                                BorderSide.none,
+                                                          ),
+                                                          prefixIcon:
+                                                              const Icon(
+                                                                  EvaIcons
+                                                                      .person),
+                                                          hintText: "search..",
+                                                          //isDense: true,
+                                                          fillColor:
+                                                              Theme.of(context)
+                                                                  .cardColor,
+                                                        ),
+                                                      ),
+                                                      suggestionsCallback:
+                                                          (pattern) async {
+                                                        return snapshot.data!.where(
+                                                            (element) => (element
+                                                                        .name ??
+                                                                    "")
+                                                                .toLowerCase()
+                                                                .contains(pattern
+                                                                    .toLowerCase()));
+                                                      },
+                                                      itemBuilder: (context,
+                                                          suggestion) {
+                                                        return ListTile(
+                                                          //leading: Icon(Icons.shopping_cart),
+                                                          title: Text(
+                                                              suggestion.name ??
+                                                                  ""),
+                                                        );
+                                                      },
+                                                      onSuggestionSelected:
+                                                          (suggestion) {
+                                                        controller.resourceId =
+                                                            suggestion.id!;
+                                                        controller
+                                                                .resourceFieldController
+                                                                .text =
+                                                            suggestion.name!;
+                                                      },
+                                                    ),
+                                                  )
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 1,
+                              child: SizedBox(
+                                child: Card(
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Symbols.search)),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 1,
+                              child: SizedBox(
+                                child: Card(
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Symbols.search)),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 2,
+                              mainAxisCellCount: 1,
+                              child: SizedBox(),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 3,
+                              mainAxisCellCount: 1,
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      //controller: phoneFieldController,
+                                      decoration: InputDecoration(
+                                        prefixIcon:
+                                            const Icon(Icons.text_fields),
+                                        border: const OutlineInputBorder(),
+                                        labelText: 'DocumentNo'.tr,
+                                        floatingLabelBehavior:
+                                            FloatingLabelBehavior.always,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 1,
+                              mainAxisCellCount: 1,
+                              child: SizedBox(
+                                child: Card(
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: Icon(Symbols.search)),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                                crossAxisCellCount: 11,
+                                mainAxisCellCount: 1,
+                                child: Obx(
+                                  () => Visibility(
+                                    replacement: Card(),
+                                    visible:
+                                        controller._nodeListdataAvailable.value,
+                                    child: InputDecorator(
+                                      decoration: InputDecoration(
+                                        labelText: 'Phase'.tr,
+                                        //filled: true,
+                                        border: const OutlineInputBorder(
+                                            /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                            ),
+                                        prefixIcon: const Icon(EvaIcons.list),
+                                        //hintText: "search..",
+                                        isDense: true,
+                                        //fillColor: Theme.of(context).cardColor,
+                                      ),
+                                      child: DropdownButton(
+                                        isDense: true,
+                                        underline: const SizedBox(),
+                                        hint: Text("Select a Phase".tr),
+                                        isExpanded: true,
+                                        value: controller.nodeId.value == ""
+                                            ? null
+                                            : controller.nodeId.value,
+                                        elevation: 16,
+                                        onChanged: (newValue) {
+                                          controller.nodeId.value =
+                                              newValue as String;
+
+                                          controller.advancementStatusDateStart
+                                              .value = "";
+                                          controller.phaseDuration.value = 0.0;
+                                          controller.advancementStatusID = 0;
+                                          controller.phaseStatus.value = "";
+
+                                          controller.searchPhase(
+                                              controller.nodeId.value);
+
+                                          //print(dropdownValue);
+                                        },
+                                        items: controller.nodeList.records!
+                                            .map((list) {
+                                          return DropdownMenuItem<String>(
+                                            value: list.id.toString(),
+                                            child: Text(
+                                              list.name.toString(),
+                                            ),
+                                          );
+                                        }).toList(),
+                                      ),
+                                    ),
+                                  ),
+                                )),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 9,
+                              mainAxisCellCount: 4,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Obx(
+                                            () => Visibility(
+                                              replacement: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                  // If the button is pressed, return green, otherwise blue
+
+                                                  return Colors.grey;
+                                                })),
+                                                onPressed: () {},
+                                                child: Text("Start"),
+                                              ),
+                                              visible: controller
+                                                      .phaseStatus.value ==
+                                                  "START",
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                  // If the button is pressed, return green, otherwise blue
+
+                                                  return kNotifColor;
+                                                })),
+                                                onPressed: () {
+                                                  controller
+                                                      .createAdvancementStateRecord();
+                                                },
+                                                child: Text("Start"),
+                                              ),
+                                            ),
+                                          ),
+                                          Obx(
+                                            () => Visibility(
+                                              replacement: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                  // If the button is pressed, return green, otherwise blue
+
+                                                  return Colors.grey;
+                                                })),
+                                                onPressed: () {},
+                                                child: Text("Stop"),
+                                              ),
+                                              visible: controller
+                                                      .phaseStatus.value ==
+                                                  "STOP",
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                  // If the button is pressed, return green, otherwise blue
+
+                                                  return kNotifColor;
+                                                })),
+                                                onPressed: () {
+                                                  controller
+                                                      .editAdvancementStateRecord();
+                                                },
+                                                child: Text("Stop"),
+                                              ),
+                                            ),
+                                          ),
+                                          Obx(
+                                            () => Visibility(
+                                              replacement: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                  // If the button is pressed, return green, otherwise blue
+
+                                                  return Colors.grey;
+                                                })),
+                                                onPressed: () {},
+                                                child: Text("Start/Stop"),
+                                              ),
+                                              visible: controller
+                                                      .phaseStatus.value ==
+                                                  "START",
+                                              child: ElevatedButton(
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .resolveWith(
+                                                                (states) {
+                                                  // If the button is pressed, return green, otherwise blue
+
+                                                  return kNotifColor;
+                                                })),
+                                                onPressed: () {},
+                                                child: Text("Start/Stop"),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                            visible: controller
+                                                    .advancementStatusDateStart
+                                                    .value !=
+                                                "",
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("START   ",
+                                                    style: TextStyle(
+                                                        fontSize: 25)),
+                                                Text(
+                                                    controller.advancementStatusDateStart
+                                                                .value !=
+                                                            ""
+                                                        ? DateFormat(
+                                                                'dd-MM-yyyy  kk:mm')
+                                                            .format(DateTime
+                                                                .parse(controller
+                                                                    .advancementStatusDateStart
+                                                                    .value))
+                                                        : "",
+                                                    style: TextStyle(
+                                                        fontSize: 25)),
+                                              ],
+                                            )),
+                                      ),
+                                      Obx(
+                                        () => Visibility(
+                                            visible: controller
+                                                    .advancementStatusDateStart
+                                                    .value !=
+                                                "",
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Text("STOP   ",
+                                                    style: TextStyle(
+                                                        fontSize: 25)),
+                                                Text(
+                                                    controller.advancementStatusDateStart
+                                                                    .value !=
+                                                                "" &&
+                                                            controller
+                                                                    .phaseDuration
+                                                                    .value !=
+                                                                0.0
+                                                        ? DateFormat('dd-MM-yyyy  kk:mm')
+                                                            .format(DateTime.parse(
+                                                                    controller
+                                                                        .advancementStatusDateStart
+                                                                        .value)
+                                                                .add(Duration(
+                                                                    minutes: (controller.phaseDuration.value * 60).toInt())))
+                                                        : "",
+                                                    style: TextStyle(fontSize: 25)),
+                                              ],
+                                            )),
+                                      ),
+                                      ElevatedButton(
+                                        style: ButtonStyle(backgroundColor:
+                                            MaterialStateProperty.resolveWith(
+                                                (states) {
+                                          // If the button is pressed, return green, otherwise blue
+
+                                          return kNotifColor;
+                                        })),
+                                        onPressed: () {
+                                          controller
+                                              .unloadProductFieldController
+                                              .text = "";
+                                          controller.unloadQtyFieldController
+                                              .text = "1";
+                                          controller.unloadProductId = 0;
+                                          controller.noteFieldController.text =
+                                              "";
+                                          controller.widthFieldController.text =
+                                              "";
+                                          controller
+                                              .heightFieldController.text = "";
+                                          controller.widthFieldController.text =
+                                              "";
+                                          controller
+                                              .lengthFieldController.text = "";
+                                          Get.defaultDialog(
+                                            title: 'Add Material'.tr,
+                                            textConfirm: 'Confirm'.tr,
+                                            onConfirm: () {
+                                              controller.createProductionLine();
+                                            },
+                                            content: Column(
+                                              children: [
+                                                FutureBuilder(
+                                                  future: controller
+                                                      .getAllProducts(),
+                                                  builder: (BuildContext ctx,
+                                                          AsyncSnapshot<
+                                                                  List<
+                                                                      PRecords>>
+                                                              snapshot) =>
+                                                      snapshot.hasData
+                                                          ? TypeAheadField<
+                                                              PRecords>(
+                                                              direction:
+                                                                  AxisDirection
+                                                                      .up,
+                                                              //getImmediateSuggestions: true,
+                                                              textFieldConfiguration:
+                                                                  TextFieldConfiguration(
+                                                                onChanged:
+                                                                    (value) {
+                                                                  if (value ==
+                                                                      "") {
+                                                                    controller
+                                                                        .unloadProductId = 0;
+                                                                  }
+                                                                },
+                                                                controller:
+                                                                    controller
+                                                                        .unloadProductFieldController,
+                                                                //autofocus: true,
+
+                                                                decoration:
+                                                                    InputDecoration(
+                                                                  labelText:
+                                                                      'Product'
+                                                                          .tr,
+                                                                  //filled: true,
+                                                                  border: const OutlineInputBorder(
+                                                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                                                      ),
+                                                                  prefixIcon:
+                                                                      const Icon(
+                                                                          EvaIcons
+                                                                              .search),
+                                                                  //hintText: "search..",
+                                                                  isDense: true,
+                                                                  //fillColor: Theme.of(context).cardColor,
+                                                                ),
+                                                              ),
+                                                              suggestionsCallback:
+                                                                  (pattern) async {
+                                                                return snapshot
+                                                                    .data!
+                                                                    .where((element) => ("${element.value}_${element.name}")
+                                                                        .toLowerCase()
+                                                                        .contains(
+                                                                            pattern.toLowerCase()));
+                                                              },
+                                                              itemBuilder:
+                                                                  (context,
+                                                                      suggestion) {
+                                                                return ListTile(
+                                                                  //leading: Icon(Icons.shopping_cart),
+                                                                  title: Text(
+                                                                      suggestion
+                                                                              .name ??
+                                                                          ""),
+                                                                  subtitle: Text(
+                                                                      suggestion
+                                                                              .value ??
+                                                                          ""),
+                                                                );
+                                                              },
+                                                              onSuggestionSelected:
+                                                                  (suggestion) {
+                                                                controller
+                                                                        .unloadProductFieldController
+                                                                        .text =
+                                                                    suggestion
+                                                                        .name!;
+                                                                controller
+                                                                        .unloadProductId =
+                                                                    suggestion
+                                                                        .id!;
+                                                              },
+                                                            )
+                                                          : const Center(
+                                                              child:
+                                                                  CircularProgressIndicator(),
+                                                            ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextField(
+                                                  //focusNode: focusNode,
+                                                  controller: controller
+                                                      .unloadQtyFieldController,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                              .numberWithOptions(
+                                                          signed: true,
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(
+                                                            RegExp("[0-9.-]"))
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: const Icon(
+                                                        Symbols.dialpad),
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Quantity'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextField(
+                                                  //focusNode: focusNode,
+                                                  controller: controller
+                                                      .noteFieldController,
+
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: const Icon(
+                                                        Icons.text_fields),
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Note'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextField(
+                                                  //focusNode: focusNode,
+                                                  controller: controller
+                                                      .widthFieldController,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                              .numberWithOptions(
+                                                          signed: true,
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp("[0-9]"))
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: const Icon(
+                                                        Icons.square_foot),
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Width'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextField(
+                                                  //focusNode: focusNode,
+                                                  controller: controller
+                                                      .heightFieldController,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                              .numberWithOptions(
+                                                          signed: true,
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp("[0-9]"))
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: const Icon(
+                                                        Icons.square_foot),
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Height'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                                const SizedBox(
+                                                  height: 10,
+                                                ),
+                                                TextField(
+                                                  //focusNode: focusNode,
+                                                  controller: controller
+                                                      .lengthFieldController,
+                                                  keyboardType:
+                                                      const TextInputType
+                                                              .numberWithOptions(
+                                                          signed: true,
+                                                          decimal: true),
+                                                  inputFormatters: [
+                                                    FilteringTextInputFormatter
+                                                        .allow(RegExp("[0-9]"))
+                                                  ],
+                                                  decoration: InputDecoration(
+                                                    prefixIcon: const Icon(
+                                                        Icons.square_foot),
+                                                    border:
+                                                        const OutlineInputBorder(),
+                                                    labelText: 'Length'.tr,
+                                                    floatingLabelBehavior:
+                                                        FloatingLabelBehavior
+                                                            .always,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Icon(Symbols.add),
+                                            Text("Add Material"),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 11,
+                              mainAxisCellCount: 3,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Obx(
+                                    () => controller._dataAvailable.value
+                                        ? Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    controller._trx.records?[0]
+                                                            .documentNo ??
+                                                        "N/A",
+                                                    style: TextStyle(
+                                                        fontSize: 25,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  Text(
+                                                    "${"Qty".tr}: ${controller._trx.records?[0].productionQty ?? 0.0}",
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "${"CDL".tr}: ",
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    "${"Qty Prod".tr}: ${controller._trx.records?[0].actualQty ?? 0}",
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Text(
+                                                    "${"Product".tr}: ${controller._trx.records?[0].mProductID?.identifier}",
+                                                    style: TextStyle(
+                                                      fontSize: 25,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          )
+                                        : SizedBox(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 7,
+                              mainAxisCellCount: 6,
+                              child: Card(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Production Components".tr,
+                                              style: TextStyle(
+                                                  fontSize: 25,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            IconButton(
+                                                onPressed: () {
+                                                  var search = controller
+                                                      .prodRowList.records!
+                                                      .where((element) =>
+                                                          element
+                                                              .mInventoryLineID
+                                                              ?.id !=
+                                                          null);
+                                                  if (search.isNotEmpty) {
+                                                    controller
+                                                        .getInventoryByLineID(
+                                                            search
+                                                                .first
+                                                                .mInventoryLineID!
+                                                                .id!);
+                                                  } else {
+                                                    controller
+                                                        .createInventory();
+                                                  }
+                                                },
+                                                icon: Icon(Icons.get_app_sharp))
+                                          ],
+                                        ),
+                                      ),
+                                      Divider(),
+                                      Obx(
+                                        () => Visibility(
+                                          visible: controller
+                                              ._prodLinedataAvailable.value,
+                                          child: Expanded(
+                                            child: ListView.builder(
+                                                itemCount: controller
+                                                    .prodRowList
+                                                    .records!
+                                                    .length,
+                                                itemBuilder:
+                                                    (BuildContext context,
+                                                        int index) {
+                                                  return Card(
+                                                    child: Container(
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                              color: Color
+                                                                  .fromRGBO(
+                                                                      64,
+                                                                      75,
+                                                                      96,
+                                                                      .9)),
+                                                      child: ListTile(
+                                                        contentPadding:
+                                                            const EdgeInsets
+                                                                    .symmetric(
+                                                                horizontal:
+                                                                    kSpacing),
+                                                        title: Text(controller
+                                                                .prodRowList
+                                                                .records![index]
+                                                                .mProductID
+                                                                ?.identifier ??
+                                                            "N/A"),
+                                                        subtitle: Column(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Visibility(
+                                                              visible: controller
+                                                                          .prodRowList
+                                                                          .records![
+                                                                              index]
+                                                                          .width !=
+                                                                      null &&
+                                                                  controller
+                                                                          .prodRowList
+                                                                          .records![
+                                                                              index]
+                                                                          .height !=
+                                                                      null &&
+                                                                  controller
+                                                                          .prodRowList
+                                                                          .records![
+                                                                              index]
+                                                                          .length !=
+                                                                      null,
+                                                              child: Row(
+                                                                children: [
+                                                                  Text(
+                                                                      "${"Volume".tr}: ${controller.prodRowList.records![index].width}x${controller.prodRowList.records![index].height}x${controller.prodRowList.records![index].length}"),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                    "${"Qty Planned".tr}: ${controller.prodRowList.records![index].plannedQty}"),
+                                                              ],
+                                                            ),
+                                                            Row(
+                                                              children: [
+                                                                Text(
+                                                                    "${"Qty Used".tr}: ${controller.prodRowList.records![index].qtyUsed}"),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        trailing: controller
+                                                                    .prodRowList
+                                                                    .records![
+                                                                        index]
+                                                                    .mInventoryLineID
+                                                                    ?.id ==
+                                                                null
+                                                            ? Icon(
+                                                                Icons
+                                                                    .warehouse_sharp,
+                                                                color: Colors
+                                                                    .yellow,
+                                                              )
+                                                            : Icon(
+                                                                Icons.check,
+                                                                color:
+                                                                    kNotifColor,
+                                                              ),
+                                                        shape:
+                                                            RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(10),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  );
+                                                }),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                            StaggeredGridTile.count(
+                                crossAxisCellCount: 7,
+                                mainAxisCellCount: 6,
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Text(
+                                                "Summary".tr,
+                                                style: TextStyle(
+                                                    fontSize: 25,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              ElevatedButton(
+                                                  onPressed: () {},
+                                                  child: Text("All".tr))
+                                            ],
+                                          ),
+                                        ),
+                                        Divider(),
+                                        Obx(
+                                          () =>
+                                              controller.summaryAvailable.value
+                                                  ? Expanded(
+                                                      child: ListView.builder(
+                                                          primary: false,
+                                                          scrollDirection:
+                                                              Axis.vertical,
+                                                          shrinkWrap: true,
+                                                          itemCount: controller
+                                                              .summeryPhaseList
+                                                              .length,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int index) {
+                                                            return Container(
+                                                              margin: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      10),
+                                                              child: Card(
+                                                                child:
+                                                                    ExpansionTile(
+                                                                  title: Text(
+                                                                    controller
+                                                                            .summeryPhaseList[
+                                                                        index],
+                                                                    style: const TextStyle(
+                                                                        fontWeight:
+                                                                            FontWeight
+                                                                                .bold,
+                                                                        color: Colors
+                                                                            .white),
+                                                                  ),
+                                                                  childrenPadding:
+                                                                      const EdgeInsets
+                                                                              .only(
+                                                                          bottom:
+                                                                              10,
+                                                                          right:
+                                                                              10,
+                                                                          left:
+                                                                              10),
+                                                                  children: [
+                                                                    ListView.builder(
+                                                                        primary: false,
+                                                                        scrollDirection: Axis.vertical,
+                                                                        shrinkWrap: true,
+                                                                        itemCount: controller.summaryPhase.records!.length,
+                                                                        itemBuilder: (BuildContext context, int index2) {
+                                                                          return controller.summeryPhaseListId[index] == controller.summaryPhase.records![index2].mProductionNodeID!.id!
+                                                                              ? ListTile(
+                                                                                  contentPadding: const EdgeInsets.symmetric(horizontal: kSpacing),
+                                                                                  leading: Text(
+                                                                                    controller.summaryPhase.records![index2].docStatus!.id!,
+                                                                                  ),
+                                                                                  title: Text(
+                                                                                    controller.summaryPhase.records![index2].sResourceID?.identifier ?? 'N/A',
+                                                                                    style: TextStyle(
+                                                                                      fontSize: 13,
+                                                                                      color: kFontColorPallets[0],
+                                                                                    ),
+                                                                                  ),
+                                                                                  subtitle: Text(
+                                                                                    controller.summaryPhase.records![index2].movementDate!.substring(0, 10),
+                                                                                    style: TextStyle(
+                                                                                      fontSize: 11,
+                                                                                      color: kFontColorPallets[2],
+                                                                                    ),
+                                                                                  ),
+                                                                                  trailing: Text('${controller.summaryPhase.records![index2].durationReal ?? 0} Ore'),
+                                                                                )
+                                                                              : const SizedBox();
+                                                                        }),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                    )
+                                                  : SizedBox(),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                )),
+                            StaggeredGridTile.count(
+                              crossAxisCellCount: 6,
+                              mainAxisCellCount: 6,
+                              child: Card(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ]);
+              },
+            ),
           ),
         ),
       ),
