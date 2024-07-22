@@ -9,6 +9,7 @@ import 'dart:io';
 
 import 'package:bluetooth_thermal_printer/bluetooth_thermal_printer.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
+import 'package:flutter/services.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
@@ -209,6 +210,37 @@ class SettingsScreen extends GetView<SettingsController> {
                                 trailing: const Icon(Icons.chevron_right),
                                 onPressed: (context) {
                                   Get.to(() => const ExampleApp());
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer IP'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(controller.fiscalPrinterIP.value),
+                                leading:
+                                    const Icon(Icons.network_check_outlined),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterIP();
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer SerialNo'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(
+                                    controller.fiscalPrinterSerialNo.value),
+                                leading:
+                                    const Icon(Icons.network_check_outlined),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterSerialNo();
                                 },
                               ),
                             ],

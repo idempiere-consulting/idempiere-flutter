@@ -418,6 +418,7 @@ class CRMPOSController extends GetxController {
     );
     if (response.statusCode == 201) {
       var json = jsonDecode(utf8.decode(response.bodyBytes));
+      generateFiscalPrint();
 
       //Get.find<CRMSalesOrderController>().getSalesOrders();
       Get.back();
@@ -447,6 +448,39 @@ class CRMPOSController extends GetxController {
           ),
         );
       }
+    }
+  }
+
+  Future<void> generateFiscalPrint() async {
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+    var msg =
+        '<?xml version="1.0" encoding="utf-8"?><printerFiscalReceipt><beginFiscalReceipt></beginFiscalReceipt><displayText data="Message 1 On customer display "></displayText>';
+
+    for (var element in productList) {
+      msg =
+          '$msg<printRecItem description="${element.productName}" unitPrice="${(element.price! * 100).toInt()}"  idVat="" quantity="${element.qty}" ></printRecItem>';
+    }
+
+    msg =
+        '$msg<endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
+
+    var url = Uri.parse(
+        'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/xml',
+        'authorization':
+            'Basic ${stringToBase64.encode("${GetStorage().read('fiscalPrinterSerialNo')}:${GetStorage().read('fiscalPrinterSerialNo')}")}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
     }
   }
 

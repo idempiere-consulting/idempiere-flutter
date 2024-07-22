@@ -19,6 +19,8 @@ class ProductionAdvancementStateController extends GetxController {
 
   TextEditingController resourceFieldController = TextEditingController();
 
+  TextEditingController documentNoFieldController = TextEditingController();
+
   int resourceId = 0;
 
   var _hasCallSupport = false;
@@ -47,6 +49,8 @@ class ProductionAdvancementStateController extends GetxController {
 
   int inventoryDocId = 0;
 
+  TextEditingController hoursFieldController = TextEditingController(text: "");
+
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
   var _prodLinedataAvailable = false.obs;
@@ -57,6 +61,9 @@ class ProductionAdvancementStateController extends GetxController {
   List<int> summeryPhaseListId = [];
   var summaryAvailable = false.obs;
   Map<int, num> phaseTotalHours = {};
+
+  var attachments = AttachmentJSON(attachments: []);
+  var attachmentsAvailable = false.obs;
 
   @override
   void onInit() {
@@ -120,6 +127,11 @@ class ProductionAdvancementStateController extends GetxController {
 
       var phaseList = PPCostCollectorJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
+
+      advancementStatusDateStart.value = "";
+      phaseDuration.value = 0.0;
+      advancementStatusID = 0;
+      phaseStatus.value = "";
 
       if (phaseList.records!.isEmpty) {
         phaseStatus.value = "START";
@@ -195,6 +207,102 @@ class ProductionAdvancementStateController extends GetxController {
     }
   }
 
+  Future<void> getTablesWithAttachments() async {
+    attachmentsAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_docdms_v/?\$filter=  ((Record_ID eq $productionOrderID and Name eq \'M_Production\') or (Record_ID eq ${_trx.records![0].cbPartnerID?.id} and Name eq \'C_BPartner\') or (Record_ID eq ${_trx.records![0].mProductID?.id} and Name eq \'M_Product\')) and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      attachments.attachments!.removeWhere((element) => true);
+      var tablesWithAttachments = DocAttachmentsJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (tablesWithAttachments.records!.isNotEmpty) {
+        for (var record in tablesWithAttachments.records!) {
+          if ((attachments.attachments!.where((element) =>
+              (element.recordId == record.recordID &&
+                  element.tableName == record.name))).isEmpty) {
+            await getAttachments(record.recordID!, record.name!);
+          }
+        }
+      }
+      attachmentsAvailable.value = true;
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> getAttachments(int id, String tableName) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/models/$tableName/$id/attachments');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      var json =
+          AttachmentJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      for (var i = 0; i < json.attachments!.length; i++) {
+        attachments.attachments!.add(Attachments(
+            recordId: id,
+            tableName: tableName,
+            name: json.attachments![0].name,
+            contentType: json.attachments![0].contentType));
+      }
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> getMyResourceByLoginUser() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/S_Resource?\$filter= Name eq \'${GetStorage().read('user')}\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonres = ResourceJson.fromJson(jsondecoded);
+
+      if (jsonres.records!.isNotEmpty) {
+        resourceId = jsonres.records![0].id!;
+        resourceFieldController.text = jsonres.records![0].name!;
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<List<RRecords>> getAllResources() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -230,37 +338,6 @@ class ProductionAdvancementStateController extends GetxController {
     //print(json.);
   }
 
-  Future<void> getMyResourceByLoginUser() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/S_Resource?\$filter= Name eq \'${GetStorage().read('user')}\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var jsondecoded = jsonDecode(response.body);
-
-      var jsonres = ResourceJson.fromJson(jsondecoded);
-
-      if (jsonres.records!.isNotEmpty) {
-        resourceId = jsonres.records![0].id!;
-        resourceFieldController.text = jsonres.records![0].name!;
-      }
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
-    }
-  }
-
   Future<void> getProductionOrder(String barcode) async {
     _dataAvailable.value = false;
 
@@ -287,7 +364,7 @@ class ProductionAdvancementStateController extends GetxController {
       },
     );
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
 
       _trx = ProductionOrderJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
@@ -306,6 +383,9 @@ class ProductionAdvancementStateController extends GetxController {
         getWorkFlowNodes(_trx.records![0].aDWorkflowID?.id ?? 0);
 
         getWarehouseID(_trx.records![0].mLocatorID!.id!);
+
+        //getAttachments();
+        getTablesWithAttachments();
 
         //print(trx.rowcount);
         //print(response.body);
@@ -460,6 +540,7 @@ class ProductionAdvancementStateController extends GetxController {
 
     if (response.statusCode == 201) {
       searchPhase(nodeId.value);
+      getAllPhases();
       Get.snackbar(
         "Done!".tr,
         "The record has been created".tr,
@@ -539,8 +620,95 @@ class ProductionAdvancementStateController extends GetxController {
     );
 
     if (response.statusCode == 200) {
+      getAllPhases();
       //print(response.body);
       searchPhase(nodeId.value);
+      Get.snackbar(
+        "Done!".tr,
+        "The record has been created".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      Get.snackbar(
+        "Error!".tr,
+        "Record not created".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
+  Future<void> createAdvancementStateRecordByStartStopButton() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+
+    DateTime now = DateTime.now();
+
+    DateTime before = now
+        .subtract(Duration(minutes: int.parse(hoursFieldController.text) * 60));
+    var n = before.minute; // Number to match
+    var l = [0, 15, 30, 45]; // List of values
+
+    var number = l.where((e) => e <= n).toList()..sort();
+
+    //print(number[number.length - 1]);
+
+    var hourTime = "00";
+
+    var minuteTime = "00";
+
+    if (before.hour < 10) {
+      hourTime = "0${before.hour}";
+    } else {
+      hourTime = "${before.hour}";
+    }
+
+    if (number[number.length - 1] != 0) {
+      minuteTime = number[number.length - 1].toString();
+    }
+    if (number[number.length - 1] != 0) {
+      minuteTime = number[number.length - 1].toString();
+    }
+
+    var formatter = DateFormat('yyyy-MM-dd');
+    var date = formatter.format(before);
+    var startTime = '$hourTime:$minuteTime:00Z';
+
+    var msg = {
+      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+      "AD_Client_ID": {"id": GetStorage().read("clientid")},
+      "M_Warewouse_ID": {"id": warehouseID},
+      "M_Locator_ID": {"id": 1000000},
+      "M_Production_ID": {"id": productionOrderID},
+      "S_Resource_ID": {"id": resourceId},
+      "M_Product_ID": {"id": _trx.records![0].mProductID?.id},
+      "M_Production_Node_ID": {"id": int.parse(nodeId.value)},
+      "MovementDate": "${date}T$startTime",
+      "DocStatus": {"id": "CO"},
+      "DurationReal": int.parse(hoursFieldController.text),
+    };
+
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/windows/activity-control-report');
+    var response = await http.post(
+      url,
+      body: jsonEncode(msg),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 201) {
+      Get.back();
+      searchPhase(nodeId.value);
+      getAllPhases();
       Get.snackbar(
         "Done!".tr,
         "The record has been created".tr,

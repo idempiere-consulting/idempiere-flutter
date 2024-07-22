@@ -26,6 +26,9 @@ class SettingsController extends GetxController {
     isjpTODOSync.value = GetStorage().read('isjpTODOSync') ?? true;
     isWorkOrderSync.value = GetStorage().read('isWorkOrderSync') ?? true;
     posPrinterName.value = GetStorage().read('posName') ?? 'None';
+    fiscalPrinterIP.value = GetStorage().read('fiscalPrinterIP') ?? 'None';
+    fiscalPrinterSerialNo.value =
+        GetStorage().read('fiscalPrinterSerialNo') ?? 'None';
   }
 
   Future<void> reSyncAll() async {
@@ -643,6 +646,73 @@ class SettingsController extends GetxController {
     );
   }
 
+  TextEditingController fiscalPrinterIPFieldController =
+      TextEditingController();
+
+  var fiscalPrinterIP = "".obs;
+
+  Future<void> writeFiscalPrinterIP() async {
+    Get.defaultDialog(
+      onConfirm: () {
+        GetStorage()
+            .write('fiscalPrinterIP', fiscalPrinterIPFieldController.text);
+        fiscalPrinterIP.value = fiscalPrinterIPFieldController.text;
+        Get.back();
+      },
+      title: '',
+      content: Column(
+        children: [
+          TextField(
+            autofocus: true,
+            controller: fiscalPrinterIPFieldController,
+            keyboardType: const TextInputType.numberWithOptions(
+                signed: true, decimal: true),
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+            ],
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.print_rounded),
+              border: const OutlineInputBorder(),
+              labelText: 'Ip'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  TextEditingController fiscalPrinterSerialNoFieldController =
+      TextEditingController();
+
+  var fiscalPrinterSerialNo = "".obs;
+
+  Future<void> writeFiscalPrinterSerialNo() async {
+    Get.defaultDialog(
+      onConfirm: () {
+        GetStorage().write(
+            'fiscalPrinterSerialNo', fiscalPrinterSerialNoFieldController.text);
+        fiscalPrinterSerialNo.value = fiscalPrinterSerialNoFieldController.text;
+        Get.back();
+      },
+      title: '',
+      content: Column(
+        children: [
+          TextField(
+            autofocus: true,
+            controller: fiscalPrinterSerialNoFieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.print_rounded),
+              border: const OutlineInputBorder(),
+              labelText: 'Serial Number'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   // Data
   // ignore: library_private_types_in_public_api
   _Profile getProfil() {
@@ -783,45 +853,5 @@ class SettingsController extends GetxController {
         totalUnread: 1,
       ),
     ];
-  }
-}
-
-class Provider extends GetConnect {
-  Future<void> getLeads() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    //print(authorization);
-    //String clientid = GetStorage().read('clientid');
-    /* final response = await get(
-      'http://' + ip + '/api/v1/windows/lead',
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.status.hasError) {
-      return Future.error(response.statusText!);
-    } else {
-      return response.body;
-    } */
-
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://' + ip + '/api/v1/windows/lead');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = jsonDecode(response.body);
-      //print(json['window-records'][0]);
-      return json;
-    } else {
-      return Future.error(response.body);
-    }
   }
 }
