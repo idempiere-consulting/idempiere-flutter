@@ -408,47 +408,51 @@ class CRMPOSController extends GetxController {
       "order-line".tr: list,
     });
 
-    var response = await http.post(
-      url,
-      body: msg,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 201) {
-      var json = jsonDecode(utf8.decode(response.bodyBytes));
-      generateFiscalPrint();
-
-      //Get.find<CRMSalesOrderController>().getSalesOrders();
-      Get.back();
-      //print("done!");
-      Get.snackbar(
-        "${json["DocumentNo"]}",
-        "The record has been created".tr,
-        icon: const Icon(
-          Icons.done,
-          color: Colors.green,
-        ),
+    if (await checkConnection()) {
+      var response = await http.post(
+        url,
+        body: msg,
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
       );
 
-      /* cOrderId = json["id"];
+      if (response.statusCode == 201) {
+        var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+        //Get.find<CRMSalesOrderController>().getSalesOrders();
+        Get.back();
+        //print("done!");
+        Get.snackbar(
+          "${json["DocumentNo"]}",
+          "The record has been created".tr,
+          icon: const Icon(
+            Icons.done,
+            color: Colors.green,
+          ),
+        );
+
+        /* cOrderId = json["id"];
       if (cOrderId != 0) {
         createSalesOrderLine();
       } */
-    } else {
-      if (kDebugMode) {
-        print(response.body);
-        Get.snackbar(
-          "Error!".tr,
-          "Record not updated".tr,
-          icon: const Icon(
-            Icons.error,
-            color: Colors.red,
-          ),
-        );
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+          Get.snackbar(
+            "Error!".tr,
+            "Record not updated".tr,
+            icon: const Icon(
+              Icons.error,
+              color: Colors.red,
+            ),
+          );
+        }
       }
-    }
+    } else {}
+
+    generateFiscalPrint();
   }
 
   Future<void> generateFiscalPrint() async {

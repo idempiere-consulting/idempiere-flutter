@@ -37,6 +37,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode;
+import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:xml/xml.dart';
 
