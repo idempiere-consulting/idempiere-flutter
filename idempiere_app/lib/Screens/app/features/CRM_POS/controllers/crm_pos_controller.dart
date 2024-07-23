@@ -547,7 +547,7 @@ class CRMPOSController extends GetxController {
 
     for (var element in productList) {
       msg =
-          '$msg<printRecItem description="${element.productName}" unitPrice="${(element.price! * 1000).toInt()}"  idVat="B" quantity="${element.qty! * 2000}" ></printRecItem>';
+          '$msg<printRecItem description="${element.productName}" unitPrice="${(element.price! * 100).toInt()}"  idVat="B" quantity="${element.qty! * 1000}" ></printRecItem>';
     }
 
     msg =
