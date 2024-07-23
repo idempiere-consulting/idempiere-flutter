@@ -3,7 +3,7 @@ class ProductionOrderJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  final List<POJRecords>? records;
 
   ProductionOrderJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class ProductionOrderJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => POJRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class ProductionOrderJson {
       };
 }
 
-class Records {
+class POJRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -64,7 +64,7 @@ class Records {
   final ADWorkflowID? aDWorkflowID;
   final String? modelname;
 
-  Records({
+  POJRecords({
     this.id,
     this.uid,
     this.aDClientID,
@@ -98,7 +98,7 @@ class Records {
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  POJRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null

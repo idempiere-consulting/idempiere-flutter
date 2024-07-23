@@ -122,6 +122,10 @@ class ProductionAdvancementStateScreen
                                   //getImmediateSuggestions: true,
                                   textFieldConfiguration:
                                       TextFieldConfiguration(
+                                    onTap: () {
+                                      controller.resourceFieldController.text =
+                                          "";
+                                    },
                                     onChanged: (value) {},
                                     controller:
                                         controller.resourceFieldController,
@@ -168,6 +172,67 @@ class ProductionAdvancementStateScreen
                     ),
                   ),
                   Container(
+                    padding: EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: controller.getAllProduction(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<POJRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<POJRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onTap: () {
+                                      controller
+                                          .documentNoFieldController.text = "";
+                                    },
+                                    onChanged: (value) {},
+                                    controller:
+                                        controller.documentNoFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'DocumentNo'.tr,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      hintText: "search..",
+                                      //isDense: true,
+                                      fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.documentNo ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.documentNo ?? ""),
+                                      subtitle: Text(
+                                          suggestion.cbPartnerID?.identifier ??
+                                              ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    controller.getProductionOrder(
+                                        suggestion.documentNo!.toLowerCase());
+                                    controller.documentNoFieldController.text =
+                                        suggestion.documentNo!;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  /* Container(
                     padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
                     child: TextField(
                       controller: controller.documentNoFieldController,
@@ -182,7 +247,7 @@ class ProductionAdvancementStateScreen
                         controller.getProductionOrder(value.toLowerCase());
                       },
                     ),
-                  ),
+                  ), */
                   Obx(
                     () => Visibility(
                       replacement: SizedBox(),
@@ -900,6 +965,11 @@ class ProductionAdvancementStateScreen
                                                       //getImmediateSuggestions: true,
                                                       textFieldConfiguration:
                                                           TextFieldConfiguration(
+                                                        onTap: () {
+                                                          controller
+                                                              .resourceFieldController
+                                                              .text = "";
+                                                        },
                                                         onChanged: (value) {},
                                                         controller: controller
                                                             .resourceFieldController,
@@ -1009,27 +1079,105 @@ class ProductionAdvancementStateScreen
                             StaggeredGridTile.count(
                               crossAxisCellCount: 3,
                               mainAxisCellCount: 1,
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller:
-                                          controller.documentNoFieldController,
-                                      decoration: InputDecoration(
-                                        prefixIcon:
-                                            const Icon(Icons.text_fields),
-                                        border: const OutlineInputBorder(),
-                                        labelText: 'DocumentNo'.tr,
-                                        floatingLabelBehavior:
-                                            FloatingLabelBehavior.always,
+                              child: SizedBox(
+                                child: Card(
+                                  child: Row(
+                                    children: [
+                                      FutureBuilder(
+                                        future: controller.getAllProduction(),
+                                        builder: (BuildContext ctx,
+                                                AsyncSnapshot<List<POJRecords>>
+                                                    snapshot) =>
+                                            snapshot.hasData
+                                                ? Expanded(
+                                                    child: TypeAheadField<
+                                                        POJRecords>(
+                                                      direction:
+                                                          AxisDirection.down,
+                                                      //getImmediateSuggestions: true,
+                                                      textFieldConfiguration:
+                                                          TextFieldConfiguration(
+                                                        onTap: () {
+                                                          controller
+                                                              .documentNoFieldController
+                                                              .text = "";
+                                                        },
+                                                        onChanged: (value) {},
+                                                        controller: controller
+                                                            .documentNoFieldController,
+                                                        //autofocus: true,
+
+                                                        decoration:
+                                                            InputDecoration(
+                                                          labelText:
+                                                              'DocumentNo'.tr,
+                                                          filled: true,
+                                                          border:
+                                                              OutlineInputBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            borderSide:
+                                                                BorderSide.none,
+                                                          ),
+                                                          prefixIcon:
+                                                              const Icon(
+                                                                  EvaIcons
+                                                                      .search),
+                                                          hintText: "search..",
+                                                          //isDense: true,
+                                                          fillColor:
+                                                              Theme.of(context)
+                                                                  .cardColor,
+                                                        ),
+                                                      ),
+                                                      suggestionsCallback:
+                                                          (pattern) async {
+                                                        return snapshot.data!.where(
+                                                            (element) => (element
+                                                                        .documentNo ??
+                                                                    "")
+                                                                .toLowerCase()
+                                                                .contains(pattern
+                                                                    .toLowerCase()));
+                                                      },
+                                                      itemBuilder: (context,
+                                                          suggestion) {
+                                                        return ListTile(
+                                                          //leading: Icon(Icons.shopping_cart),
+                                                          title: Text(suggestion
+                                                                  .documentNo ??
+                                                              ""),
+                                                          subtitle: Text(suggestion
+                                                                  .cbPartnerID
+                                                                  ?.identifier ??
+                                                              ""),
+                                                        );
+                                                      },
+                                                      onSuggestionSelected:
+                                                          (suggestion) {
+                                                        controller
+                                                            .getProductionOrder(
+                                                                suggestion
+                                                                    .documentNo!
+                                                                    .toLowerCase());
+                                                        controller
+                                                                .documentNoFieldController
+                                                                .text =
+                                                            suggestion
+                                                                .documentNo!;
+                                                      },
+                                                    ),
+                                                  )
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
                                       ),
-                                      onSubmitted: (value) {
-                                        controller.getProductionOrder(
-                                            value.toLowerCase());
-                                      },
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ),
                             StaggeredGridTile.count(

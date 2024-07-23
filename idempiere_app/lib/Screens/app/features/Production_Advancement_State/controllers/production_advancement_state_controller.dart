@@ -20,6 +20,7 @@ class ProductionAdvancementStateController extends GetxController {
   TextEditingController resourceFieldController = TextEditingController();
 
   TextEditingController documentNoFieldController = TextEditingController();
+  var _dataDocNoAvailable = false.obs;
 
   int resourceId = 0;
 
@@ -397,6 +398,41 @@ class ProductionAdvancementStateController extends GetxController {
         print(response.body);
       }
     }
+  }
+
+  Future<List<POJRecords>> getAllProduction() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Production?\$filter=  AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var jsondecoded = jsonDecode(response.body);
+
+      var jsonres = ProductionOrderJson.fromJson(jsondecoded);
+
+      getMyResourceByLoginUser();
+
+      return jsonres.records!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      throw Exception("Failed to load production orders");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
   }
 
   Future<void> getProductionOrderLines(int productionID) async {

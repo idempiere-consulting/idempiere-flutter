@@ -450,7 +450,92 @@ class CRMPOSController extends GetxController {
           );
         }
       }
-    } else {}
+    } else {
+      List<dynamic> list = [];
+      if (GetStorage().read('postCallList') == null) {
+        var call = {
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://$ip/api/v1/windows/sales-order',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+          "C_BPartner_ID": {"id": businessPartnerId},
+          "C_BPartner_Location_ID": {"id": bpLocationId.value},
+          "Bill_BPartner_ID": {"id": businessPartnerId},
+          "Bill_Location_ID": {
+            "id": defValues.records![0].cBPartnerLocationID!.id
+          },
+          "Revision": defValues.records![0].revision,
+          //"AD_User_ID": defValues.records![0].aDUserID!.id,
+          //"Bill_User_ID": defValues.records![0].billUserID!.id,
+          "C_DocTypeTarget_ID": {"identifier": "Ordine Scontrino"},
+          "DateOrdered": "${formattedDate}T00:00:00Z",
+          "DatePromised": "${formattedDate}T00:00:00Z",
+          "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
+          "DeliveryRule": defValues.records![0].deliveryRule!.id,
+          "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
+          "FreightCostRule": defValues.records![0].freightCostRule!.id,
+          "PriorityRule": defValues.records![0].priorityRule!.id,
+          "InvoiceRule": defValues.records![0].invoiceRule!.id,
+          "M_PriceList_ID": defValues.records![0].mPriceListID!.id,
+          "SalesRep_ID": defValues.records![0].salesRepID!.id,
+          "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
+          "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
+          "PaymentRule": {"id": paymentRuleId.value},
+          "LIT_FidelityCard": fidelityFieldController.text,
+          "order-line".tr: list,
+        };
+
+        list.add(jsonEncode(call));
+      } else {
+        list = GetStorage().read('postCallList');
+        var call = {
+          "offlineid": GetStorage().read('postCallId'),
+          "url": '$protocol://$ip/api/v1/windows/sales-order',
+          "AD_Org_ID": {"id": GetStorage().read("organizationid")},
+          "AD_Client_ID": {"id": GetStorage().read("clientid")},
+          "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
+          "C_BPartner_ID": {"id": businessPartnerId},
+          "C_BPartner_Location_ID": {"id": bpLocationId.value},
+          "Bill_BPartner_ID": {"id": businessPartnerId},
+          "Bill_Location_ID": {
+            "id": defValues.records![0].cBPartnerLocationID!.id
+          },
+          "Revision": defValues.records![0].revision,
+          //"AD_User_ID": defValues.records![0].aDUserID!.id,
+          //"Bill_User_ID": defValues.records![0].billUserID!.id,
+          "C_DocTypeTarget_ID": {"identifier": "Ordine Scontrino"},
+          "DateOrdered": "${formattedDate}T00:00:00Z",
+          "DatePromised": "${formattedDate}T00:00:00Z",
+          "LIT_Revision_Date": "${formattedDate}T00:00:00Z",
+          "DeliveryRule": defValues.records![0].deliveryRule!.id,
+          "DeliveryViaRule": defValues.records![0].deliveryViaRule!.id,
+          "FreightCostRule": defValues.records![0].freightCostRule!.id,
+          "PriorityRule": defValues.records![0].priorityRule!.id,
+          "InvoiceRule": defValues.records![0].invoiceRule!.id,
+          "M_PriceList_ID": defValues.records![0].mPriceListID!.id,
+          "SalesRep_ID": defValues.records![0].salesRepID!.id,
+          "C_Currency_ID": defValues.records![0].cCurrencyID!.id,
+          "C_PaymentTerm_ID": {"id": int.parse(paymentTermId.value)},
+          "PaymentRule": {"id": paymentRuleId.value},
+          "LIT_FidelityCard": fidelityFieldController.text,
+          "order-line".tr: list,
+        };
+
+        list.add(jsonEncode(call));
+      }
+
+      GetStorage().write('postCallId', GetStorage().read('postCallId') + 1);
+      GetStorage().write('postCallList', list);
+      Get.snackbar(
+        "Saved!".tr,
+        "The record has been saved locally waiting for internet connection".tr,
+        icon: const Icon(
+          Icons.save,
+          color: Colors.red,
+        ),
+      );
+    }
 
     generateFiscalPrint();
   }
@@ -462,11 +547,11 @@ class CRMPOSController extends GetxController {
 
     for (var element in productList) {
       msg =
-          '$msg<printRecItem description="${element.productName}" unitPrice="${(element.price! * 100).toInt()}"  idVat="" quantity="${element.qty}" ></printRecItem>';
+          '$msg<printRecItem description="${element.productName}" unitPrice="${(element.price! * 1000).toInt()}"  idVat="B" quantity="${element.qty! * 2000}" ></printRecItem>';
     }
 
     msg =
-        '$msg<endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
+        '$msg<printRecSubtotal></printRecSubtotal><endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
 
     var url = Uri.parse(
         'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');
@@ -513,6 +598,41 @@ class CRMPOSController extends GetxController {
         }
       }
     }
+  }
+
+  Future<bool> getConfVariables() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_SysConfig?\$filter= Name eq \'LIT_POSShowDiscount\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = ProductCategoryJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.records!.isNotEmpty) {
+        if (json.records![0].value == 'Y') {
+          return true;
+        }
+      } else {
+        return false;
+      }
+      //getPriceListVersionID();
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+    return false;
   }
 
   Future<void> getBusinessPartner() async {

@@ -1469,6 +1469,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
             case "69":
               Get.offAllNamed("/SupplychainLoadUnload");
               break;
+            case "82":
+              Get.offNamed('/ProductionAdvancementState');
+              break;
             default:
               Get.offAllNamed("/Dashboard");
               break;

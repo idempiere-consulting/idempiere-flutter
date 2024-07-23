@@ -1370,6 +1370,7 @@ class LocaleString extends Translations {
           'production-mask': 'produzione-prodotto-singolo-pps00',
           'production-line-mask': 'production-line',
           'Images': 'Immagini',
+          'Production Advancement State': 'Stato Avanzamento Produzione',
         },
       };
 }
