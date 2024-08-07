@@ -77,6 +77,7 @@ class ProductionAdvancementStateController extends GetxController {
     //getADUserID();
     getDocType();
     adUserId = GetStorage().read('userId');
+    getMyResourceByLoginUser();
   }
 
   bool get dataAvailable => _dataAvailable.value;
@@ -324,8 +325,6 @@ class ProductionAdvancementStateController extends GetxController {
 
       var jsonres = ResourceJson.fromJson(jsondecoded);
 
-      getMyResourceByLoginUser();
-
       return jsonres.records!;
     } else {
       if (kDebugMode) {
@@ -419,8 +418,6 @@ class ProductionAdvancementStateController extends GetxController {
       var jsondecoded = jsonDecode(response.body);
 
       var jsonres = ProductionOrderJson.fromJson(jsondecoded);
-
-      getMyResourceByLoginUser();
 
       return jsonres.records!;
     } else {

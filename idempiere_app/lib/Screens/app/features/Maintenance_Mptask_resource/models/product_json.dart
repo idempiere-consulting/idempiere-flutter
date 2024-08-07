@@ -49,7 +49,7 @@ class Records {
   final bool? isStocked;
   final bool? isPurchased;
   final bool? isSold;
-  final int? volume;
+  final num? volume;
   final num? weight;
   final String? value;
   final MProductCategoryID? mProductCategoryID;
@@ -193,7 +193,7 @@ class Records {
         isStocked = json['IsStocked'] as bool?,
         isPurchased = json['IsPurchased'] as bool?,
         isSold = json['IsSold'] as bool?,
-        volume = json['Volume'] as int?,
+        volume = json['Volume'] as num?,
         weight = json['Weight'] as num?,
         value = json['Value'] as String?,
         mProductCategoryID =

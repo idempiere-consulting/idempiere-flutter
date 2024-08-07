@@ -14,6 +14,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact_bp_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_POS/models/discountschemabreak_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/pos_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/posbuttonlayout_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_POS/models/postablerow_json.dart';
@@ -531,6 +532,9 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                     child: TextField(
                                       controller:
                                           controller.fidelityFieldController,
+                                      onSubmitted: (value) {
+                                        controller.getFidelityCard(value);
+                                      },
                                       decoration: InputDecoration(
                                         isDense: true,
                                         //hintStyle: TextStyle(fontStyle: FontStyle.italic),
@@ -768,7 +772,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                               mainAxisCellCount: 20,
                               child: MasonryGridView.count(
                                 shrinkWrap: true,
-                                itemCount: 2,
+                                itemCount: 6,
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
@@ -861,6 +865,252 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                             ),
                                                           );
                                                         }),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }
+
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "HISTORY".tr) {
+                                            if (GetStorage().read('posList') !=
+                                                null) {
+                                              var posList = await GetStorage()
+                                                  .read('posList');
+
+                                              // ignore: use_build_context_synchronously
+                                              showDialog(
+                                                context: context,
+                                                barrierDismissible: true,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return Dialog(
+                                                    child: SizedBox(
+                                                      width: 200,
+                                                      height: 400,
+                                                      child: ListView.builder(
+                                                          itemCount:
+                                                              posList.length,
+                                                          itemBuilder:
+                                                              (BuildContext
+                                                                      context,
+                                                                  int index) {
+                                                            return Card(
+                                                              child: ListTile(
+                                                                onTap: () {
+                                                                  controller.generateCourtesyReceipt((jsonDecode(
+                                                                          posList[
+                                                                              index]))[
+                                                                      "order-line"
+                                                                          .tr]);
+                                                                },
+                                                                title: Text((jsonDecode(
+                                                                        posList[
+                                                                            index]))[
+                                                                    "DateOrdered"]),
+                                                                subtitle:
+                                                                    Column(
+                                                                  children: [
+                                                                    Row(
+                                                                      children: [
+                                                                        Text((jsonDecode(posList[index]))["TOT"]
+                                                                            .toString()),
+                                                                      ],
+                                                                    ),
+                                                                    Row(
+                                                                      children: [
+                                                                        Text(
+                                                                            "Fidelity: ${(jsonDecode(posList[index]))["LIT_FidelityCard"]}"),
+                                                                      ],
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                            );
+                                                          }),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            } else {
+                                              Get.defaultDialog(
+                                                title: 'No History Found'.tr,
+                                                content: Column(
+                                                  children: [],
+                                                ),
+                                              );
+                                            }
+                                          }
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "CLOSING".tr) {
+                                            Get.defaultDialog(
+                                              title: '',
+                                              content: Column(
+                                                children: [
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            bottom: 10.0),
+                                                    child: ElevatedButton(
+                                                        onPressed: () {
+                                                          controller
+                                                              .generateDailyReport();
+                                                        },
+                                                        child: Text(
+                                                            'Daily Report'.tr)),
+                                                  ),
+                                                  ElevatedButton(
+                                                      onPressed: () {
+                                                        controller
+                                                            .generateDailyFiscalClosing();
+                                                      },
+                                                      child: Text(
+                                                          'Daily Fiscal Closing'
+                                                              .tr)),
+                                                ],
+                                              ),
+                                            );
+                                          }
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "ROUNDING".tr) {
+                                            // ignore: use_build_context_synchronously
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  child: SizedBox(
+                                                    width: 200,
+                                                    height: 250,
+                                                    child: ListView.builder(
+                                                        itemCount: 3,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index) {
+                                                          return Card(
+                                                            child: ListTile(
+                                                              onTap: () {
+                                                                switch (index) {
+                                                                  case 0:
+                                                                    controller.roundingDownCaseOne(controller
+                                                                        .totalRows
+                                                                        .value
+                                                                        .floorToDouble());
+                                                                    break;
+                                                                  case 1:
+                                                                    controller.roundingDownCaseOne(
+                                                                        (controller.totalRows.value / 5.0).floor() *
+                                                                            5.0);
+                                                                    break;
+                                                                  case 2:
+                                                                    controller.roundingDownCaseOne(
+                                                                        (controller.totalRows.value / 10).floor() *
+                                                                            10);
+                                                                    break;
+                                                                  default:
+                                                                }
+                                                              },
+                                                              title: Text(
+                                                                  "${controller.roundingList[index]}€"),
+                                                              subtitle: Text(
+                                                                  "${index == 0 ? controller.totalRows.value.floorToDouble() : index == 1 ? (controller.totalRows.value / 5).floor() * 5 : (controller.totalRows.value / 10).floor() * 10}"),
+                                                            ),
+                                                          );
+                                                        }),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              'EDIT UNIT PRICE'.tr) {
+                                            List<TextEditingController>
+                                                editUnitPriceFieldController =
+                                                List.generate(
+                                                    controller
+                                                        .totalFieldController
+                                                        .length,
+                                                    (i) =>
+                                                        TextEditingController());
+
+                                            for (var i = 0;
+                                                i <
+                                                    editUnitPriceFieldController
+                                                        .length;
+                                                i++) {
+                                              editUnitPriceFieldController[i]
+                                                      .text =
+                                                  controller.productList[i]
+                                                      .discountedPrice
+                                                      .toString();
+                                            }
+
+                                            // ignore: use_build_context_synchronously
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  child: SizedBox(
+                                                    width: 250,
+                                                    height: 460,
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 250,
+                                                          height: 400,
+                                                          child:
+                                                              ListView.builder(
+                                                                  itemCount:
+                                                                      controller
+                                                                          .totalFieldController
+                                                                          .length,
+                                                                  itemBuilder:
+                                                                      (BuildContext
+                                                                              context,
+                                                                          int index) {
+                                                                    return Card(
+                                                                      child:
+                                                                          ListTile(
+                                                                        onTap:
+                                                                            () {},
+                                                                        title: Text(
+                                                                            "${controller.productList[index].productName}"),
+                                                                        subtitle:
+                                                                            TextField(
+                                                                          controller:
+                                                                              editUnitPriceFieldController[index],
+                                                                          decoration:
+                                                                              InputDecoration(
+                                                                            isDense:
+                                                                                true,
+                                                                            prefixIcon:
+                                                                                const Icon(Icons.monetization_on),
+                                                                            border:
+                                                                                const OutlineInputBorder(),
+                                                                          ),
+                                                                        ),
+                                                                      ),
+                                                                    );
+                                                                  }),
+                                                        ),
+                                                        Divider(),
+                                                        ElevatedButton(
+                                                            onPressed: () {
+                                                              Get.back();
+                                                              controller
+                                                                  .setUnitPrices(
+                                                                      editUnitPriceFieldController);
+                                                            },
+                                                            child: Text(
+                                                                'Change Unit Prices'))
+                                                      ],
+                                                    ),
                                                   ),
                                                 );
                                               },

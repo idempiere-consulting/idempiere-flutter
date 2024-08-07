@@ -1,12 +1,12 @@
-class CampaignJSON {
+class DiscountSchemaBreakJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
   final int? arraycount;
-  final List<CRecords>? records;
+  final List<Records>? records;
 
-  CampaignJSON({
+  DiscountSchemaBreakJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -15,14 +15,14 @@ class CampaignJSON {
     this.records,
   });
 
-  CampaignJSON.fromJson(Map<String, dynamic> json)
+  DiscountSchemaBreakJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => CRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -35,7 +35,7 @@ class CampaignJSON {
       };
 }
 
-class CRecords {
+class Records {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -45,14 +45,16 @@ class CRecords {
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final String? name;
-  final CChannelID? cChannelID;
-  final int? costs;
-  final String? value;
-  final bool? isSummary;
+  final MDiscountSchemaID? mDiscountSchemaID;
+  final int? seqNo;
+  final int? breakValue;
+  final num? breakDiscount;
+  final bool? isBPartnerFlatDiscount;
+  final int? fixedPrice;
+  final LITDiscountPriceGroupID? lITDiscountPriceGroupID;
   final String? modelname;
 
-  CRecords({
+  Records({
     this.id,
     this.uid,
     this.aDClientID,
@@ -62,15 +64,17 @@ class CRecords {
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.name,
-    this.cChannelID,
-    this.costs,
-    this.value,
-    this.isSummary,
+    this.mDiscountSchemaID,
+    this.seqNo,
+    this.breakValue,
+    this.breakDiscount,
+    this.isBPartnerFlatDiscount,
+    this.fixedPrice,
+    this.lITDiscountPriceGroupID,
     this.modelname,
   });
 
-  CRecords.fromJson(Map<String, dynamic> json)
+  Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
@@ -88,13 +92,21 @@ class CRecords {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        name = json['Name'] as String?,
-        cChannelID = (json['C_Channel_ID'] as Map<String, dynamic>?) != null
-            ? CChannelID.fromJson(json['C_Channel_ID'] as Map<String, dynamic>)
-            : null,
-        costs = json['Costs'] as int?,
-        value = json['Value'] as String?,
-        isSummary = json['IsSummary'] as bool?,
+        mDiscountSchemaID =
+            (json['M_DiscountSchema_ID'] as Map<String, dynamic>?) != null
+                ? MDiscountSchemaID.fromJson(
+                    json['M_DiscountSchema_ID'] as Map<String, dynamic>)
+                : null,
+        seqNo = json['SeqNo'] as int?,
+        breakValue = json['BreakValue'] as int?,
+        breakDiscount = json['BreakDiscount'] as num?,
+        isBPartnerFlatDiscount = json['IsBPartnerFlatDiscount'] as bool?,
+        fixedPrice = json['FixedPrice'] as int?,
+        lITDiscountPriceGroupID =
+            (json['LIT_DiscountPriceGroup_ID'] as Map<String, dynamic>?) != null
+                ? LITDiscountPriceGroupID.fromJson(
+                    json['LIT_DiscountPriceGroup_ID'] as Map<String, dynamic>)
+                : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -107,11 +119,13 @@ class CRecords {
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'Name': name,
-        'C_Channel_ID': cChannelID?.toJson(),
-        'Costs': costs,
-        'Value': value,
-        'IsSummary': isSummary,
+        'M_DiscountSchema_ID': mDiscountSchemaID?.toJson(),
+        'SeqNo': seqNo,
+        'BreakValue': breakValue,
+        'BreakDiscount': breakDiscount,
+        'IsBPartnerFlatDiscount': isBPartnerFlatDiscount,
+        'FixedPrice': fixedPrice,
+        'LIT_DiscountPriceGroup_ID': lITDiscountPriceGroupID?.toJson(),
         'model-name': modelname
       };
 }
@@ -224,20 +238,47 @@ class UpdatedBy {
       };
 }
 
-class CChannelID {
+class MDiscountSchemaID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  CChannelID({
+  MDiscountSchemaID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  CChannelID.fromJson(Map<String, dynamic> json)
+  MDiscountSchemaID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITDiscountPriceGroupID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITDiscountPriceGroupID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITDiscountPriceGroupID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

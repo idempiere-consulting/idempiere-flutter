@@ -1371,6 +1371,12 @@ class LocaleString extends Translations {
           'production-line-mask': 'production-line',
           'Images': 'Immagini',
           'Production Advancement State': 'Stato Avanzamento Produzione',
+          'HISTORY': 'STORICO',
+          'CLOSING': 'CHIUSURA',
+          'Daily Report': 'Report Giornaliero',
+          'Daily Fiscal Closing': 'Chiusura Fiscale Giornaliera',
+          'ROUNDING': 'ARROTONDAMENTO',
+          'EDIT UNIT PRICE': 'MODIF. PREZZO UNITARIO'
         },
       };
 }

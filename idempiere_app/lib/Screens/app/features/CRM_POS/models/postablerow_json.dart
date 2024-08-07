@@ -9,19 +9,20 @@ class POSTableRowJSON {
   double? discount;
   double? discountedPrice;
   double? tot;
+  bool? isRounded;
 
-  POSTableRowJSON({
-    this.rowType,
-    this.number,
-    this.productCode,
-    this.productName,
-    this.productId,
-    this.qty,
-    this.price,
-    this.discount,
-    this.discountedPrice,
-    this.tot,
-  });
+  POSTableRowJSON(
+      {this.rowType,
+      this.number,
+      this.productCode,
+      this.productName,
+      this.productId,
+      this.qty,
+      this.price,
+      this.discount,
+      this.discountedPrice,
+      this.tot,
+      this.isRounded = false});
 
   POSTableRowJSON.fromJson(Map<String, dynamic> json)
       : number = json['number'] as int?,

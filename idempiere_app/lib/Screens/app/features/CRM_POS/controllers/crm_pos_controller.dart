@@ -5,6 +5,11 @@ class CRMPOSController extends GetxController {
 
   late SalesOrderDefaultsJson defValues;
 
+  DiscountSchemaBreakJSON discountSchemaBreakJSON =
+      DiscountSchemaBreakJSON(records: []);
+
+  int discountSchemaID = 0;
+
   TextEditingController fidelityFieldController =
       TextEditingController(text: "");
 
@@ -19,7 +24,16 @@ class CRMPOSController extends GetxController {
 
   PosButtonLayoutJSON prodCategoryButtonList = PosButtonLayoutJSON(records: []);
 
-  List<String> functionButtonNameList = ['RETURN'.tr, 'PURCH. PRICE'.tr];
+  List<String> functionButtonNameList = [
+    'RETURN'.tr,
+    'PURCH. PRICE'.tr,
+    'HISTORY'.tr,
+    'CLOSING'.tr,
+    'ROUNDING'.tr,
+    'EDIT UNIT PRICE'.tr
+  ];
+
+  List<int> roundingList = [1, 5, 10];
 
   var isReturnButtonActive = false.obs;
 
@@ -59,6 +73,41 @@ class CRMPOSController extends GetxController {
     getDefaultPaymentTermsFromBP();
     getPOSProductCategories();
     getPOSProductCategoryButtonLayout();
+  }
+
+  Future<void> nextCustomer() async {
+    tableAvailable.value = false;
+
+    fidelityFieldController.text = "";
+
+    isReturnButtonActive.value = false;
+
+    rows = [];
+
+    productList = [];
+
+    rowNumber = 0;
+    currentProductName.value = "";
+    currentProductQuantity.value = "1";
+    currentProductPrice.value = 0.0;
+
+    discountSchemaBreakJSON = DiscountSchemaBreakJSON(records: []);
+
+    rowQtyFieldController = [];
+
+    totalFieldController = [];
+
+    quantityCounted = "";
+
+    totalRows.value = 0.0;
+    discountSchemaID = 0;
+
+    //dataAvailable.value = false;
+
+    cashPayment.value = false;
+    creditCardPayment.value = false;
+
+    tableAvailable.value = true;
   }
 
   Future<void> getProducts() async {
@@ -139,12 +188,17 @@ class CRMPOSController extends GetxController {
       if (kDebugMode) {
         print(response.body);
       }
-      print('fidelity');
+      //print('fidelity');
       var json =
           ContactJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (json.records!.isNotEmpty) {
         fidelityFieldController.text = barcode;
+
+        if (json.records![0].mDiscountSchemaID != null) {
+          discountSchemaID = json.records![0].mDiscountSchemaID!.id!;
+          addDiscountSchema(json.records![0].mDiscountSchemaID!.id!);
+        }
         Get.snackbar(
           "Done!".tr,
           "Fidelity Card Added to the Order".tr,
@@ -154,6 +208,7 @@ class CRMPOSController extends GetxController {
           ),
         );
       } else {
+        fidelityFieldController.text = "";
         Get.snackbar(
           "Error".tr,
           "Fidelity Card not found".tr,
@@ -167,6 +222,27 @@ class CRMPOSController extends GetxController {
       if (kDebugMode) {
         print(response.body);
       }
+    }
+  }
+
+  Future<void> addDiscountSchema(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_DiscountSchemaBreak?\$filter= M_DiscountSchema_ID eq $id and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+      discountSchemaBreakJSON = DiscountSchemaBreakJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
     }
   }
 
@@ -267,6 +343,19 @@ class CRMPOSController extends GetxController {
     if (isReturnButtonActive.value) {
       rowType = "R";
     }
+
+    double discount = discountSchemaBreakJSON.records!.isNotEmpty
+        ? (discountSchemaBreakJSON.records!.where((element) =>
+                element.lITDiscountPriceGroupID?.id ==
+                product.litDiscountPriceGroupID?.id)).isNotEmpty
+            ? (discountSchemaBreakJSON.records!.where((element) =>
+                    element.lITDiscountPriceGroupID?.id ==
+                    product.litDiscountPriceGroupID?.id))
+                .first
+                .breakDiscount!
+                .toDouble()
+            : product.discount!.toDouble()
+        : product.discount!.toDouble();
     productList.add(POSTableRowJSON.fromJson({
       "number": rowNumber,
       "rowType": rowType,
@@ -275,10 +364,14 @@ class CRMPOSController extends GetxController {
       "productId": product.id,
       "qty": int.parse(rowType == "R" ? "-1" : "1"),
       "price": product.priceList!.toDouble(),
-      "discount": product.discount!.toDouble(),
-      "discountedPrice": product.price!.toDouble(),
-      "tot":
-          double.parse(rowType == "R" ? "-1" : "1") * product.price!.toDouble(),
+      "discount": discount.toDouble(),
+      "discountedPrice": product.price!.toDouble() -
+          ((product.price!.toDouble() / 100.0) * discount.toDouble()),
+      "tot": double.parse(rowType == "R" ? "-1" : "1") *
+          (rowType != "R"
+              ? product.price!.toDouble() -
+                  ((product.price!.toDouble() / 100.0) * discount.toDouble())
+              : product.price!.toDouble()),
     }));
     currentProductName.value = product.name!;
 
@@ -286,9 +379,14 @@ class CRMPOSController extends GetxController {
         .add(TextEditingController(text: rowType == "R" ? "-1" : "1"));
     totalFieldController.add(TextEditingController(
         text: (double.parse(rowType == "R" ? "-1" : "1") *
-                product.price!.toDouble())
+                (rowType != "R"
+                    ? product.price!.toDouble() -
+                        ((product.price!.toDouble() / 100.0) *
+                            discount.toDouble())
+                    : product.price!.toDouble()))
             .toString()));
-    currentProductPrice.value = product.price!.toDouble();
+    currentProductPrice.value = product.price!.toDouble() -
+        ((product.price!.toDouble() / 100.0) * discount.toDouble());
     updateTotal();
     currentProductName.value = product.name ?? "N/A";
     currentProductQuantity.value = "1";
@@ -360,8 +458,142 @@ class CRMPOSController extends GetxController {
     totalRows.value = tot;
   }
 
+  Future<int> getpossc01() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Product?\$filter= Value eq \'possc01\' and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      var json =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      return json.records![0].id!;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+      return 0;
+    }
+  }
+
+  Future<void> roundingDownCaseOne(double roundedTot) async {
+    tableAvailable.value = false;
+    double tot = totalRows.value;
+
+    double difference = tot - roundedTot;
+
+    // print(difference);
+
+    double qties = 0.0;
+
+    int highestPriceProd = 0;
+
+    double numToDistributeBetweenProds = double.parse(
+        (difference / productList.length.toDouble()).toStringAsFixed(2));
+    print(numToDistributeBetweenProds);
+
+    for (var i = 0; i < productList.length; i++) {
+      if (productList[i].discountedPrice! >=
+          productList[highestPriceProd].discountedPrice!) {
+        highestPriceProd = i;
+      }
+    }
+
+    if (productList[highestPriceProd].qty! == 1) {
+      productList[highestPriceProd].discountedPrice =
+          productList[highestPriceProd].discountedPrice! - difference;
+      productList[highestPriceProd].tot =
+          productList[highestPriceProd].tot! - difference;
+      totalFieldController[highestPriceProd].text =
+          (productList[highestPriceProd].discountedPrice! *
+                  productList[highestPriceProd].qty!.toDouble())
+              .toStringAsFixed(2);
+      productList[highestPriceProd].isRounded = true;
+    }
+
+    if (productList[highestPriceProd].qty! > 1) {
+      productList[highestPriceProd].tot =
+          productList[highestPriceProd].tot! - difference;
+      productList[highestPriceProd].discountedPrice = double.parse(
+          (productList[highestPriceProd].tot! /
+                  productList[highestPriceProd].qty!.toDouble())
+              .toStringAsFixed(2));
+      totalFieldController[highestPriceProd].text =
+          (productList[highestPriceProd].discountedPrice! *
+                  productList[highestPriceProd].qty!.toDouble())
+              .toStringAsFixed(2);
+
+      productList[highestPriceProd].isRounded = true;
+      if (productList[highestPriceProd].tot! -
+              double.parse(totalFieldController[highestPriceProd].text) >
+          0.0) {
+        PLRecords rec = PLRecords(
+            value: "possc01",
+            name: "Arrotondamento",
+            id: await getpossc01(),
+            priceList: double.parse((productList[highestPriceProd].tot! -
+                    double.parse(totalFieldController[highestPriceProd].text))
+                .toStringAsFixed(2)),
+            price: double.parse((productList[highestPriceProd].tot! -
+                    double.parse(totalFieldController[highestPriceProd].text))
+                .toStringAsFixed(2)),
+            discount: 0.0);
+
+        setCurrentProduct(rec);
+      }
+    }
+
+    updateTotal();
+
+    tableAvailable.value = true;
+  }
+
+  Future<void> setUnitPrices(
+      List<TextEditingController> unitPriceFieldController) async {
+    tableAvailable.value = false;
+    for (var i = 0; i < unitPriceFieldController.length; i++) {
+      productList[i].discountedPrice =
+          double.parse(unitPriceFieldController[i].text);
+      totalFieldController[i].text =
+          (productList[i].discountedPrice! * productList[i].qty!.toDouble())
+              .toStringAsFixed(2);
+    }
+
+    tableAvailable.value = true;
+  }
+
   Future<void> createSalesOrder() async {
     Get.back();
+
+    var total = 0.0;
+
+    var msg2 =
+        '<?xml version="1.0" encoding="utf-8"?><printerFiscalReceipt><beginFiscalReceipt></beginFiscalReceipt><displayText data="Message 1 On customer display "></displayText>';
+
+    for (var element in productList) {
+      if (element.qty! > 0) {
+        msg2 =
+            '$msg2<printRecItem description="${element.productName}" unitPrice="${(element.discountedPrice! * 100).toInt()}"  idVat="B" quantity="${element.qty! * 1000}" ></printRecItem>';
+      } else {
+        msg2 =
+            '$msg2<printRecRefund  description="${element.productName}" unitPrice="${(element.price! * 100).toInt()}"  idVat="B" quantity="${element.qty! * -1000}" ></printRecRefund>';
+      }
+    }
+
+    msg2 =
+        '$msg2<printRecSubtotal></printRecSubtotal><endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
+
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -374,12 +606,25 @@ class CRMPOSController extends GetxController {
     List<Map<String, Object>> list = [];
 
     for (var element in productList) {
-      list.add({
-        "M_Product_ID": {"id": element.productId},
-        "qtyEntered": element.qty!
-      });
+      total = total + (element.qty! * element.discountedPrice!);
+
+      if (element.productCode == "possc01" || element.isRounded == true) {
+        list.add({
+          "ProductName": element.productName!,
+          "M_Product_ID": {"id": element.productId},
+          "qtyEntered": element.qty!,
+          "PriceList": element.price!,
+          "PriceEntered": element.discountedPrice!
+        });
+      } else {
+        list.add({
+          "ProductName": element.productName!,
+          "M_Product_ID": {"id": element.productId},
+          "qtyEntered": element.qty!
+        });
+      }
     }
-    var msg = jsonEncode({
+    var msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
@@ -388,6 +633,8 @@ class CRMPOSController extends GetxController {
       "Bill_BPartner_ID": {"id": businessPartnerId},
       "Bill_Location_ID": {"id": defValues.records![0].cBPartnerLocationID!.id},
       "Revision": defValues.records![0].revision,
+      "TextDetails": msg2,
+      "TOT": total,
       //"AD_User_ID": defValues.records![0].aDUserID!.id,
       //"Bill_User_ID": defValues.records![0].billUserID!.id,
       "C_DocTypeTarget_ID": {"identifier": "Ordine Scontrino"},
@@ -406,12 +653,29 @@ class CRMPOSController extends GetxController {
       "PaymentRule": {"id": paymentRuleId.value},
       "LIT_FidelityCard": fidelityFieldController.text,
       "order-line".tr: list,
-    });
+    };
+
+    if (discountSchemaID != 0) {
+      msg.addAll({
+        "M_DiscountSchema_ID": {"id": discountSchemaID}
+      });
+    }
+
+    List<dynamic> poslist = [];
+    if (GetStorage().read('posList') == null) {
+      poslist.add(jsonEncode(msg));
+    } else {
+      poslist = GetStorage().read('posList');
+      poslist.add(jsonEncode(msg));
+    }
+    GetStorage().write('posList', poslist);
+
+    GetStorage().write('postCallList', []);
 
     if (await checkConnection()) {
       var response = await http.post(
         url,
-        body: msg,
+        body: jsonEncode(msg),
         headers: <String, String>{
           'Content-Type': 'application/json',
           'Authorization': authorization,
@@ -432,6 +696,8 @@ class CRMPOSController extends GetxController {
             color: Colors.green,
           ),
         );
+
+        nextCustomer();
 
         /* cOrderId = json["id"];
       if (cOrderId != 0) {
@@ -466,6 +732,8 @@ class CRMPOSController extends GetxController {
             "id": defValues.records![0].cBPartnerLocationID!.id
           },
           "Revision": defValues.records![0].revision,
+          "TextDetails": msg2,
+          "TOT": total,
           //"AD_User_ID": defValues.records![0].aDUserID!.id,
           //"Bill_User_ID": defValues.records![0].billUserID!.id,
           "C_DocTypeTarget_ID": {"identifier": "Ordine Scontrino"},
@@ -485,6 +753,12 @@ class CRMPOSController extends GetxController {
           "LIT_FidelityCard": fidelityFieldController.text,
           "order-line".tr: list,
         };
+
+        if (discountSchemaID != 0) {
+          call.addAll({
+            "M_DiscountSchema_ID": {"id": discountSchemaID}
+          });
+        }
 
         list.add(jsonEncode(call));
       } else {
@@ -502,6 +776,8 @@ class CRMPOSController extends GetxController {
             "id": defValues.records![0].cBPartnerLocationID!.id
           },
           "Revision": defValues.records![0].revision,
+          "TextDetails": msg2,
+          "TOT": total,
           //"AD_User_ID": defValues.records![0].aDUserID!.id,
           //"Bill_User_ID": defValues.records![0].billUserID!.id,
           "C_DocTypeTarget_ID": {"identifier": "Ordine Scontrino"},
@@ -521,7 +797,11 @@ class CRMPOSController extends GetxController {
           "LIT_FidelityCard": fidelityFieldController.text,
           "order-line".tr: list,
         };
-
+        if (discountSchemaID != 0) {
+          call.addAll({
+            "M_DiscountSchema_ID": {"id": discountSchemaID}
+          });
+        }
         list.add(jsonEncode(call));
       }
 
@@ -537,21 +817,101 @@ class CRMPOSController extends GetxController {
       );
     }
 
-    generateFiscalPrint();
+    generateFiscalPrint(msg2);
   }
 
-  Future<void> generateFiscalPrint() async {
+  Future<void> generateFiscalPrint(String msg2) async {
     Codec<String, String> stringToBase64 = utf8.fuse(base64);
-    var msg =
-        '<?xml version="1.0" encoding="utf-8"?><printerFiscalReceipt><beginFiscalReceipt></beginFiscalReceipt><displayText data="Message 1 On customer display "></displayText>';
 
-    for (var element in productList) {
-      msg =
-          '$msg<printRecItem description="${element.productName}" unitPrice="${(element.price! * 100).toInt()}"  idVat="B" quantity="${element.qty! * 1000}" ></printRecItem>';
+    var url = Uri.parse(
+        'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');
+
+    var response = await http.post(
+      url,
+      body: msg2,
+      headers: <String, String>{
+        'Content-Type': 'application/xml',
+        'authorization':
+            'Basic ${stringToBase64.encode("${GetStorage().read('fiscalPrinterSerialNo')}:${GetStorage().read('fiscalPrinterSerialNo')}")}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> generateCourtesyReceipt(
+      List<dynamic> courtesyReceiptItemList) async {
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    var msg2 =
+        '<?xml version="1.0" encoding="utf-8"?><printerNotFiscal><beginNotFiscal></beginNotFiscal><printNormal font="5" data="SCONTRINO DI CORTESIA"></printNormal>';
+
+    for (var element in courtesyReceiptItemList) {
+      print(element);
+
+      if (element["qtyEntered"] > 0) {
+        msg2 =
+            '$msg2<printNormal font="1" data="${element["ProductName"]}   x${element["qtyEntered"]}"></printNormal>';
+      }
     }
 
-    msg =
-        '$msg<printRecSubtotal></printRecSubtotal><endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
+    msg2 = '$msg2<endNotFiscal></endNotFiscal></printerNotFiscal>';
+
+    var url = Uri.parse(
+        'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');
+
+    var response = await http.post(
+      url,
+      body: msg2,
+      headers: <String, String>{
+        'Content-Type': 'application/xml',
+        'authorization':
+            'Basic ${stringToBase64.encode("${GetStorage().read('fiscalPrinterSerialNo')}:${GetStorage().read('fiscalPrinterSerialNo')}")}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> generateDailyReport() async {
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    var msg =
+        '<?xml version="1.0" encoding="utf-8"?><printerFiscalReport><printXReport description=""></printXReport></printerFiscalReport>';
+
+    var url = Uri.parse(
+        'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/xml',
+        'authorization':
+            'Basic ${stringToBase64.encode("${GetStorage().read('fiscalPrinterSerialNo')}:${GetStorage().read('fiscalPrinterSerialNo')}")}',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> generateDailyFiscalClosing() async {
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    var msg =
+        '<?xml version="1.0" encoding="utf-8"?><printerFiscalReport><printZReport description=""></printZReport></printerFiscalReport>';
 
     var url = Uri.parse(
         'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');

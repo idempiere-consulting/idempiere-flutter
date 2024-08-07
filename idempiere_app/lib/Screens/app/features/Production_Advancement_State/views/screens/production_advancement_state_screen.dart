@@ -599,7 +599,8 @@ class ProductionAdvancementStateScreen
                                                     snapshot) =>
                                             snapshot.hasData
                                                 ? TypeAheadField<PRecords>(
-                                                    direction: AxisDirection.up,
+                                                    direction:
+                                                        AxisDirection.down,
                                                     //getImmediateSuggestions: true,
                                                     textFieldConfiguration:
                                                         TextFieldConfiguration(
@@ -926,10 +927,1116 @@ class ProductionAdvancementStateScreen
                       ),
                     ),
                   ),
+                  Container(
+                    height: 400,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Summary".tr,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: () {}, child: Text("All".tr))
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            Obx(
+                              () => controller.summaryAvailable.value
+                                  ? Expanded(
+                                      child: ListView.builder(
+                                          primary: false,
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          itemCount: controller
+                                              .summeryPhaseList.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Card(
+                                                child: ExpansionTile(
+                                                  title: Text(
+                                                    controller.summeryPhaseList[
+                                                        index],
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  ),
+                                                  childrenPadding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10,
+                                                          right: 10,
+                                                          left: 10),
+                                                  children: [
+                                                    ListView.builder(
+                                                        primary: false,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .summaryPhase
+                                                            .records!
+                                                            .length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index2) {
+                                                          return controller
+                                                                          .summeryPhaseListId[
+                                                                      index] ==
+                                                                  controller
+                                                                      .summaryPhase
+                                                                      .records![
+                                                                          index2]
+                                                                      .mProductionNodeID!
+                                                                      .id!
+                                                              ? ListTile(
+                                                                  contentPadding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          kSpacing),
+                                                                  leading: Text(
+                                                                    controller
+                                                                        .summaryPhase
+                                                                        .records![
+                                                                            index2]
+                                                                        .docStatus!
+                                                                        .id!,
+                                                                  ),
+                                                                  title: Text(
+                                                                    controller
+                                                                            .summaryPhase
+                                                                            .records![index2]
+                                                                            .sResourceID
+                                                                            ?.identifier ??
+                                                                        'N/A',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          13,
+                                                                      color:
+                                                                          kFontColorPallets[
+                                                                              0],
+                                                                    ),
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    controller
+                                                                        .summaryPhase
+                                                                        .records![
+                                                                            index2]
+                                                                        .movementDate!
+                                                                        .substring(
+                                                                            0,
+                                                                            10),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          11,
+                                                                      color:
+                                                                          kFontColorPallets[
+                                                                              2],
+                                                                    ),
+                                                                  ),
+                                                                  trailing: Text(
+                                                                      '${controller.summaryPhase.records![index2].durationReal ?? 0} Ore'),
+                                                                )
+                                                              : const SizedBox();
+                                                        }),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    )
+                                  : SizedBox(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
                 ]);
               },
               tabletBuilder: (context, constraints) {
-                return Column(children: []);
+                return Column(children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: controller.getAllResources(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<RRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<RRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onTap: () {
+                                      controller.resourceFieldController.text =
+                                          "";
+                                    },
+                                    onChanged: (value) {},
+                                    controller:
+                                        controller.resourceFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'Resource'.tr,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      prefixIcon: const Icon(EvaIcons.person),
+                                      hintText: "search..",
+                                      //isDense: true,
+                                      fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    controller.resourceId = suggestion.id!;
+                                    controller.resourceFieldController.text =
+                                        suggestion.name!;
+                                    if (controller.nodeId.value != "") {
+                                      controller
+                                          .searchPhase(controller.nodeId.value);
+                                    }
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    child: FutureBuilder(
+                      future: controller.getAllProduction(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<POJRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<POJRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onTap: () {
+                                      controller
+                                          .documentNoFieldController.text = "";
+                                    },
+                                    onChanged: (value) {},
+                                    controller:
+                                        controller.documentNoFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'DocumentNo'.tr,
+                                      filled: true,
+                                      border: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none,
+                                      ),
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      hintText: "search..",
+                                      //isDense: true,
+                                      fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.documentNo ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.documentNo ?? ""),
+                                      subtitle: Text(
+                                          suggestion.cbPartnerID?.identifier ??
+                                              ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    controller.getProductionOrder(
+                                        suggestion.documentNo!.toLowerCase());
+                                    controller.documentNoFieldController.text =
+                                        suggestion.documentNo!;
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
+                    ),
+                  ),
+                  /* Container(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: TextField(
+                      controller: controller.documentNoFieldController,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        prefixIcon: const Icon(Icons.text_fields),
+                        border: const OutlineInputBorder(),
+                        labelText: 'DocumentNo'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                      ),
+                      onSubmitted: (value) {
+                        controller.getProductionOrder(value.toLowerCase());
+                      },
+                    ),
+                  ), */
+                  Obx(
+                    () => Visibility(
+                      replacement: SizedBox(),
+                      visible: controller._nodeListdataAvailable.value,
+                      child: Container(
+                        padding:
+                            EdgeInsets.only(left: 10, bottom: 10, right: 10),
+                        child: InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: 'Phase'.tr,
+                            //filled: true,
+                            border: const OutlineInputBorder(
+                                /* borderRadius: BorderRadius.circular(10),
+                                            borderSide: BorderSide.none, */
+                                ),
+                            prefixIcon: const Icon(EvaIcons.list),
+                            //hintText: "search..",
+                            isDense: true,
+                            //fillColor: Theme.of(context).cardColor,
+                          ),
+                          child: DropdownButton(
+                            isDense: true,
+                            underline: const SizedBox(),
+                            hint: Text("Select a Phase".tr),
+                            isExpanded: true,
+                            value: controller.nodeId.value == ""
+                                ? null
+                                : controller.nodeId.value,
+                            elevation: 16,
+                            onChanged: (newValue) {
+                              controller.nodeId.value = newValue as String;
+
+                              controller.advancementStatusDateStart.value = "";
+                              controller.phaseDuration.value = 0.0;
+                              controller.advancementStatusID = 0;
+                              controller.phaseStatus.value = "";
+
+                              controller.searchPhase(controller.nodeId.value);
+
+                              //print(dropdownValue);
+                            },
+                            items: controller.nodeList.records!.map((list) {
+                              return DropdownMenuItem<String>(
+                                value: list.id.toString(),
+                                child: Text(
+                                  list.name.toString(),
+                                ),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Obx(
+                          () => controller._dataAvailable.value
+                              ? Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          controller._trx.records?[0]
+                                                  .documentNo ??
+                                              "N/A",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          "${"Qty".tr}: ${controller._trx.records?[0].productionQty ?? 0.0}",
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${"CDL".tr}: ",
+                                        ),
+                                        Text(
+                                          "${"Qty Prod".tr}: ${controller._trx.records?[0].actualQty ?? 0}",
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "${"Product".tr}: ${controller._trx.records?[0].mProductID?.identifier}",
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                              : SizedBox(),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: EdgeInsets.only(right: 10, left: 10, bottom: 10),
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Obx(
+                                  () => Visibility(
+                                    replacement: ElevatedButton(
+                                      style: ButtonStyle(backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) {
+                                        // If the button is pressed, return green, otherwise blue
+
+                                        return Colors.grey;
+                                      })),
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Start",
+                                      ),
+                                    ),
+                                    visible:
+                                        controller.phaseStatus.value == "START",
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) {
+                                        // If the button is pressed, return green, otherwise blue
+
+                                        return kNotifColor;
+                                      })),
+                                      onPressed: () {
+                                        controller
+                                            .createAdvancementStateRecord();
+                                      },
+                                      child: Text(
+                                        "Start",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Obx(
+                                  () => Visibility(
+                                    replacement: ElevatedButton(
+                                      style: ButtonStyle(backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) {
+                                        // If the button is pressed, return green, otherwise blue
+
+                                        return Colors.grey;
+                                      })),
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Stop",
+                                      ),
+                                    ),
+                                    visible:
+                                        controller.phaseStatus.value == "STOP",
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) {
+                                        // If the button is pressed, return green, otherwise blue
+
+                                        return kNotifColor;
+                                      })),
+                                      onPressed: () {
+                                        controller.editAdvancementStateRecord();
+                                      },
+                                      child: Text(
+                                        "Stop",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Obx(
+                                  () => Visibility(
+                                    replacement: ElevatedButton(
+                                      style: ButtonStyle(backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) {
+                                        // If the button is pressed, return green, otherwise blue
+
+                                        return Colors.grey;
+                                      })),
+                                      onPressed: () {},
+                                      child: Text(
+                                        "Start/Stop",
+                                      ),
+                                    ),
+                                    visible:
+                                        controller.phaseStatus.value == "START",
+                                    child: ElevatedButton(
+                                      style: ButtonStyle(backgroundColor:
+                                          MaterialStateProperty.resolveWith(
+                                              (states) {
+                                        // If the button is pressed, return green, otherwise blue
+
+                                        return kNotifColor;
+                                      })),
+                                      onPressed: () {
+                                        controller.hoursFieldController.text =
+                                            "";
+                                        Get.defaultDialog(
+                                          title: 'Hours Done'.tr,
+                                          onConfirm: () {
+                                            controller
+                                                .createAdvancementStateRecordByStartStopButton();
+                                          },
+                                          content: Column(
+                                            children: [
+                                              TextField(
+                                                autofocus: true,
+                                                controller: controller
+                                                    .hoursFieldController,
+                                                keyboardType:
+                                                    const TextInputType
+                                                            .numberWithOptions(
+                                                        signed: true,
+                                                        decimal: true),
+                                                inputFormatters: [
+                                                  FilteringTextInputFormatter
+                                                      .allow(RegExp("[0-9.]"))
+                                                ],
+                                                decoration: InputDecoration(
+                                                  prefixIcon: const Icon(
+                                                      Icons.timelapse),
+                                                  border:
+                                                      const OutlineInputBorder(),
+                                                  labelText: 'Hours'.tr,
+                                                  floatingLabelBehavior:
+                                                      FloatingLabelBehavior
+                                                          .always,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        );
+                                      },
+                                      child: Text(
+                                        "Start/Stop",
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                            Obx(
+                              () => Visibility(
+                                  visible: controller
+                                          .advancementStatusDateStart.value !=
+                                      "",
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "START   ",
+                                      ),
+                                      Text(
+                                        controller.advancementStatusDateStart
+                                                    .value !=
+                                                ""
+                                            ? DateFormat('dd-MM-yyyy  kk:mm')
+                                                .format(DateTime.parse(controller
+                                                    .advancementStatusDateStart
+                                                    .value))
+                                            : "",
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            Obx(
+                              () => Visibility(
+                                  visible: controller.advancementStatusDateStart
+                                              .value !=
+                                          "" &&
+                                      controller.phaseDuration.value != 0.0,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        "STOP   ",
+                                      ),
+                                      Text(
+                                        controller.advancementStatusDateStart
+                                                        .value !=
+                                                    "" &&
+                                                controller
+                                                        .phaseDuration.value !=
+                                                    0.0
+                                            ? DateFormat('dd-MM-yyyy  kk:mm')
+                                                .format(DateTime.parse(controller
+                                                        .advancementStatusDateStart
+                                                        .value)
+                                                    .add(Duration(
+                                                        minutes: (controller
+                                                                    .phaseDuration
+                                                                    .value *
+                                                                60)
+                                                            .toInt())))
+                                            : "",
+                                      ),
+                                    ],
+                                  )),
+                            ),
+                            SizedBox(height: 10),
+                            ElevatedButton(
+                              style: ButtonStyle(backgroundColor:
+                                  MaterialStateProperty.resolveWith((states) {
+                                // If the button is pressed, return green, otherwise blue
+
+                                return kNotifColor;
+                              })),
+                              onPressed: () {
+                                controller.unloadProductFieldController.text =
+                                    "";
+                                controller.unloadQtyFieldController.text = "1";
+                                controller.unloadProductId = 0;
+                                controller.noteFieldController.text = "";
+                                controller.widthFieldController.text = "";
+                                controller.heightFieldController.text = "";
+                                controller.widthFieldController.text = "";
+                                controller.lengthFieldController.text = "";
+                                Get.defaultDialog(
+                                  title: 'Add Material'.tr,
+                                  textConfirm: 'Confirm'.tr,
+                                  onConfirm: () {
+                                    controller.createProductionLine();
+                                  },
+                                  content: Column(
+                                    children: [
+                                      FutureBuilder(
+                                        future: controller.getAllProducts(),
+                                        builder: (BuildContext ctx,
+                                                AsyncSnapshot<List<PRecords>>
+                                                    snapshot) =>
+                                            snapshot.hasData
+                                                ? TypeAheadField<PRecords>(
+                                                    direction:
+                                                        AxisDirection.down,
+                                                    //getImmediateSuggestions: true,
+                                                    textFieldConfiguration:
+                                                        TextFieldConfiguration(
+                                                      onChanged: (value) {
+                                                        if (value == "") {
+                                                          controller
+                                                              .unloadProductId = 0;
+                                                        }
+                                                      },
+                                                      controller: controller
+                                                          .unloadProductFieldController,
+                                                      //autofocus: true,
+
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText: 'Product'.tr,
+                                                        //filled: true,
+                                                        border: const OutlineInputBorder(
+                                                            /* borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide.none, */
+                                                            ),
+                                                        prefixIcon: const Icon(
+                                                            EvaIcons.search),
+                                                        //hintText: "search..",
+                                                        isDense: true,
+                                                        //fillColor: Theme.of(context).cardColor,
+                                                      ),
+                                                    ),
+                                                    suggestionsCallback:
+                                                        (pattern) async {
+                                                      return snapshot.data!
+                                                          .where((element) =>
+                                                              ("${element.value}_${element.name}")
+                                                                  .toLowerCase()
+                                                                  .contains(pattern
+                                                                      .toLowerCase()));
+                                                    },
+                                                    itemBuilder:
+                                                        (context, suggestion) {
+                                                      return ListTile(
+                                                        //leading: Icon(Icons.shopping_cart),
+                                                        title: Text(
+                                                            suggestion.name ??
+                                                                ""),
+                                                        subtitle: Text(
+                                                            suggestion.value ??
+                                                                ""),
+                                                      );
+                                                    },
+                                                    onSuggestionSelected:
+                                                        (suggestion) {
+                                                      controller
+                                                          .unloadProductFieldController
+                                                          .text = suggestion.name!;
+                                                      controller
+                                                              .unloadProductId =
+                                                          suggestion.id!;
+                                                    },
+                                                  )
+                                                : const Center(
+                                                    child:
+                                                        CircularProgressIndicator(),
+                                                  ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                        //focusNode: focusNode,
+                                        controller:
+                                            controller.unloadQtyFieldController,
+                                        keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                            signed: true, decimal: true),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[0-9.-]"))
+                                        ],
+                                        decoration: InputDecoration(
+                                          prefixIcon:
+                                              const Icon(Symbols.dialpad),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Quantity'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                        //focusNode: focusNode,
+                                        controller:
+                                            controller.noteFieldController,
+
+                                        decoration: InputDecoration(
+                                          prefixIcon:
+                                              const Icon(Icons.text_fields),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Note'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                        //focusNode: focusNode,
+                                        controller:
+                                            controller.widthFieldController,
+                                        keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                            signed: true, decimal: true),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[0-9]"))
+                                        ],
+                                        decoration: InputDecoration(
+                                          prefixIcon:
+                                              const Icon(Icons.square_foot),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Width'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                        //focusNode: focusNode,
+                                        controller:
+                                            controller.heightFieldController,
+                                        keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                            signed: true, decimal: true),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[0-9]"))
+                                        ],
+                                        decoration: InputDecoration(
+                                          prefixIcon:
+                                              const Icon(Icons.square_foot),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Height'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 10,
+                                      ),
+                                      TextField(
+                                        //focusNode: focusNode,
+                                        controller:
+                                            controller.lengthFieldController,
+                                        keyboardType: const TextInputType
+                                                .numberWithOptions(
+                                            signed: true, decimal: true),
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter.allow(
+                                              RegExp("[0-9]"))
+                                        ],
+                                        decoration: InputDecoration(
+                                          prefixIcon:
+                                              const Icon(Icons.square_foot),
+                                          border: const OutlineInputBorder(),
+                                          labelText: 'Length'.tr,
+                                          floatingLabelBehavior:
+                                              FloatingLabelBehavior.always,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(Symbols.add),
+                                  Text(
+                                    "Add Material".tr,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 400,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Production Components".tr,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  IconButton(
+                                      onPressed: () {
+                                        var search = controller
+                                            .prodRowList.records!
+                                            .where((element) =>
+                                                element.mInventoryLineID?.id !=
+                                                null);
+                                        if (search.isNotEmpty) {
+                                          controller.getInventoryByLineID(search
+                                              .first.mInventoryLineID!.id!);
+                                        } else {
+                                          controller.createInventory();
+                                        }
+                                      },
+                                      icon: Icon(Icons.get_app_sharp))
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            Obx(
+                              () => Visibility(
+                                visible:
+                                    controller._prodLinedataAvailable.value,
+                                child: Expanded(
+                                  child: ListView.builder(
+                                      itemCount: controller
+                                          .prodRowList.records!.length,
+                                      itemBuilder:
+                                          (BuildContext context, int index) {
+                                        return Card(
+                                          child: Container(
+                                            decoration: const BoxDecoration(
+                                                color: Color.fromRGBO(
+                                                    64, 75, 96, .9)),
+                                            child: ListTile(
+                                              contentPadding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: kSpacing),
+                                              title: Text(controller
+                                                      .prodRowList
+                                                      .records![index]
+                                                      .mProductID
+                                                      ?.identifier ??
+                                                  "N/A"),
+                                              subtitle: Column(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.start,
+                                                children: [
+                                                  Visibility(
+                                                    visible: controller
+                                                                .prodRowList
+                                                                .records![index]
+                                                                .width !=
+                                                            null &&
+                                                        controller
+                                                                .prodRowList
+                                                                .records![index]
+                                                                .height !=
+                                                            null &&
+                                                        controller
+                                                                .prodRowList
+                                                                .records![index]
+                                                                .length !=
+                                                            null,
+                                                    child: Row(
+                                                      children: [
+                                                        Text(
+                                                            "${"Volume".tr}: ${controller.prodRowList.records![index].width}x${controller.prodRowList.records![index].height}x${controller.prodRowList.records![index].length}"),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                          "${"Qty Planned".tr}: ${controller.prodRowList.records![index].plannedQty}"),
+                                                    ],
+                                                  ),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                          "${"Qty Used".tr}: ${controller.prodRowList.records![index].qtyUsed}"),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                              trailing: controller
+                                                          .prodRowList
+                                                          .records![index]
+                                                          .mInventoryLineID
+                                                          ?.id ==
+                                                      null
+                                                  ? Icon(
+                                                      Icons.warehouse_sharp,
+                                                      color: Colors.yellow,
+                                                    )
+                                                  : Icon(
+                                                      Icons.check,
+                                                      color: kNotifColor,
+                                                    ),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    height: 400,
+                    child: Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Summary".tr,
+                                    style: TextStyle(
+                                        fontSize: 25,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  ElevatedButton(
+                                      onPressed: () {}, child: Text("All".tr))
+                                ],
+                              ),
+                            ),
+                            Divider(),
+                            Obx(
+                              () => controller.summaryAvailable.value
+                                  ? Expanded(
+                                      child: ListView.builder(
+                                          primary: false,
+                                          scrollDirection: Axis.vertical,
+                                          shrinkWrap: true,
+                                          itemCount: controller
+                                              .summeryPhaseList.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            return Container(
+                                              margin:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Card(
+                                                child: ExpansionTile(
+                                                  title: Text(
+                                                    controller.summeryPhaseList[
+                                                        index],
+                                                    style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white),
+                                                  ),
+                                                  childrenPadding:
+                                                      const EdgeInsets.only(
+                                                          bottom: 10,
+                                                          right: 10,
+                                                          left: 10),
+                                                  children: [
+                                                    ListView.builder(
+                                                        primary: false,
+                                                        scrollDirection:
+                                                            Axis.vertical,
+                                                        shrinkWrap: true,
+                                                        itemCount: controller
+                                                            .summaryPhase
+                                                            .records!
+                                                            .length,
+                                                        itemBuilder:
+                                                            (BuildContext
+                                                                    context,
+                                                                int index2) {
+                                                          return controller
+                                                                          .summeryPhaseListId[
+                                                                      index] ==
+                                                                  controller
+                                                                      .summaryPhase
+                                                                      .records![
+                                                                          index2]
+                                                                      .mProductionNodeID!
+                                                                      .id!
+                                                              ? ListTile(
+                                                                  contentPadding: const EdgeInsets
+                                                                          .symmetric(
+                                                                      horizontal:
+                                                                          kSpacing),
+                                                                  leading: Text(
+                                                                    controller
+                                                                        .summaryPhase
+                                                                        .records![
+                                                                            index2]
+                                                                        .docStatus!
+                                                                        .id!,
+                                                                  ),
+                                                                  title: Text(
+                                                                    controller
+                                                                            .summaryPhase
+                                                                            .records![index2]
+                                                                            .sResourceID
+                                                                            ?.identifier ??
+                                                                        'N/A',
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          13,
+                                                                      color:
+                                                                          kFontColorPallets[
+                                                                              0],
+                                                                    ),
+                                                                  ),
+                                                                  subtitle:
+                                                                      Text(
+                                                                    controller
+                                                                        .summaryPhase
+                                                                        .records![
+                                                                            index2]
+                                                                        .movementDate!
+                                                                        .substring(
+                                                                            0,
+                                                                            10),
+                                                                    style:
+                                                                        TextStyle(
+                                                                      fontSize:
+                                                                          11,
+                                                                      color:
+                                                                          kFontColorPallets[
+                                                                              2],
+                                                                    ),
+                                                                  ),
+                                                                  trailing: Text(
+                                                                      '${controller.summaryPhase.records![index2].durationReal ?? 0} Ore'),
+                                                                )
+                                                              : const SizedBox();
+                                                        }),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          }),
+                                    )
+                                  : SizedBox(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ]);
               },
               desktopBuilder: (context, constraints) {
                 return Row(
@@ -1545,7 +2652,7 @@ class ProductionAdvancementStateScreen
                                                               PRecords>(
                                                               direction:
                                                                   AxisDirection
-                                                                      .up,
+                                                                      .down,
                                                               //getImmediateSuggestions: true,
                                                               textFieldConfiguration:
                                                                   TextFieldConfiguration(
@@ -2179,7 +3286,7 @@ class ProductionAdvancementStateScreen
                                                                 GetStorage().read(
                                                                     'protocol');
                                                             var url = Uri.parse(
-                                                                '$protocol://$ip/api/v1/models/m_production/1000001/attachments/${controller.attachments.attachments![index].name!}');
+                                                                '$protocol://$ip/api/v1/models/m_production/${controller.productionOrderID}/attachments/${controller.attachments.attachments![index].name!}');
                                                             var response =
                                                                 await http.get(
                                                               url,
@@ -2245,6 +3352,10 @@ class ProductionAdvancementStateScreen
                                                                           image64
                                                                     });
                                                               }
+                                                            } else {
+                                                              print('aaa');
+                                                              print(response
+                                                                  .body);
                                                             }
                                                           },
                                                           contentPadding:

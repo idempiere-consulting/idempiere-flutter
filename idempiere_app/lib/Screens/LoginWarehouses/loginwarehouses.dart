@@ -1361,6 +1361,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       DateTime now = DateTime.now();
       DateTime date = DateTime(now.year, now.month, now.day);
       GetStorage().write('lastLoginDate', date.toString());
+      print(value);
       switch (value) {
         case "0":
           Get.offAllNamed("/Dashboard");
@@ -1391,6 +1392,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           break;
         case "69":
           Get.offAllNamed("/SupplychainLoadUnload");
+          break;
+        case "82":
+          Get.offNamed('/ProductionAdvancementState');
           break;
         default:
           Get.offAllNamed("/Dashboard");
@@ -1441,6 +1445,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           DateTime now = DateTime.now();
           DateTime date = DateTime(now.year, now.month, now.day);
           GetStorage().write('lastLoginDate', date.toString());
+          print(value);
           switch (value) {
             case "0":
               Get.offAllNamed("/Dashboard");

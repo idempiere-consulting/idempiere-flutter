@@ -87,11 +87,13 @@ class PLRecords {
   final num? discount;
   final num? qtyAvailable;
   final ADPrintColorID? adPrintColorID;
+  final LITDiscountPriceGroupID? litDiscountPriceGroupID;
   final LitProductSizeID? litProductSizeID;
   final String? imageUrl;
   final String? sku;
   final String? dateRestock;
   final String? sizes;
+  final bool? isRounded;
 
   PLRecords(
       {this.id,
@@ -150,10 +152,12 @@ class PLRecords {
       this.qtyAvailable,
       this.litProductSizeID,
       this.adPrintColorID,
+      this.litDiscountPriceGroupID,
       this.sku,
       this.sizes,
       this.dateRestock,
-      this.imageUrl});
+      this.imageUrl,
+      this.isRounded});
 
   PLRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -238,6 +242,11 @@ class PLRecords {
                 ? ADPrintColorID.fromJson(
                     json['AD_PrintColor_ID'] as Map<String, dynamic>)
                 : null,
+        litDiscountPriceGroupID =
+            (json['LIT_DiscountPriceGroup_ID'] as Map<String, dynamic>?) != null
+                ? LITDiscountPriceGroupID.fromJson(
+                    json['LIT_DiscountPriceGroup_ID'] as Map<String, dynamic>)
+                : null,
         litProductSizeID =
             (json['lit_ProductSize_ID'] as Map<String, dynamic>?) != null
                 ? LitProductSizeID.fromJson(
@@ -249,6 +258,7 @@ class PLRecords {
         sizes = json['sizes'] as String?,
         price = json['PriceStd'] as num?,
         priceList = json['PriceList'] as num?,
+        isRounded = json['IsRounded'] as bool?,
         discount = json['Discount'] as num?;
 
   Map<String, dynamic> toJson() => {
@@ -488,6 +498,33 @@ class LitProductSizeID {
   });
 
   LitProductSizeID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITDiscountPriceGroupID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITDiscountPriceGroupID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITDiscountPriceGroupID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

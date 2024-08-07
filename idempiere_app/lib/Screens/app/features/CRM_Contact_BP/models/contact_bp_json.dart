@@ -45,6 +45,7 @@ class Records {
   final UpdatedBy? updatedBy;
   final String? eMail;
   final CBPartnerID? cBPartnerID;
+  final MDiscountSchemaID? mDiscountSchemaID;
   final String? eMailUser;
   final NotificationType? notificationType;
   final bool? isFullBPAccess;
@@ -86,6 +87,7 @@ class Records {
     this.updatedBy,
     this.eMail,
     this.cBPartnerID,
+    this.mDiscountSchemaID,
     this.eMailUser,
     this.notificationType,
     this.isFullBPAccess,
@@ -140,6 +142,11 @@ class Records {
             ? CBPartnerID.fromJson(
                 json['C_BPartner_ID'] as Map<String, dynamic>)
             : null,
+        mDiscountSchemaID =
+            (json['M_DiscountSchema_ID'] as Map<String, dynamic>?) != null
+                ? MDiscountSchemaID.fromJson(
+                    json['M_DiscountSchema_ID'] as Map<String, dynamic>)
+                : null,
         eMailUser = json['EMailUser'] as String?,
         notificationType =
             (json['NotificationType'] as Map<String, dynamic>?) != null
@@ -340,6 +347,33 @@ class CBPartnerID {
   });
 
   CBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MDiscountSchemaID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MDiscountSchemaID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MDiscountSchemaID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
