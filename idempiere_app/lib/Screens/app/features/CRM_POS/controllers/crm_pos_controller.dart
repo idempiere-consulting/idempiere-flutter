@@ -25,17 +25,25 @@ class CRMPOSController extends GetxController {
   PosButtonLayoutJSON prodCategoryButtonList = PosButtonLayoutJSON(records: []);
 
   List<String> functionButtonNameList = [
+    'EXIT'.tr,
     'RETURN'.tr,
     'PURCH. PRICE'.tr,
     'HISTORY'.tr,
     'CLOSING'.tr,
     'ROUNDING'.tr,
-    'EDIT UNIT PRICE'.tr
+    'EDIT UNIT PRICE'.tr,
+    "MIXED PAYMENT".tr
   ];
 
   List<int> roundingList = [1, 5, 10];
 
   var isReturnButtonActive = false.obs;
+
+  ProductListJson mixedPaymentTypes = ProductListJson(records: []);
+
+  List<TextEditingController> mixedPaymentControllerList = [];
+
+  var isMixedPayment = false.obs;
 
   List<DataRow> rows = [];
 
@@ -79,6 +87,8 @@ class CRMPOSController extends GetxController {
     tableAvailable.value = false;
 
     fidelityFieldController.text = "";
+
+    paymentRuleId.value = "K";
 
     isReturnButtonActive.value = false;
 
@@ -335,6 +345,40 @@ class CRMPOSController extends GetxController {
     return 0;
   }
 
+  Future<void> getMixedPaymentTypes() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        "$protocol://$ip/api/v1/models/C_POSTenderType?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}");
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      mixedPaymentTypes =
+          ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      mixedPaymentControllerList = List.generate(
+          mixedPaymentTypes.records!.length,
+          (index) => TextEditingController(text: "0.0"));
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> registerMixedPaymentOption() async {
+    paymentRuleId.value = "M";
+    cashPayment.value = false;
+    creditCardPayment.value = false;
+  }
+
   setCurrentProduct(PLRecords product) {
     tableAvailable.value = false;
     rowNumber++;
@@ -555,6 +599,7 @@ class CRMPOSController extends GetxController {
     }
 
     updateTotal();
+    Get.back();
 
     tableAvailable.value = true;
   }
@@ -565,10 +610,16 @@ class CRMPOSController extends GetxController {
     for (var i = 0; i < unitPriceFieldController.length; i++) {
       productList[i].discountedPrice =
           double.parse(unitPriceFieldController[i].text);
+      productList[i].tot = double.parse(
+          (productList[i].discountedPrice! * productList[i].qty!.toDouble())
+              .toStringAsFixed(2));
       totalFieldController[i].text =
           (productList[i].discountedPrice! * productList[i].qty!.toDouble())
               .toStringAsFixed(2);
+      productList[i].isRounded = true;
     }
+
+    updateTotal();
 
     tableAvailable.value = true;
   }
@@ -605,6 +656,8 @@ class CRMPOSController extends GetxController {
     //print(formattedDate);
     List<Map<String, Object>> list = [];
 
+    List<Map<String, Object>> mixedPaymentList = [];
+
     for (var element in productList) {
       total = total + (element.qty! * element.discountedPrice!);
 
@@ -624,6 +677,19 @@ class CRMPOSController extends GetxController {
         });
       }
     }
+
+    if (paymentRuleId.value == "M") {
+      for (var i = 0; i < mixedPaymentTypes.records!.length; i++) {
+        if ((double.tryParse(mixedPaymentControllerList[i].text) ?? 0.0) >
+            0.0) {
+          mixedPaymentList.add({
+            "C_POSTenderType_ID": {"id": mixedPaymentTypes.records![0].id},
+            "PayAmt": double.parse(mixedPaymentControllerList[i].text),
+          });
+        }
+      }
+    }
+
     var msg = {
       "AD_Org_ID": {"id": GetStorage().read("organizationid")},
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
@@ -654,6 +720,12 @@ class CRMPOSController extends GetxController {
       "LIT_FidelityCard": fidelityFieldController.text,
       "order-line".tr: list,
     };
+
+    if (paymentRuleId.value == 'M') {
+      msg.addAll({
+        "pos-payment".tr: mixedPaymentList,
+      });
+    }
 
     if (discountSchemaID != 0) {
       msg.addAll({

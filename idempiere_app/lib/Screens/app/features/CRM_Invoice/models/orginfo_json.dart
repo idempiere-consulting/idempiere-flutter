@@ -63,6 +63,8 @@ class Records {
   final String? lITDeclarant;
   final String? lITPresentationType;
   final String? lITFEPAIPA;
+  final String? phone;
+  final String? email;
   final String? modelname;
 
   Records({
@@ -97,6 +99,8 @@ class Records {
     this.lITDeclarant,
     this.lITPresentationType,
     this.lITFEPAIPA,
+    this.phone,
+    this.email,
     this.modelname,
   });
 
@@ -184,6 +188,8 @@ class Records {
         lITDeclarant = json['LIT_Declarant'] as String?,
         lITPresentationType = json['LIT_PresentationType'] as String?,
         lITFEPAIPA = json['LIT_FEPA_IPA'] as String?,
+        phone = json['Phone'] as String?,
+        email = json['EMail'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

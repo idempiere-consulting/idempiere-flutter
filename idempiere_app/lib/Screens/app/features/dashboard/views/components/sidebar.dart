@@ -12,6 +12,7 @@ class _Sidebar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(GetStorage().read('roleid'));
     return Container(
       color: Theme.of(context).cardColor,
       child: SingleChildScrollView(
@@ -251,6 +252,17 @@ class _Sidebar extends StatelessWidget {
                       GetStorage().read("isOffline") == false ? true : false,
                 ),
                 SelectionButtonData(
+                  activeIcon: EvaIcons.settings,
+                  icon: EvaIcons.settingsOutline,
+                  label: "Permission Customization".tr,
+                  visible:
+                      true /* (GetStorage().read("isOffline") == false
+                          ? true
+                          : false) &&
+                      GetStorage().read('roleid') == '1000000' */
+                  ,
+                ),
+                SelectionButtonData(
                   activeIcon: EvaIcons.logOut,
                   icon: EvaIcons.logOutOutline,
                   label: "Log Out",
@@ -319,6 +331,9 @@ class _Sidebar extends StatelessWidget {
                     Get.offNamed('/Settings');
                     break;
                   case 19:
+                    Get.offNamed('/PermissionCustomization');
+                    break;
+                  case 20:
                     Get.offAllNamed("/");
                     break;
                   default:

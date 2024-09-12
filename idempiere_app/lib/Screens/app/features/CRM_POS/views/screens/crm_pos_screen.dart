@@ -748,11 +748,27 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               .records![index]
                                                               .name ??
                                                           'N/A'),
-                                                      subtitle: Text(controller
-                                                              ._trx
-                                                              .records![index]
-                                                              .value ??
-                                                          "N/A"),
+                                                      subtitle: Column(
+                                                        children: [
+                                                          Row(
+                                                            children: [
+                                                              Text(controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .value ??
+                                                                  "N/A"),
+                                                            ],
+                                                          ),
+                                                          Divider(),
+                                                          Row(
+                                                            children: [
+                                                              Text(
+                                                                  "Tot a Magazzino:  ${controller._trx.records![index].qtyOnHand}"),
+                                                            ],
+                                                          )
+                                                        ],
+                                                      ),
                                                     ),
                                                   );
                                                 })
@@ -772,7 +788,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                               mainAxisCellCount: 20,
                               child: MasonryGridView.count(
                                 shrinkWrap: true,
-                                itemCount: 6,
+                                itemCount: 8,
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
@@ -1057,12 +1073,12 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                               builder: (BuildContext context) {
                                                 return Dialog(
                                                   child: SizedBox(
-                                                    width: 250,
+                                                    width: 750,
                                                     height: 460,
                                                     child: Column(
                                                       children: [
                                                         SizedBox(
-                                                          width: 250,
+                                                          width: 750,
                                                           height: 400,
                                                           child:
                                                               ListView.builder(
@@ -1080,7 +1096,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                                         onTap:
                                                                             () {},
                                                                         title: Text(
-                                                                            "${controller.productList[index].productName}"),
+                                                                            "${controller.productList[index].productCode}_${controller.productList[index].productName}  x  ${controller.productList[index].qty}"),
                                                                         subtitle:
                                                                             TextField(
                                                                           controller:
@@ -1108,7 +1124,117 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                                       editUnitPriceFieldController);
                                                             },
                                                             child: Text(
-                                                                'Change Unit Prices'))
+                                                                'Change Unit Prices'
+                                                                    .tr))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }
+
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "MIXED PAYMENT".tr) {
+                                            await controller
+                                                .getMixedPaymentTypes();
+
+                                            // ignore: use_build_context_synchronously
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  child: SizedBox(
+                                                    width: 250,
+                                                    height: 350,
+                                                    child: Column(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 250,
+                                                          height: 300,
+                                                          child:
+                                                              ListView.builder(
+                                                                  itemCount: controller
+                                                                      .mixedPaymentTypes
+                                                                      .records!
+                                                                      .length,
+                                                                  itemBuilder:
+                                                                      (BuildContext
+                                                                              context,
+                                                                          int index) {
+                                                                    return Padding(
+                                                                      padding:
+                                                                          const EdgeInsets.all(
+                                                                              8.0),
+                                                                      child:
+                                                                          TextField(
+                                                                        controller:
+                                                                            controller.mixedPaymentControllerList[index],
+                                                                        decoration:
+                                                                            InputDecoration(
+                                                                          labelText:
+                                                                              "${controller.mixedPaymentTypes.records![index].name}",
+                                                                          filled:
+                                                                              true,
+                                                                          border:
+                                                                              OutlineInputBorder(
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(10),
+                                                                            borderSide:
+                                                                                BorderSide.none,
+                                                                          ),
+                                                                          prefixIcon:
+                                                                              const Icon(EvaIcons.search),
+                                                                          hintText:
+                                                                              "${controller.mixedPaymentTypes.records![index].name}",
+                                                                          isDense:
+                                                                              true,
+                                                                          fillColor:
+                                                                              Theme.of(context).cardColor,
+                                                                        ),
+                                                                        minLines:
+                                                                            1,
+                                                                        maxLines:
+                                                                            1,
+                                                                        onSubmitted:
+                                                                            (value) {
+                                                                          controller
+                                                                              .getProductBySearchField(value);
+                                                                        },
+                                                                      ),
+                                                                    );
+                                                                  }),
+                                                        ),
+                                                        ElevatedButton(
+                                                            onPressed: () {
+                                                              double totMixed =
+                                                                  0.0;
+
+                                                              for (var element
+                                                                  in controller
+                                                                      .mixedPaymentControllerList) {
+                                                                totMixed = totMixed +
+                                                                    (double.tryParse(
+                                                                            element.text) ??
+                                                                        0.0);
+                                                              }
+
+                                                              if (totMixed !=
+                                                                      0.0 &&
+                                                                  totMixed ==
+                                                                      controller
+                                                                          .totalRows
+                                                                          .value) {
+                                                                controller
+                                                                    .registerMixedPaymentOption();
+
+                                                                Get.back();
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                                'Confirm'.tr)),
                                                       ],
                                                     ),
                                                   ),
@@ -1426,7 +1552,10 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                           .cashPayment.value ||
                                                       controller
                                                           .creditCardPayment
-                                                          .value
+                                                          .value ||
+                                                      controller.paymentRuleId
+                                                              .value ==
+                                                          "M"
                                                   ? kNotifColor
                                                   : Colors.grey),
                                           child: Text(

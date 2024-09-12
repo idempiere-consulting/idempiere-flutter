@@ -68,7 +68,6 @@ class CRecords {
   final bool? isPublic;
   final bool? isFavourite;
   final String? modelname;
-  final String? litmobilerole;
   final CBPartnerID? cbPartnerID;
 
   CRecords({
@@ -108,9 +107,13 @@ class CRecords {
     this.isPublic,
     this.isFavourite,
     this.modelname,
-    this.litmobilerole,
     this.cbPartnerID,
   });
+
+  String get getname => name as String;
+
+  /*  @override
+  int get hashCode => hashValues(name); */
 
   CRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -167,7 +170,6 @@ class CRecords {
         cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
             ? CBPartnerID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        litmobilerole = json['lit_mobilerole'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

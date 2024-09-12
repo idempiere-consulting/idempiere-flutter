@@ -86,6 +86,7 @@ class PLRecords {
   final num? priceList;
   final num? discount;
   final num? qtyAvailable;
+  final num? qtyOnHand;
   final ADPrintColorID? adPrintColorID;
   final LITDiscountPriceGroupID? litDiscountPriceGroupID;
   final LitProductSizeID? litProductSizeID;
@@ -157,6 +158,7 @@ class PLRecords {
       this.sizes,
       this.dateRestock,
       this.imageUrl,
+      this.qtyOnHand,
       this.isRounded});
 
   PLRecords.fromJson(Map<String, dynamic> json)
@@ -259,7 +261,8 @@ class PLRecords {
         price = json['PriceStd'] as num?,
         priceList = json['PriceList'] as num?,
         isRounded = json['IsRounded'] as bool?,
-        discount = json['Discount'] as num?;
+        qtyOnHand = json['PriceList'] as num?,
+        discount = json['QtyOnHand'] as num?;
 
   Map<String, dynamic> toJson() => {
         'id': id,

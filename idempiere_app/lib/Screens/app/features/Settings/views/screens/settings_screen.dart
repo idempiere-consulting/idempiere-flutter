@@ -13,6 +13,9 @@ import 'package:flutter/services.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Open_Items/models/organization_json.dart';
+import 'package:idempiere_app/Screens/app/features/Settings/models/clocation_json.dart';
 import 'package:idempiere_app/Screens/app/features/Settings/views/screens/serial_example.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
@@ -354,6 +357,51 @@ class SettingsScreen extends GetView<SettingsController> {
                               ),
                             ],
                           ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Serial Test'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(controller.posPrinterName.value),
+                                leading: const Icon(Icons.private_connectivity),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  Get.to(() => const ExampleApp());
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer IP'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(controller.fiscalPrinterIP.value),
+                                leading:
+                                    const Icon(Icons.network_check_outlined),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterIP();
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer SerialNo'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(
+                                    controller.fiscalPrinterSerialNo.value),
+                                leading:
+                                    const Icon(Icons.network_check_outlined),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterSerialNo();
+                                },
+                              ),
+                            ],
+                          ),
                         ],
                       )),
                 ],
@@ -459,6 +507,65 @@ class SettingsScreen extends GetView<SettingsController> {
                                   if (Platform.isAndroid) {
                                     controller.getBluetooth(context);
                                   }
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Serial Test'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(controller.posPrinterName.value),
+                                leading: const Icon(Icons.private_connectivity),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  Get.to(() => const ExampleApp());
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer IP'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(controller.fiscalPrinterIP.value),
+                                leading:
+                                    const Icon(Icons.network_check_outlined),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterIP();
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer SerialNo'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text(
+                                    controller.fiscalPrinterSerialNo.value),
+                                leading:
+                                    const Icon(Icons.network_check_outlined),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterSerialNo();
+                                },
+                              ),
+                            ],
+                          ),
+                          SettingsSection(
+                            margin: const EdgeInsetsDirectional.all(8.0),
+                            title: Text('Fiscal Printer Header'.tr),
+                            tiles: <SettingsTile>[
+                              SettingsTile.navigation(
+                                title: Text("Set Header".tr),
+                                leading: const Icon(Icons.document_scanner),
+                                trailing: const Icon(Icons.chevron_right),
+                                onPressed: (context) {
+                                  controller.writeFiscalPrinterHeader();
                                 },
                               ),
                             ],

@@ -22,6 +22,7 @@ import 'package:idempiere_app/Screens/app/features/Human_Resource_Attendance/vie
 import 'package:idempiere_app/Screens/app/features/Human_Resource_Employee_Sheet/views/screens/humanresource_employee_sheet_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_standard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_mptask_standard_taskline_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Permission_Customization/views/screens/permission_customization_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Confirm_Sales_Order/views/screens/portal_mp_confirm_sales_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Hours_Review/views/screens/portal_mp_hoursreview_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Order/views/screens/portal_mp_sales_order_screen.dart';
@@ -182,6 +183,11 @@ class MyApp extends StatelessWidget {
         GetPage(
           name: '/IntervalCharts',
           page: () => IntervalPage(),
+        ),
+        GetPage(
+          name: '/PermissionCustomization',
+          page: () => const PermissionCustomizationScreen(),
+          binding: PermissionCustomizationBinding(),
         ),
         GetPage(
           name: '/Dashboard',

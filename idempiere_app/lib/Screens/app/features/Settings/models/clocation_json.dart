@@ -1,25 +1,28 @@
-class ContactsJson {
+class CLocationJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<CRecords>? records;
+  final int? arraycount;
+  final List<Records>? records;
 
-  ContactsJson({
+  CLocationJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
     this.rowcount,
+    this.arraycount,
     this.records,
   });
 
-  ContactsJson.fromJson(Map<String, dynamic> json)
+  CLocationJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
+        arraycount = json['array-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => CRecords.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -27,15 +30,14 @@ class ContactsJson {
         'records-size': recordssize,
         'skip-records': skiprecords,
         'row-count': rowcount,
+        'array-count': arraycount,
         'records': records?.map((e) => e.toJson()).toList()
       };
 }
 
-class CRecords {
+class Records {
   final int? id;
   final String? uid;
-  final String? name;
-  final String? description;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
   final bool? isActive;
@@ -43,39 +45,18 @@ class CRecords {
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final String? eMail;
-  final SupervisorID? supervisorID;
-  final NotificationType? notificationType;
-  final bool? isFullBPAccess;
-  final String? value;
-  final bool? isInPayroll;
-  final bool? isSalesLead;
-  final bool? isLocked;
-  final int? failedLoginCount;
-  final String? dateLastLogin;
-  final bool? isNoPasswordReset;
-  final bool? isExpired;
-  final bool? isAddMailTextAutomatically;
-  final bool? isNoExpire;
-  final bool? isSupportUser;
-  final bool? isShipTo;
-  final bool? isBillTo;
-  final bool? isVendorLead;
-  final bool? isLegalUser;
-  final bool? lITIsWebTicket;
-  final bool? lITIsMailReader;
-  final bool? lITIsPartner;
-  final bool? isPublic;
-  final bool? isFavourite;
+  final String? address1;
+  final String? city;
+  final CCountryID? cCountryID;
+  final CRegionID? cRegionID;
+  final String? postal;
+  final String? regionName;
+  final bool? isValid;
   final String? modelname;
-  final String? litmobilerole;
-  final CBPartnerID? cbPartnerID;
 
-  CRecords({
+  Records({
     this.id,
     this.uid,
-    this.name,
-    this.description,
     this.aDClientID,
     this.aDOrgID,
     this.isActive,
@@ -83,40 +64,19 @@ class CRecords {
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.eMail,
-    this.supervisorID,
-    this.notificationType,
-    this.isFullBPAccess,
-    this.value,
-    this.isInPayroll,
-    this.isSalesLead,
-    this.isLocked,
-    this.failedLoginCount,
-    this.dateLastLogin,
-    this.isNoPasswordReset,
-    this.isExpired,
-    this.isAddMailTextAutomatically,
-    this.isNoExpire,
-    this.isSupportUser,
-    this.isShipTo,
-    this.isBillTo,
-    this.isVendorLead,
-    this.isLegalUser,
-    this.lITIsWebTicket,
-    this.lITIsMailReader,
-    this.lITIsPartner,
-    this.isPublic,
-    this.isFavourite,
+    this.address1,
+    this.city,
+    this.cCountryID,
+    this.cRegionID,
+    this.postal,
+    this.regionName,
+    this.isValid,
     this.modelname,
-    this.litmobilerole,
-    this.cbPartnerID,
   });
 
-  CRecords.fromJson(Map<String, dynamic> json)
+  Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
-        name = json['Name'] as String?,
-        description = json['Description'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
@@ -132,49 +92,22 @@ class CRecords {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        eMail = json['EMail'] as String?,
-        supervisorID = (json['Supervisor_ID'] as Map<String, dynamic>?) != null
-            ? SupervisorID.fromJson(
-                json['Supervisor_ID'] as Map<String, dynamic>)
+        address1 = json['Address1'] as String?,
+        city = json['City'] as String?,
+        cCountryID = (json['C_Country_ID'] as Map<String, dynamic>?) != null
+            ? CCountryID.fromJson(json['C_Country_ID'] as Map<String, dynamic>)
             : null,
-        notificationType =
-            (json['NotificationType'] as Map<String, dynamic>?) != null
-                ? NotificationType.fromJson(
-                    json['NotificationType'] as Map<String, dynamic>)
-                : null,
-        isFullBPAccess = json['IsFullBPAccess'] as bool?,
-        value = json['Value'] as String?,
-        isInPayroll = json['IsInPayroll'] as bool?,
-        isSalesLead = json['IsSalesLead'] as bool?,
-        isLocked = json['IsLocked'] as bool?,
-        failedLoginCount = json['FailedLoginCount'] as int?,
-        dateLastLogin = json['DateLastLogin'] as String?,
-        isNoPasswordReset = json['IsNoPasswordReset'] as bool?,
-        isExpired = json['IsExpired'] as bool?,
-        isAddMailTextAutomatically =
-            json['IsAddMailTextAutomatically'] as bool?,
-        isNoExpire = json['IsNoExpire'] as bool?,
-        isSupportUser = json['IsSupportUser'] as bool?,
-        isShipTo = json['IsShipTo'] as bool?,
-        isBillTo = json['IsBillTo'] as bool?,
-        isVendorLead = json['IsVendorLead'] as bool?,
-        isLegalUser = json['isLegalUser'] as bool?,
-        lITIsWebTicket = json['LIT_isWebTicket'] as bool?,
-        lITIsMailReader = json['LIT_isMailReader'] as bool?,
-        lITIsPartner = json['LIT_IsPartner'] as bool?,
-        isPublic = json['IsPublic'] as bool?,
-        isFavourite = json['IsFavourite'] as bool?,
-        cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
-            ? CBPartnerID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
+        cRegionID = (json['C_Region_ID'] as Map<String, dynamic>?) != null
+            ? CRegionID.fromJson(json['C_Region_ID'] as Map<String, dynamic>)
             : null,
-        litmobilerole = json['lit_mobilerole'] as String?,
+        postal = json['Postal'] as String?,
+        regionName = json['RegionName'] as String?,
+        isValid = json['IsValid'] as bool?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
         'uid': uid,
-        'Name': name,
-        'Description': description,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
         'IsActive': isActive,
@@ -182,30 +115,13 @@ class CRecords {
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'EMail': eMail,
-        'Supervisor_ID': supervisorID?.toJson(),
-        'NotificationType': notificationType?.toJson(),
-        'IsFullBPAccess': isFullBPAccess,
-        'Value': value,
-        'IsInPayroll': isInPayroll,
-        'IsSalesLead': isSalesLead,
-        'IsLocked': isLocked,
-        'FailedLoginCount': failedLoginCount,
-        'DateLastLogin': dateLastLogin,
-        'IsNoPasswordReset': isNoPasswordReset,
-        'IsExpired': isExpired,
-        'IsAddMailTextAutomatically': isAddMailTextAutomatically,
-        'IsNoExpire': isNoExpire,
-        'IsSupportUser': isSupportUser,
-        'IsShipTo': isShipTo,
-        'IsBillTo': isBillTo,
-        'IsVendorLead': isVendorLead,
-        'isLegalUser': isLegalUser,
-        'LIT_isWebTicket': lITIsWebTicket,
-        'LIT_isMailReader': lITIsMailReader,
-        'LIT_IsPartner': lITIsPartner,
-        'IsPublic': isPublic,
-        'IsFavourite': isFavourite,
+        'Address1': address1,
+        'City': city,
+        'C_Country_ID': cCountryID?.toJson(),
+        'C_Region_ID': cRegionID?.toJson(),
+        'Postal': postal,
+        'RegionName': regionName,
+        'IsValid': isValid,
         'model-name': modelname
       };
 }
@@ -318,20 +234,20 @@ class UpdatedBy {
       };
 }
 
-class SupervisorID {
+class CCountryID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  SupervisorID({
+  CCountryID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  SupervisorID.fromJson(Map<String, dynamic> json)
+  CCountryID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -345,47 +261,20 @@ class SupervisorID {
       };
 }
 
-class NotificationType {
-  final String? propertyLabel;
-  final String? id;
-  final String? identifier;
-  final String? modelname;
-
-  NotificationType({
-    this.propertyLabel,
-    this.id,
-    this.identifier,
-    this.modelname,
-  });
-
-  NotificationType.fromJson(Map<String, dynamic> json)
-      : propertyLabel = json['propertyLabel'] as String?,
-        id = json['id'] as String?,
-        identifier = json['identifier'] as String?,
-        modelname = json['model-name'] as String?;
-
-  Map<String, dynamic> toJson() => {
-        'propertyLabel': propertyLabel,
-        'id': id,
-        'identifier': identifier,
-        'model-name': modelname
-      };
-}
-
-class CBPartnerID {
+class CRegionID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  CBPartnerID({
+  CRegionID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  CBPartnerID.fromJson(Map<String, dynamic> json)
+  CRegionID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

@@ -1376,7 +1376,19 @@ class LocaleString extends Translations {
           'Daily Report': 'Report Giornaliero',
           'Daily Fiscal Closing': 'Chiusura Fiscale Giornaliera',
           'ROUNDING': 'ARROTONDAMENTO',
-          'EDIT UNIT PRICE': 'MODIF. PREZZO UNITARIO'
+          'EDIT UNIT PRICE': 'MODIF. PREZZO UNITARIO',
+          'Fiscal Printer IP': 'IP Stampante Fiscale',
+          'Fiscal Printer SerialNo': 'Matricola Stampante Fiscale',
+          'Fiscal Printer Header': 'Testata Stampante Fiscale',
+          'Row 1 (Name)': 'Riga 1 (Nome)',
+          'Row 2 (Company Name)': 'Riga 2 (Ragione Sociale)',
+          'Row 3 (Address)': 'Riga 3 (Indirizzo)',
+          'Row 4 (Postal Code - City - Region)':
+              'Riga 4 (CAP - Città - Regione)',
+          'Row 5 (Phone - Email)': 'Riga 5 (Tel - Email)',
+          'Row 6 (Tax Code)': 'Riga 6 (P. IVA)',
+          'Set Header': 'Imposta Header',
+          'MIXED PAYMENT': 'PAGAMENTO MISTO',
         },
       };
 }

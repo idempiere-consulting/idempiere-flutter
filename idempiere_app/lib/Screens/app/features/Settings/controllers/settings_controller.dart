@@ -713,6 +713,222 @@ class SettingsController extends GetxController {
     );
   }
 
+  TextEditingController fiscalPrinterHeader1FieldController =
+      TextEditingController();
+  TextEditingController fiscalPrinterHeader2FieldController =
+      TextEditingController();
+  TextEditingController fiscalPrinterHeader3FieldController =
+      TextEditingController();
+  TextEditingController fiscalPrinterHeader4FieldController =
+      TextEditingController();
+  TextEditingController fiscalPrinterHeader5FieldController =
+      TextEditingController();
+  TextEditingController fiscalPrinterHeader6FieldController =
+      TextEditingController();
+
+  Future<void> writeFiscalPrinterHeader() async {
+    Get.defaultDialog(
+      onConfirm: () {
+        setFiscalPrintHeader();
+        Get.back();
+      },
+      textConfirm: 'Set Header'.tr,
+      title: '',
+      content: Column(
+        children: [
+          TextField(
+            //autofocus: true,
+            controller: fiscalPrinterHeader1FieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.edit_document),
+              border: const OutlineInputBorder(),
+              labelText: 'Row 1 (Name)'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            //autofocus: true,
+            controller: fiscalPrinterHeader2FieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.edit_document),
+              border: const OutlineInputBorder(),
+              labelText: 'Row 2 (Company Name)'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            //autofocus: true,
+            controller: fiscalPrinterHeader3FieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.edit_document),
+              border: const OutlineInputBorder(),
+              labelText: 'Row 3 (Address)'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            //autofocus: true,
+            controller: fiscalPrinterHeader4FieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.edit_document),
+              border: const OutlineInputBorder(),
+              labelText: 'Row 4 (Postal Code - City - Region)'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            //autofocus: true,
+            controller: fiscalPrinterHeader5FieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.edit_document),
+              border: const OutlineInputBorder(),
+              labelText: 'Row 5 (Phone - Email)'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          TextField(
+            //autofocus: true,
+            controller: fiscalPrinterHeader6FieldController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.edit_document),
+              border: const OutlineInputBorder(),
+              labelText: 'Row 6 (Tax Code)'.tr,
+              floatingLabelBehavior: FloatingLabelBehavior.always,
+            ),
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          ElevatedButton(
+              onPressed: () {
+                getHeaderOrgInfoFromIdempiere();
+                getHeaderOrganizationFromIdempiere();
+              },
+              child: Text("Get Fields from Idempiere".tr)),
+        ],
+      ),
+    );
+  }
+
+  Future<void> setFiscalPrintHeader() async {
+    String msg =
+        '<?xml version="1.0" encoding="utf-8"?><printerCommand><setHeaderLine  description="${fiscalPrinterHeader1FieldController.text}" rowNum="1" type="4"></setHeaderLine><setHeaderLine  description="${fiscalPrinterHeader2FieldController.text}" rowNum="2" type="1"></setHeaderLine><setHeaderLine  description="${fiscalPrinterHeader3FieldController.text}" rowNum="3" type="1"></setHeaderLine><setHeaderLine  description="${fiscalPrinterHeader4FieldController.text}" rowNum="4" type="1"></setHeaderLine><setHeaderLine  description="${fiscalPrinterHeader5FieldController.text}" rowNum="5" type="1"></setHeaderLine><setHeaderLine  description="${fiscalPrinterHeader6FieldController.text}" rowNum="6" type="1"></setHeaderLine></printerCommand>';
+
+    Codec<String, String> stringToBase64 = utf8.fuse(base64);
+
+    var url = Uri.parse(
+        'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm');
+
+    var response = await http.post(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/xml',
+        'authorization':
+            'Basic ${stringToBase64.encode("${GetStorage().read('fiscalPrinterSerialNo')}:${GetStorage().read('fiscalPrinterSerialNo')}")}',
+      },
+    );
+  }
+
+  Future<void> getHeaderOrgInfoFromIdempiere() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_OrgInfo?\$filter= AD_Org_ID eq ${GetStorage().read("organizationid")} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json =
+          OrgInfoJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      fiscalPrinterHeader5FieldController.text =
+          "Tel ${json.records![0].phone ?? ""}  Email ${json.records![0].email ?? ""}";
+      fiscalPrinterHeader6FieldController.text =
+          "P. IVA ${json.records![0].taxID}";
+
+      if (json.records![0].cLocationID != null) {
+        getHeaderAddressFromIdempiere(json.records![0].cLocationID!.id!);
+      }
+
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> getHeaderAddressFromIdempiere(int locationId) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_Location?\$filter= C_Location_ID eq $locationId and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json =
+          CLocationJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      fiscalPrinterHeader3FieldController.text = "${json.records![0].address1}";
+      fiscalPrinterHeader4FieldController.text =
+          "${json.records![0].postal}, ${json.records![0].city}, ${json.records![0].cRegionID?.identifier}";
+
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
+  Future<void> getHeaderOrganizationFromIdempiere() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_Org?\$filter= AD_Org_ID eq ${GetStorage().read("organizationid")} and AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json = OrganizationJSON.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      fiscalPrinterHeader1FieldController.text = json.records![0].name ?? "";
+      fiscalPrinterHeader1FieldController.text =
+          json.records![0].description ?? "";
+
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
   // Data
   // ignore: library_private_types_in_public_api
   _Profile getProfil() {
