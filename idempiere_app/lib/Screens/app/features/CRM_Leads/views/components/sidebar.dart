@@ -29,9 +29,16 @@ class _Sidebar extends StatelessWidget {
               initialSelected: 1,
               data: [
                 SelectionButtonData(
-                  activeIcon: EvaIcons.arrowBack,
-                  icon: EvaIcons.arrowBackOutline,
+                  activeIcon: EvaIcons.grid,
+                  icon: EvaIcons.gridOutline,
                   label: "Dashboard".tr,
+                  visible: int.parse(list[0], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: Icons.person_add,

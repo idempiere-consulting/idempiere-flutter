@@ -17,6 +17,8 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/orginfo_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Invoice/models/rvbpartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/shipment_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_createbybarcode_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_createreturnbybarcode_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
@@ -171,6 +173,24 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
         childrenButtonSize: const Size(45, 45), */
           children: [
             SpeedDialChild(
+                label: 'Create Return Customer by Barcode'.tr,
+                child: Icon(
+                  Symbols.document_scanner,
+                  color: Colors.white,
+                ),
+                onTap: () {
+                  Get.to(const CRMCreateRetunByBarcodeShipment());
+                }),
+            SpeedDialChild(
+                label: 'Create by Barcode'.tr,
+                child: Icon(
+                  Symbols.document_scanner,
+                  color: Colors.white,
+                ),
+                onTap: () {
+                  Get.to(const CRMCreateByBarcodeShipment());
+                }),
+            SpeedDialChild(
                 label: 'Filter'.tr,
                 child: Obx(() => Icon(
                       Symbols.filter_alt,
@@ -269,6 +289,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
+                                              "DocumentNo": controller.trx
+                                                  .records![index].documentNo,
                                               "note": controller
                                                       .trx
                                                       .records![index]
@@ -295,10 +317,23 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   .records![index]
                                                   .deliveryViaRule
                                                   ?.id,
+                                              "shipperId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mShipperID
+                                                  ?.id,
                                               "externalAspect": controller
                                                   .trx
                                                   .records![index]
                                                   .externalAspect,
+                                              "weight": controller
+                                                  .trx.records![index].weight,
+                                              "grossWeight": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITGrossWeight,
+                                              "noPackages": controller.trx
+                                                  .records![index].noPackages,
                                             });
                                       },
                                     ),
@@ -554,6 +589,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
+                                              "DocumentNo": controller.trx
+                                                  .records![index].documentNo,
                                               "note": controller
                                                       .trx
                                                       .records![index]
@@ -580,10 +617,23 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   .records![index]
                                                   .deliveryViaRule
                                                   ?.id,
+                                              "shipperId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mShipperID
+                                                  ?.id,
                                               "externalAspect": controller
                                                   .trx
                                                   .records![index]
                                                   .externalAspect,
+                                              "weight": controller
+                                                  .trx.records![index].weight,
+                                              "grossWeight": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITGrossWeight,
+                                              "noPackages": controller.trx
+                                                  .records![index].noPackages,
                                             });
                                       },
                                     ),
@@ -839,6 +889,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             arguments: {
                                               "id": controller
                                                   .trx.records![index].id,
+                                              "DocumentNo": controller.trx
+                                                  .records![index].documentNo,
                                               "note": controller
                                                       .trx
                                                       .records![index]
@@ -865,10 +917,23 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                                   .records![index]
                                                   .deliveryViaRule
                                                   ?.id,
+                                              "shipperId": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .mShipperID
+                                                  ?.id,
                                               "externalAspect": controller
                                                   .trx
                                                   .records![index]
                                                   .externalAspect,
+                                              "weight": controller
+                                                  .trx.records![index].weight,
+                                              "grossWeight": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .lITGrossWeight,
+                                              "noPackages": controller.trx
+                                                  .records![index].noPackages,
                                             });
                                       },
                                     ),

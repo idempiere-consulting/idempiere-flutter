@@ -1465,6 +1465,9 @@ class _BodyState extends State<Body> {
         case "8":
           Get.offAllNamed("/SalesOrder");
           break;
+        case "10":
+          Get.offAllNamed("/Shipment");
+          break;
         case "22":
           Get.offAllNamed("/Maintenance");
           break;
@@ -1629,6 +1632,9 @@ class _BodyState extends State<Body> {
               break;
             case "8":
               Get.offAllNamed("/SalesOrder");
+              break;
+            case "10":
+              Get.offAllNamed("/Shipment");
               break;
             case "22":
               Get.offAllNamed("/Maintenance");

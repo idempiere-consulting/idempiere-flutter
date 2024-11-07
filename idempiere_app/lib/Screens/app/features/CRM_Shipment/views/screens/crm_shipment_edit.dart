@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/deliveryviarule_json.dart';
@@ -28,6 +29,10 @@ class _EditShipmentState extends State<EditShipment> {
       "PrivateNote": noteFieldController.text,
       "Description": descriptionFieldController.text,
       "LIT_ExternalAspect": aspectFieldController.text,
+      "Weight": double.tryParse(weightFieldController.text) ?? 0.0,
+      "LIT_GrossWeight":
+          double.tryParse(grossWeightFieldController.text) ?? 0.0,
+      "NoPackages": int.tryParse(noPackagesFieldController.text) ?? 0,
       "ShipDate": shipmentDate,
       "MovementDate": movementDate,
     };
@@ -39,6 +44,11 @@ class _EditShipmentState extends State<EditShipment> {
     if (deliveryViaRule != "0") {
       msg.addAll({
         "DeliveryViaRule": {"id": deliveryViaRule}
+      });
+    }
+    if (shipperId != "0") {
+      msg.addAll({
+        "M_Shipper_ID": {"id": int.parse(shipperId)}
       });
     }
     final protocol = GetStorage().read('protocol');
@@ -122,7 +132,34 @@ class _EditShipmentState extends State<EditShipment> {
 
       return json.records!;
     } else {
+      print(response.body);
       throw Exception("Failed to load deliveryviarules");
+    }
+
+    //print(response.body);
+  }
+
+  Future<List<MTRecords>> getAllShippers() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/M_Shipper?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = MovementTypeJSON.fromJson(jsonDecode(response.body));
+      //print(json.rowcount);
+
+      return json.records!;
+    } else {
+      throw Exception("Failed to load shippers");
     }
 
     //print(response.body);
@@ -170,17 +207,24 @@ class _EditShipmentState extends State<EditShipment> {
   dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var noteFieldController;
+  late TextEditingController documentNoFieldController;
   late TextEditingController descriptionFieldController;
   late TextEditingController docTypeFieldController;
   late TextEditingController aspectFieldController;
+  late TextEditingController weightFieldController;
+  late TextEditingController grossWeightFieldController;
+  late TextEditingController noPackagesFieldController;
   String shipmentDate = "";
   String movementDate = "";
   String movementTypeId = "0";
   String deliveryViaRule = "0";
+  String shipperId = "0";
 
   @override
   void initState() {
     super.initState();
+    documentNoFieldController =
+        TextEditingController(text: args['DocumentNo'] ?? "");
     noteFieldController = TextEditingController();
     descriptionFieldController =
         TextEditingController(text: args['description'] ?? "");
@@ -188,10 +232,17 @@ class _EditShipmentState extends State<EditShipment> {
     docTypeFieldController =
         TextEditingController(text: args['docTypeName'] ?? "");
     aspectFieldController = TextEditingController(text: args['externalAspect']);
+    weightFieldController =
+        TextEditingController(text: (args['weight'] ?? 0.0).toString());
+    grossWeightFieldController =
+        TextEditingController(text: (args['grossWeight'] ?? 0).toString());
     shipmentDate = args['shipDate'] ?? "";
     movementDate = args['movementDate'] ?? "";
     movementTypeId = (args['movementTypeID'] ?? 0).toString();
     deliveryViaRule = (args['deliveryViaRule'] ?? 0).toString();
+    shipperId = (args['shipperId'] ?? 0).toString();
+    noPackagesFieldController =
+        TextEditingController(text: (args['noPackages'] ?? 0).toString());
     //getAllMovementTypes();
   }
 
@@ -261,6 +312,22 @@ class _EditShipmentState extends State<EditShipment> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: documentNoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.document_scanner),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
                     minLines: 1,
                     maxLines: 5,
                     controller: docTypeFieldController,
@@ -371,6 +438,55 @@ class _EditShipmentState extends State<EditShipment> {
                   ),
                 ),
                 Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllShippers(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<MTRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? InputDecorator(
+                                decoration: InputDecoration(
+                                  isDense: true,
+                                  labelText: 'Shipper'.tr,
+                                  //filled: true,
+                                  border: const OutlineInputBorder(
+                                      /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                      ),
+                                  prefixIcon: const Icon(EvaIcons.list),
+                                  //hintText: "search..",
+
+                                  //fillColor: Theme.of(context).cardColor,
+                                ),
+                                child: DropdownButton(
+                                  isDense: true,
+                                  underline: const SizedBox(),
+                                  isExpanded: true,
+                                  value: shipperId == "0" ? null : shipperId,
+                                  elevation: 16,
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      shipperId = newValue!;
+                                    });
+                                    //print(dropdownValue);
+                                  },
+                                  items: snapshot.data!.map((list) {
+                                    return DropdownMenuItem<String>(
+                                      value: list.id.toString(),
+                                      child: Text(
+                                        list.name.toString(),
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     minLines: 1,
@@ -410,6 +526,70 @@ class _EditShipmentState extends State<EditShipment> {
                       labelText: 'External Aspect'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: noPackagesFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'NoPackages'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: weightFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Weight'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: grossWeightFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Gross Weight'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
@@ -491,6 +671,22 @@ class _EditShipmentState extends State<EditShipment> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: documentNoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.document_scanner),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
                     minLines: 1,
                     maxLines: 5,
                     controller: docTypeFieldController,
@@ -640,6 +836,70 @@ class _EditShipmentState extends State<EditShipment> {
                       labelText: 'External Aspect'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: noPackagesFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'NoPackages'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: weightFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Weight'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: grossWeightFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Gross Weight'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
                   ),
                 ),
                 Container(
@@ -721,6 +981,22 @@ class _EditShipmentState extends State<EditShipment> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    readOnly: true,
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: documentNoFieldController,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.document_scanner),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Document N°'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    readOnly: true,
                     minLines: 1,
                     maxLines: 5,
                     controller: docTypeFieldController,
@@ -870,6 +1146,70 @@ class _EditShipmentState extends State<EditShipment> {
                       labelText: 'External Aspect'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: noPackagesFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                    decoration: InputDecoration(
+                      isDense: true,
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'NoPackages'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: weightFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Weight'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    controller: grossWeightFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
+                    ],
+                    decoration: InputDecoration(
+                      //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Gross Weight'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                    minLines: 1,
+                    maxLines: 4,
                   ),
                 ),
                 Container(

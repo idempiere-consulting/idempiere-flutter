@@ -37,7 +37,13 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.moon,
                   icon: EvaIcons.moonOutline,
                   label: "Asset".tr,
-                  visible: true,
+                  visible: int.parse(list[131], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.logOut,

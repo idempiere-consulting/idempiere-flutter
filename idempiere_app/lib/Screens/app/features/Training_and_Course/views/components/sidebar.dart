@@ -76,7 +76,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person_add,
                   icon: EvaIcons.personOutline,
                   label: "Course List".tr,
-                  visible: int.parse(list[57], radix: 16)
+                  visible: int.parse(list[56], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==

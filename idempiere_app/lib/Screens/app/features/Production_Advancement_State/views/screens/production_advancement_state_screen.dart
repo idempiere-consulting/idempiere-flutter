@@ -111,7 +111,7 @@ class ProductionAdvancementStateScreen
               mobileBuilder: (context, constraints) {
                 return Column(children: [
                   Container(
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: FutureBuilder(
                       future: controller.getAllResources(),
                       builder: (BuildContext ctx,
@@ -213,7 +213,6 @@ class ProductionAdvancementStateScreen
                                   },
                                   itemBuilder: (context, suggestion) {
                                     return ListTile(
-                                      //leading: Icon(Icons.shopping_cart),
                                       title: Text(suggestion.documentNo ?? ""),
                                       subtitle: Text(
                                           suggestion.cbPartnerID?.identifier ??

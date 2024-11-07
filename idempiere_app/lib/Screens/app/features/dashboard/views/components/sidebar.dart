@@ -32,6 +32,13 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.grid,
                   icon: EvaIcons.gridOutline,
                   label: "Dashboard".tr,
+                  visible: int.parse(list[0], radix: 16)
+                              .toRadixString(2)
+                              .padLeft(4, "0")
+                              .toString()[1] ==
+                          "1"
+                      ? true
+                      : false,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.calendar,
@@ -255,12 +262,8 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: EvaIcons.settings,
                   icon: EvaIcons.settingsOutline,
                   label: "Permission Customization".tr,
-                  visible:
-                      true /* (GetStorage().read("isOffline") == false
-                          ? true
-                          : false) &&
-                      GetStorage().read('roleid') == '1000000' */
-                  ,
+                  visible: GetStorage().read('roleid') == '1000000' ||
+                      GetStorage().read('roleid') == 1000000,
                 ),
                 SelectionButtonData(
                   activeIcon: EvaIcons.logOut,

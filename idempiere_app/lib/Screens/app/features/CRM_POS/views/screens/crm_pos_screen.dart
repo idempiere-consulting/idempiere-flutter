@@ -823,7 +823,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                   index] ==
                                               "PURCH. PRICE".tr) {
                                             List<String> products = [];
-                                            List<int> purchasePrices = [];
+                                            List<double> purchasePrices = [];
                                             for (var element
                                                 in controller.productList) {
                                               products.add(
@@ -906,6 +906,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                       width: 200,
                                                       height: 400,
                                                       child: ListView.builder(
+                                                          reverse: true,
                                                           itemCount:
                                                               posList.length,
                                                           itemBuilder:
@@ -921,17 +922,15 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                                       "order-line"
                                                                           .tr]);
                                                                 },
-                                                                title: Text((jsonDecode(
-                                                                        posList[
-                                                                            index]))[
-                                                                    "DateOrdered"]),
+                                                                title: Text(
+                                                                    "Data: ${(jsonDecode(posList[index]))["datascontrino"]}"),
                                                                 subtitle:
                                                                     Column(
                                                                   children: [
                                                                     Row(
                                                                       children: [
-                                                                        Text((jsonDecode(posList[index]))["TOT"]
-                                                                            .toString()),
+                                                                        Text(
+                                                                            "TOT. EUR ${(jsonDecode(posList[index]))["TOT"]}"),
                                                                       ],
                                                                     ),
                                                                     Row(
@@ -989,6 +988,12 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                               ),
                                             );
                                           }
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "EXIT".tr) {
+                                            Get.offNamed('/CRM');
+                                          }
+
                                           if (controller.functionButtonNameList[
                                                   index] ==
                                               "ROUNDING".tr) {

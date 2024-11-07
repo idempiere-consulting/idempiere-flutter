@@ -130,7 +130,7 @@ class CRMShipmentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$businessPartnerFilter$dateStartFilter$dateEndFilter$docNoFilter&\$orderby= MovementDate desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$businessPartnerFilter$dateStartFilter$dateEndFilter$docNoFilter&\$orderby= Created desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
 
     var response = await http.get(
       url,

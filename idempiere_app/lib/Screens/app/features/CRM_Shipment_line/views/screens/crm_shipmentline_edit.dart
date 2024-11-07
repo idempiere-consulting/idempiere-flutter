@@ -1,14 +1,18 @@
 import 'dart:convert';
+import 'dart:io';
 //import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
 import 'package:idempiere_app/constants.dart';
+import 'package:path_provider/path_provider.dart';
 
 class EditShipmentline extends StatefulWidget {
   const EditShipmentline({Key? key}) : super(key: key);
@@ -63,6 +67,31 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     }
   }
 
+  Future<List<PRecords>> getAllProducts() async {
+    //print(response.body);
+    const filename = "products";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+
+    var jsonResources =
+        ProductJson.fromJson(jsonDecode(file.readAsStringSync()));
+
+    /* for (var i = 0; i < jsonResources.records!.length; i++) {
+      if (((jsonResources.records![i].mProductCategoryID?.identifier ?? "")
+          .contains((Get.arguments["id"] as String).tr))) {
+        print(jsonResources.records![i].mProductCategoryID?.identifier);
+      }
+    } */
+
+    //print(jsonResources.records!.length);
+
+    return jsonResources.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   deleteShipmentLine() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -106,11 +135,19 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     }
   }
 
+  static String _displayStringForOption(PRecords option) =>
+      "${option.value}_${option.name}";
+
   dynamic args = Get.arguments;
   // ignore: prefer_typing_uninitialized_variables
   var qtyFieldController;
   // ignore: prefer_typing_uninitialized_variables
   var descriptionFieldController;
+
+  // ignore: prefer_typing_uninitialized_variables
+  var productId;
+  // ignore: prefer_typing_uninitialized_variables
+  var productFieldController;
 
   // ignore: prefer_typing_uninitialized_variables
   var checkboxState;
@@ -120,6 +157,7 @@ class _EditShipmentlineState extends State<EditShipmentline> {
     super.initState();
     qtyFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
+    productFieldController = TextEditingController(text: args["productName"]);
     qtyFieldController.text = (args["qtyEntered"]).toString();
     descriptionFieldController.text = args["description"] ?? "";
     checkboxState = args["isSelected"] ?? false;
@@ -183,11 +221,29 @@ class _EditShipmentlineState extends State<EditShipmentline> {
                   margin: const EdgeInsets.all(10),
                   child: TextField(
                     //maxLines: 5,
-                    controller: qtyFieldController,
+                    controller: productFieldController,
                     decoration: InputDecoration(
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
-                      labelText: 'Quantity Planned'.tr,
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.all(10),
+                  child: TextField(
+                    //maxLines: 5,
+                    controller: qtyFieldController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Quantity'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),

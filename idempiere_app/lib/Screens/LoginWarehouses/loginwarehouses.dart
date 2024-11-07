@@ -1347,6 +1347,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         productSync == false &&
         jpTODOSync == false &&
         workOrderSync == false) {
+      Get.back();
       var value = "0";
       List<dynamic> list = GetStorage().read('permission');
       for (var i = 0; i < list.length; i++) {
@@ -1371,6 +1372,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
           break;
         case "8":
           Get.offAllNamed("/SalesOrder");
+          break;
+        case "10":
+          Get.offAllNamed("/Shipment");
           break;
         case "22":
           Get.offAllNamed("/Maintenance");
@@ -1455,6 +1459,9 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
               break;
             case "8":
               Get.offAllNamed("/SalesOrder");
+              break;
+            case "10":
+              Get.offAllNamed("/Shipment");
               break;
             case "22":
               Get.offAllNamed("/Maintenance");

@@ -178,13 +178,92 @@ class PermissionCustomizationScreen
                     decoration: const BoxDecoration(
                         color: Color.fromRGBO(64, 75, 96, .9)),
                     child: ExpansionTile(
-                      title: const Text(
-                        'CRM',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Dashboard',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[0].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[0].value = value!;
+                              controller.binaryPermList[0] =
+                                  "${controller.binaryPermList[0].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[0].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [],
+                    ),
+                  ),
+                ),
+
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'CRM',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[2].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[2].value = value!;
+                              controller.binaryPermList[2] =
+                                  "${controller.binaryPermList[2].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[2].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
                       ),
                       childrenPadding: const EdgeInsets.all(10),
                       children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Ordine di V.',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[50].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[50].value = value!;
+                                controller.binaryPermList[50] =
+                                    "${controller.binaryPermList[50].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[50].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
                         ExpansionTile(
                           title: const Text(
                             'Lead',
@@ -471,6 +550,50 @@ class PermissionCustomizationScreen
                             )
                           ],
                         ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Contratti di Vendita',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Lettura'.tr),
+                              value: controller.boolAccessList[21].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[21].value = value!;
+                                controller.binaryPermList[21] =
+                                    "${controller.binaryPermList[21].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[21].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'POS',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Lettura'.tr),
+                              value: controller.boolAccessList[126].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[126].value = value!;
+                                controller.binaryPermList[126] =
+                                    "${controller.binaryPermList[126].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[126].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
                       ],
                     ),
                   ),
@@ -482,35 +605,33 @@ class PermissionCustomizationScreen
                     decoration: const BoxDecoration(
                         color: Color.fromRGBO(64, 75, 96, .9)),
                     child: ExpansionTile(
-                      title: const Text(
-                        'Scrivania',
-                        style: TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.bold),
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Scrivania',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[16].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[16].value = value!;
+                              controller.binaryPermList[16] =
+                                  "${controller.binaryPermList[16].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[16].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
                       ),
                       childrenPadding: const EdgeInsets.all(10),
                       children: [
-                        ExpansionTile(
-                          title: const Text(
-                            'Ticket',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          childrenPadding: const EdgeInsets.all(10),
-                          children: [
-                            CheckboxListTile(
-                              title: Text('Accesso'.tr),
-                              value: controller.boolAccessList[16].value,
-                              activeColor: kPrimaryColor,
-                              onChanged: (bool? value) {
-                                controller.boolAccessList[16].value = value!;
-                                controller.binaryPermList[16] =
-                                    "${controller.binaryPermList[16].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[16].substring(2)}";
-                              },
-                              controlAffinity: ListTileControlAffinity.leading,
-                            )
-                          ],
-                        ),
                         ExpansionTile(
                           title: const Text(
                             'Gestione Documenti',
@@ -528,6 +649,1036 @@ class PermissionCustomizationScreen
                                 controller.boolAccessList[20].value = value!;
                                 controller.binaryPermList[20] =
                                     "${controller.binaryPermList[20].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[20].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Manutenzione',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[22].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[22].value = value!;
+                              controller.binaryPermList[22] =
+                                  "${controller.binaryPermList[22].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[22].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Calendario',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[0].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[0].value = value!;
+                                controller.binaryPermList[0] =
+                                    "${controller.binaryPermList[0].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[0].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Ordini di lavoro',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[24].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[24].value = value!;
+                                controller.binaryPermList[24] =
+                                    "${controller.binaryPermList[24].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[24].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Worck Order',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[31].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[31].value = value!;
+                                controller.binaryPermList[31] =
+                                    "${controller.binaryPermList[31].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[31].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Anomalia',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[25].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[25].value = value!;
+                                controller.binaryPermList[25] =
+                                    "${controller.binaryPermList[25].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[25].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Mag. furgone',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[26].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[26].value = value!;
+                                controller.binaryPermList[26] =
+                                    "${controller.binaryPermList[26].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[26].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Prelievo magazzino',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[27].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[27].value = value!;
+                                controller.binaryPermList[27] =
+                                    "${controller.binaryPermList[27].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[27].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Shipment customer',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[10].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[10].value = value!;
+                                controller.binaryPermList[10] =
+                                    "${controller.binaryPermList[10].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[10].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Carico scheda Tecnica',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[29].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[29].value = value!;
+                                controller.binaryPermList[29] =
+                                    "${controller.binaryPermList[29].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[29].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Impianto di Manutenzione',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[30].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[30].value = value!;
+                                controller.binaryPermList[30] =
+                                    "${controller.binaryPermList[30].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[30].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Portale Cliente',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[32].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[32].value = value!;
+                              controller.binaryPermList[32] =
+                                  "${controller.binaryPermList[32].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[32].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Formazione e Corso',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[43].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[43].value = value!;
+                                controller.binaryPermList[43] =
+                                    "${controller.binaryPermList[43].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[43].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Ordine di Vendita B2B',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[51].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[51].value = value!;
+                                controller.binaryPermList[51] =
+                                    "${controller.binaryPermList[51].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[51].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Acquisti',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[58].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[58].value = value!;
+                              controller.binaryPermList[58] =
+                                  "${controller.binaryPermList[58].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[58].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Lead Fornitori',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[59].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[59].value = value!;
+                                controller.binaryPermList[59] =
+                                    "${controller.binaryPermList[59].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[59].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Contratto di Acquisto',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[62].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[62].value = value!;
+                                controller.binaryPermList[62] =
+                                    "${controller.binaryPermList[62].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[62].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Richiesta di Acquisto',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[62].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[62].value = value!;
+                                controller.binaryPermList[62] =
+                                    "${controller.binaryPermList[62].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[62].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Logistica',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[63].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[63].value = value!;
+                              controller.binaryPermList[63] =
+                                  "${controller.binaryPermList[63].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[63].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Prodotto',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[64].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[64].value = value!;
+                                controller.binaryPermList[64] =
+                                    "${controller.binaryPermList[64].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[64].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Inventario',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[68].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[68].value = value!;
+                                controller.binaryPermList[68] =
+                                    "${controller.binaryPermList[68].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[68].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Entrata Merce',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[66].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[66].value = value!;
+                                controller.binaryPermList[66] =
+                                    "${controller.binaryPermList[66].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[66].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Carico/Scarico',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[69].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[69].value = value!;
+                                controller.binaryPermList[69] =
+                                    "${controller.binaryPermList[69].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[69].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Inventario con Lotto',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[70].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[70].value = value!;
+                                controller.binaryPermList[70] =
+                                    "${controller.binaryPermList[70].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[70].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Cambio Impinato del Disp.',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[71].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[71].value = value!;
+                                controller.binaryPermList[71] =
+                                    "${controller.binaryPermList[71].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[71].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Manutenzione blocco e sblocco contenitore',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[72].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[72].value = value!;
+                                controller.binaryPermList[72] =
+                                    "${controller.binaryPermList[72].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[72].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Produzione',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[77].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[77].value = value!;
+                              controller.binaryPermList[77] =
+                                  "${controller.binaryPermList[77].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[77].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Ordine di produzione',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[78].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[78].value = value!;
+                                controller.binaryPermList[78] =
+                                    "${controller.binaryPermList[78].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[78].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Stato avanzamento produzione',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[82].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[82].value = value!;
+                                controller.binaryPermList[82] =
+                                    "${controller.binaryPermList[82].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[82].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Risorse Umane',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[94].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[94].value = value!;
+                              controller.binaryPermList[94] =
+                                  "${controller.binaryPermList[94].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[94].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Scheda dipendente',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[99].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[99].value = value!;
+                                controller.binaryPermList[99] =
+                                    "${controller.binaryPermList[99].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[99].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Dipendente',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[105].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[105].value = value!;
+                              controller.binaryPermList[105] =
+                                  "${controller.binaryPermList[105].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[105].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Formazione e Corso',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[52].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[52].value = value!;
+                              controller.binaryPermList[52] =
+                                  "${controller.binaryPermList[52].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[52].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Presenza Corsi',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[53].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[53].value = value!;
+                                controller.binaryPermList[53] =
+                                    "${controller.binaryPermList[53].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[53].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Quiz',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[54].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[54].value = value!;
+                                controller.binaryPermList[54] =
+                                    "${controller.binaryPermList[54].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[54].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Analisi test',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[55].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[55].value = value!;
+                                controller.binaryPermList[55] =
+                                    "${controller.binaryPermList[55].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[55].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                        ExpansionTile(
+                          title: const Text(
+                            'Lista corsi',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[56].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[56].value = value!;
+                                controller.binaryPermList[56] =
+                                    "${controller.binaryPermList[56].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[56].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Accounting',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[85].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[85].value = value!;
+                              controller.binaryPermList[85] =
+                                  "${controller.binaryPermList[85].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[85].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Cespite',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[131].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[131].value = value!;
+                                controller.binaryPermList[131] =
+                                    "${controller.binaryPermList[131].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[131].substring(2)}";
+                              },
+                              controlAffinity: ListTileControlAffinity.leading,
+                            )
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => Container(
+                    margin: const EdgeInsets.all(10),
+                    decoration: const BoxDecoration(
+                        color: Color.fromRGBO(64, 75, 96, .9)),
+                    child: ExpansionTile(
+                      title: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                'Progetto',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          CheckboxListTile(
+                            title: Text('Accesso'.tr),
+                            value: controller.boolAccessList[135].value,
+                            activeColor: kPrimaryColor,
+                            onChanged: (bool? value) {
+                              controller.boolAccessList[135].value = value!;
+                              controller.binaryPermList[135] =
+                                  "${controller.binaryPermList[135].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[135].substring(2)}";
+                            },
+                            controlAffinity: ListTileControlAffinity.leading,
+                          )
+                        ],
+                      ),
+                      childrenPadding: const EdgeInsets.all(10),
+                      children: [
+                        ExpansionTile(
+                          title: const Text(
+                            'Cespite',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                          childrenPadding: const EdgeInsets.all(10),
+                          children: [
+                            CheckboxListTile(
+                              title: Text('Accesso'.tr),
+                              value: controller.boolAccessList[131].value,
+                              activeColor: kPrimaryColor,
+                              onChanged: (bool? value) {
+                                controller.boolAccessList[131].value = value!;
+                                controller.binaryPermList[131] =
+                                    "${controller.binaryPermList[131].substring(0, 1)}${value ? "1" : "0"}${controller.binaryPermList[131].substring(2)}";
                               },
                               controlAffinity: ListTileControlAffinity.leading,
                             )

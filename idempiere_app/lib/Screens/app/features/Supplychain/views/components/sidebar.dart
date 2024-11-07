@@ -49,7 +49,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "SupplychainInventory".tr,
-                  visible: int.parse(list[73], radix: 16)
+                  visible: int.parse(list[68], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==
@@ -73,7 +73,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Load & Unload".tr,
-                  visible: int.parse(list[74], radix: 16)
+                  visible: int.parse(list[69], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==
@@ -85,7 +85,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.person,
                   icon: EvaIcons.personOutline,
                   label: "Inventory with Lot".tr,
-                  visible: int.parse(list[74], radix: 16)
+                  visible: int.parse(list[70], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==

@@ -219,12 +219,18 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                                 "qtyEntered": controller
                                                         .trx
                                                         .records![index]
-                                                        .plannedQty ??
+                                                        .qtyEntered ??
                                                     0,
                                                 "description": controller
                                                         .trx
                                                         .records![index]
                                                         .description ??
+                                                    "",
+                                                "productName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier ??
                                                     "",
                                                 "isSelected": controller
                                                         .trx
@@ -465,12 +471,18 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                                 "qtyEntered": controller
                                                         .trx
                                                         .records![index]
-                                                        .plannedQty ??
+                                                        .qtyEntered ??
                                                     0,
                                                 "description": controller
                                                         .trx
                                                         .records![index]
                                                         .description ??
+                                                    "",
+                                                "productName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier ??
                                                     "",
                                                 "isSelected": controller
                                                         .trx
@@ -711,12 +723,18 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                                 "qtyEntered": controller
                                                         .trx
                                                         .records![index]
-                                                        .plannedQty ??
+                                                        .qtyEntered ??
                                                     0,
                                                 "description": controller
                                                         .trx
                                                         .records![index]
                                                         .description ??
+                                                    "",
+                                                "productName": controller
+                                                        .trx
+                                                        .records![index]
+                                                        .mProductID
+                                                        ?.identifier ??
                                                     "",
                                                 "isSelected": controller
                                                         .trx

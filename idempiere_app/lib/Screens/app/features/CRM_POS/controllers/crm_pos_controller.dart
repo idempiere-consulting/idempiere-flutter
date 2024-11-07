@@ -318,7 +318,7 @@ class CRMPOSController extends GetxController {
     }
   }
 
-  Future<int> getSelectedProductPurchasePriceListPrice(int prodId) async {
+  Future<double> getSelectedProductPurchasePriceListPrice(int prodId) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
@@ -336,7 +336,7 @@ class CRMPOSController extends GetxController {
           ProductListJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (json.records!.isNotEmpty) {
-        return (json.records![0].price ?? 0).toInt();
+        return (json.records![0].price ?? 0).toDouble();
       }
     } else {
       print(response.body);
@@ -719,6 +719,8 @@ class CRMPOSController extends GetxController {
       "PaymentRule": {"id": paymentRuleId.value},
       "LIT_FidelityCard": fidelityFieldController.text,
       "order-line".tr: list,
+      "datascontrino":
+          "$formattedDate ${DateFormat('hh:mm:ss').format(DateTime.now())}",
     };
 
     if (paymentRuleId.value == 'M') {

@@ -83,7 +83,7 @@ class _BodyState extends State<Body> {
     myController = TextEditingController();
     myController.text = GetStorage().read('ip') ?? "";
     dropdownValue = GetStorage().read('language') ?? "it_IT";
-    protocolDropdownValue = GetStorage().read('protocol') ?? "http";
+    protocolDropdownValue = GetStorage().read('protocol') ?? "https";
   }
 
   @override

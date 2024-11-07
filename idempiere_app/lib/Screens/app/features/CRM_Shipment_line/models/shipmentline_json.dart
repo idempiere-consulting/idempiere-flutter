@@ -3,7 +3,7 @@ class ShipmentLineJson {
   final int? recordssize;
   final int? skiprecords;
   final int? rowcount;
-  final List<Records>? records;
+  final List<SLRecords>? records;
 
   ShipmentLineJson({
     this.pagecount,
@@ -19,7 +19,7 @@ class ShipmentLineJson {
         skiprecords = json['skip-records'] as int?,
         rowcount = json['row-count'] as int?,
         records = (json['records'] as List?)
-            ?.map((dynamic e) => Records.fromJson(e as Map<String, dynamic>))
+            ?.map((dynamic e) => SLRecords.fromJson(e as Map<String, dynamic>))
             .toList();
 
   Map<String, dynamic> toJson() => {
@@ -31,7 +31,7 @@ class ShipmentLineJson {
       };
 }
 
-class Records {
+class SLRecords {
   final int? id;
   final String? uid;
   final ADClientID? aDClientID;
@@ -43,18 +43,21 @@ class Records {
   final UpdatedBy? updatedBy;
   final MLocatorID? mLocatorID;
   final MInOutID? mInOutID;
-  final MProductID? mProductID;
-  final num? movementQty;
+  final SLMProductID? mProductID;
+  final SLCBPartnerID? cBPartnerID;
+  num? movementQty;
+  String? name;
   final String? description;
   final int? line;
-  final COrderLineID? cOrderLineID;
+  final SLCOrderLineID? cOrderLineID;
+  final BayMasterOrderLineID? bayMasterOrderLineID;
   final CUOMID? cUOMID;
   final bool? isInvoiced;
   final MAttributeSetInstanceID? mAttributeSetInstanceID;
   final bool? isDescription;
   final num? confirmedQty;
   final num? pickedQty;
-  final num? plannedQty;
+  num? plannedQty;
   final num? scrappedQty;
   final num? targetQty;
   final bool? processed;
@@ -64,7 +67,7 @@ class Records {
   final String? help;
   final String? modelname;
 
-  Records({
+  SLRecords({
     this.id,
     this.uid,
     this.aDClientID,
@@ -77,10 +80,13 @@ class Records {
     this.mLocatorID,
     this.mInOutID,
     this.mProductID,
+    this.cBPartnerID,
     this.movementQty,
+    this.name,
     this.description,
     this.line,
     this.cOrderLineID,
+    this.bayMasterOrderLineID,
     this.cUOMID,
     this.isInvoiced,
     this.mAttributeSetInstanceID,
@@ -98,7 +104,7 @@ class Records {
     this.modelname,
   });
 
-  Records.fromJson(Map<String, dynamic> json)
+  SLRecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
@@ -123,15 +129,26 @@ class Records {
             ? MInOutID.fromJson(json['M_InOut_ID'] as Map<String, dynamic>)
             : null,
         mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
-            ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
+            ? SLMProductID.fromJson(
+                json['M_Product_ID'] as Map<String, dynamic>)
+            : null,
+        cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? SLCBPartnerID.fromJson(
+                json['C_BPartner_ID'] as Map<String, dynamic>)
             : null,
         movementQty = json['MovementQty'] as num?,
+        name = json['Name'] as String?,
         description = json['Description'] as String?,
         line = json['Line'] as int?,
         cOrderLineID = (json['C_OrderLine_ID'] as Map<String, dynamic>?) != null
-            ? COrderLineID.fromJson(
+            ? SLCOrderLineID.fromJson(
                 json['C_OrderLine_ID'] as Map<String, dynamic>)
             : null,
+        bayMasterOrderLineID =
+            (json['Bay_MasterOrderLine_ID'] as Map<String, dynamic>?) != null
+                ? BayMasterOrderLineID.fromJson(
+                    json['Bay_MasterOrderLine_ID'] as Map<String, dynamic>)
+                : null,
         cUOMID = (json['C_UOM_ID'] as Map<String, dynamic>?) != null
             ? CUOMID.fromJson(json['C_UOM_ID'] as Map<String, dynamic>)
             : null,
@@ -351,20 +368,20 @@ class MInOutID {
       };
 }
 
-class MProductID {
+class SLMProductID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  MProductID({
+  SLMProductID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  MProductID.fromJson(Map<String, dynamic> json)
+  SLMProductID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -378,20 +395,74 @@ class MProductID {
       };
 }
 
-class COrderLineID {
+class SLCBPartnerID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  COrderLineID({
+  SLCBPartnerID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  COrderLineID.fromJson(Map<String, dynamic> json)
+  SLCBPartnerID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class SLCOrderLineID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  SLCOrderLineID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  SLCOrderLineID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class BayMasterOrderLineID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  BayMasterOrderLineID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  BayMasterOrderLineID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

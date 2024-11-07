@@ -57,6 +57,7 @@ class Records {
   final CBPartnerLocationID? cBPartnerLocationID;
   final MWarehouseID? mWarehouseID;
   final DeliveryRule? deliveryRule;
+  final MShipperID? mShipperID;
   final FreightCostRule? freightCostRule;
   final num? freightAmt;
   final DeliveryViaRule? deliveryViaRule;
@@ -107,6 +108,7 @@ class Records {
     this.cBPartnerLocationID,
     this.mWarehouseID,
     this.deliveryRule,
+    this.mShipperID,
     this.freightCostRule,
     this.freightAmt,
     this.deliveryViaRule,
@@ -183,6 +185,9 @@ class Records {
         deliveryRule = (json['DeliveryRule'] as Map<String, dynamic>?) != null
             ? DeliveryRule.fromJson(
                 json['DeliveryRule'] as Map<String, dynamic>)
+            : null,
+        mShipperID = (json['M_Shipper_ID'] as Map<String, dynamic>?) != null
+            ? MShipperID.fromJson(json['M_Shipper_ID'] as Map<String, dynamic>)
             : null,
         freightCostRule =
             (json['FreightCostRule'] as Map<String, dynamic>?) != null
@@ -562,6 +567,33 @@ class MWarehouseID {
   });
 
   MWarehouseID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MShipperID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MShipperID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MShipperID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

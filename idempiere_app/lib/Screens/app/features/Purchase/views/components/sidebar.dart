@@ -127,7 +127,7 @@ class _Sidebar extends StatelessWidget {
                   activeIcon: Icons.description,
                   icon: Icons.description_outlined,
                   label: "Purchase Request".tr,
-                  visible: int.parse(list[64], radix: 16)
+                  visible: int.parse(list[62], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")
                               .toString()[1] ==

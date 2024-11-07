@@ -26,6 +26,8 @@ class CRMSalesOrderController extends GetxController {
   var businessPartnerFilter =
       GetStorage().read('SalesOrder_businessPartnerFilter') ?? "";
   var docNoFilter = GetStorage().read('SalesOrder_docNoFilter') ?? "";
+  var dateStartFilter = GetStorage().read('SalesOrder_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('SalesOrder_dateEndFilter') ?? "";
 
   var businessPartnerId = 0.obs;
   String businessPartnerName = "";
@@ -33,6 +35,8 @@ class CRMSalesOrderController extends GetxController {
   var salesRepId = 0;
   var salesRepName = "";
   var docNoValue = "".obs;
+  var dateStartValue = "".obs;
+  var dateEndValue = "".obs;
 
   var searchFieldController = TextEditingController();
 
@@ -78,6 +82,8 @@ class CRMSalesOrderController extends GetxController {
     salesRepId = GetStorage().read('SalesOrder_salesRepId') ?? 0;
     salesRepName = GetStorage().read('SalesOrder_salesRepName') ?? "";
     docNoValue.value = GetStorage().read('SalesOrder_docNo') ?? "";
+    dateStartValue.value = GetStorage().read('SalesOrder_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('SalesOrder_dateEnd') ?? "";
     getSalesOrders();
     getADUserID();
     setConnect();
@@ -241,7 +247,7 @@ class CRMSalesOrderController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_salesorder_v?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_salesorder_v?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
