@@ -1402,6 +1402,16 @@ class LocaleString extends Translations {
           "Date Start Shipment": "Data Inizio Trasporto",
           "Weight": "Peso",
           "Gross Weight": "Peso Lordo",
+          "Different Address!": "Indirizzo Diverso!",
+          "This barcode has a different address from the header, do you still want to add this shipment line?":
+              "Questo barcode ha l'indirizzo diverso da quello di testata, vuoi comunque aggiungere la riga DDT?",
+          "Create Shipment": 'Crea DDT',
+          "Unfinished Shipment": "DDT non finito",
+          "Do you want to save it?": "Vuoi salvarlo?",
+          "Shipment has been reopened": "DDT Riaperto",
+          "Shipment not reopened": "DDT non Riaperto",
+          'The Missing Quantity of this Order Line would be below 0 as a result of adding this Shipment Line':
+              'La Quantità Mancante di questa Riga Ordine diventerebbe 0 se venisse aggiunta questa riga DDT'
         },
       };
 }

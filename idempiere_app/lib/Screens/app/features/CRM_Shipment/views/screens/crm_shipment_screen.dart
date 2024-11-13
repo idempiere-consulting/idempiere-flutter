@@ -194,7 +194,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                 label: 'Filter'.tr,
                 child: Obx(() => Icon(
                       Symbols.filter_alt,
-                      color: controller.businessPartnerId.value == 0 &&
+                      color: controller.selectedUserRadioTile.value == 0 &&
+                              controller.businessPartnerId.value == 0 &&
                               controller.dateStartValue.value == "" &&
                               controller.dateEndValue.value == "" &&
                               controller.docNoValue.value == ""
@@ -203,6 +204,10 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                     )),
                 onTap: () {
                   Get.to(const CRMFilterShipment(), arguments: {
+                    'selectedUserRadioTile':
+                        controller.selectedUserRadioTile.value,
+                    'userId': controller.userId,
+                    'userName': controller.userName,
                     'businessPartnerId': controller.businessPartnerId.value,
                     'businessPartnerName': controller.businessPartnerName,
                     'dateStart': controller.dateStartValue.value,
@@ -236,7 +241,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,
@@ -836,7 +841,7 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                           primary: false,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
-                          itemCount: controller.trx.rowcount,
+                          itemCount: controller.trx.records!.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Card(
                               elevation: 8.0,

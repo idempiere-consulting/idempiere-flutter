@@ -65,6 +65,7 @@ class SLRecords {
   final bool? isAutoProduce;
   final bool? isSelected;
   final String? help;
+  final String? mobileBarcodeType;
   final String? modelname;
 
   SLRecords({
@@ -101,6 +102,7 @@ class SLRecords {
     this.isAutoProduce,
     this.isSelected,
     this.help,
+    this.mobileBarcodeType,
     this.modelname,
   });
 
@@ -169,6 +171,7 @@ class SLRecords {
         isAutoProduce = json['IsAutoProduce'] as bool?,
         isSelected = json['IsSelected'] as bool?,
         help = json['Help'] as String?,
+        mobileBarcodeType = json['mobileBarcodeType'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

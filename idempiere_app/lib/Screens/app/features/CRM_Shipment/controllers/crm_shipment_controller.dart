@@ -16,11 +16,16 @@ class CRMShipmentController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
-  var businessPartnerFilter = "";
-  var dateStartFilter = "";
-  var dateEndFilter = "";
-  var docNoFilter = "";
+  var userFilter = GetStorage().read('Shipment_userFilter') ?? "";
+  var businessPartnerFilter =
+      GetStorage().read('Shipment_businessPartnerFilter') ?? "";
+  var dateStartFilter = GetStorage().read('Shipment_dateStartFilter') ?? "";
+  var dateEndFilter = GetStorage().read('Shipment_dateEndFilter') ?? "";
+  var docNoFilter = GetStorage().read('Shipment_docNoFilter') ?? "";
 
+  var selectedUserRadioTile = 0.obs;
+  var userId = 0;
+  var userName = "";
   var businessPartnerId = 0.obs;
   String businessPartnerName = "";
   var dateStartValue = "".obs;
@@ -36,7 +41,13 @@ class CRMShipmentController extends GetxController {
     canLaunchUrl(Uri.parse('tel:123')).then((bool result) {
       _hasCallSupport = result;
     });
-
+    selectedUserRadioTile.value =
+        GetStorage().read('Shipment_selectedUserRadioTile') ?? 0;
+    userId = GetStorage().read('Shipment_userId') ?? 0;
+    userName = GetStorage().read('Shipment_userName') ?? "";
+    docNoValue.value = GetStorage().read('Shipment_docNo') ?? "";
+    dateStartValue.value = GetStorage().read('Shipment_dateStart') ?? "";
+    dateEndValue.value = GetStorage().read('Shipment_dateEnd') ?? "";
     getShipments();
     getADUserID();
     setConnect();
@@ -130,7 +141,7 @@ class CRMShipmentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$businessPartnerFilter$dateStartFilter$dateEndFilter$docNoFilter&\$orderby= Created desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$businessPartnerFilter$dateStartFilter$dateEndFilter$docNoFilter$userFilter&\$orderby= Created desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
 
     var response = await http.get(
       url,
@@ -188,7 +199,7 @@ class CRMShipmentController extends GetxController {
       //print(response.body);
       Get.snackbar(
         "Done!".tr,
-        "Sales Order has been created".tr,
+        "Shipment has been reopened".tr,
         icon: const Icon(
           Icons.done,
           color: Colors.green,
@@ -200,7 +211,7 @@ class CRMShipmentController extends GetxController {
       }
       Get.snackbar(
         "Error!".tr,
-        "Sales Order not created".tr,
+        "Shipment not reopened".tr,
         icon: const Icon(
           Icons.error,
           color: Colors.red,
@@ -219,7 +230,8 @@ class CRMShipmentController extends GetxController {
         '$protocol://$ip/api/v1/models/m_inout/${_trx.records![index].id}');
 
     var msg = jsonEncode({
-      'DocStatus': {"id": "CO"}
+      //'DocStatus': {"id": "CO"}
+      "doc-action": "CO",
     });
     var response = await http.put(
       url,

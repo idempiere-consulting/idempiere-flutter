@@ -59,6 +59,8 @@ class Records {
   final CCurrencyID? cCurrencyID;
   final InvoiceRule? invoiceRule;
   final num? freightAmt;
+  final FOB? fob;
+  final MShipperID? mShipperID;
   final DeliveryViaRule? deliveryViaRule;
   final PriorityRule? priorityRule;
   final num? totalLines;
@@ -125,6 +127,8 @@ class Records {
     this.cCurrencyID,
     this.invoiceRule,
     this.freightAmt,
+    this.fob,
+    this.mShipperID,
     this.deliveryViaRule,
     this.priorityRule,
     this.totalLines,
@@ -219,6 +223,12 @@ class Records {
             ? InvoiceRule.fromJson(json['InvoiceRule'] as Map<String, dynamic>)
             : null,
         freightAmt = json['FreightAmt'] as num?,
+        fob = (json['FOB'] as Map<String, dynamic>?) != null
+            ? FOB.fromJson(json['FOB'] as Map<String, dynamic>)
+            : null,
+        mShipperID = (json['M_Shipper_ID'] as Map<String, dynamic>?) != null
+            ? MShipperID.fromJson(json['M_Shipper_ID'] as Map<String, dynamic>)
+            : null,
         deliveryViaRule =
             (json['DeliveryViaRule'] as Map<String, dynamic>?) != null
                 ? DeliveryViaRule.fromJson(
@@ -503,6 +513,33 @@ class DocStatus {
       };
 }
 
+class FOB {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  FOB({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  FOB.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
 class CDocTypeID {
   final String? propertyLabel;
   final int? id;
@@ -733,6 +770,33 @@ class MWarehouseID {
   });
 
   MWarehouseID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MShipperID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MShipperID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MShipperID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

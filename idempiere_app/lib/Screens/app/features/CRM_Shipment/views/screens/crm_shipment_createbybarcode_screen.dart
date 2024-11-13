@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_P
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/deliveryviarule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/movementtype_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/mstoragereservation_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
 
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/models/product_json.dart';
@@ -106,7 +107,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       });
     }
 
-    print(msg);
+    //print(msg);
 
     var response = await http.post(
       url,
@@ -117,7 +118,9 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       },
     );
     if (response.statusCode == 201) {
+      GetStorage().write('DDT_SavedBarcodeCreation', null);
       Get.back();
+      Get.find<CRMShipmentController>().getShipments();
       if (kDebugMode) {
         print(response.body);
       }
@@ -125,6 +128,69 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       if (kDebugMode) {
         print(response.body);
       }
+    }
+  }
+
+  Future<void> restoreCreationFromJson() async {
+    setState(() {
+      linesAvailable = false;
+    });
+    shipmentLines = ShipmentLineJson.fromJson(
+        GetStorage().read('DDT_SavedBarcodeCreation'));
+    getRestoredLine(shipmentLines.records![0].cOrderLineID?.id ?? 0);
+    //getShipmentAddress(shipmentLines.records![0].cOrderID!.id!);
+    setState(() {
+      linesAvailable = true;
+    });
+  }
+
+  Future<void> getRestoredLine(int orderLineId) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_OrderLine?\$filter= C_OrderLine_ID eq $orderLineId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      SalesOrderLineJson orderLineJSON = SalesOrderLineJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+      if (orderLineJSON.records!.isNotEmpty) {
+        getRestoredHeaderData(orderLineJSON.records![0].cOrderID?.id ?? 0);
+      }
+    }
+  }
+
+  Future<void> getRestoredHeaderData(int orderId) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_Order_ID eq $orderId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json =
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      bpLocationId = json.records![0].cBPartnerLocationID?.id ?? 0;
+      businessPartnerFieldController.text =
+          json.records![0].cBPartnerID!.identifier!;
+      businessPartnerID = json.records![0].cBPartnerID!.id!;
+      getShipmentAddress(json.records![0].id!);
+      //print(response.body);
+    } else {
+      //print(response.body);
     }
   }
 
@@ -145,8 +211,39 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       var json =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       bpLocationId = json.records![0].cBPartnerLocationID?.id ?? 0;
+
+      setState(() {
+        fobId = json.records![0].fob?.id ?? "0";
+        deliveryViaRule = json.records![0].deliveryViaRule?.id ?? "P";
+        shipperId = (json.records![0].mShipperID?.id ?? 0).toString();
+      });
+
       //print(response.body);
     } else {
+      //print(response.body);
+    }
+  }
+
+  Future<int> checkShipmentAddress(int orderId) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_Order_ID eq $orderId');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      var json =
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      return json.records![0].cBPartnerLocationID?.id ?? 0;
+      //print(response.body);
+    } else {
+      return 0;
       //print(response.body);
     }
   }
@@ -286,6 +383,34 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     return 0;
   }
 
+  Future<bool> isOrderCompleted(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_order?\$filter= C_Order_ID eq $id and DocStatus eq \'CO\'');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      SalesOrderJson orderJSON =
+          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (orderJSON.records!.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+    return false;
+  }
+
   Future<SalesOrderLineJson> getAllOrderLines(int id) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -388,24 +513,43 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                   ],
                 )); */
           } else {
-            shipmentLines.records!.add(SLRecords(
-                cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
-                plannedQty: orderLine.records![0].qtyOrdered! -
-                    orderLine.records![0].qtyDelivered!,
-                cBPartnerID: SLCBPartnerID(
-                    id: orderLine.records![0].cBPartnerID!.id!,
-                    identifier: orderLine.records![0].cBPartnerID!.identifier!),
-                mProductID: SLMProductID(
-                    id: orderLine.records![0].mProductID!.id!,
-                    identifier: orderLine.records![0].mProductID!.identifier!),
-                name: orderLine.records![0].name,
-                description: orderLine.records![0].description,
-                help: orderLine.records![0].help,
-                movementQty: num.parse(barcodeList[2])));
+            if ((orderLine.records![0].qtyOrdered! -
+                        orderLine.records![0].qtyDelivered!) -
+                    (num.parse(barcodeList[2])) <
+                0) {
+              Get.defaultDialog(
+                title: 'Error!'.tr,
+                content: Text(
+                    'The Missing Quantity of this Order Line would be below 0 as a result of adding this Shipment Line'
+                        .tr),
+              );
+            } else {
+              shipmentLines.records!.add(
+                SLRecords(
+                  cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
+                  plannedQty: orderLine.records![0].qtyOrdered! -
+                      orderLine.records![0].qtyDelivered!,
+                  cBPartnerID: SLCBPartnerID(
+                      id: orderLine.records![0].cBPartnerID!.id!,
+                      identifier:
+                          orderLine.records![0].cBPartnerID!.identifier!),
+                  mProductID: SLMProductID(
+                      id: orderLine.records![0].mProductID!.id!,
+                      identifier:
+                          orderLine.records![0].mProductID!.identifier!),
+                  name: orderLine.records![0].name,
+                  description: orderLine.records![0].description,
+                  help: orderLine.records![0].help,
+                  movementQty: num.parse(barcodeList[2]),
+                  mobileBarcodeType: barcodeList[0],
+                ),
+              );
 
-            businessPartnerFieldController.text =
-                orderLine.records![0].cBPartnerID!.identifier!;
-            getShipmentAddress(orderLine.records![0].cOrderID!.id!);
+              businessPartnerFieldController.text =
+                  orderLine.records![0].cBPartnerID!.identifier!;
+              businessPartnerID = orderLine.records![0].cBPartnerID!.id!;
+              getShipmentAddress(orderLine.records![0].cOrderID!.id!);
+            }
           }
         } else if (orderLine.records![0].cBPartnerID!.id! ==
             shipmentLines.records![0].cBPartnerID!.id!) {
@@ -480,31 +624,95 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                       orderLine.records![0].id &&
                   shipmentLines.records![i].mProductID?.id ==
                       orderLine.records![0].mProductID?.id) {
-                shipmentLines.records![i].movementQty =
-                    shipmentLines.records![i].movementQty! +
-                        num.parse(barcodeList[2]);
+                if (shipmentLines.records![i].plannedQty! -
+                        (shipmentLines.records![i].movementQty! +
+                            num.parse(barcodeList[2])) <
+                    0) {
+                  Get.defaultDialog(
+                    title: 'Error!'.tr,
+                    content: Text(
+                        'The Missing Quantity of this Order Line would be below 0 as a result of adding this Shipment Line'
+                            .tr),
+                  );
+                } else {
+                  shipmentLines.records![i].movementQty =
+                      shipmentLines.records![i].movementQty! +
+                          num.parse(barcodeList[2]);
+                }
 
                 notFound = false;
               }
             }
             if (notFound) {
-              orderLine.records![0].qtyReserved = await getProdQtyReserved(
-                  orderLine.records![0].mProductID!.id!);
-              shipmentLines.records!.add(SLRecords(
-                  cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
-                  plannedQty: orderLine.records![0].qtyReserved!,
-                  cBPartnerID: SLCBPartnerID(
-                      id: orderLine.records![0].cBPartnerID!.id!,
-                      identifier:
-                          orderLine.records![0].cBPartnerID!.identifier!),
-                  mProductID: SLMProductID(
-                      id: orderLine.records![0].mProductID!.id!,
-                      identifier:
-                          orderLine.records![0].mProductID!.identifier!),
-                  name: orderLine.records![0].name,
-                  description: orderLine.records![0].description,
-                  help: orderLine.records![0].help,
-                  movementQty: num.parse(barcodeList[2])));
+              if ((orderLine.records![0].qtyOrdered! -
+                          orderLine.records![0].qtyDelivered!) -
+                      (num.parse(barcodeList[2])) <
+                  0) {
+                Get.defaultDialog(
+                  title: 'Error!'.tr,
+                  content: Text(
+                      'The Missing Quantity of this Order Line would be below 0 as a result of adding this Shipment Line'
+                          .tr),
+                );
+              } else {
+                if (await checkShipmentAddress(
+                        orderLine.records![0].cOrderID?.id ?? 0) !=
+                    bpLocationId) {
+                  Get.defaultDialog(
+                    title: 'Different Address!'.tr,
+                    content: Text(
+                        'This barcode has a different address from the header, do you still want to add this shipment line?'
+                            .tr),
+                    textCancel: 'back'.tr,
+                    onConfirm: () async {
+                      Navigator.of(Get.overlayContext!, rootNavigator: true)
+                          .pop();
+
+                      orderLine.records![0].qtyReserved =
+                          await getProdQtyReserved(
+                              orderLine.records![0].mProductID!.id!);
+                      shipmentLines.records!.add(SLRecords(
+                        cOrderLineID:
+                            SLCOrderLineID(id: orderLine.records![0].id),
+                        plannedQty: orderLine.records![0].qtyReserved!,
+                        cBPartnerID: SLCBPartnerID(
+                            id: orderLine.records![0].cBPartnerID!.id!,
+                            identifier:
+                                orderLine.records![0].cBPartnerID!.identifier!),
+                        mProductID: SLMProductID(
+                            id: orderLine.records![0].mProductID!.id!,
+                            identifier:
+                                orderLine.records![0].mProductID!.identifier!),
+                        name: orderLine.records![0].name,
+                        description: orderLine.records![0].description,
+                        help: orderLine.records![0].help,
+                        movementQty: num.parse(barcodeList[2]),
+                        mobileBarcodeType: barcodeList[0],
+                      ));
+                    },
+                  );
+                } else {
+                  orderLine.records![0].qtyReserved = await getProdQtyReserved(
+                      orderLine.records![0].mProductID!.id!);
+                  shipmentLines.records!.add(SLRecords(
+                    cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
+                    plannedQty: orderLine.records![0].qtyReserved!,
+                    cBPartnerID: SLCBPartnerID(
+                        id: orderLine.records![0].cBPartnerID!.id!,
+                        identifier:
+                            orderLine.records![0].cBPartnerID!.identifier!),
+                    mProductID: SLMProductID(
+                        id: orderLine.records![0].mProductID!.id!,
+                        identifier:
+                            orderLine.records![0].mProductID!.identifier!),
+                    name: orderLine.records![0].name,
+                    description: orderLine.records![0].description,
+                    help: orderLine.records![0].help,
+                    movementQty: num.parse(barcodeList[2]),
+                    mobileBarcodeType: barcodeList[0],
+                  ));
+                }
+              }
             }
           }
 
@@ -551,6 +759,8 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
         } */
 
         if (barcodeList[0].contains('ol')) {
+          noPackagesFieldController.text =
+              (int.parse(noPackagesFieldController.text) + 1).toString();
           SalesOrderLineJson allLines =
               await getAllOrderLines(orderLine.records![0].cOrderID!.id!);
           for (var i = 0; i < allLines.records!.length; i++) {
@@ -562,109 +772,274 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
           }
         }
       } else {
-        final ip = GetStorage().read('ip');
-        String authorization = 'Bearer ${GetStorage().read('token')}';
-        final protocol = GetStorage().read('protocol');
-        var url = Uri.parse(
-            '$protocol://$ip/api/v1/models/M_Product?\$filter= M_Product_ID eq ${barcodeList[1]}');
+        bool noOrderlineFound = true;
 
-        var response2 = await http.get(
-          url,
-          headers: <String, String>{
-            'Content-Type': 'application/json',
-            'Authorization': authorization,
-          },
-        );
+        if (businessPartnerID > 0) {
+          var url = Uri.parse(
+              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID&\$orderby= Created asc');
 
-        if (response2.statusCode == 200) {
-          ProductJson prod = ProductJson.fromJson(
-              jsonDecode(utf8.decode(response2.bodyBytes)));
+          var response3 = await http.get(
+            url,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': authorization,
+            },
+          );
+          if (response3.statusCode == 200) {
+            SalesOrderLineJson orderLinePR = SalesOrderLineJson.fromJson(
+                jsonDecode(utf8.decode(response3.bodyBytes)));
+            for (var i = 0; i < orderLinePR.records!.length; i++) {
+              if (!(await isOrderCompleted(
+                  orderLinePR.records![i].cOrderID?.id ?? 0))) {
+                orderLinePR.records!.removeAt(i);
+              }
+            }
+            if (orderLinePR.records!.isNotEmpty) {
+              noOrderlineFound = false;
+              TextEditingController qtyController =
+                  TextEditingController(text: '');
+              Get.defaultDialog(
+                  title: 'Insert Qty'.tr,
+                  onConfirm: () {
+                    Navigator.of(Get.overlayContext!, rootNavigator: true)
+                        .pop();
 
-          if (prod.records!.isNotEmpty && barcodeList[0].contains('pr')) {
-            var resQty = await getProdQtyReserved(prod.records![0].id!);
-            TextEditingController qtyController =
-                TextEditingController(text: '');
-            Get.defaultDialog(
-                title: 'Insert Qty'.tr,
-                onConfirm: () {
-                  Navigator.of(Get.overlayContext!, rootNavigator: true).pop();
-                  bool notFound = true;
-                  for (var i = 0; i < shipmentLines.records!.length; i++) {
-                    if (shipmentLines.records![i].mProductID?.id ==
-                        prod.records![0].id) {
-                      shipmentLines.records![i].movementQty =
-                          shipmentLines.records![i].movementQty! +
-                              num.parse(qtyController.text);
-
-                      notFound = false;
+                    int qtyToAdd = int.parse(qtyController.text);
+                    int totResidueQty = 0;
+                    for (var element in orderLinePR.records!) {
+                      totResidueQty = (totResidueQty +
+                              ((element.qtyOrdered ?? 0) -
+                                  (element.qtyDelivered ?? 0)))
+                          .toInt();
                     }
-                  }
-                  if (notFound) {
-                    /* orderLine.records![0].qtyReserved =
+
+                    if (totResidueQty < qtyToAdd) {
+                      Get.defaultDialog(
+                        title: 'Error!'.tr,
+                        content: Text(
+                            'The Missing Quantity of this Order Line would be below 0 as a result of adding this Shipment Line'
+                                .tr),
+                      );
+                    } else {
+                      for (var i = 0; i < orderLinePR.records!.length; i++) {
+                        if (qtyToAdd > 0 &&
+                            (orderLinePR.records![i].qtyOrdered ??
+                                    0 -
+                                        (orderLinePR.records![i].qtyDelivered ??
+                                            0)) >
+                                0) {
+                          if (qtyToAdd <=
+                              (orderLinePR.records![i].qtyOrdered ??
+                                  0 -
+                                      (orderLinePR.records![i].qtyDelivered ??
+                                          0))) {
+                            shipmentLines.records!.add(SLRecords(
+                              cOrderLineID: SLCOrderLineID(
+                                  id: orderLinePR.records![i].id),
+                              plannedQty: orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!,
+                              cBPartnerID: SLCBPartnerID(
+                                  id: orderLinePR.records![i].cBPartnerID!.id!,
+                                  identifier: orderLinePR
+                                      .records![i].cBPartnerID!.identifier!),
+                              mProductID: SLMProductID(
+                                  id: orderLinePR.records![i].mProductID!.id!,
+                                  identifier: orderLinePR
+                                      .records![i].mProductID!.identifier!),
+                              name: orderLinePR.records![i].name,
+                              description: orderLinePR.records![i].description,
+                              help: orderLinePR.records![i].help,
+                              movementQty: qtyToAdd,
+                              mobileBarcodeType: barcodeList[0],
+                            ));
+
+                            qtyToAdd = 0;
+                          }
+
+                          if (qtyToAdd >
+                              (orderLinePR.records![i].qtyOrdered ??
+                                  0 -
+                                      (orderLinePR.records![i].qtyDelivered ??
+                                          0))) {
+                            shipmentLines.records!.add(SLRecords(
+                              cOrderLineID: SLCOrderLineID(
+                                  id: orderLinePR.records![i].id),
+                              plannedQty: orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!,
+                              cBPartnerID: SLCBPartnerID(
+                                  id: orderLinePR.records![i].cBPartnerID!.id!,
+                                  identifier: orderLinePR
+                                      .records![i].cBPartnerID!.identifier!),
+                              mProductID: SLMProductID(
+                                  id: orderLinePR.records![i].mProductID!.id!,
+                                  identifier: orderLinePR
+                                      .records![i].mProductID!.identifier!),
+                              name: orderLinePR.records![i].name,
+                              description: orderLinePR.records![i].description,
+                              help: orderLinePR.records![i].help,
+                              movementQty:
+                                  orderLinePR.records![i].qtyOrdered!.toInt(),
+                              mobileBarcodeType: barcodeList[0],
+                            ));
+
+                            qtyToAdd = qtyToAdd -
+                                (orderLinePR.records![i].qtyOrdered!.toInt() -
+                                    (orderLinePR.records![i].qtyDelivered ?? 0)
+                                        .toInt());
+                          }
+                        }
+                      }
+                    }
+
+                    linesAvailable = true;
+                    setState(() {});
+                  },
+                  content: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          readOnly: true,
+                          controller: TextEditingController(
+                              text: orderLinePR
+                                  .records![0].mProductID?.identifier),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.text_fields),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Product'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          autofocus: true,
+                          controller: qtyController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                          ],
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.timelapse),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Qty'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ));
+            } else {}
+          } else {}
+        }
+
+        if (noOrderlineFound) {
+          var url = Uri.parse(
+              '$protocol://$ip/api/v1/models/M_Product?\$filter= M_Product_ID eq ${barcodeList[1]}');
+
+          var response2 = await http.get(
+            url,
+            headers: <String, String>{
+              'Content-Type': 'application/json',
+              'Authorization': authorization,
+            },
+          );
+
+          if (response2.statusCode == 200) {
+            ProductJson prod = ProductJson.fromJson(
+                jsonDecode(utf8.decode(response2.bodyBytes)));
+
+            if (prod.records!.isNotEmpty && barcodeList[0].contains('pr')) {
+              var resQty = await getProdQtyReserved(prod.records![0].id!);
+              TextEditingController qtyController =
+                  TextEditingController(text: '');
+              Get.defaultDialog(
+                  title: 'Insert Qty'.tr,
+                  onConfirm: () {
+                    Navigator.of(Get.overlayContext!, rootNavigator: true)
+                        .pop();
+                    bool notFound = true;
+                    for (var i = 0; i < shipmentLines.records!.length; i++) {
+                      if (shipmentLines.records![i].mProductID?.id ==
+                          prod.records![0].id) {
+                        shipmentLines.records![i].movementQty =
+                            shipmentLines.records![i].movementQty! +
+                                num.parse(qtyController.text);
+
+                        notFound = false;
+                      }
+                    }
+                    if (notFound) {
+                      /* orderLine.records![0].qtyReserved =
                         await getProdQtyReserved(
                             orderLine.records![0].mProductID!.id!); */
-                    shipmentLines.records!.add(SLRecords(
+                      shipmentLines.records!.add(SLRecords(
                         plannedQty: resQty,
                         mProductID: SLMProductID(
                             id: prod.records![0].id!,
                             identifier:
                                 "${prod.records![0].value}_${prod.records![0].name}"),
-                        movementQty: num.parse(qtyController.text)));
-                  }
+                        movementQty: num.parse(qtyController.text),
+                        mobileBarcodeType: barcodeList[0],
+                      ));
+                    }
 
-                  linesAvailable = true;
-                  setState(() {});
-                },
-                content: Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        readOnly: true,
-                        controller:
-                            TextEditingController(text: prod.records![0].value),
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.text_fields),
-                          border: const OutlineInputBorder(),
-                          labelText: 'Code'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                    linesAvailable = true;
+                    setState(() {});
+                  },
+                  content: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          readOnly: true,
+                          controller: TextEditingController(
+                              text: prod.records![0].value),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.text_fields),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Code'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        readOnly: true,
-                        controller:
-                            TextEditingController(text: prod.records![0].name),
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.text_fields),
-                          border: const OutlineInputBorder(),
-                          labelText: 'Product'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          readOnly: true,
+                          controller: TextEditingController(
+                              text: prod.records![0].name),
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.text_fields),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Product'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: TextField(
-                        autofocus: true,
-                        controller: qtyController,
-                        keyboardType: const TextInputType.numberWithOptions(
-                            signed: true, decimal: true),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                        ],
-                        decoration: InputDecoration(
-                          prefixIcon: const Icon(Icons.timelapse),
-                          border: const OutlineInputBorder(),
-                          labelText: 'Qty'.tr,
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: TextField(
+                          autofocus: true,
+                          controller: qtyController,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              signed: true, decimal: true),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                          ],
+                          decoration: InputDecoration(
+                            prefixIcon: const Icon(Icons.timelapse),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Qty'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
-                ));
+                    ],
+                  ));
+            }
           }
         }
       }
@@ -682,6 +1057,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
 
   bool linesAvailable = false;
   late TextEditingController businessPartnerFieldController;
+  int businessPartnerID = 0;
   late TextEditingController dateFieldController;
   late TextEditingController timeFieldController;
   late TextEditingController noPackagesFieldController;
@@ -692,7 +1068,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
 
   int bpLocationId = 0;
 
-  String deliveryViaRule = "0";
+  String deliveryViaRule = "P";
   String shipperId = "0";
   String fobId = "0";
 
@@ -706,7 +1082,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
         text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
     timeFieldController = TextEditingController(
         text: DateFormat('HH:mm:ss').format(DateTime.now()));
-    noPackagesFieldController = TextEditingController(text: '1');
+    noPackagesFieldController = TextEditingController(text: '0');
     weightFieldController = TextEditingController(text: '0');
     grossWeightFieldController = TextEditingController(text: '0');
     externalAspectFieldController = TextEditingController(text: '');
@@ -714,6 +1090,10 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     shipperId = "0";
     fobId = "0";
     movementTypeId = "0";
+
+    if (GetStorage().read('DDT_SavedBarcodeCreation') != null) {
+      restoreCreationFromJson();
+    }
   }
 
   @override
@@ -723,7 +1103,28 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              Get.back();
+              if (shipmentLines.records!.isNotEmpty) {
+                Get.defaultDialog(
+                  title: 'Unfinished Shipment'.tr,
+                  content: Text('Do you want to save it?'.tr),
+                  onCancel: () {
+                    if (GetStorage().read('DDT_SavedBarcodeCreation') != null) {
+                      GetStorage().write('DDT_SavedBarcodeCreation', null);
+                    }
+                    Get.back();
+                    Get.back();
+                  },
+                  onConfirm: () {
+                    Get.back();
+                    //print(shipmentLines.toJson());
+                    GetStorage().write(
+                        'DDT_SavedBarcodeCreation', shipmentLines.toJson());
+                    Get.back();
+                  },
+                );
+              } else {
+                Get.back();
+              }
             },
             icon: const Icon(Icons.close)),
         centerTitle: true,
@@ -767,6 +1168,11 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Text(
+                        '${'Scanned Packages'.tr}: ${noPackagesFieldController.text}'),
+                  ),
                   ExpansionTile(
                     title: Text('Header Fields'.tr),
                     children: [
@@ -1100,8 +1506,8 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                             left: 10, right: 10, bottom: 10),
                         child: TextField(
                           // maxLength: 10,
-                          keyboardType:
-                              TextInputType.numberWithOptions(decimal: false),
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
                           controller: timeFieldController,
 
                           decoration: InputDecoration(
@@ -1123,6 +1529,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                     child: ListView.builder(
                       primary: false,
                       scrollDirection: Axis.vertical,
+                      reverse: true,
                       shrinkWrap: true,
                       itemCount: shipmentLines.records!.length,
                       itemBuilder: (BuildContext context, int index) {
@@ -1146,11 +1553,29 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                                             color: Colors.white24))),
                                 child: IconButton(
                                   icon: const Icon(
-                                    Icons.article,
-                                    color: Colors.white,
+                                    Icons.delete,
+                                    color: Colors.red,
                                   ),
-                                  tooltip: 'Article'.tr,
+                                  tooltip: 'Delete'.tr,
                                   onPressed: () {
+                                    setState(() {
+                                      linesAvailable = false;
+                                    });
+                                    if ((shipmentLines.records![index]
+                                                .mobileBarcodeType ??
+                                            '')
+                                        .contains('ol')) {
+                                      noPackagesFieldController.text =
+                                          (int.parse(noPackagesFieldController
+                                                      .text) -
+                                                  1)
+                                              .toString();
+                                    }
+                                    shipmentLines.records!.removeAt(index);
+
+                                    setState(() {
+                                      linesAvailable = true;
+                                    });
                                     //log("info button pressed");
                                   },
                                 ),
