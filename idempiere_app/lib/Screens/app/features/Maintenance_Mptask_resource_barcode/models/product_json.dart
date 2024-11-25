@@ -67,6 +67,7 @@ class Records {
   final int? guaranteeDays;
   final MAttributeSetInstanceID? mAttributeSetInstanceID;
   final MAttributeSetID? mAttributeSetID;
+  final LITAutomationRule? litAutomationRule;
   final int? guaranteeDaysMin;
   final bool? isWebStoreFeatured;
   final bool? isSelfService;
@@ -111,6 +112,7 @@ class Records {
     this.value,
     this.mProductCategoryID,
     this.cTaxCategoryID,
+    this.litAutomationRule,
     this.sKU,
     this.shelfWidth,
     this.shelfHeight,
@@ -201,6 +203,11 @@ class Records {
         productType = (json['ProductType'] as Map<String, dynamic>?) != null
             ? ProductType.fromJson(json['ProductType'] as Map<String, dynamic>)
             : null,
+        litAutomationRule =
+            (json['LIT_AutomationRule'] as Map<String, dynamic>?) != null
+                ? LITAutomationRule.fromJson(
+                    json['LIT_AutomationRule'] as Map<String, dynamic>)
+                : null,
         guaranteeDays = json['GuaranteeDays'] as int?,
         mAttributeSetInstanceID =
             (json['M_AttributeSetInstance_ID'] as Map<String, dynamic>?) != null
@@ -499,6 +506,33 @@ class ProductType {
   });
 
   ProductType.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITAutomationRule {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITAutomationRule({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITAutomationRule.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as String?,
         identifier = json['identifier'] as String?,

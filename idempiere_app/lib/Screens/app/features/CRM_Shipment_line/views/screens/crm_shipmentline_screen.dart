@@ -11,6 +11,7 @@ import 'package:flutter/foundation.dart';
 //import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_editbybarcode_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_create.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_edit.dart';
@@ -176,6 +177,15 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                   ), */
                 ],
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    Get.to(const CRMEditByBarcodeShipment(), arguments: {
+                      "businessPartnerID": Get.arguments["bPartnerID"],
+                      "businessPartnerIName": controller.bpFieldController.text,
+                      "orderID": Get.arguments["id"],
+                    });
+                  },
+                  child: Text('Add Shipment Lines By Barcode'.tr)),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable

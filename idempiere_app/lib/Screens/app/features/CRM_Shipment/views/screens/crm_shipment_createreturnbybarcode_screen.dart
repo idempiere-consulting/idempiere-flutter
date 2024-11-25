@@ -9,9 +9,11 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Sales_Order_Creation_BP_PriceList/models/businesspartner_location_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/deliveryviarule_json.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/movementtype_json.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/models/product_json.dart';
 
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -60,7 +62,7 @@ class _CRMCreateRetunByBarcodeShipmentState
       "AD_Client_ID": {"id": GetStorage().read("clientid")},
       "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
       "C_DocType_ID": {"id": 1000015},
-      "C_BPartner_ID": {"id": shipmentLines.records![0].cBPartnerID?.id},
+      "C_BPartner_ID": {"id": businessPartnerId},
       "C_BPartner_Location_ID": {"id": bpLocationId},
       "MovementDate": DateFormat('yyyy-MM-dd').format(date),
       "DateAcct": DateFormat('yyyy-MM-dd').format(date),
@@ -89,12 +91,12 @@ class _CRMCreateRetunByBarcodeShipmentState
     }
   }
 
-  Future<void> getShipmentAddress() async {
+  Future<void> getShipmentAddress(int id) async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= IsShipTo eq true and C_BPartner_ID eq ${shipmentLines.records![0].cBPartnerID!.id!}');
+        '$protocol://$ip/api/v1/models/C_BPartner_Location?\$filter= IsShipTo eq true and C_BPartner_ID eq $id');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -218,6 +220,23 @@ class _CRMCreateRetunByBarcodeShipmentState
     //print(response.body);
   }
 
+  Future<List<BPRecords>> getAllBPs() async {
+    //await getBusinessPartner();
+    //print(response.body);
+    const filename = "businesspartner";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    var jsondecoded = jsonDecode(file.readAsStringSync());
+
+    var jsonbps = BusinessPartnerJson.fromJson(jsondecoded);
+
+    return jsonbps.records!;
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
   Future<void> getScannedOrderLine(String barcode) async {
     setState(() {
       linesAvailable = false;
@@ -228,10 +247,108 @@ class _CRMCreateRetunByBarcodeShipmentState
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
+
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_OrderLine?\$filter= C_OrderLine_ID eq ${barcodeList[0]}');
-    print(
-        '$protocol://$ip/api/v1/models/C_OrderLine?\$filter= C_OrderLine_ID eq ${barcodeList[0]}');
+        '$protocol://$ip/api/v1/models/M_Product?\$filter= M_Product_ID eq ${barcodeList[1]}');
+
+    var response2 = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response2.statusCode == 200) {
+      ProductJson prod =
+          ProductJson.fromJson(jsonDecode(utf8.decode(response2.bodyBytes)));
+
+      if (prod.records!.isNotEmpty && barcodeList[0].contains('pr')) {
+        TextEditingController qtyController = TextEditingController(text: '');
+        Get.defaultDialog(
+            title: 'Insert Qty'.tr,
+            onConfirm: () {
+              Navigator.of(Get.overlayContext!, rootNavigator: true).pop();
+
+              /* orderLine.records![0].qtyReserved =
+                        await getProdQtyReserved(
+                            orderLine.records![0].mProductID!.id!); */
+              shipmentLines.records!.add(SLRecords(
+                plannedQty: 0,
+                mProductID: SLMProductID(
+                    id: prod.records![0].id!,
+                    identifier:
+                        "${prod.records![0].value}_${prod.records![0].name}"),
+                movementQty: num.parse(qtyController.text),
+                mobileBarcodeType: barcodeList[0],
+                isInvoiced: true,
+              ));
+
+              linesAvailable = true;
+              setState(() {});
+            },
+            content: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    readOnly: true,
+                    controller:
+                        TextEditingController(text: prod.records![0].value),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Code'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    readOnly: true,
+                    controller:
+                        TextEditingController(text: prod.records![0].name),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Product'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    autofocus: true,
+                    controller: qtyController,
+                    keyboardType: const TextInputType.numberWithOptions(
+                        signed: true, decimal: true),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9]"))
+                    ],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.timelapse),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Qty'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+              ],
+            ));
+      } else {
+        Get.defaultDialog(
+          title: 'Error!'.tr,
+          content: Text(
+              'No Linked Order was found for this Product and It\'s NOT Extra ODV'
+                  .tr),
+        );
+      }
+    }
+
+    /* var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/C_OrderLine?\$filter= C_OrderLine_ID eq ${barcodeList[1]}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -255,7 +372,7 @@ class _CRMCreateRetunByBarcodeShipmentState
               mProductID: SLMProductID(
                   id: orderLine.records![0].mProductID!.id!,
                   identifier: orderLine.records![0].mProductID!.identifier!),
-              movementQty: num.parse(barcodeList[1])));
+              movementQty: num.parse(barcodeList[2])));
 
           businessPartnerFieldController.text =
               orderLine.records![0].cBPartnerID!.identifier!;
@@ -270,7 +387,7 @@ class _CRMCreateRetunByBarcodeShipmentState
                     orderLine.records![0].mProductID?.id) {
               shipmentLines.records![i].movementQty =
                   shipmentLines.records![i].movementQty! +
-                      num.parse(barcodeList[1]);
+                      num.parse(barcodeList[2]);
 
               notFound = false;
             }
@@ -286,10 +403,10 @@ class _CRMCreateRetunByBarcodeShipmentState
                 mProductID: SLMProductID(
                     id: orderLine.records![0].mProductID!.id!,
                     identifier: orderLine.records![0].mProductID!.identifier!),
-                movementQty: num.parse(barcodeList[1])));
+                movementQty: num.parse(barcodeList[2])));
           }
         }
-      }
+      } 
 
       linesAvailable = true;
       setState(() {});
@@ -297,7 +414,7 @@ class _CRMCreateRetunByBarcodeShipmentState
       print(response.body);
     } else {
       print(response.body);
-    }
+    }*/
   }
 
   ShipmentLineJson shipmentLines = ShipmentLineJson(records: []);
@@ -312,6 +429,7 @@ class _CRMCreateRetunByBarcodeShipmentState
   late TextEditingController externalAspectFieldController;
   String movementTypeId = "0";
 
+  int businessPartnerId = 0;
   int bpLocationId = 0;
 
   String deliveryViaRule = "0";
@@ -379,21 +497,68 @@ class _CRMCreateRetunByBarcodeShipmentState
                     title: Text('Header Fields'.tr),
                     children: [
                       Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10, top: 10),
-                        child: TextField(
-                          readOnly: true,
-                          controller: businessPartnerFieldController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            prefixIcon: const Icon(Icons.text_fields),
-                            border: const OutlineInputBorder(),
-                            labelText: 'Business Partner'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          minLines: 1,
-                          maxLines: 4,
+                        margin: const EdgeInsets.all(10),
+                        child: FutureBuilder(
+                          future: getAllBPs(),
+                          builder: (BuildContext ctx,
+                                  AsyncSnapshot<List<BPRecords>> snapshot) =>
+                              snapshot.hasData
+                                  ? TypeAheadField<BPRecords>(
+                                      direction: AxisDirection.down,
+                                      //getImmediateSuggestions: true,
+                                      textFieldConfiguration:
+                                          TextFieldConfiguration(
+                                        onChanged: (value) {
+                                          if (value == "") {
+                                            setState(() {
+                                              businessPartnerId = 0;
+                                            });
+                                          }
+                                        },
+                                        controller:
+                                            businessPartnerFieldController,
+                                        //autofocus: true,
+                                        style: DefaultTextStyle.of(context)
+                                            .style
+                                            .copyWith(
+                                                fontStyle: FontStyle.italic),
+                                        decoration: InputDecoration(
+                                          labelText: 'Business Partner'.tr,
+                                          //filled: true,
+                                          border: const OutlineInputBorder(
+                                              /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                              ),
+                                          prefixIcon:
+                                              const Icon(EvaIcons.search),
+                                          //hintText: "search..",
+                                          isDense: true,
+                                          //fillColor: Theme.of(context).cardColor,
+                                        ),
+                                      ),
+                                      suggestionsCallback: (pattern) async {
+                                        return snapshot.data!.where((element) =>
+                                            (element.name ?? "")
+                                                .toLowerCase()
+                                                .contains(
+                                                    pattern.toLowerCase()));
+                                      },
+                                      itemBuilder: (context, suggestion) {
+                                        return ListTile(
+                                          //leading: Icon(Icons.shopping_cart),
+                                          title: Text(suggestion.name ?? ""),
+                                        );
+                                      },
+                                      onSuggestionSelected: (suggestion) {
+                                        businessPartnerFieldController.text =
+                                            suggestion.name!;
+                                        businessPartnerId = suggestion.id!;
+                                        getShipmentAddress(businessPartnerId);
+                                      },
+                                    )
+                                  : const Center(
+                                      child: CircularProgressIndicator(),
+                                    ),
                         ),
                       ),
                       Container(

@@ -272,6 +272,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             .records![index]
                                             .cBPartnerID
                                             ?.identifier,
+                                        "bPartnerID": controller
+                                            .trx.records![index].cBPartnerID?.id
                                       });
                                     },
                                   ),
@@ -572,6 +574,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             .records![index]
                                             .cBPartnerID
                                             ?.identifier,
+                                        "bPartnerID": controller
+                                            .trx.records![index].cBPartnerID?.id
                                       });
                                     },
                                   ),
@@ -872,6 +876,8 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             .records![index]
                                             .cBPartnerID
                                             ?.identifier,
+                                        "bPartnerID": controller
+                                            .trx.records![index].cBPartnerID?.id
                                       });
                                     },
                                   ),

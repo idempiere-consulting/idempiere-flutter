@@ -16,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Shipment/models/mstorager
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_screen.dart';
 
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/views/screens/crm_shipmentline_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource_barcode/models/product_json.dart';
 import 'package:idempiere_app/Screens/app/features/Portal_Mp_Sales_Offer/models/sales_order_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
@@ -30,23 +31,22 @@ import '../../../CRM_Sales_Order_Line/models/salesorderline_json.dart';
 
 //screens
 
-class CRMCreateByBarcodeShipment extends StatefulWidget {
-  const CRMCreateByBarcodeShipment({Key? key}) : super(key: key);
+class CRMEditByBarcodeShipment extends StatefulWidget {
+  const CRMEditByBarcodeShipment({Key? key}) : super(key: key);
 
   @override
-  State<CRMCreateByBarcodeShipment> createState() => _CRMFilterShipmentState();
+  State<CRMEditByBarcodeShipment> createState() => _CRMFilterShipmentState();
 }
 
-class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
+class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
   Future<void> createShipment() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/windows/shipment-customer');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/shipment-customer/tabs/${"shipment".tr}/${args['orderID']}/${"shipment-line".tr}');
 
     var inputFormat = DateFormat('dd/MM/yyyy');
-
-    var date = inputFormat.parse(dateFieldController.text);
 
     List<Map<String, Object>> list = [];
 
@@ -64,54 +64,35 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
         list.add({
           "M_Product_ID": {"id": element.mProductID?.id},
           "QtyEntered": element.movementQty!,
-          "IsInvoiced": element.isInvoiced ?? false,
         });
       }
     }
 
-    var msg = {
-      "AD_Org_ID": {"id": GetStorage().read("organizationid")},
-      "AD_Client_ID": {"id": GetStorage().read("clientid")},
-      "M_Warehouse_ID": {"id": GetStorage().read("warehouseid")},
-      "C_DocType_ID": {"id": 1000011},
-      "C_BPartner_ID": {"id": shipmentLines.records![0].cBPartnerID?.id},
-      "C_BPartner_Location_ID": {"id": bpLocationId},
-      "NoPackages": int.parse(noPackagesFieldController.text),
-      "Weight": double.tryParse(weightFieldController.text) ?? 0.0,
-      "LIT_GrossWeight":
-          double.tryParse(grossWeightFieldController.text) ?? 0.0,
-      "LIT_ExternalAspect": externalAspectFieldController.text,
-      "ShipDate":
-          '${DateFormat('yyyy-MM-dd').format(date)}T${timeFieldController.text}Z',
-      "shipment-line".tr: list,
-    };
-
-    if (movementTypeId != "0") {
-      msg.addAll({
-        'LIT_M_MovementType_ID': {"id": int.parse(movementTypeId)}
-      });
-    }
-    if (deliveryViaRule != "0") {
-      msg.addAll({
-        "DeliveryViaRule": {"id": deliveryViaRule}
-      });
-    }
-
-    if (shipperId != "0") {
-      msg.addAll({
-        "M_Shipper_ID": {"id": int.parse(shipperId)}
-      });
-    }
-
-    if (fobId != "0") {
-      msg.addAll({
-        "FOB": {"id": fobId}
-      });
-    }
-
     //print(msg);
 
-    var response = await http.post(
+    for (var msg in list) {
+      var response = await http.post(
+        url,
+        body: jsonEncode(msg),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': authorization,
+        },
+      );
+      if (response.statusCode == 201) {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      } else {
+        if (kDebugMode) {
+          print(response.body);
+        }
+      }
+      Get.back();
+      Get.find<CRMShipmentlineController>().getShipmentlines();
+    }
+
+    /*  var response = await http.post(
       url,
       body: jsonEncode(msg),
       headers: <String, String>{
@@ -120,7 +101,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       },
     );
     if (response.statusCode == 201) {
-      GetStorage().write('DDT_SavedBarcodeCreation', null);
       Get.back();
       Get.find<CRMShipmentController>().getShipments();
       if (kDebugMode) {
@@ -130,70 +110,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       if (kDebugMode) {
         print(response.body);
       }
-    }
-  }
-
-  Future<void> restoreCreationFromJson() async {
-    setState(() {
-      linesAvailable = false;
-    });
-    shipmentLines = ShipmentLineJson.fromJson(
-        GetStorage().read('DDT_SavedBarcodeCreation'));
-    getRestoredLine(shipmentLines.records![0].cOrderLineID?.id ?? 0);
-    //getShipmentAddress(shipmentLines.records![0].cOrderID!.id!);
-    setState(() {
-      linesAvailable = true;
-    });
-  }
-
-  Future<void> getRestoredLine(int orderLineId) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_OrderLine?\$filter= C_OrderLine_ID eq $orderLineId');
-
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      SalesOrderLineJson orderLineJSON = SalesOrderLineJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-      if (orderLineJSON.records!.isNotEmpty) {
-        getRestoredHeaderData(orderLineJSON.records![0].cOrderID?.id ?? 0);
-      }
-    }
-  }
-
-  Future<void> getRestoredHeaderData(int orderId) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_order?\$filter= C_Order_ID eq $orderId');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      var json =
-          SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
-      bpLocationId = json.records![0].cBPartnerLocationID?.id ?? 0;
-      businessPartnerFieldController.text =
-          json.records![0].cBPartnerID!.identifier!;
-      businessPartnerID = json.records![0].cBPartnerID!.id!;
-      getShipmentAddress(json.records![0].id!);
-      //print(response.body);
-    } else {
-      //print(response.body);
-    }
+    } */
   }
 
   Future<void> getShipmentAddress(int orderId) async {
@@ -201,7 +118,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/c_order?\$filter= C_Order_ID eq $orderId');
+        '$protocol://$ip/api/v1/models/m_inout?\$filter= M_InOut_ID eq $orderId');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -213,12 +130,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       var json =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
       bpLocationId = json.records![0].cBPartnerLocationID?.id ?? 0;
-
-      setState(() {
-        fobId = json.records![0].fob?.id ?? "0";
-        deliveryViaRule = json.records![0].deliveryViaRule?.id ?? "P";
-        shipperId = (json.records![0].mShipperID?.id ?? 0).toString();
-      });
 
       //print(response.body);
     } else {
@@ -248,112 +159,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       return 0;
       //print(response.body);
     }
-  }
-
-  Future<List<MTRecords>> getAllMovementTypes() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/LIT_M_MovementType?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = MovementTypeJSON.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
-
-      return json.records!;
-    } else {
-      throw Exception("Failed to load movement types");
-    }
-
-    //print(response.body);
-  }
-
-  Future<List<DVRRecords>> getAllFOB() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 200030');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = DeliveryViaRuleJSON.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
-
-      return json.records!;
-    } else {
-      //print(response.body);
-      throw Exception("Failed to load FOB");
-    }
-
-    //print(response.body);
-  }
-
-  Future<List<DVRRecords>> getAllDeliveryViaRules() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/AD_Ref_List?\$filter= AD_Reference_ID eq 152');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = DeliveryViaRuleJSON.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
-
-      return json.records!;
-    } else {
-      //print(response.body);
-      throw Exception("Failed to load deliveryviarules");
-    }
-
-    //print(response.body);
-  }
-
-  Future<List<MTRecords>> getAllShippers() async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/M_Shipper?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      //print(response.body);
-      var json = MovementTypeJSON.fromJson(jsonDecode(response.body));
-      //print(json.rowcount);
-
-      return json.records!;
-    } else {
-      throw Exception("Failed to load shippers");
-    }
-
-    //print(response.body);
   }
 
   Future<num> getProdQtyReserved(int id) async {
@@ -400,14 +205,10 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     );
 
     if (response.statusCode == 200) {
-      //print(id);
       SalesOrderJson orderJSON =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (orderJSON.records!.isNotEmpty) {
-        //print(orderJSON.records!);
-        //print(orderJSON.records![0].docStatus?.id);
-        //print('-----------');
         return true;
       } else {
         return false;
@@ -433,51 +234,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     if (response.statusCode == 200) {
       SalesOrderLineJson orderLine = SalesOrderLineJson.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
-
-      print(orderLine.pagecount!);
-
-      if (orderLine.pagecount! > 1) {
-        int index = 1;
-        var json2 = await getAllOrderLinesPages(orderLine, index, id);
-        return json2;
-      } else {
-        return orderLine;
-      }
-    }
-
-    return SalesOrderLineJson(records: []);
-  }
-
-  Future<SalesOrderLineJson> getAllOrderLinesPages(
-      SalesOrderLineJson json, int index, int id) async {
-    final ip = GetStorage().read('ip');
-    String authorization = 'Bearer ${GetStorage().read('token')}';
-    final protocol = GetStorage().read('protocol');
-    var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/C_OrderLine?\$filter= C_Order_ID eq $id&\$skip=${(index * 100)}');
-    var response = await http.get(
-      url,
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Authorization': authorization,
-      },
-    );
-    if (response.statusCode == 200) {
-      index += 1;
-      SalesOrderLineJson pagejson = SalesOrderLineJson.fromJson(
-          jsonDecode(utf8.decode(response.bodyBytes)));
-      for (var element in pagejson.records!) {
-        json.records!.add(element);
-      }
-
-      if (json.pagecount! > index) {
-        await getAllOrderLinesPages(json, index, id);
-      } else {
-        print('AAAAA');
-        return json;
-      }
-    } else {
-      print(response.body);
+      return orderLine;
     }
 
     return SalesOrderLineJson(records: []);
@@ -510,7 +267,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       //getProdQtyReserved(orderLine.records![0].mProductID!.id!);
 
       if (orderLine.records!.isNotEmpty && !(barcodeList[0].contains('pr'))) {
-        var olscanned = false;
         if (shipmentLines.records!.isEmpty) {
           orderLine.records![0].qtyReserved =
               await getProdQtyReserved(orderLine.records![0].mProductID!.id!);
@@ -575,7 +331,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                         .tr),
               );
             } else {
-              olscanned = true;
               shipmentLines.records!.add(
                 SLRecords(
                   cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
@@ -597,10 +352,10 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                 ),
               );
 
-              businessPartnerFieldController.text =
-                  orderLine.records![0].cBPartnerID!.identifier!;
-              businessPartnerID = orderLine.records![0].cBPartnerID!.id!;
-              getShipmentAddress(orderLine.records![0].cOrderID!.id!);
+              //businessPartnerFieldController.text =
+              //   orderLine.records![0].cBPartnerID!.identifier!;
+              //businessPartnerID = orderLine.records![0].cBPartnerID!.id!;
+              //getShipmentAddress(orderLine.records![0].cOrderID!.id!);
             }
           }
         } else if (orderLine.records![0].cBPartnerID!.id! ==
@@ -687,7 +442,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                             .tr),
                   );
                 } else {
-                  olscanned = true;
                   shipmentLines.records![i].movementQty =
                       shipmentLines.records![i].movementQty! +
                           num.parse(barcodeList[2]);
@@ -718,7 +472,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                             .tr),
                     textCancel: 'back'.tr,
                     onConfirm: () async {
-                      olscanned = true;
                       Navigator.of(Get.overlayContext!, rootNavigator: true)
                           .pop();
 
@@ -728,8 +481,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                       shipmentLines.records!.add(SLRecords(
                         cOrderLineID:
                             SLCOrderLineID(id: orderLine.records![0].id),
-                        plannedQty: orderLine.records![0].qtyOrdered! -
-                            orderLine.records![0].qtyDelivered!,
+                        plannedQty: orderLine.records![0].qtyReserved!,
                         cBPartnerID: SLCBPartnerID(
                             id: orderLine.records![0].cBPartnerID!.id!,
                             identifier:
@@ -747,13 +499,11 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                     },
                   );
                 } else {
-                  olscanned = true;
                   orderLine.records![0].qtyReserved = await getProdQtyReserved(
                       orderLine.records![0].mProductID!.id!);
                   shipmentLines.records!.add(SLRecords(
                     cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
-                    plannedQty: orderLine.records![0].qtyOrdered! -
-                        orderLine.records![0].qtyDelivered!,
+                    plannedQty: orderLine.records![0].qtyReserved!,
                     cBPartnerID: SLCBPartnerID(
                         id: orderLine.records![0].cBPartnerID!.id!,
                         identifier:
@@ -815,7 +565,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
           default:
         } */
 
-        if (barcodeList[0].contains('ol') && olscanned) {
+        if (barcodeList[0].contains('ol')) {
           noPackagesFieldController.text =
               (int.parse(noPackagesFieldController.text) + 1).toString();
           SalesOrderLineJson allLines =
@@ -833,7 +583,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
 
         if (businessPartnerID > 0) {
           var url = Uri.parse(
-              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID and C_BPartner_Location_ID eq $bpLocationId and QtyReserved neq 0&\$orderby= Created asc');
+              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID&\$orderby= Created asc');
 
           var response3 = await http.get(
             url,
@@ -845,19 +595,12 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
           if (response3.statusCode == 200) {
             SalesOrderLineJson orderLinePR = SalesOrderLineJson.fromJson(
                 jsonDecode(utf8.decode(response3.bodyBytes)));
-
-            SalesOrderLineJson orderLinePRCOPY = orderLinePR;
             for (var i = 0; i < orderLinePR.records!.length; i++) {
               if (!(await isOrderCompleted(
                   orderLinePR.records![i].cOrderID?.id ?? 0))) {
-                orderLinePRCOPY.records!.removeWhere((element) =>
-                    element.cOrderID?.id ==
-                    orderLinePR.records![i].cOrderID?.id);
+                orderLinePR.records!.removeAt(i);
               }
             }
-
-            orderLinePR = orderLinePRCOPY;
-
             if (orderLinePR.records!.isNotEmpty) {
               noOrderlineFound = false;
               TextEditingController qtyController =
@@ -871,8 +614,10 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                     int qtyToAdd = int.parse(qtyController.text);
                     int totResidueQty = 0;
                     for (var element in orderLinePR.records!) {
-                      totResidueQty =
-                          (totResidueQty + element.qtyReserved!).toInt();
+                      totResidueQty = (totResidueQty +
+                              ((element.qtyOrdered ?? 0) -
+                                  (element.qtyDelivered ?? 0)))
+                          .toInt();
                     }
 
                     if (totResidueQty < qtyToAdd) {
@@ -890,14 +635,16 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                                         (orderLinePR.records![i].qtyDelivered ??
                                             0)) >
                                 0) {
-                          orderLinePR.records![i].qtyReserved;
-
                           if (qtyToAdd <=
-                              orderLinePR.records![i].qtyReserved!) {
+                              (orderLinePR.records![i].qtyOrdered ??
+                                  0 -
+                                      (orderLinePR.records![i].qtyDelivered ??
+                                          0))) {
                             shipmentLines.records!.add(SLRecords(
                               cOrderLineID: SLCOrderLineID(
                                   id: orderLinePR.records![i].id),
-                              plannedQty: orderLinePR.records![i].qtyReserved,
+                              plannedQty: orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!,
                               cBPartnerID: SLCBPartnerID(
                                   id: orderLinePR.records![i].cBPartnerID!.id!,
                                   identifier: orderLinePR
@@ -916,11 +663,16 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                             qtyToAdd = 0;
                           }
 
-                          if (qtyToAdd > orderLinePR.records![i].qtyReserved!) {
+                          if (qtyToAdd >
+                              (orderLinePR.records![i].qtyOrdered ??
+                                  0 -
+                                      (orderLinePR.records![i].qtyDelivered ??
+                                          0))) {
                             shipmentLines.records!.add(SLRecords(
                               cOrderLineID: SLCOrderLineID(
                                   id: orderLinePR.records![i].id),
-                              plannedQty: orderLinePR.records![i].qtyReserved!,
+                              plannedQty: orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!,
                               cBPartnerID: SLCBPartnerID(
                                   id: orderLinePR.records![i].cBPartnerID!.id!,
                                   identifier: orderLinePR
@@ -932,12 +684,15 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                               name: orderLinePR.records![i].name,
                               description: orderLinePR.records![i].description,
                               help: orderLinePR.records![i].help,
-                              movementQty: orderLinePR.records![i].qtyReserved!,
+                              movementQty:
+                                  orderLinePR.records![i].qtyOrdered!.toInt(),
                               mobileBarcodeType: barcodeList[0],
                             ));
 
                             qtyToAdd = qtyToAdd -
-                                orderLinePR.records![i].qtyReserved!.toInt();
+                                (orderLinePR.records![i].qtyOrdered!.toInt() -
+                                    (orderLinePR.records![i].qtyDelivered ?? 0)
+                                        .toInt());
                           }
                         }
                       }
@@ -1003,9 +758,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
             ProductJson prod = ProductJson.fromJson(
                 jsonDecode(utf8.decode(response2.bodyBytes)));
 
-            if (prod.records!.isNotEmpty &&
-                barcodeList[0].contains('pr') &&
-                prod.records![0].litAutomationRule?.id == "XODV") {
+            if (prod.records!.isNotEmpty && barcodeList[0].contains('pr')) {
               var resQty = await getProdQtyReserved(prod.records![0].id!);
               TextEditingController qtyController =
                   TextEditingController(text: '');
@@ -1014,20 +767,31 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                   onConfirm: () {
                     Navigator.of(Get.overlayContext!, rootNavigator: true)
                         .pop();
+                    bool notFound = true;
+                    for (var i = 0; i < shipmentLines.records!.length; i++) {
+                      if (shipmentLines.records![i].mProductID?.id ==
+                          prod.records![0].id) {
+                        shipmentLines.records![i].movementQty =
+                            shipmentLines.records![i].movementQty! +
+                                num.parse(qtyController.text);
 
-                    /* orderLine.records![0].qtyReserved =
+                        notFound = false;
+                      }
+                    }
+                    if (notFound) {
+                      /* orderLine.records![0].qtyReserved =
                         await getProdQtyReserved(
                             orderLine.records![0].mProductID!.id!); */
-                    shipmentLines.records!.add(SLRecords(
-                      plannedQty: resQty,
-                      mProductID: SLMProductID(
-                          id: prod.records![0].id!,
-                          identifier:
-                              "${prod.records![0].value}_${prod.records![0].name}"),
-                      movementQty: num.parse(qtyController.text),
-                      mobileBarcodeType: barcodeList[0],
-                      isInvoiced: true,
-                    ));
+                      shipmentLines.records!.add(SLRecords(
+                        plannedQty: resQty,
+                        mProductID: SLMProductID(
+                            id: prod.records![0].id!,
+                            identifier:
+                                "${prod.records![0].value}_${prod.records![0].name}"),
+                        movementQty: num.parse(qtyController.text),
+                        mobileBarcodeType: barcodeList[0],
+                      ));
+                    }
 
                     linesAvailable = true;
                     setState(() {});
@@ -1082,13 +846,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                       ),
                     ],
                   ));
-            } else {
-              Get.defaultDialog(
-                title: 'Error!'.tr,
-                content: Text(
-                    'No Linked Order was found for this Product and It\'s NOT Extra ODV'
-                        .tr),
-              );
             }
           }
         }
@@ -1103,24 +860,16 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     }
   }
 
+  var args = Get.arguments;
   ShipmentLineJson shipmentLines = ShipmentLineJson(records: []);
 
   bool linesAvailable = false;
   late TextEditingController businessPartnerFieldController;
   int businessPartnerID = 0;
-  late TextEditingController dateFieldController;
-  late TextEditingController timeFieldController;
+  late TextEditingController docNoFieldController;
   late TextEditingController noPackagesFieldController;
-  late TextEditingController weightFieldController;
-  late TextEditingController grossWeightFieldController;
-  late TextEditingController externalAspectFieldController;
-  String movementTypeId = "0";
 
   int bpLocationId = 0;
-
-  String deliveryViaRule = "P";
-  String shipperId = "0";
-  String fobId = "0";
 
   @override
   void initState() {
@@ -1128,22 +877,10 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     shipmentLines = ShipmentLineJson(records: []);
     linesAvailable = false;
     businessPartnerFieldController = TextEditingController(text: '');
-    dateFieldController = TextEditingController(
-        text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
-    timeFieldController = TextEditingController(
-        text: DateFormat('HH:mm:ss').format(DateTime.now()));
-    noPackagesFieldController = TextEditingController(text: '0');
-    weightFieldController = TextEditingController(text: '0');
-    grossWeightFieldController = TextEditingController(text: '0');
-    externalAspectFieldController = TextEditingController(text: '');
-    deliveryViaRule = "P";
-    shipperId = "0";
-    fobId = "0";
-    movementTypeId = "0";
-
-    if (GetStorage().read('DDT_SavedBarcodeCreation') != null) {
-      restoreCreationFromJson();
-    }
+    businessPartnerID = args['businessPartnerID'] ?? 0;
+    businessPartnerFieldController.text = args['businessPartnerName'] ?? "";
+    noPackagesFieldController = TextEditingController(text: "0");
+    getShipmentAddress(args['orderID'] ?? 0);
   }
 
   @override
@@ -1153,32 +890,11 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       appBar: AppBar(
         leading: IconButton(
             onPressed: () {
-              if (shipmentLines.records!.isNotEmpty) {
-                Get.defaultDialog(
-                  title: 'Unfinished Shipment'.tr,
-                  content: Text('Do you want to save it?'.tr),
-                  onCancel: () {
-                    if (GetStorage().read('DDT_SavedBarcodeCreation') != null) {
-                      GetStorage().write('DDT_SavedBarcodeCreation', null);
-                    }
-                    Get.back();
-                    Get.back();
-                  },
-                  onConfirm: () {
-                    Get.back();
-                    //print(shipmentLines.toJson());
-                    GetStorage().write(
-                        'DDT_SavedBarcodeCreation', shipmentLines.toJson());
-                    Get.back();
-                  },
-                );
-              } else {
-                Get.back();
-              }
+              Get.back();
             },
             icon: const Icon(Icons.close)),
         centerTitle: true,
-        title: Text('Create Shipment'.tr),
+        title: Text('Edit Shipment'.tr),
         actions: [
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -1240,339 +956,6 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                       minLines: 1,
                       maxLines: 4,
                     ),
-                  ),
-                  ExpansionTile(
-                    title: Text('Header Fields'.tr),
-                    children: [
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: FutureBuilder(
-                          future: getAllMovementTypes(),
-                          builder: (BuildContext ctx,
-                                  AsyncSnapshot<List<MTRecords>> snapshot) =>
-                              snapshot.hasData
-                                  ? InputDecorator(
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        labelText: 'Movement Type'.tr,
-                                        //filled: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.list),
-                                        //hintText: "search..",
-
-                                        //fillColor: Theme.of(context).cardColor,
-                                      ),
-                                      child: DropdownButton(
-                                        isDense: true,
-                                        underline: const SizedBox(),
-                                        isExpanded: true,
-                                        value: movementTypeId == "0"
-                                            ? null
-                                            : movementTypeId,
-                                        elevation: 16,
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            movementTypeId = newValue!;
-                                          });
-                                          //print(dropdownValue);
-                                        },
-                                        items: snapshot.data!.map((list) {
-                                          return DropdownMenuItem<String>(
-                                            value: list.id.toString(),
-                                            child: Text(
-                                              list.name.toString(),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    )
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: FutureBuilder(
-                          future: getAllDeliveryViaRules(),
-                          builder: (BuildContext ctx,
-                                  AsyncSnapshot<List<DVRRecords>> snapshot) =>
-                              snapshot.hasData
-                                  ? InputDecorator(
-                                      decoration: InputDecoration(
-                                        labelText: 'Delivery Via Rule'.tr,
-                                        //filled: true,
-                                        isDense: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.list),
-                                        //hintText: "search..",
-
-                                        //fillColor: Theme.of(context).cardColor,
-                                      ),
-                                      child: DropdownButton(
-                                        isDense: true,
-                                        underline: const SizedBox(),
-                                        isExpanded: true,
-                                        value: deliveryViaRule == "0"
-                                            ? null
-                                            : deliveryViaRule,
-                                        elevation: 16,
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            deliveryViaRule = newValue!;
-                                          });
-                                          //print(dropdownValue);
-                                        },
-                                        items: snapshot.data!.map((list) {
-                                          return DropdownMenuItem<String>(
-                                            value: list.value,
-                                            child: Text(
-                                              list.name.toString(),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    )
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: FutureBuilder(
-                          future: getAllShippers(),
-                          builder: (BuildContext ctx,
-                                  AsyncSnapshot<List<MTRecords>> snapshot) =>
-                              snapshot.hasData
-                                  ? InputDecorator(
-                                      decoration: InputDecoration(
-                                        isDense: true,
-                                        labelText: 'Shipper'.tr,
-                                        //filled: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.list),
-                                        //hintText: "search..",
-
-                                        //fillColor: Theme.of(context).cardColor,
-                                      ),
-                                      child: DropdownButton(
-                                        isDense: true,
-                                        underline: const SizedBox(),
-                                        isExpanded: true,
-                                        value:
-                                            shipperId == "0" ? null : shipperId,
-                                        elevation: 16,
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            shipperId = newValue!;
-                                          });
-                                          //print(dropdownValue);
-                                        },
-                                        items: snapshot.data!.map((list) {
-                                          return DropdownMenuItem<String>(
-                                            value: list.id.toString(),
-                                            child: Text(
-                                              list.name.toString(),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    )
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: FutureBuilder(
-                          future: getAllFOB(),
-                          builder: (BuildContext ctx,
-                                  AsyncSnapshot<List<DVRRecords>> snapshot) =>
-                              snapshot.hasData
-                                  ? InputDecorator(
-                                      decoration: InputDecoration(
-                                        labelText: 'Freight Terms'.tr,
-                                        //filled: true,
-                                        isDense: true,
-                                        border: const OutlineInputBorder(
-                                            /* borderRadius: BorderRadius.circular(10),
-                                        borderSide: BorderSide.none, */
-                                            ),
-                                        prefixIcon: const Icon(EvaIcons.list),
-                                        //hintText: "search..",
-
-                                        //fillColor: Theme.of(context).cardColor,
-                                      ),
-                                      child: DropdownButton(
-                                        isDense: true,
-                                        underline: const SizedBox(),
-                                        isExpanded: true,
-                                        value: fobId == "0" ? null : fobId,
-                                        elevation: 16,
-                                        onChanged: (String? newValue) {
-                                          setState(() {
-                                            fobId = newValue!;
-                                          });
-                                          //print(dropdownValue);
-                                        },
-                                        items: snapshot.data!.map((list) {
-                                          return DropdownMenuItem<String>(
-                                            value: list.value,
-                                            child: Text(
-                                              list.name.toString(),
-                                            ),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    )
-                                  : const Center(
-                                      child: CircularProgressIndicator(),
-                                    ),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: TextField(
-                          controller: externalAspectFieldController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            prefixIcon: const Icon(Icons.text_fields),
-                            border: const OutlineInputBorder(),
-                            labelText: 'External Aspect'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          minLines: 1,
-                          maxLines: 4,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: TextField(
-                          controller: noPackagesFieldController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp("[0-9]"))
-                          ],
-                          decoration: InputDecoration(
-                            isDense: true,
-                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            prefixIcon: const Icon(Icons.text_fields),
-                            border: const OutlineInputBorder(),
-                            labelText: 'NoPackages'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          minLines: 1,
-                          maxLines: 4,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: TextField(
-                          controller: weightFieldController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                          ],
-                          decoration: InputDecoration(
-                            isDense: true,
-                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            prefixIcon: const Icon(Icons.text_fields),
-                            border: const OutlineInputBorder(),
-                            labelText: 'Weight'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          minLines: 1,
-                          maxLines: 4,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: TextField(
-                          controller: grossWeightFieldController,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              signed: true, decimal: true),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp("[0-9.]"))
-                          ],
-                          decoration: InputDecoration(
-                            isDense: true,
-                            //hintStyle: TextStyle(fontStyle: FontStyle.italic),
-                            prefixIcon: const Icon(Icons.text_fields),
-                            border: const OutlineInputBorder(),
-                            labelText: 'Gross Weight'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                          ),
-                          minLines: 1,
-                          maxLines: 4,
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: TextField(
-                          // maxLength: 10,
-                          keyboardType: TextInputType.datetime,
-                          controller: dateFieldController,
-                          decoration: InputDecoration(
-                            isDense: true,
-                            prefixIcon: const Icon(EvaIcons.calendarOutline),
-                            border: const OutlineInputBorder(),
-                            labelText: 'Date Start Shipment'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            hintText: 'DD/MM/YYYY',
-                            counterText: '',
-                          ),
-                          inputFormatters: [
-                            FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
-                            LengthLimitingTextInputFormatter(10),
-                            _DateFormatterCustom(),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.only(
-                            left: 10, right: 10, bottom: 10),
-                        child: TextField(
-                          // maxLength: 10,
-                          keyboardType: const TextInputType.numberWithOptions(
-                              decimal: false),
-                          controller: timeFieldController,
-
-                          decoration: InputDecoration(
-                            isDense: true,
-                            prefixIcon: const Icon(EvaIcons.calendarOutline),
-                            border: const OutlineInputBorder(),
-                            labelText: 'Time'.tr,
-                            floatingLabelBehavior: FloatingLabelBehavior.always,
-                            hintText: '00:00:00',
-                            counterText: '',
-                          ),
-                          inputFormatters: [TimeTextInputFormatter()],
-                        ),
-                      ),
-                    ],
                   ),
                   Visibility(
                     visible: linesAvailable,

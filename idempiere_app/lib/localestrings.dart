@@ -998,7 +998,7 @@ class LocaleString extends Translations {
           'N° Maintenance': 'N° Impianto',
           'Is Paid': 'Pagato',
           'Net Amount': 'Importo Netto',
-          'shipment': 'documento-di-spedizione-ddt00',
+          'shipment': 'documento-di-trasporto-ddt-ddt00',
           'shipment-line': 'riga-del-documento',
           'Yes': 'Sì',
           'No': 'No',
@@ -1411,7 +1411,9 @@ class LocaleString extends Translations {
           "Shipment has been reopened": "DDT Riaperto",
           "Shipment not reopened": "DDT non Riaperto",
           'The Missing Quantity of this Order Line would be below 0 as a result of adding this Shipment Line':
-              'La Quantità Mancante di questa Riga Ordine diventerebbe 0 se venisse aggiunta questa riga DDT'
+              'La Quantità Mancante di questa Riga Ordine diventerebbe 0 se venisse aggiunta questa riga DDT',
+          'No Linked Order was found for this Product and It\'s NOT Extra ODV':
+              'Nessun Ordine collegato e il prodotto non è Extra ODV',
         },
       };
 }
