@@ -398,8 +398,8 @@ class CRMPOSController extends GetxController {
                 .first
                 .breakDiscount!
                 .toDouble()
-            : product.discount!.toDouble()
-        : product.discount!.toDouble();
+            : (product.discount ?? 0).toDouble()
+        : (product.discount ?? 0).toDouble();
     productList.add(POSTableRowJSON.fromJson({
       "number": rowNumber,
       "rowType": rowType,
@@ -683,7 +683,7 @@ class CRMPOSController extends GetxController {
         if ((double.tryParse(mixedPaymentControllerList[i].text) ?? 0.0) >
             0.0) {
           mixedPaymentList.add({
-            "C_POSTenderType_ID": {"id": mixedPaymentTypes.records![0].id},
+            "C_POSTenderType_ID": {"id": mixedPaymentTypes.records![i].id},
             "PayAmt": double.parse(mixedPaymentControllerList[i].text),
           });
         }
