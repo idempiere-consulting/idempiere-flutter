@@ -262,7 +262,7 @@ class PLRecords {
         priceList = json['PriceList'] as num?,
         isRounded = json['IsRounded'] as bool?,
         qtyOnHand = json['PriceList'] as num?,
-        discount = json['QtyOnHand'] as num?;
+        discount = json['Discount'] as num?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
