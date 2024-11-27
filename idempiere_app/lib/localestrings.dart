@@ -1414,6 +1414,8 @@ class LocaleString extends Translations {
               'La Quantità Mancante di questa Riga Ordine diventerebbe 0 se venisse aggiunta questa riga DDT',
           'No Linked Order was found for this Product and It\'s NOT Extra ODV':
               'Nessun Ordine collegato e il prodotto non è Extra ODV',
+          'CASH': 'CONTANTI',
+          'CREDIT CARD': 'CARTA DI CREDITO',
         },
       };
 }

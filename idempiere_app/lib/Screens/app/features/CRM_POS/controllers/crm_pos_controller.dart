@@ -629,21 +629,61 @@ class CRMPOSController extends GetxController {
 
     var total = 0.0;
 
+    var totalPOS = 0.0;
+
     var msg2 =
         '<?xml version="1.0" encoding="utf-8"?><printerFiscalReceipt><beginFiscalReceipt></beginFiscalReceipt><displayText data="Message 1 On customer display "></displayText>';
 
     for (var element in productList) {
       if (element.qty! > 0) {
+        totalPOS = totalPOS + (element.discountedPrice! * element.qty!);
         msg2 =
             '$msg2<printRecItem description="${element.productName}" unitPrice="${(element.discountedPrice! * 100).toInt()}"  idVat="B" quantity="${element.qty! * 1000}" ></printRecItem>';
       } else {
+        totalPOS = totalPOS - (element.price! * element.qty!);
         msg2 =
             '$msg2<printRecRefund  description="${element.productName}" unitPrice="${(element.price! * 100).toInt()}"  idVat="B" quantity="${element.qty! * -1000}" ></printRecRefund>';
       }
     }
 
+    /* paymentRuleId.value = "M";
+    cashPayment.value = false;
+    creditCardPayment.value = false; */
+    if (cashPayment.value) {
+      msg2 =
+          '$msg2<printRecTotal description="${"CASH".tr}" payment="${(totalPOS * 100).toInt()}" paymentType="1" ></printRecTotal>';
+    }
+
+    if (creditCardPayment.value) {
+      msg2 =
+          '$msg2<printRecTotal description="${"CREDIT CARD".tr}" payment="${(totalPOS * 100).toInt()}" paymentType="2" ></printRecTotal>';
+    }
+
+    if (paymentRuleId.value == "M") {
+      for (var i = 0; i < mixedPaymentTypes.records!.length; i++) {
+        if ((double.tryParse(mixedPaymentControllerList[i].text) ?? 0.0) >
+            0.0) {
+          /* mixedPaymentList.add({
+            "C_POSTenderType_ID": {"id": mixedPaymentTypes.records![i].id},
+            "PayAmt": double.parse(mixedPaymentControllerList[i].text),
+          }); */
+          switch (i) {
+            case 0:
+              msg2 =
+                  '$msg2<printRecTotal description="${"CASH".tr}" payment="${(double.parse(mixedPaymentControllerList[i].text) * 100).toInt()}" paymentType="1" ></printRecTotal>';
+              break;
+            case 1:
+              msg2 =
+                  '$msg2<printRecTotal description="${"CREDIT CARD".tr}" payment="${(double.parse(mixedPaymentControllerList[i].text) * 100).toInt()}" paymentType="2" ></printRecTotal>';
+              break;
+            default:
+          }
+        }
+      }
+    }
+
     msg2 =
-        '$msg2<printRecSubtotal></printRecSubtotal><endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
+        '$msg2<endFiscalReceiptCut></endFiscalReceiptCut></printerFiscalReceipt>';
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
