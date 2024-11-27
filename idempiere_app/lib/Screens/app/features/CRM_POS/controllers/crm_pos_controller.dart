@@ -126,7 +126,7 @@ class CRMPOSController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_pos_prodlist_v?\$filter= PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -156,7 +156,7 @@ class CRMPOSController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= (Value eq \'$barcode\' or UPC eq \'$barcode\') and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_pos_prodlist_v?\$filter= (Value eq \'$barcode\' or UPC eq \'$barcode\') and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -262,7 +262,7 @@ class CRMPOSController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= M_Product_Category_ID eq $categoryId and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
+        '$protocol://$ip/api/v1/models/lit_pos_prodlist_v?\$filter= M_Product_Category_ID eq $categoryId and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -293,7 +293,7 @@ class CRMPOSController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        "$protocol://$ip/api/v1/models/lit_product_list2_v?\$filter= (contains(tolower(Name),'${search.toLowerCase()}') or contains(tolower(Value),'${search.toLowerCase()}')) and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}");
+        "$protocol://$ip/api/v1/models/lit_pos_prodlist_v?\$filter= (contains(tolower(Name),'${search.toLowerCase()}') or contains(tolower(Value),'${search.toLowerCase()}')) and PriceStd neq null and AD_Client_ID eq ${GetStorage().read("clientid")}");
     var response = await http.get(
       url,
       headers: <String, String>{
