@@ -799,6 +799,8 @@ class CRMPOSController extends GetxController {
       if (response.statusCode == 201) {
         var json = jsonDecode(utf8.decode(response.bodyBytes));
 
+        completeOrder(json["id"]);
+
         //Get.find<CRMSalesOrderController>().getSalesOrders();
         Get.back();
         //print("done!");
@@ -932,6 +934,41 @@ class CRMPOSController extends GetxController {
     }
 
     generateFiscalPrint(msg2);
+  }
+
+  completeOrder(int id) async {
+    Get.back();
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/c_order/$id');
+
+    var msg = jsonEncode({
+      //'DocStatus': {"id": "CO"}
+      "doc-action": "CO",
+    });
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      Get.snackbar(
+        "Done!".tr,
+        "The Record has been Completed".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
   }
 
   Future<void> generateFiscalPrint(String msg2) async {
