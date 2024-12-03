@@ -1416,6 +1416,8 @@ class LocaleString extends Translations {
               'Nessun Ordine collegato e il prodotto non è Extra ODV',
           'CASH': 'CONTANTI',
           'CREDIT CARD': 'CARTA DI CREDITO',
+          "DISCOUNT": "SCONTO",
+          "MANUAL DISCOUNT": "SCONTO MANUALE"
         },
       };
 }

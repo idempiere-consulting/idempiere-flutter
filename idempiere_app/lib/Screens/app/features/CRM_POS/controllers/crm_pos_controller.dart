@@ -10,6 +10,8 @@ class CRMPOSController extends GetxController {
 
   int discountSchemaID = 0;
 
+  var selectedDiscountButtonValue = 0.0.obs;
+
   TextEditingController fidelityFieldController =
       TextEditingController(text: "");
 
@@ -32,7 +34,8 @@ class CRMPOSController extends GetxController {
     'CLOSING'.tr,
     'ROUNDING'.tr,
     'EDIT UNIT PRICE'.tr,
-    "MIXED PAYMENT".tr
+    "MIXED PAYMENT".tr,
+    "MANUAL DISCOUNT".tr
   ];
 
   List<int> roundingList = [1, 5, 10];
@@ -400,6 +403,10 @@ class CRMPOSController extends GetxController {
                 .toDouble()
             : (product.discount ?? 0).toDouble()
         : (product.discount ?? 0).toDouble();
+
+    if (selectedDiscountButtonValue.value > 0.0) {
+      discount = selectedDiscountButtonValue.value;
+    }
     productList.add(POSTableRowJSON.fromJson({
       "number": rowNumber,
       "rowType": rowType,
@@ -410,11 +417,15 @@ class CRMPOSController extends GetxController {
       "price": product.priceList!.toDouble(),
       "discount": discount.toDouble(),
       "discountedPrice": product.price!.toDouble() -
-          ((product.price!.toDouble() / 100.0) * discount.toDouble()),
+          double.parse(
+              ((product.price!.toDouble() / 100.0) * discount.toDouble())
+                  .toStringAsFixed(2)),
       "tot": double.parse(rowType == "R" ? "-1" : "1") *
           (rowType != "R"
               ? product.price!.toDouble() -
-                  ((product.price!.toDouble() / 100.0) * discount.toDouble())
+                  double.parse(((product.price!.toDouble() / 100.0) *
+                          discount.toDouble())
+                      .toStringAsFixed(2))
               : product.price!.toDouble()),
     }));
     currentProductName.value = product.name!;
@@ -425,12 +436,14 @@ class CRMPOSController extends GetxController {
         text: (double.parse(rowType == "R" ? "-1" : "1") *
                 (rowType != "R"
                     ? product.price!.toDouble() -
-                        ((product.price!.toDouble() / 100.0) *
-                            discount.toDouble())
+                        double.parse(((product.price!.toDouble() / 100.0) *
+                                discount.toDouble())
+                            .toStringAsFixed(2))
                     : product.price!.toDouble()))
             .toString()));
     currentProductPrice.value = product.price!.toDouble() -
-        ((product.price!.toDouble() / 100.0) * discount.toDouble());
+        double.parse(((product.price!.toDouble() / 100.0) * discount.toDouble())
+            .toStringAsFixed(2));
     updateTotal();
     currentProductName.value = product.name ?? "N/A";
     currentProductQuantity.value = "1";

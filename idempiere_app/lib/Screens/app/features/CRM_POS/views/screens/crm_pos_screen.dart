@@ -788,7 +788,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                               mainAxisCellCount: 20,
                               child: MasonryGridView.count(
                                 shrinkWrap: true,
-                                itemCount: 8,
+                                itemCount: 9,
                                 crossAxisCount: 2,
                                 mainAxisSpacing: 2,
                                 crossAxisSpacing: 2,
@@ -807,6 +807,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                   "RETURN".tr) {
                                             return kNotifColor;
                                           }
+
                                           return null;
                                         })),
                                         onPressed: () async {
@@ -1240,6 +1241,342 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                             },
                                                             child: Text(
                                                                 'Confirm'.tr)),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          }
+                                          if (controller.functionButtonNameList[
+                                                  index] ==
+                                              "MANUAL DISCOUNT".tr) {
+                                            // ignore: use_build_context_synchronously
+                                            showDialog(
+                                              context: context,
+                                              barrierDismissible: true,
+                                              builder: (BuildContext context) {
+                                                return Dialog(
+                                                  child: SizedBox(
+                                                    width: 250,
+                                                    height: 430,
+                                                    child: Column(
+                                                      children: [
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 0.0;
+                                                            },
+                                                            title: Text("0%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    0.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 10.0;
+                                                            },
+                                                            title: Text("10%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    10.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 15.0;
+                                                            },
+                                                            title: Text("15%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    15.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 20.0;
+                                                            },
+                                                            title: Text("20%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    20.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 30.0;
+                                                            },
+                                                            title: Text("30%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    30.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 40.0;
+                                                            },
+                                                            title: Text("40%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    40.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
+                                                                  .value = 50.0;
+                                                            },
+                                                            title: Text("50%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    50.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
                                                       ],
                                                     ),
                                                   ),
