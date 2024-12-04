@@ -1008,7 +1008,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                     width: 200,
                                                     height: 250,
                                                     child: ListView.builder(
-                                                        itemCount: 3,
+                                                        itemCount: 4,
                                                         itemBuilder:
                                                             (BuildContext
                                                                     context,
@@ -1021,14 +1021,20 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                                     controller.roundingDownCaseOne(controller
                                                                         .totalRows
                                                                         .value
-                                                                        .floorToDouble());
+                                                                        .ceilToDouble());
                                                                     break;
                                                                   case 1:
+                                                                    controller.roundingDownCaseOne(controller
+                                                                        .totalRows
+                                                                        .value
+                                                                        .floorToDouble());
+                                                                    break;
+                                                                  case 2:
                                                                     controller.roundingDownCaseOne(
                                                                         (controller.totalRows.value / 5.0).floor() *
                                                                             5.0);
                                                                     break;
-                                                                  case 2:
+                                                                  case 3:
                                                                     controller.roundingDownCaseOne(
                                                                         (controller.totalRows.value / 10).floor() *
                                                                             10);
@@ -1039,7 +1045,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               title: Text(
                                                                   "${controller.roundingList[index]}€"),
                                                               subtitle: Text(
-                                                                  "${index == 0 ? controller.totalRows.value.floorToDouble() : index == 1 ? (controller.totalRows.value / 5).floor() * 5 : (controller.totalRows.value / 10).floor() * 10}"),
+                                                                  "${index == 0 ? controller.totalRows.value.ceilToDouble() : index == 1 ? controller.totalRows.value.floorToDouble() : index == 2 ? (controller.totalRows.value / 5).floor() * 5 : (controller.totalRows.value / 10).floor() * 10}"),
                                                             ),
                                                           );
                                                         }),

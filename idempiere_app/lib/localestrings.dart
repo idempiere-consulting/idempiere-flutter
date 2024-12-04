@@ -1417,7 +1417,9 @@ class LocaleString extends Translations {
           'CASH': 'CONTANTI',
           'CREDIT CARD': 'CARTA DI CREDITO',
           "DISCOUNT": "SCONTO",
-          "MANUAL DISCOUNT": "SCONTO MANUALE"
+          "MANUAL DISCOUNT": "SCONTO MANUALE",
+          "Hours Review": "Riepilogo Ore",
+          "Print Report": "Stampa Report",
         },
       };
 }

@@ -97,485 +97,434 @@ class SettingsScreen extends GetView<SettingsController> {
             },
           ),
         ),
-        body: SingleChildScrollView(
-          child: ResponsiveBuilder(
-            mobileBuilder: (context, constraints) {
-              return Column(
-                children: [
-                  Obx(() => SettingsList(
-                        shrinkWrap: true,
-                        sections: [
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Sync Data'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile(
-                                title: Text('Re-Sync All'.tr),
-                                leading: const Icon(Icons.sync),
-                                onPressed: (context) {
-                                  controller.reSyncAll();
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('User Preferences'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isUserPreferencesSyncing.value ==
-                                            false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue:
-                                    controller.isUserPreferencesSync.value,
-                                onToggle: (bool value) {
-                                  controller.isUserPreferencesSync.value =
-                                      value;
-                                  //GetStorage().write('isUserPreferencesSync', value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Business Partners'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isBusinessPartnerSyncing.value ==
-                                            false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue:
-                                    controller.isBusinessPartnerSync.value,
-                                onToggle: (bool value) {
-                                  controller.isBusinessPartnerSync.value =
-                                      value;
-                                  //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Event Calendar'.tr),
-                                leading:
-                                    controller.isjpTODOSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isjpTODOSync.value,
-                                onToggle: (bool value) {
-                                  controller.isjpTODOSync.value = value;
-                                  //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Products'.tr),
-                                leading:
-                                    controller.isProductSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isProductSync.value,
-                                onToggle: (bool value) {
-                                  controller.isProductSync.value = value;
-                                  //GetStorage().write('isProductSync', controller.isProductSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Work Orders'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isWorkOrderSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isWorkOrderSync.value,
-                                onToggle: (bool value) {
-                                  controller.isWorkOrderSync.value = value;
-                                  //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Bluetooth Printer'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.posPrinterName.value),
-                                leading: const Icon(Icons.receipt),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  if (Platform.isAndroid) {
-                                    controller.getBluetooth(context);
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Serial Test'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.posPrinterName.value),
-                                leading: const Icon(Icons.private_connectivity),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  Get.to(() => const ExampleApp());
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer IP'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.fiscalPrinterIP.value),
-                                leading:
-                                    const Icon(Icons.network_check_outlined),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterIP();
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer SerialNo'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(
-                                    controller.fiscalPrinterSerialNo.value),
-                                leading:
-                                    const Icon(Icons.network_check_outlined),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterSerialNo();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                ],
-              );
-            },
-            tabletBuilder: (context, constraints) {
-              return Column(
-                children: [
-                  Obx(() => SettingsList(
-                        shrinkWrap: true,
-                        sections: [
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Sync Data'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile(
-                                title: Text('Re-Sync All'.tr),
-                                leading: const Icon(Icons.sync),
-                                onPressed: (context) {
-                                  controller.reSyncAll();
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('User Preferences'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isUserPreferencesSyncing.value ==
-                                            false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue:
-                                    controller.isUserPreferencesSync.value,
-                                onToggle: (bool value) {
-                                  controller.isUserPreferencesSync.value =
-                                      value;
-                                  //GetStorage().write('isUserPreferencesSync', value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Business Partners'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isBusinessPartnerSyncing.value ==
-                                            false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue:
-                                    controller.isBusinessPartnerSync.value,
-                                onToggle: (bool value) {
-                                  controller.isBusinessPartnerSync.value =
-                                      value;
-                                  //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Event Calendar'.tr),
-                                leading:
-                                    controller.isjpTODOSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isjpTODOSync.value,
-                                onToggle: (bool value) {
-                                  controller.isjpTODOSync.value = value;
-                                  //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Products'.tr),
-                                leading:
-                                    controller.isProductSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isProductSync.value,
-                                onToggle: (bool value) {
-                                  controller.isProductSync.value = value;
-                                  //GetStorage().write('isProductSync', controller.isProductSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Work Orders'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isWorkOrderSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isWorkOrderSync.value,
-                                onToggle: (bool value) {
-                                  controller.isWorkOrderSync.value = value;
-                                  //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Bluetooth Printer'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.posPrinterName.value),
-                                leading: const Icon(Icons.receipt),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  if (Platform.isAndroid) {
-                                    controller.getBluetooth(context);
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Serial Test'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.posPrinterName.value),
-                                leading: const Icon(Icons.private_connectivity),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  Get.to(() => const ExampleApp());
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer IP'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.fiscalPrinterIP.value),
-                                leading:
-                                    const Icon(Icons.network_check_outlined),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterIP();
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer SerialNo'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(
-                                    controller.fiscalPrinterSerialNo.value),
-                                leading:
-                                    const Icon(Icons.network_check_outlined),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterSerialNo();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                ],
-              );
-            },
-            desktopBuilder: (context, constraints) {
-              return Column(
-                children: [
-                  Obx(() => SettingsList(
-                        shrinkWrap: true,
-                        sections: [
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Sync Data'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile(
-                                title: Text('Re-Sync All'.tr),
-                                leading: const Icon(Icons.sync),
-                                onPressed: (context) {
-                                  controller.reSyncAll();
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('User Preferences'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isUserPreferencesSyncing.value ==
-                                            false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue:
-                                    controller.isUserPreferencesSync.value,
-                                onToggle: (bool value) {
-                                  controller.isUserPreferencesSync.value =
-                                      value;
-                                  //GetStorage().write('isUserPreferencesSync', value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Business Partners'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isBusinessPartnerSyncing.value ==
-                                            false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue:
-                                    controller.isBusinessPartnerSync.value,
-                                onToggle: (bool value) {
-                                  controller.isBusinessPartnerSync.value =
-                                      value;
-                                  //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Event Calendar'.tr),
-                                leading:
-                                    controller.isjpTODOSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isjpTODOSync.value,
-                                onToggle: (bool value) {
-                                  controller.isjpTODOSync.value = value;
-                                  //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Products'.tr),
-                                leading:
-                                    controller.isProductSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isProductSync.value,
-                                onToggle: (bool value) {
-                                  controller.isProductSync.value = value;
-                                  //GetStorage().write('isProductSync', controller.isProductSync.value);
-                                },
-                              ),
-                              SettingsTile.switchTile(
-                                title: Text('Work Orders'.tr),
-                                // ignore: prefer_const_constructors
-                                leading:
-                                    controller.isWorkOrderSyncing.value == false
-                                        ? const Icon(Icons.cloud_download)
-                                        : const CircularProgressIndicator(),
-                                initialValue: controller.isWorkOrderSync.value,
-                                onToggle: (bool value) {
-                                  controller.isWorkOrderSync.value = value;
-                                  //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Bluetooth Printer'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.posPrinterName.value),
-                                leading: const Icon(Icons.receipt),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  if (Platform.isAndroid) {
-                                    controller.getBluetooth(context);
-                                  }
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Serial Test'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.posPrinterName.value),
-                                leading: const Icon(Icons.private_connectivity),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  Get.to(() => const ExampleApp());
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer IP'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(controller.fiscalPrinterIP.value),
-                                leading:
-                                    const Icon(Icons.network_check_outlined),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterIP();
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer SerialNo'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text(
-                                    controller.fiscalPrinterSerialNo.value),
-                                leading:
-                                    const Icon(Icons.network_check_outlined),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterSerialNo();
-                                },
-                              ),
-                            ],
-                          ),
-                          SettingsSection(
-                            margin: const EdgeInsetsDirectional.all(8.0),
-                            title: Text('Fiscal Printer Header'.tr),
-                            tiles: <SettingsTile>[
-                              SettingsTile.navigation(
-                                title: Text("Set Header".tr),
-                                leading: const Icon(Icons.document_scanner),
-                                trailing: const Icon(Icons.chevron_right),
-                                onPressed: (context) {
-                                  controller.writeFiscalPrinterHeader();
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      )),
-                ],
-              );
-            },
-          ),
+        body: ResponsiveBuilder(
+          mobileBuilder: (context, constraints) {
+            return Obx(() => SettingsList(
+                  sections: [
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Sync Data'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile(
+                          title: Text('Re-Sync All'.tr),
+                          leading: const Icon(Icons.sync),
+                          onPressed: (context) {
+                            controller.reSyncAll();
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('User Preferences'.tr),
+                          // ignore: prefer_const_constructors
+                          leading:
+                              controller.isUserPreferencesSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                          initialValue: controller.isUserPreferencesSync.value,
+                          onToggle: (bool value) {
+                            controller.isUserPreferencesSync.value = value;
+                            //GetStorage().write('isUserPreferencesSync', value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Business Partners'.tr),
+                          // ignore: prefer_const_constructors
+                          leading:
+                              controller.isBusinessPartnerSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                          initialValue: controller.isBusinessPartnerSync.value,
+                          onToggle: (bool value) {
+                            controller.isBusinessPartnerSync.value = value;
+                            //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Event Calendar'.tr),
+                          leading: controller.isjpTODOSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isjpTODOSync.value,
+                          onToggle: (bool value) {
+                            controller.isjpTODOSync.value = value;
+                            //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Products'.tr),
+                          leading: controller.isProductSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isProductSync.value,
+                          onToggle: (bool value) {
+                            controller.isProductSync.value = value;
+                            //GetStorage().write('isProductSync', controller.isProductSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Work Orders'.tr),
+                          // ignore: prefer_const_constructors
+                          leading: controller.isWorkOrderSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isWorkOrderSync.value,
+                          onToggle: (bool value) {
+                            controller.isWorkOrderSync.value = value;
+                            //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Bluetooth Printer'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.posPrinterName.value),
+                          leading: const Icon(Icons.receipt),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            if (Platform.isAndroid) {
+                              controller.getBluetooth(context);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Serial Test'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.posPrinterName.value),
+                          leading: const Icon(Icons.private_connectivity),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            Get.to(() => const ExampleApp());
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer IP'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.fiscalPrinterIP.value),
+                          leading: const Icon(Icons.network_check_outlined),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterIP();
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer SerialNo'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.fiscalPrinterSerialNo.value),
+                          leading: const Icon(Icons.network_check_outlined),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterSerialNo();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          },
+          tabletBuilder: (context, constraints) {
+            return Obx(() => SettingsList(
+                  shrinkWrap: true,
+                  sections: [
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Sync Data'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile(
+                          title: Text('Re-Sync All'.tr),
+                          leading: const Icon(Icons.sync),
+                          onPressed: (context) {
+                            controller.reSyncAll();
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('User Preferences'.tr),
+                          // ignore: prefer_const_constructors
+                          leading:
+                              controller.isUserPreferencesSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                          initialValue: controller.isUserPreferencesSync.value,
+                          onToggle: (bool value) {
+                            controller.isUserPreferencesSync.value = value;
+                            //GetStorage().write('isUserPreferencesSync', value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Business Partners'.tr),
+                          // ignore: prefer_const_constructors
+                          leading:
+                              controller.isBusinessPartnerSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                          initialValue: controller.isBusinessPartnerSync.value,
+                          onToggle: (bool value) {
+                            controller.isBusinessPartnerSync.value = value;
+                            //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Event Calendar'.tr),
+                          leading: controller.isjpTODOSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isjpTODOSync.value,
+                          onToggle: (bool value) {
+                            controller.isjpTODOSync.value = value;
+                            //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Products'.tr),
+                          leading: controller.isProductSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isProductSync.value,
+                          onToggle: (bool value) {
+                            controller.isProductSync.value = value;
+                            //GetStorage().write('isProductSync', controller.isProductSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Work Orders'.tr),
+                          // ignore: prefer_const_constructors
+                          leading: controller.isWorkOrderSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isWorkOrderSync.value,
+                          onToggle: (bool value) {
+                            controller.isWorkOrderSync.value = value;
+                            //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Bluetooth Printer'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.posPrinterName.value),
+                          leading: const Icon(Icons.receipt),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            if (Platform.isAndroid) {
+                              controller.getBluetooth(context);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Serial Test'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.posPrinterName.value),
+                          leading: const Icon(Icons.private_connectivity),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            Get.to(() => const ExampleApp());
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer IP'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.fiscalPrinterIP.value),
+                          leading: const Icon(Icons.network_check_outlined),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterIP();
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer SerialNo'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.fiscalPrinterSerialNo.value),
+                          leading: const Icon(Icons.network_check_outlined),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterSerialNo();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          },
+          desktopBuilder: (context, constraints) {
+            return Obx(() => SettingsList(
+                  shrinkWrap: true,
+                  sections: [
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Sync Data'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile(
+                          title: Text('Re-Sync All'.tr),
+                          leading: const Icon(Icons.sync),
+                          onPressed: (context) {
+                            controller.reSyncAll();
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('User Preferences'.tr),
+                          // ignore: prefer_const_constructors
+                          leading:
+                              controller.isUserPreferencesSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                          initialValue: controller.isUserPreferencesSync.value,
+                          onToggle: (bool value) {
+                            controller.isUserPreferencesSync.value = value;
+                            //GetStorage().write('isUserPreferencesSync', value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Business Partners'.tr),
+                          // ignore: prefer_const_constructors
+                          leading:
+                              controller.isBusinessPartnerSyncing.value == false
+                                  ? const Icon(Icons.cloud_download)
+                                  : const CircularProgressIndicator(),
+                          initialValue: controller.isBusinessPartnerSync.value,
+                          onToggle: (bool value) {
+                            controller.isBusinessPartnerSync.value = value;
+                            //GetStorage().write('isBusinessPartnerSync', controller.isBusinessPartnerSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Event Calendar'.tr),
+                          leading: controller.isjpTODOSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isjpTODOSync.value,
+                          onToggle: (bool value) {
+                            controller.isjpTODOSync.value = value;
+                            //GetStorage().write('isjpTODOSync', controller.isjpTODOSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Products'.tr),
+                          leading: controller.isProductSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isProductSync.value,
+                          onToggle: (bool value) {
+                            controller.isProductSync.value = value;
+                            //GetStorage().write('isProductSync', controller.isProductSync.value);
+                          },
+                        ),
+                        SettingsTile.switchTile(
+                          title: Text('Work Orders'.tr),
+                          // ignore: prefer_const_constructors
+                          leading: controller.isWorkOrderSyncing.value == false
+                              ? const Icon(Icons.cloud_download)
+                              : const CircularProgressIndicator(),
+                          initialValue: controller.isWorkOrderSync.value,
+                          onToggle: (bool value) {
+                            controller.isWorkOrderSync.value = value;
+                            //GetStorage().write('isWorkOrderSync', controller.isWorkOrderSync.value);
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Bluetooth Printer'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.posPrinterName.value),
+                          leading: const Icon(Icons.receipt),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            if (Platform.isAndroid) {
+                              controller.getBluetooth(context);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Serial Test'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.posPrinterName.value),
+                          leading: const Icon(Icons.private_connectivity),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            Get.to(() => const ExampleApp());
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer IP'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.fiscalPrinterIP.value),
+                          leading: const Icon(Icons.network_check_outlined),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterIP();
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer SerialNo'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text(controller.fiscalPrinterSerialNo.value),
+                          leading: const Icon(Icons.network_check_outlined),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterSerialNo();
+                          },
+                        ),
+                      ],
+                    ),
+                    SettingsSection(
+                      margin: const EdgeInsetsDirectional.all(8.0),
+                      title: Text('Fiscal Printer Header'.tr),
+                      tiles: <SettingsTile>[
+                        SettingsTile.navigation(
+                          title: Text("Set Header".tr),
+                          leading: const Icon(Icons.document_scanner),
+                          trailing: const Icon(Icons.chevron_right),
+                          onPressed: (context) {
+                            controller.writeFiscalPrinterHeader();
+                          },
+                        ),
+                      ],
+                    ),
+                  ],
+                ));
+          },
         ),
       ),
     );

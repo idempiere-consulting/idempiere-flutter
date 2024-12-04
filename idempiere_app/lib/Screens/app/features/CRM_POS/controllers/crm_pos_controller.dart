@@ -38,7 +38,7 @@ class CRMPOSController extends GetxController {
     "MANUAL DISCOUNT".tr
   ];
 
-  List<int> roundingList = [1, 5, 10];
+  List<int> roundingList = [1, 1, 5, 10];
 
   var isReturnButtonActive = false.obs;
 

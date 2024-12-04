@@ -108,6 +108,7 @@ class _CreateTicketClientTicketState extends State<CreateTicketClientTicket> {
         //print(response.body);
       }
       Get.find<TicketClientTicketController>().getTickets();
+      Get.back();
       //print("done!");
       Get.snackbar(
         "Done!".tr,
