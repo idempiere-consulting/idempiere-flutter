@@ -1265,7 +1265,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                 return Dialog(
                                                   child: SizedBox(
                                                     width: 250,
-                                                    height: 430,
+                                                    height: 470,
                                                     child: Column(
                                                       children: [
                                                         Card(
@@ -1274,6 +1274,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               controller
                                                                   .selectedDiscountButtonValue
                                                                   .value = 0.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("0%"),
                                                             subtitle: controller
@@ -1319,6 +1320,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               controller
                                                                   .selectedDiscountButtonValue
                                                                   .value = 10.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("10%"),
                                                             subtitle: controller
@@ -1364,6 +1366,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               controller
                                                                   .selectedDiscountButtonValue
                                                                   .value = 15.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("15%"),
                                                             subtitle: controller
@@ -1409,6 +1412,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               controller
                                                                   .selectedDiscountButtonValue
                                                                   .value = 20.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("20%"),
                                                             subtitle: controller
@@ -1453,7 +1457,54 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                             onTap: () {
                                                               controller
                                                                   .selectedDiscountButtonValue
+                                                                  .value = 25.0;
+                                                              Get.back();
+                                                            },
+                                                            title: Text("25%"),
+                                                            subtitle: controller
+                                                                        .selectedDiscountButtonValue
+                                                                        .value ==
+                                                                    25.0
+                                                                ? Row(
+                                                                    children: [
+                                                                      Container(
+                                                                        decoration:
+                                                                            BoxDecoration(
+                                                                          color:
+                                                                              kNotifColor,
+                                                                          borderRadius:
+                                                                              BorderRadius.circular(10),
+                                                                        ),
+                                                                        padding: const EdgeInsets.symmetric(
+                                                                            horizontal:
+                                                                                5,
+                                                                            vertical:
+                                                                                2.5),
+                                                                        child:
+                                                                            Text(
+                                                                          "SELECTED"
+                                                                              .tr,
+                                                                          style: const TextStyle(
+                                                                              fontSize: 11,
+                                                                              color: Colors.white),
+                                                                          maxLines:
+                                                                              1,
+                                                                          overflow:
+                                                                              TextOverflow.ellipsis,
+                                                                        ),
+                                                                      ),
+                                                                    ],
+                                                                  )
+                                                                : null,
+                                                          ),
+                                                        ),
+                                                        Card(
+                                                          child: ListTile(
+                                                            onTap: () {
+                                                              controller
+                                                                  .selectedDiscountButtonValue
                                                                   .value = 30.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("30%"),
                                                             subtitle: controller
@@ -1499,6 +1550,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               controller
                                                                   .selectedDiscountButtonValue
                                                                   .value = 40.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("40%"),
                                                             subtitle: controller
@@ -1544,6 +1596,7 @@ class CRMPOSScreen extends GetView<CRMPOSController> {
                                                               controller
                                                                   .selectedDiscountButtonValue
                                                                   .value = 50.0;
+                                                              Get.back();
                                                             },
                                                             title: Text("50%"),
                                                             subtitle: controller

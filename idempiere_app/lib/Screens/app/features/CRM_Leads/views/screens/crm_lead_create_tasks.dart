@@ -217,7 +217,11 @@ class _CreateLeadTasksState extends State<CreateLeadTasks> {
     var n = now.minute; // Number to match
     var l = [0, 15, 30, 45]; // List of values
 
+    var nPlus30 = (now.add(const Duration(minutes: 30))).minute;
+
     var number = l.where((e) => e <= n).toList()..sort();
+
+    var minuteEnd = l.where((e) => e <= nPlus30).toList()..sort();
 
     //print(number[number.length - 1]);
 
@@ -238,11 +242,17 @@ class _CreateLeadTasksState extends State<CreateLeadTasks> {
       minuteTime = number[number.length - 1].toString();
     }
 
+    /* var minuteEndTime = "00";
+
+    if(minuteEnd > 0){
+
+    } */
+
     var formatter = DateFormat('yyyy-MM-dd');
     date = formatter.format(now);
     startTime = '$hourTime:$minuteTime:00Z';
     timeStart = '$hourTime:$minuteTime';
-    timeEnd = '$hourTime:$minuteTime';
+    timeEnd = '$hourTime:${int.parse(minuteTime)}';
   }
 
   var args = Get.arguments;
@@ -283,7 +293,7 @@ class _CreateLeadTasksState extends State<CreateLeadTasks> {
     businessPartnerId = args["bPartnerId"] ?? 0;
 
     dropDownList = getTypes()!;
-    dropdownValue = "WP";
+    dropdownValue = "NY";
 
     //getProject();
   }

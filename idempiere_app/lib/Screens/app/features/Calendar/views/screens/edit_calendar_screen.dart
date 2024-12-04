@@ -97,7 +97,7 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
         ),
       );
     } else {
-      //print(response.body);
+      print(response.body);
       Get.snackbar(
         "Error!".tr,
         "Unmodified record (is it yours?)".tr,

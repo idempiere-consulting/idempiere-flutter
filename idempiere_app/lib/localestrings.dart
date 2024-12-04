@@ -1420,6 +1420,7 @@ class LocaleString extends Translations {
           "MANUAL DISCOUNT": "SCONTO MANUALE",
           "Hours Review": "Riepilogo Ore",
           "Print Report": "Stampa Report",
+          "Done Today": "Svolto Oggi",
         },
       };
 }

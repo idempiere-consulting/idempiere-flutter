@@ -14,6 +14,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Human_Resource/models/employeepresence_json.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/models/broadcastmessage_json.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_finished_tasks.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -158,7 +159,9 @@ class DashboardScreen extends GetView<DashboardController> {
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.green)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(const DashboardFinishedTasks());
+                            },
                             icon: const Icon(
                               // <-- Icon
                               Icons.pending_actions_rounded,
@@ -531,7 +534,9 @@ class DashboardScreen extends GetView<DashboardController> {
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.green)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(const DashboardFinishedTasks());
+                            },
                             icon: const Icon(
                               // <-- Icon
                               Icons.pending_actions_rounded,
@@ -904,7 +909,9 @@ class DashboardScreen extends GetView<DashboardController> {
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         Colors.green)),
-                            onPressed: () {},
+                            onPressed: () {
+                              Get.to(const DashboardFinishedTasks());
+                            },
                             icon: const Icon(
                               // <-- Icon
                               Icons.pending_actions_rounded,
