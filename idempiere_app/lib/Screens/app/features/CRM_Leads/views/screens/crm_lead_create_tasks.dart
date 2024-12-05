@@ -242,17 +242,20 @@ class _CreateLeadTasksState extends State<CreateLeadTasks> {
       minuteTime = number[number.length - 1].toString();
     }
 
-    /* var minuteEndTime = "00";
+    var minuteEndTime = "00";
 
-    if(minuteEnd > 0){
-
-    } */
+    if ((minuteEnd[minuteEnd.length - 1]) > 0) {
+      minuteEndTime = minuteEnd[minuteEnd.length - 1].toString();
+    } else {
+      minuteEndTime = "00";
+    }
 
     var formatter = DateFormat('yyyy-MM-dd');
     date = formatter.format(now);
     startTime = '$hourTime:$minuteTime:00Z';
+
     timeStart = '$hourTime:$minuteTime';
-    timeEnd = '$hourTime:${int.parse(minuteTime)}';
+    timeEnd = '$hourTime:$minuteEndTime';
   }
 
   var args = Get.arguments;
@@ -454,7 +457,7 @@ class _CreateLeadTasksState extends State<CreateLeadTasks> {
                   child: DateTimePicker(
                     //readOnly: true,
                     type: DateTimePickerType.time,
-                    initialValue: startTime.substring(0, 5),
+                    initialValue: timeEnd.substring(0, 5),
                     firstDate: DateTime(2000),
                     lastDate: DateTime(2100),
                     timeLabelText: 'End Time'.tr,
