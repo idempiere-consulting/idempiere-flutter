@@ -58,6 +58,25 @@ class CRMOpportunityController extends GetxController {
     getOpportunities();
   }
 
+  String quickFilterDropdownValue = "0";
+  String quickFilterString = "";
+
+  setQuickFilterValue(String value) {
+    quickFilterDropdownValue = value;
+    print(quickFilterDropdownValue);
+
+    switch (quickFilterDropdownValue) {
+      case "0":
+        quickFilterString = "";
+        break;
+      case "1":
+        quickFilterString = " and C_SalesStage_ID neq 1000010";
+        break;
+      default:
+    }
+    getOpportunities();
+  }
+
   bool get dataAvailable => _dataAvailable.value;
   OpportunityJson get trx => _trx;
   get displayStringForOption => _displayStringForOption;
@@ -171,7 +190,7 @@ class CRMOpportunityController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$notificationFilter$userFilter$saleStageFilter$businessPartnerFilter$productFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_opportunity_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}$quickFilterString$notificationFilter$userFilter${quickFilterString != "" ? "" : saleStageFilter}${quickFilterString != "" ? "" : businessPartnerFilter}${quickFilterString != "" ? "" : productFilter}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -189,6 +208,10 @@ class CRMOpportunityController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
     }
   }
 

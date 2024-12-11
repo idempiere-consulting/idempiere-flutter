@@ -48,6 +48,8 @@ class ANRecords {
   final MPMaintainTaskID? mPMaintainTaskID;
   LITNCFaultTypeID? lITNCFaultTypeID;
   MPMaintainResourceID? mPMaintainResourceID;
+  MPOTID? mpotid;
+  CBPartnerID? cbPartnerID;
   bool? isInvoiced;
   bool? lITIsManagedByCustomer;
   AMProductID? mProductID;
@@ -72,6 +74,8 @@ class ANRecords {
       this.dateDoc,
       this.aDUserID,
       this.mPMaintainTaskID,
+      this.mpotid,
+      this.cbPartnerID,
       this.lITNCFaultTypeID,
       this.mPMaintainResourceID,
       this.isInvoiced,
@@ -112,6 +116,13 @@ class ANRecords {
                 ? MPMaintainTaskID.fromJson(
                     json['MP_Maintain_Task_ID'] as Map<String, dynamic>)
                 : null,
+        mpotid = (json['MP_OT_ID'] as Map<String, dynamic>?) != null
+            ? MPOTID.fromJson(json['MP_OT_ID'] as Map<String, dynamic>)
+            : null,
+        cbPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
+            ? CBPartnerID.fromJson(
+                json['C_BPartner_ID'] as Map<String, dynamic>)
+            : null,
         lITNCFaultTypeID =
             (json['LIT_NCFaultType_ID'] as Map<String, dynamic>?) != null
                 ? LITNCFaultTypeID.fromJson(
@@ -310,6 +321,60 @@ class MPMaintainTaskID {
   });
 
   MPMaintainTaskID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MPOTID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MPOTID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MPOTID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class CBPartnerID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  CBPartnerID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  CBPartnerID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

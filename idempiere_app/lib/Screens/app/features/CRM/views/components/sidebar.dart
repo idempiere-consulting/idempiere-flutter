@@ -144,7 +144,7 @@ class _Sidebar extends StatelessWidget {
                 SelectionButtonData(
                   activeIcon: Icons.payments,
                   icon: Icons.payments_outlined,
-                  label: "Payment".tr,
+                  label: "Payment (Receipt)".tr,
                   visible: int.parse(list[12], radix: 16)
                               .toRadixString(2)
                               .padLeft(4, "0")

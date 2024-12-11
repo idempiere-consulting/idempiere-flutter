@@ -73,7 +73,7 @@ class _BodyState extends State<Body> {
   // ignore: prefer_typing_uninitialized_variables
   var myController;
   String dropdownValue = "";
-  String protocolDropdownValue = "";
+  String protocolDropdownValue = "https";
   @override
   void initState() {
     super.initState();

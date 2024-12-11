@@ -133,7 +133,7 @@ class AccountingAssetController extends GetxController {
     return ProjectCardData(
       percent: .3,
       projectImage: const AssetImage(ImageRasterPath.logo1),
-      projectName: "Accounting",
+      projectName: "Accounting".tr,
       releaseTime: DateTime.now(),
     );
   }

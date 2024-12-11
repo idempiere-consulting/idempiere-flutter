@@ -92,9 +92,9 @@ class ProjectListScreen extends GetView<ProjectListController> {
                             children: [
                               //Icon(Icons.filter_alt),
                               Obx(() => controller.dataAvailable
-                                  ? Text("PROJECTS: ".tr +
-                                      controller.trx.rowcount.toString())
-                                  : Text("PROJECTS: ".tr)),
+                                  ? Text(
+                                      "${"PROJECT".tr}: ${controller.trx.rowcount}")
+                                  : Text("${"PROJECT".tr} ")),
                             ],
                           ),
                         ),
