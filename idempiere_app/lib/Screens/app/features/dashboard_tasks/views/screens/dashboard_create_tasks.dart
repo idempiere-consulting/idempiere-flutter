@@ -747,7 +747,7 @@ class _CreateDashboardTasksState extends State<CreateDashboardTasks> {
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
                             LengthLimitingTextInputFormatter(10),
-                            _DateFormatterCustom(),
+                            DateFormatterCustom(),
                           ],
                         ),
                       ),
@@ -1434,7 +1434,7 @@ class TimeTextInputFormatter extends TextInputFormatter {
   }
 }
 
-class _DateFormatterCustom extends TextInputFormatter {
+class DateFormatterCustom extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue prevText, TextEditingValue currText) {

@@ -31,11 +31,13 @@ import 'package:idempiere_app/Screens/app/shared_components/selection_button.dar
 import 'package:idempiere_app/Screens/app/shared_components/task_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
+import 'package:flutter/foundation.dart';
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -64,6 +66,42 @@ class CalendarScreen extends StatefulWidget {
 }
 
 class _CalendarScreenState extends State<CalendarScreen> {
+  Future<void> getDocument(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url =
+        Uri.parse('$protocol://$ip/api/v1/windows/personal-todo/$id/print');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      //throw Exception("Failed to load PDF");
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getAllEventsOffline() async {
     var json = EventJson.fromJson(jsonDecode(GetStorage().read('')));
     List<EventRecords>? list = json.records;
@@ -795,6 +833,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           ],
                         ),
                       ),
+                      Visibility(
+                        visible: event.statusId == "CO",
+                        child: Row(
+                          children: [
+                            IconButton(
+                              tooltip: 'print Document'.tr,
+                              onPressed: () async {
+                                /* var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .editWorkOrderResourceDateTesting(
+                                                                  isConnected,
+                                                                  index); */
+                                getDocument(event.id);
+                                /* Get.to(
+                                                            const PrintDocumentScreen(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![index]
+                                                                  .id,
+                                                            }); */
+                              },
+                              icon: const Icon(Icons.print),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -1187,6 +1253,34 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           ],
                         ),
                       ),
+                      Visibility(
+                        visible: event.statusId == "CO",
+                        child: Row(
+                          children: [
+                            IconButton(
+                              tooltip: 'print Document'.tr,
+                              onPressed: () async {
+                                /* var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .editWorkOrderResourceDateTesting(
+                                                                  isConnected,
+                                                                  index); */
+                                getDocument(event.id);
+                                /* Get.to(
+                                                            const PrintDocumentScreen(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![index]
+                                                                  .id,
+                                                            }); */
+                              },
+                              icon: const Icon(Icons.print),
+                            ),
+                          ],
+                        ),
+                      )
                     ],
                   ),
                 ),

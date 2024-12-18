@@ -111,6 +111,8 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
 
     //print(msg);
 
+    save = true;
+
     var response = await http.post(
       url,
       body: jsonEncode(msg),
@@ -120,6 +122,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       },
     );
     if (response.statusCode == 201) {
+      save = false;
       GetStorage().write('DDT_SavedBarcodeCreation', null);
       Get.back();
       Get.find<CRMShipmentController>().getShipments();
@@ -1122,6 +1125,8 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
   String shipperId = "0";
   String fobId = "0";
 
+  bool save = false;
+
   @override
   void initState() {
     super.initState();
@@ -1140,6 +1145,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
     shipperId = "0";
     fobId = "0";
     movementTypeId = "0";
+    save = false;
 
     if (GetStorage().read('DDT_SavedBarcodeCreation') != null) {
       restoreCreationFromJson();
@@ -1184,7 +1190,9 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: IconButton(
               onPressed: () {
-                createShipment();
+                if (!save) {
+                  createShipment();
+                }
               },
               icon: const Icon(
                 Icons.save,

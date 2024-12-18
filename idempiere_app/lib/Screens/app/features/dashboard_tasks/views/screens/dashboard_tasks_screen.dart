@@ -26,11 +26,15 @@ import 'package:idempiere_app/Screens/app/shared_components/today_text.dart';
 import 'package:idempiere_app/Screens/app/utils/helpers/app_helpers.dart';
 //import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:http/http.dart' as http;
+// ignore: depend_on_referenced_packages
+import 'package:pdf/pdf.dart';
+import 'package:flutter/foundation.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:intl/intl.dart';
+import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 // binding
@@ -208,6 +212,30 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                                 .jPToDoScheduledEndTime,
                                             "qty": controller
                                                 .trx.records![index].qty,
+                                            "projectID": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cProjectID
+                                                    ?.id ??
+                                                0,
+                                            "projectName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cProjectID
+                                                    ?.identifier ??
+                                                "",
+                                            "businessPartnerID": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id ??
+                                                0,
+                                            "businessPartnerName": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.identifier ??
+                                                "",
                                           });
                                     },
                                   ),
@@ -285,6 +313,36 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
                                           ),
                                         ],
                                       ),
+                                      Visibility(
+                                        visible: controller._trx.records![index]
+                                                .jPToDoStatus?.id ==
+                                            "CO",
+                                        child: Row(
+                                          children: [
+                                            IconButton(
+                                              tooltip: 'print Document'.tr,
+                                              onPressed: () async {
+                                                /* var isConnected =
+                                                              await checkConnection();
+                                                          controller
+                                                              .editWorkOrderResourceDateTesting(
+                                                                  isConnected,
+                                                                  index); */
+                                                controller.getDocument(index);
+                                                /* Get.to(
+                                                            const PrintDocumentScreen(),
+                                                            arguments: {
+                                                              "id": controller
+                                                                  .trx
+                                                                  .records![index]
+                                                                  .id,
+                                                            }); */
+                                              },
+                                              icon: const Icon(Icons.print),
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
                                 ],
@@ -526,7 +584,7 @@ class DashboardTasksScreen extends GetView<DashboardTasksController> {
             ]);
           },
           desktopBuilder: (context, constraints) {
-           return Column(children: [
+            return Column(children: [
               const SizedBox(height: kSpacing * (kIsWeb ? 1 : 2)),
               _buildHeader(
                   onPressedMenu: () => Scaffold.of(context).openDrawer()),

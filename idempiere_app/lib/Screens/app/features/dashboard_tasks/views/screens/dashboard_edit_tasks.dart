@@ -2,15 +2,20 @@ import 'dart:convert';
 //import 'dart:developer';
 
 import 'package:date_time_picker/date_time_picker.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Contact_BP/models/contact.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/models/leadstatus.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Leads/views/screens/crm_leads_screen.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard/views/screens/dashboard_screen.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/models/project_json.dart';
+import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_create_tasks.dart';
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:http/http.dart' as http;
@@ -39,20 +44,33 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
 
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
-    final msg = jsonEncode({
+    var msg = {
       "JP_ToDo_Status": {"id": statusId},
       "Qty": hours,
-      "JP_ToDo_ScheduledStartDate": '${args["startDate"]}T$startTime:00Z',
-      "JP_ToDo_ScheduledEndDate": '${args["startDate"]}T$endTime:00Z',
-      "JP_ToDo_ScheduledStartTime": startTime,
-      "JP_ToDo_ScheduledEndTime": endTime,
-    });
+      "JP_ToDo_ScheduledStartDate":
+          '${args["startDate"]}T${starttimeFieldController.text}Z',
+      "JP_ToDo_ScheduledEndDate":
+          '${args["startDate"]}T${endtimeFieldController.text}Z',
+      "JP_ToDo_ScheduledStartTime": "${starttimeFieldController.text}Z",
+      "JP_ToDo_ScheduledEndTime": "${endtimeFieldController.text}Z",
+    };
+
+    if (projectId > 0) {
+      msg.addAll({
+        "C_Project_ID": {"id": projectId}
+      });
+    }
+    if (businessPartnerId > 0) {
+      msg.addAll({
+        "C_BPartner_ID": {"id": businessPartnerId}
+      });
+    }
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args['id']}');
     //print(msg);
     var response = await http.put(
       url,
-      body: msg,
+      body: jsonEncode(msg),
       headers: <String, String>{
         'Content-Type': 'application/json',
         'Authorization': authorization,
@@ -178,6 +196,42 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     //print(json.);
   }
 
+  Future<void> getProjectBP() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_project?\$filter= C_Project_ID eq $projectId');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      try {
+        businessPartnerId = json["records"][0]["C_BPartner_ID"]["id"] ?? 0;
+        businessPartnerFieldController.text =
+            json["records"][0]["C_BPartner_ID"]["identifier"];
+      } catch (e) {
+        businessPartnerId = 0;
+        businessPartnerFieldController.text = "";
+      }
+    } else {
+      if (kDebugMode) {
+        print(utf8.decode(response.bodyBytes));
+      }
+    }
+    setState(() {
+      flagProject = true;
+    });
+  }
+
   Future<List<PJRecords>> getAllProjects() async {
     final ip = GetStorage().read('ip');
     String authorization =
@@ -202,6 +256,84 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       return jsonProjects.records!;
     } else {
       throw Exception("Failed to load projects");
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<BPRecords>> getAllBusinessPartners() async {
+    final ip = GetStorage().read('ip');
+    String authorization =
+        'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //var jsondecoded = jsonDecode(response.body);
+
+      var json = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.pagecount! > 1) {
+        int index = 1;
+        var json2 = await getAllBusinessPartnersPages(json, index);
+        return json2;
+      } else {
+        return json.records!;
+      }
+    } else {
+      return BusinessPartnerJson(records: []).records!;
+    }
+
+    //print(list[0].eMail);
+
+    //print(json.);
+  }
+
+  Future<List<BPRecords>> getAllBusinessPartnersPages(
+      BusinessPartnerJson json, int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization =
+        'Bearer ${GetStorage().read('token')}'; //GetStorage().read("clientid")
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/c_bpartner?\$filter= AD_Client_ID eq ${GetStorage().read("clientid")}&\$skip=${(index * 100)}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      index += 1;
+
+      var pageJson = BusinessPartnerJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      for (var element in pageJson.records!) {
+        json.records!.add(element);
+      }
+
+      if (json.pagecount! > index) {
+        var json2 = await getAllBusinessPartnersPages(json, index);
+        return json2;
+      } else {
+        return json.records!;
+      }
+    } else {
+      return BusinessPartnerJson(records: []).records!;
     }
 
     //print(list[0].eMail);
@@ -273,9 +405,18 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
 
       startTime = '$hourTime:$minuteTime:00Z';
 
+      starttimeFieldController =
+          TextEditingController(text: '$hourTime:$minuteTime:00');
+
       endTime = '$endhourTime:$endminuteTime:00Z';
+      endtimeFieldController =
+          TextEditingController(text: "$hourTime:$minuteTime:00");
     } else {
-      startTime = args["startTime"];
+      startTime = (args["startTime"] as String).substring(0, 5);
+      starttimeFieldController = TextEditingController(
+          text: (args["startTime"] as String).substring(0, 8));
+      endtimeFieldController = TextEditingController(
+          text: (args["endTime"] as String).substring(0, 8));
     }
 
     if (args["statusId"] == "WP") {
@@ -305,7 +446,11 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
       }
 
       endTime = '$hourTime:$minuteTime:00Z';
+
+      endtimeFieldController =
+          TextEditingController(text: "$hourTime:$minuteTime:00");
     }
+
     //print(startTime);
     //print(endTime);
   }
@@ -326,8 +471,18 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
   String startTime = "";
   String endTime = "";
 
+  late TextEditingController dateFieldController;
+  late TextEditingController endtimeFieldController;
+  late TextEditingController starttimeFieldController;
+  late TextEditingController projectFieldController;
+  late TextEditingController businessPartnerFieldController;
+  int projectId = 0;
+  bool flagProject = false;
+  int businessPartnerId = 0;
+
   @override
   void initState() {
+    flagProject = false;
     startTime = "";
     endTime = "";
     nameFieldController = TextEditingController();
@@ -335,6 +490,15 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     statusFieldController = TextEditingController();
     bPartnerFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
+    dateFieldController = TextEditingController(
+        text: DateFormat('dd/MM/yyyy').format(DateTime.now()));
+    starttimeFieldController = TextEditingController();
+    endtimeFieldController = TextEditingController();
+    projectFieldController = TextEditingController(text: args["projectName"]);
+    businessPartnerFieldController =
+        TextEditingController(text: args["businessPartnerName"]);
+    projectId = args["projectID"];
+    businessPartnerId = args["businessPartnerID"];
     //dropdownValue = Get.arguments["leadStatus"];
     fillFields();
     super.initState();
@@ -398,9 +562,162 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: nameFieldController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<PJRecords>(
+                                direction: AxisDirection.down,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        projectId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: projectFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Project'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  projectId = suggestion.id!;
+                                  nameFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  projectFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  setState(() {});
+                                  getProjectBP();
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllBusinessPartners(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<BPRecords>(
+                                direction: AxisDirection.down,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        businessPartnerId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: businessPartnerFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Business Partner'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  businessPartnerId = suggestion.id!;
+                                  businessPartnerFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  setState(() {});
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10),
+                  child: TextField(
                     readOnly: true,
                     controller: userFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Assigned To'.tr,
@@ -409,11 +726,14 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     readOnly: true,
                     controller: nameFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon: const Icon(Icons.task_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'Task'.tr,
@@ -427,6 +747,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     readOnly: true,
                     controller: statusFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon:
                           const Icon(Icons.settings_applications_outlined),
                       border: const OutlineInputBorder(),
@@ -435,7 +756,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     ),
                   ),
                 ),
-                Container(
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: DateTimePicker(
                     readOnly: true,
@@ -466,8 +787,31 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
-                ),
+                ), */
                 Container(
+                  margin: const EdgeInsets.only(left: 10, right: 5, bottom: 10),
+                  child: TextField(
+                    readOnly: true,
+                    // maxLength: 10,
+                    keyboardType: TextInputType.datetime,
+                    controller: dateFieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(EvaIcons.calendarOutline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      hintText: 'DD/MM/YYYY',
+                      counterText: '',
+                    ),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                      LengthLimitingTextInputFormatter(10),
+                      DateFormatterCustom(),
+                    ],
+                  ),
+                ),
+                /* Container(
                   margin: const EdgeInsets.all(10),
                   child: DateTimePicker(
                     decoration: InputDecoration(
@@ -537,6 +881,58 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
+                ), */
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 10, right: 5, bottom: 10),
+                        child: TextField(
+                          readOnly: args["statusId"] == "CO",
+                          // maxLength: 10,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
+                          controller: starttimeFieldController,
+
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.access_time),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Start Time'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: '00:00:00',
+                            counterText: '',
+                          ),
+                          inputFormatters: [TimeTextInputFormatter()],
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 10, bottom: 10),
+                        child: TextField(
+                          readOnly: args["statusId"] == "CO",
+                          // maxLength: 10,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
+                          controller: endtimeFieldController,
+
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.access_time),
+                            border: const OutlineInputBorder(),
+                            labelText: 'End Time'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: '00:00:00',
+                            counterText: '',
+                          ),
+                          inputFormatters: [TimeTextInputFormatter()],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.center,

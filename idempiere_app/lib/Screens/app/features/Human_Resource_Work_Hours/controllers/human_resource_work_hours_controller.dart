@@ -49,15 +49,15 @@ class HumanResourceWorkHoursController extends GetxController {
 
           var text2 = text.substring(1);
 
-          Get.defaultDialog(
+          /* Get.defaultDialog(
             title: 'result',
             content: Text(text2),
             barrierDismissible: false,
             //textConfirm: 'Confirm',
             buttonColor: kNotifColor,
-          );
+          ); */
           var url = Uri.parse(
-              '$protocol://$ip/api/v1/models/ad_user?\$filter= Value eq \'$text2\'');
+              '$protocol://$ip/api/v1/models/ad_user?\$filter= LIT_VA_USERTOKEN eq \'$text2\'');
 
           var response = await http.get(
             url,
@@ -136,6 +136,7 @@ class HumanResourceWorkHoursController extends GetxController {
 
     var msg = jsonEncode({
       "AD_User_ID": {"id": userId},
+      "Value": "tag",
       "DocumentNo": nfcCode,
       "DateStart": '${formatter.format(triggerDate)}T$hourTime:$minuteTime:00Z',
     });

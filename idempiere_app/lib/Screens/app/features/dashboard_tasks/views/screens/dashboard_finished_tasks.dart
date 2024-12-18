@@ -14,6 +14,9 @@ import 'package:idempiere_app/Screens/app/features/dashboard_tasks/models/projec
 import 'package:idempiere_app/Screens/app/features/dashboard_tasks/views/screens/dashboard_tasks_screen.dart';
 import 'package:idempiere_app/Screens/app/shared_components/responsive_builder.dart';
 import 'package:intl/intl.dart';
+// ignore: depend_on_referenced_packages
+import 'package:pdf/pdf.dart';
+import 'package:printing/printing.dart';
 
 class DashboardFinishedTasks extends StatefulWidget {
   const DashboardFinishedTasks({Key? key}) : super(key: key);
@@ -23,6 +26,42 @@ class DashboardFinishedTasks extends StatefulWidget {
 }
 
 class _DashboardFinishedTasksState extends State<DashboardFinishedTasks> {
+  Future<void> getDocument(int index) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/windows/personal-todo/${_trx.records![index].id}/print');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(utf8.decode(response.bodyBytes));
+      var json = jsonDecode(utf8.decode(response.bodyBytes));
+
+      String pdfString = json["exportFile"];
+      //print(pdfString);
+
+      List<int> list = base64.decode(pdfString);
+      Uint8List bytes = Uint8List.fromList(list);
+      //print(bytes);
+
+      //final pdf = await rootBundle.load('document.pdf');
+      await Printing.layoutPdf(onLayout: (PdfPageFormat format) async => bytes);
+
+      //return json.records!;
+    } else {
+      //throw Exception("Failed to load PDF");
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   Future<void> getLeads() async {
     setState(() {
       dataAvailable = false;
@@ -119,11 +158,13 @@ class _DashboardFinishedTasksState extends State<DashboardFinishedTasks> {
                                               color: Colors.white24))),
                                   child: IconButton(
                                     icon: const Icon(
-                                      Icons.task,
-                                      color: Colors.green,
+                                      Icons.print,
+                                      color: Colors.white,
                                     ),
                                     tooltip: 'Task'.tr,
-                                    onPressed: () {},
+                                    onPressed: () {
+                                      getDocument(index);
+                                    },
                                   ),
                                 ),
                                 title: Text(
