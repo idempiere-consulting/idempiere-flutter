@@ -26,6 +26,10 @@ class Event {
   final String workOrderName;
   final int userId;
   final String userName;
+  final int? projectId;
+  final String? projectName;
+  final int? businessPartnerId;
+  final String? businessPartnername;
   final String? createdby;
 
   const Event({
@@ -49,6 +53,10 @@ class Event {
     required this.workOrderName,
     required this.userId,
     required this.userName,
+    this.projectId,
+    this.projectName,
+    this.businessPartnerId,
+    this.businessPartnername,
     this.createdby,
   });
 }

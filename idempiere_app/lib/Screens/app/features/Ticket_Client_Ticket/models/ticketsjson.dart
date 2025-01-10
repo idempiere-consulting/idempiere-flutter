@@ -74,6 +74,7 @@ class Records {
   final int? qtyPlan;
   final String? dateStartPlan;
   final String? name;
+  final String? description;
   final String? help;
   final String? modelname;
 
@@ -120,6 +121,7 @@ class Records {
     this.qtyPlan,
     this.dateStartPlan,
     this.name,
+    this.description,
     this.help,
     this.modelname,
   });
@@ -215,6 +217,7 @@ class Records {
         qtyPlan = json['QtyPlan'] as int?,
         dateStartPlan = json['DateStartPlan'] as String?,
         name = json['Name'] as String?,
+        description = json['Description'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {

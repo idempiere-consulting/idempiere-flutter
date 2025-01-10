@@ -22,6 +22,7 @@ import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/cr
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_edit.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment/views/screens/crm_shipment_filter_screen.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Shipment_line/models/shipmentline_json.dart';
+import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -272,8 +273,10 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             .records![index]
                                             .cBPartnerID
                                             ?.identifier,
-                                        "bPartnerID": controller
-                                            .trx.records![index].cBPartnerID?.id
+                                        "bPartnerID": controller.trx
+                                            .records![index].cBPartnerID?.id,
+                                        "docStatus": controller
+                                            .trx.records![index].docStatus?.id,
                                       });
                                     },
                                   ),
@@ -574,8 +577,10 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             .records![index]
                                             .cBPartnerID
                                             ?.identifier,
-                                        "bPartnerID": controller
-                                            .trx.records![index].cBPartnerID?.id
+                                        "bPartnerID": controller.trx
+                                            .records![index].cBPartnerID?.id,
+                                        "docStatus": controller
+                                            .trx.records![index].docStatus?.id,
                                       });
                                     },
                                   ),
@@ -876,8 +881,10 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
                                             .records![index]
                                             .cBPartnerID
                                             ?.identifier,
-                                        "bPartnerID": controller
-                                            .trx.records![index].cBPartnerID?.id
+                                        "bPartnerID": controller.trx
+                                            .records![index].cBPartnerID?.id,
+                                        "docStatus": controller
+                                            .trx.records![index].docStatus?.id,
                                       });
                                     },
                                   ),
@@ -1140,26 +1147,6 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
     );
   }
 
-  Widget _buildHeader({Function()? onPressedMenu}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Row(
-        children: [
-          if (onPressedMenu != null)
-            Padding(
-              padding: const EdgeInsets.only(right: kSpacing),
-              child: IconButton(
-                onPressed: onPressedMenu,
-                icon: const Icon(EvaIcons.menu),
-                tooltip: "menu",
-              ),
-            ),
-          const Expanded(child: _Header()),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHeader2({Function()? onPressedMenu}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -1185,8 +1172,20 @@ class CRMShipmentScreen extends GetView<CRMShipmentController> {
             ],
           ),
           Row(
-            children: const [
-              Expanded(child: _Header()),
+            children: [
+              Expanded(
+                child: _Header(
+                  buttonList: TypeJson.fromJson({
+                    "types": [
+                      {"id": "0", "name": "No Filter".tr},
+                      {"id": "1", "name": "Draft Only".tr},
+                      {"id": "2", "name": "Complete Only".tr},
+                    ]
+                  }).types,
+                  dropDownValue: controller.quickFilterDropdownValue,
+                  onChanged: controller.setQuickFilterValue,
+                ),
+              ),
             ],
           ),
         ],

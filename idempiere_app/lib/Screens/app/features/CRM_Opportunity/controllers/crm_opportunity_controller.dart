@@ -70,7 +70,8 @@ class CRMOpportunityController extends GetxController {
         quickFilterString = "";
         break;
       case "1":
-        quickFilterString = " and C_SalesStage_ID neq 1000010";
+        quickFilterString =
+            " and C_SalesStage_ID neq 1000010 and C_SalesStage_ID neq 1000009";
         break;
       default:
     }

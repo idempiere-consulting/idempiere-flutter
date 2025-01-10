@@ -8,10 +8,15 @@ class PortalMpController extends GetxController {
   //final _monthDayFormat = DateFormat('MM-dd');
   Rx<CalendarFormat> format = (CalendarFormat.month).obs;
 
+  var totalHours = 0.0.obs;
+  var totalTickets = 0.obs;
+  var businessPartnerId = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
     getAllEvents();
+    getBusinessPartner();
   }
 
   Future<void> getAllEvents() async {
@@ -121,6 +126,115 @@ class PortalMpController extends GetxController {
     //print(list[0].eMail);
 
     //print(json.);
+  }
+
+  Future<void> getHours() async {
+    DateTime today = DateTime.now();
+    var formatter = DateFormat('yyyy-MM-dd');
+    DateTime thirtyDaysAgo = today.subtract(const Duration(days: 30));
+    String formattedThirtyDaysAgo = formatter.format(thirtyDaysAgo);
+    String formattedToday = formatter.format(today);
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_customer_hours_v?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')} and AssignDateFrom ge \'$formattedThirtyDaysAgo 00:00:00\' and C_BPartner_ID eq ${businessPartnerId.value}');
+    //print(url);
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+
+      var _trx =
+          HoursReviewJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      totalHours.value = 0.0;
+
+      for (var element in _trx.records!) {
+        totalHours.value += (element.qty ?? 0).toDouble();
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getBusinessPartner() async {
+    final protocol = GetStorage().read('protocol');
+    var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= Name eq \'$name\' and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json = jsonDecode(response.body);
+
+      GetStorage().write('BusinessPartnerName',
+          json["records"][0]["C_BPartner_ID"]["identifier"]);
+      GetStorage().write(
+          'BusinessPartnerId', json["records"][0]["C_BPartner_ID"]["id"]);
+
+      businessPartnerId.value = json["records"][0]["C_BPartner_ID"]["id"];
+      //print(businessPartnerId);
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      //print(response.body);
+    }
+    getHours();
+    getTickets();
+  }
+
+  Future<void> getTickets() async {
+    DateTime today = DateTime.now();
+    DateTime fiftyDaysAgo = today.subtract(Duration(days: 50));
+
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    /* print('$protocol://' +
+        ip +
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)'); */
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq 1000024 and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var _trx =
+          TicketsJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      totalTickets.value = _trx.rowcount ?? 0;
+
+      //print(trx.rowcount);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
   }
 
   Map<DateTime, List<Event>> selectedEvents = {};

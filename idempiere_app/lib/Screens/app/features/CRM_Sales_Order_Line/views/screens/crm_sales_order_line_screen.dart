@@ -72,7 +72,7 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
           ),
           actions: [
             Visibility(
-              visible: controller.args['status'] != 'CO',
+              visible: controller.args['docStatus'] != 'CO',
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: IconButton(
@@ -160,13 +160,15 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                     child: IconButton(
                                       icon: Icon(
                                         Icons.edit,
-                                        color: controller.args['status'] != 'CO'
-                                            ? Colors.green
-                                            : Colors.grey,
+                                        color:
+                                            controller.args['docStatus'] != 'CO'
+                                                ? Colors.green
+                                                : Colors.grey,
                                       ),
                                       tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
-                                        if (controller.args['status'] != 'CO') {
+                                        if (controller.args['docStatus'] !=
+                                            'CO') {
                                           Get.to(const EditSalesOrderLine(),
                                               arguments: {
                                                 "ID": controller
@@ -365,23 +367,38 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.edit,
-                                        color: Colors.green,
+                                        color:
+                                            controller.args['docStatus'] != 'CO'
+                                                ? Colors.green
+                                                : Colors.grey,
                                       ),
                                       tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
-                                        Get.to(const EditSalesOrderLine(),
-                                            arguments: {
-                                              "ID": controller
-                                                  .trx.records![index].id,
-                                              "qty": controller.trx
-                                                  .records![index].qtyEntered,
-                                              "date": controller.trx
-                                                  .records![index].datePromised,
-                                              "price": controller.trx
-                                                  .records![index].priceEntered,
-                                            });
+                                        if (controller.args['docStatus'] !=
+                                            'CO') {
+                                          Get.to(const EditSalesOrderLine(),
+                                              arguments: {
+                                                "ID": controller
+                                                    .trx.records![index].id,
+                                                "qty": controller.trx
+                                                    .records![index].qtyEntered,
+                                                "date": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .datePromised,
+                                                "price": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .priceEntered,
+                                                "businessPartnerId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id,
+                                              });
+                                        }
                                       },
                                     ),
                                   ),
@@ -559,23 +576,38 @@ class CRMSalesOrderLineScreen extends GetView<CRMSalesOrderLineController> {
                                                 width: 1.0,
                                                 color: Colors.white24))),
                                     child: IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.edit,
-                                        color: Colors.green,
+                                        color:
+                                            controller.args['docStatus'] != 'CO'
+                                                ? Colors.green
+                                                : Colors.grey,
                                       ),
                                       tooltip: 'Edit Sales Order Line'.tr,
                                       onPressed: () {
-                                        Get.to(const EditSalesOrderLine(),
-                                            arguments: {
-                                              "ID": controller
-                                                  .trx.records![index].id,
-                                              "qty": controller.trx
-                                                  .records![index].qtyEntered,
-                                              "date": controller.trx
-                                                  .records![index].datePromised,
-                                              "price": controller.trx
-                                                  .records![index].priceEntered,
-                                            });
+                                        if (controller.args['docStatus'] !=
+                                            'CO') {
+                                          Get.to(const EditSalesOrderLine(),
+                                              arguments: {
+                                                "ID": controller
+                                                    .trx.records![index].id,
+                                                "qty": controller.trx
+                                                    .records![index].qtyEntered,
+                                                "date": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .datePromised,
+                                                "price": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .priceEntered,
+                                                "businessPartnerId": controller
+                                                    .trx
+                                                    .records![index]
+                                                    .cBPartnerID
+                                                    ?.id,
+                                              });
+                                        }
                                       },
                                     ),
                                   ),

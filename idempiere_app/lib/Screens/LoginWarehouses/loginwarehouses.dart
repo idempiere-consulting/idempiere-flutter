@@ -134,8 +134,39 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       if (kDebugMode) {
         print('User Preferences Checked');
       }
-      checkSyncData();
+      syncUserFavourites();
     }
+  }
+
+  syncUserFavourites() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_AD_User_Favourite?\$filter= AD_User_ID eq ${GetStorage().read('userId')}');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      const filename = "userfavourites";
+      final file = File(
+          '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+      file.writeAsString(response.body);
+
+      userPreferencesSync = false;
+      if (kDebugMode) {
+        print('User Favourites Checked');
+        print(response.body);
+      }
+    } else {
+      print(response.body);
+    }
+    checkSyncData();
   }
 
   syncBusinessPartner() async {

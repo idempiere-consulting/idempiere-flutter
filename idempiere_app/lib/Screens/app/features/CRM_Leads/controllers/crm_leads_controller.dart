@@ -68,6 +68,26 @@ class CRMLeadController extends GetxController {
     return dJson.types;
   }
 
+  String quickFilterDropdownValue = "0";
+  String quickFilterString = "";
+
+  setQuickFilterValue(String value) {
+    quickFilterDropdownValue = value;
+    print(quickFilterDropdownValue);
+
+    switch (quickFilterDropdownValue) {
+      case "0":
+        quickFilterString = "";
+        break;
+      case "1":
+        quickFilterString =
+            " and (LeadStatus eq 'N' or LeadStatus eq 'A' or LeadStatus eq 'W')";
+        break;
+      default:
+    }
+    getLeads();
+  }
+
   getAllSaleStages() async {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
@@ -355,7 +375,7 @@ class CRMLeadController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}$nameFilter$mailFilter$phoneFilter$userFilter$sectorFilter$statusFilter$sizeFilter$campaignFilter$sourceFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_lead_v?\$filter= IsSalesLead eq Y and AD_Client_ID eq ${GetStorage().read('clientid')}$quickFilterString${quickFilterString != "" ? "" : nameFilter}${quickFilterString != "" ? "" : mailFilter}${quickFilterString != "" ? "" : phoneFilter}$userFilter${quickFilterString != "" ? "" : sectorFilter}${quickFilterString != "" ? "" : statusFilter}${quickFilterString != "" ? "" : sizeFilter}${quickFilterString != "" ? "" : campaignFilter}${quickFilterString != "" ? "" : sourceFilter}&\$skip=${(pagesCount.value - 1) * 100}');
     //print(url);
     var response = await http.get(
       url,

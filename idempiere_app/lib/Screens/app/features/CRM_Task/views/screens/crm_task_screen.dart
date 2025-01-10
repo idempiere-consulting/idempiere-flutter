@@ -13,6 +13,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Opportunity/models/businesspartner_json.dart';
+import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_create_task.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_edit_task.dart';
 import 'package:idempiere_app/Screens/app/features/CRM_Task/views/screens/crm_task_filters_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
@@ -186,9 +187,13 @@ class CRMTaskScreen extends GetView<CRMTaskController> {
                 });
               }),
           SpeedDialChild(
-            label: 'New'.tr,
-            child: const Icon(Symbols.calendar_add_on),
-          )
+              label: 'New'.tr,
+              child: const Icon(Symbols.calendar_add_on),
+              onTap: () {
+                Get.to(const CRMCreateTask(), arguments: {
+                  "adUserId": GetStorage().read('userId'),
+                });
+              })
         ],
       ),
       //key: controller.scaffoldKey,

@@ -147,19 +147,30 @@ class PortalMpHoursReviewController extends GetxController {
       for (var i = 0; i < _trx.records!.length; i++) {
         headerRows.add(DataRow(selected: false, cells: <DataCell>[
           DataCell(
-            IconButton(
-              onPressed: () {},
-              icon: Tooltip(
-                message: (_trx.records![i].isDoNotInvoice ?? true)
-                    ? 'Support'.tr
-                    : 'Invoiced'.tr,
-                child: Icon(
-                  Icons.info,
-                  color: (_trx.records![i].isDoNotInvoice ?? true)
-                      ? kNotifColor
-                      : Colors.deepOrange,
+            Row(
+              children: [
+                IconButton(
+                  onPressed: () {},
+                  icon: Tooltip(
+                    message: (_trx.records![i].isDoNotInvoice ?? true)
+                        ? 'Support'.tr
+                        : 'Invoiced'.tr,
+                    child: Icon(
+                      Icons.info,
+                      color: (_trx.records![i].isDoNotInvoice ?? true)
+                          ? kNotifColor
+                          : Colors.deepOrange,
+                    ),
+                  ),
                 ),
-              ),
+                Visibility(
+                  visible: _trx.records![i].documentNo != null,
+                  child: Expanded(
+                    child: Text(
+                        "${_trx.records![i].documentNo} ${DateFormat('dd/MM/yyyy').format(DateTime.tryParse(_trx.records![i].dateticket ?? "") ?? DateTime.now())}"),
+                  ),
+                ),
+              ],
             ),
           ),
           DataCell(Text(_trx.records![i].name ?? "N/A")),

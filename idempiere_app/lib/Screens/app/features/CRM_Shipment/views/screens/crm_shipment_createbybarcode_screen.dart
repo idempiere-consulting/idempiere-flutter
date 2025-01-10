@@ -1029,6 +1029,8 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                               "${prod.records![0].value}_${prod.records![0].name}"),
                       movementQty: num.parse(qtyController.text),
                       mobileBarcodeType: barcodeList[0],
+                      name: prod.records![0].name,
+                      description: prod.records![0].description,
                       isInvoiced: true,
                     ));
 

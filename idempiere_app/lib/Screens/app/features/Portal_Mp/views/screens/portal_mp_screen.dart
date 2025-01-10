@@ -12,6 +12,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
+import 'package:idempiere_app/Screens/app/features/Portal_Mp_Hours_Review/models/hoursreview_json.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
 import 'package:idempiere_app/Screens/app/shared_components/chatting_card.dart';
 import 'package:idempiere_app/Screens/app/shared_components/list_profil_image.dart';
 import 'package:idempiere_app/Screens/app/shared_components/progress_card.dart';
@@ -80,6 +82,67 @@ class PortalMpScreen extends GetView<PortalMpController> {
             const SizedBox(height: kSpacing / 2),
             const Divider(),
             _buildProfile(data: controller.getProfil()),
+            Container(
+              height: 180,
+              margin: const EdgeInsets.only(left: kSpacing, right: kSpacing),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kBorderRadius),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: kSpacing,
+                        top: kSpacing,
+                        bottom: 5,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${"Summary".tr}: ".tr,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              top: kSpacing,
+                              bottom: 5,
+                            ),
+                            child: Column(
+                              children: [
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      Text(
+                                          "${controller.totalTickets} ${"Open Tickets".tr}"),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      Text(
+                                          "${controller.totalHours} ${"Total Hours".tr}"),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ]);
         },
         tabletBuilder: (context, constraints) {
@@ -90,6 +153,67 @@ class PortalMpScreen extends GetView<PortalMpController> {
             const SizedBox(height: kSpacing / 2),
             const Divider(),
             _buildProfile(data: controller.getProfil()),
+            Container(
+              height: 180,
+              margin: const EdgeInsets.only(left: kSpacing, right: kSpacing),
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(kBorderRadius),
+                ),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: kSpacing,
+                        top: kSpacing,
+                        bottom: 5,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "${"Summary".tr}: ".tr,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                              left: 10,
+                              top: kSpacing,
+                              bottom: 5,
+                            ),
+                            child: Column(
+                              children: [
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      Text(
+                                          "${controller.totalTickets} ${"Open Tickets".tr}"),
+                                    ],
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+                                Obx(
+                                  () => Row(
+                                    children: [
+                                      Text(
+                                          "${controller.totalHours} ${"Total Hours".tr}"),
+                                    ],
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ]);
         },
         desktopBuilder: (context, constraints) {
@@ -1241,57 +1365,68 @@ class PortalMpScreen extends GetView<PortalMpController> {
                     _buildProfile(data: controller.getProfil()),
                     const Divider(thickness: 1),
                     const SizedBox(height: kSpacing),
-                    /*  Obx(() => Visibility(
-                          replacement: const Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                          visible: controller.calendarFlag.value,
-                          child: Obx(
-                            () => TableCalendar(
-                              locale: 'languageCalendar'.tr,
-                              focusedDay: controller.focusedDay.value,
-                              firstDay: DateTime(2000),
-                              lastDay: DateTime(2100),
-                              calendarFormat: controller.format.value,
-                              calendarStyle: const CalendarStyle(
-                                markerDecoration: BoxDecoration(
-                                    color: Colors.yellow,
-                                    shape: BoxShape.circle),
-                                todayDecoration: BoxDecoration(
-                                  color: Colors.deepPurple,
-                                ),
+                    Container(
+                      height: 180,
+                      margin: const EdgeInsets.only(
+                          left: kSpacing, right: kSpacing),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(kBorderRadius),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: kSpacing,
+                                top: kSpacing,
+                                bottom: 5,
                               ),
-                              headerStyle: const HeaderStyle(
-                                //formatButtonVisible: false,
-                                formatButtonShowsNext: false,
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Text(
+                                        "${"Summary".tr}: ".tr,
+                                        style: const TextStyle(
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ],
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      left: 10,
+                                      top: kSpacing,
+                                      bottom: 5,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Obx(
+                                          () => Row(
+                                            children: [
+                                              Text(
+                                                  "${controller.totalTickets} ${"Open Tickets".tr}"),
+                                            ],
+                                          ),
+                                        ),
+                                        const SizedBox(height: 10),
+                                        Obx(
+                                          () => Row(
+                                            children: [
+                                              Text(
+                                                  "${controller.totalHours} ${"Total Hours".tr}"),
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
-                              startingDayOfWeek: StartingDayOfWeek.monday,
-                              daysOfWeekVisible: true,
-                              onFormatChanged: (CalendarFormat _format) {
-                                controller.format.value = _format;
-                              },
-                              onDaySelected:
-                                  (DateTime selectDay, DateTime focusDay) {
-                                controller.selectedDay.value = selectDay;
-                                controller.focusedDay.value = focusDay;
-                                controller.eventFlag.value = false;
-                                controller.eventFlag.value = true;
-                              },
-                              selectedDayPredicate: (DateTime date) {
-                                return isSameDay(
-                                    controller.selectedDay.value, date);
-                              },
-                              onHeaderLongPressed: (date) {
-                                /* Get.off(const CreateCalendarEvent(),
-                            arguments: {"adUserId": adUserId}); */
-                              },
-                              eventLoader: _getEventsfromDay,
                             ),
-                          ),
-                        )), */
-                    /*  Obx(() => Visibility(
-                        visible: controller.eventFlag.value,
-                        child: _buildDayEvents())), */
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               )

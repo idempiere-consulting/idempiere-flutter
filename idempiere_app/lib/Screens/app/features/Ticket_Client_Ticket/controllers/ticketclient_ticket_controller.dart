@@ -29,6 +29,51 @@ class TicketClientTicketController extends GetxController {
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
 
+  //DESKTOP VIEW VARIABLES
+
+  int selectedHeaderId = 0;
+  int selectedHeaderIndex = 0;
+
+  TicketsJson _trxDesktop = TicketsJson(records: []);
+
+  EventJson _trxDesktopLines = EventJson(records: []);
+
+  var desktopDocNosearchFieldController = TextEditingController();
+
+  TextEditingController desktopDocNoFieldController = TextEditingController();
+  TextEditingController desktopDocTypeFieldController = TextEditingController();
+  TextEditingController desktopBusinessPartnerFieldController =
+      TextEditingController();
+  TextEditingController desktopNameFieldController = TextEditingController();
+  TextEditingController desktopDescriptionFieldController =
+      TextEditingController();
+  TextEditingController desktopDateFromFieldController =
+      TextEditingController();
+  TextEditingController desktopDateToFieldController = TextEditingController();
+  TextEditingController desktopFrequencyFieldController =
+      TextEditingController();
+
+  List<DataRow> headerRows = [];
+
+  List<DataRow> lineRows = [];
+  var requestId = 0;
+  // ignore: prefer_final_fields
+  // ignore: prefer_final_fields
+  var _desktopDataAvailable = false.obs;
+
+  var desktopPagesCount = 1.obs;
+  var desktopPagesTot = 1.obs;
+  var desktopLinePagesCount = 1.obs;
+  var desktopLinePagesTot = 1.obs;
+
+  var showHeader = true.obs;
+  var headerDataAvailable = false.obs;
+
+  var showLines = false.obs;
+  var linesDataAvailable = false.obs;
+
+  //END DESKTOP VIEW VARIABLES
+
   @override
   void onInit() {
     super.onInit();
@@ -49,6 +94,27 @@ class TicketClientTicketController extends GetxController {
   TicketsJson get trx => _trx;
   TicketTypeJson get tt => _tt;
   //String get value => _value.toString();
+
+  String quickFilterDropdownValue = "0";
+  String quickFilterString = "";
+
+  setQuickFilterValue(String value) {
+    quickFilterDropdownValue = value;
+    print(quickFilterDropdownValue);
+
+    switch (quickFilterDropdownValue) {
+      case "0":
+        quickFilterString = "";
+        break;
+      case "1":
+        quickFilterString =
+            " and (R_Status_ID neq 1000024 or R_Status_ID neq 1000030)";
+        break;
+      default:
+    }
+    getTickets();
+    getTicketsDesktop();
+  }
 
   Future<void> confirmTicket(int index) async {
     final ip = GetStorage().read('ip');
@@ -72,6 +138,7 @@ class TicketClientTicketController extends GetxController {
     );
     if (response.statusCode == 200) {
       getTickets();
+      getTicketsDesktop();
       //print("done!");
       //completeOrder(index);
     } else {
@@ -120,6 +187,7 @@ class TicketClientTicketController extends GetxController {
       }
       //print(ticketFilter);
       getTickets();
+      getTicketsDesktop();
     }
   }
 
@@ -358,6 +426,151 @@ class TicketClientTicketController extends GetxController {
         print(response.body);
       }
     }
+  }
+
+  Future<void> getTicketsDesktop() async {
+    _desktopDataAvailable.value = false;
+    DateTime today = DateTime.now();
+    DateTime fiftyDaysAgo = today.subtract(Duration(days: 50));
+    var apiUrlFilter = ["", " and AD_User_ID eq $adUserId"];
+    var notificationFilter = "";
+    if (Get.arguments != null) {
+      if (Get.arguments['notificationId'] != null) {
+        notificationFilter =
+            " and R_Request_ID eq ${Get.arguments['notificationId']}";
+        Get.arguments['notificationId'] = null;
+      }
+    }
+    _dataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    /* print('$protocol://' +
+        ip +
+        '/api/v1/models/r_request?\$filter= R_Status_ID neq $closedTicketId and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)'); */
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/r_request?\$filter= (R_Status_ID neq $closedTicketId or StartDate ge \'${DateFormat('yyyy-MM-dd').format(fiftyDaysAgo)}\') and C_BPartner_ID eq $businessPartnerId and AD_Client_ID eq ${GetStorage().read('clientid')}${apiUrlFilter[filterCount]}$notificationFilter and ($ticketFilter)&\$skip=${(desktopPagesCount.value - 1) * 100}&\$orderby= Created desc, DocumentNo desc');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      _trxDesktop =
+          TicketsJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+      desktopPagesTot.value = _trxDesktop.pagecount!;
+
+      headerRows = [];
+
+      for (var i = 0; i < _trxDesktop.records!.length; i++) {
+        headerRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(IconButton(
+            onPressed: () {
+              Get.to(const TicketClientChat(),
+                  arguments: {"ticketid": _trxDesktop.records![i].id});
+            },
+            icon: _trxDesktop.records![i].rStatusID?.id! == 1000024
+                ? const Icon(
+                    Icons.check,
+                    color: kNotifColor,
+                  )
+                : const Icon(Icons.pending, color: Colors.yellow),
+          )),
+          DataCell(Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              IconButton(
+                  onPressed: () {
+                    requestId = _trxDesktop.records![i].id!;
+                    selectedHeaderId = _trxDesktop.records![i].id!;
+                    selectedHeaderIndex = i;
+
+                    desktopDocNoFieldController.text =
+                        _trxDesktop.records![i].documentNo ?? '??';
+
+                    desktopNameFieldController.text =
+                        _trxDesktop.records![i].name ?? '??';
+
+                    desktopDocTypeFieldController.text =
+                        _trxDesktop.records![i].rStatusID?.identifier ?? "";
+
+                    desktopDateFromFieldController.text =
+                        DateFormat('dd/MM/yyyy').format(
+                            DateTime.parse(_trxDesktop.records![i].created!));
+
+                    desktopDescriptionFieldController.text =
+                        _trxDesktop.records![i].summary ?? "";
+
+                    showHeader.value = false;
+                    showLines.value = true;
+                    getTicketLineDesktop();
+                  },
+                  icon: const Icon(EvaIcons.search)),
+              Text(_trxDesktop.records![i].documentNo ?? '??')
+            ],
+          )),
+          DataCell(
+            Text(_trxDesktop.records![i].name ?? '??'),
+          ),
+          DataCell(
+            Text(DateFormat('dd/MM/yyyy')
+                .format(DateTime.parse(_trxDesktop.records![i].created!))),
+          ),
+        ]));
+      }
+      //print(trx.records!.length);
+      //print(response.body);
+      // ignore: unnecessary_null_comparison
+      _desktopDataAvailable.value = true;
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
+  Future<void> getTicketLineDesktop() async {
+    linesDataAvailable.value = false;
+    final ip = GetStorage().read('ip');
+    final protocol = GetStorage().read('protocol');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/jp_todo?\$filter= R_Request_ID eq $requestId and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby= JP_ToDo_ScheduledStartDate desc');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      print(response.body);
+      _trxDesktopLines =
+          EventJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      lineRows = [];
+
+      desktopLinePagesTot.value = _trxDesktopLines.pagecount!;
+
+      for (var i = 0; i < _trxDesktopLines.records!.length; i++) {
+        lineRows.add(DataRow(selected: false, cells: <DataCell>[
+          DataCell(
+            Text(_trxDesktopLines.records![i].name ?? '??'),
+          ),
+          DataCell(Text(_trxDesktopLines.records![i].description ?? '??')),
+          DataCell(
+            Text((_trxDesktopLines.records![i].qty ?? '??').toString()),
+          ),
+        ]));
+      }
+    }
+
+    linesDataAvailable.value = true;
   }
 
   /* void openDrawer() {

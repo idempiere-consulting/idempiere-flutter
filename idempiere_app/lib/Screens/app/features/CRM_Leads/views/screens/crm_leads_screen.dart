@@ -1580,26 +1580,6 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
     );
   }
 
-  Widget _buildHeader({Function()? onPressedMenu}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Row(
-        children: [
-          if (onPressedMenu != null)
-            Padding(
-              padding: const EdgeInsets.only(right: kSpacing),
-              child: IconButton(
-                onPressed: onPressedMenu,
-                icon: const Icon(EvaIcons.menu),
-                tooltip: "menu",
-              ),
-            ),
-          const Expanded(child: _Header()),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHeader2({Function()? onPressedMenu}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -1625,8 +1605,19 @@ class CRMLeadScreen extends GetView<CRMLeadController> {
             ],
           ),
           Row(
-            children: const [
-              Expanded(child: _Header()),
+            children: [
+              Expanded(
+                child: _Header(
+                  buttonList: TypeJson.fromJson({
+                    "types": [
+                      {"id": "0", "name": "No Filter".tr},
+                      {"id": "1", "name": "Active Only".tr},
+                    ]
+                  }).types,
+                  dropDownValue: controller.quickFilterDropdownValue,
+                  onChanged: controller.setQuickFilterValue,
+                ),
+              ),
             ],
           ),
         ],

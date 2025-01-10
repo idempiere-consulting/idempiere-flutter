@@ -221,33 +221,36 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                         ),
                                         tooltip: 'Edit Shipment'.tr,
                                         onPressed: () {
+                                          if (Get.arguments["docStatus"] !=
+                                              'CO') {
+                                            Get.to(const EditShipmentline(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "qtyEntered": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .qtyEntered ??
+                                                      0,
+                                                  "description": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .description ??
+                                                      "",
+                                                  "productName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      "",
+                                                  "isSelected": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .isSelected ??
+                                                      false,
+                                                });
+                                          }
                                           //log("info button pressed");
-                                          Get.to(const EditShipmentline(),
-                                              arguments: {
-                                                "id": controller
-                                                    .trx.records![index].id,
-                                                "qtyEntered": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .qtyEntered ??
-                                                    0,
-                                                "description": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .description ??
-                                                    "",
-                                                "productName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    "",
-                                                "isSelected": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .isSelected ??
-                                                    false,
-                                              });
                                         },
                                       ),
                                     ],
@@ -438,6 +441,15 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                   ), */
                 ],
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    Get.to(const CRMEditByBarcodeShipment(), arguments: {
+                      "businessPartnerID": Get.arguments["bPartnerID"],
+                      "businessPartnerIName": controller.bpFieldController.text,
+                      "orderID": Get.arguments["id"],
+                    });
+                  },
+                  child: Text('Add Shipment Lines By Barcode'.tr)),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -473,33 +485,36 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                         ),
                                         tooltip: 'Edit Shipment'.tr,
                                         onPressed: () {
+                                          if (Get.arguments["docStatus"] !=
+                                              'CO') {
+                                            Get.to(const EditShipmentline(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "qtyEntered": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .qtyEntered ??
+                                                      0,
+                                                  "description": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .description ??
+                                                      "",
+                                                  "productName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      "",
+                                                  "isSelected": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .isSelected ??
+                                                      false,
+                                                });
+                                          }
                                           //log("info button pressed");
-                                          Get.to(const EditShipmentline(),
-                                              arguments: {
-                                                "id": controller
-                                                    .trx.records![index].id,
-                                                "qtyEntered": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .qtyEntered ??
-                                                    0,
-                                                "description": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .description ??
-                                                    "",
-                                                "productName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    "",
-                                                "isSelected": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .isSelected ??
-                                                    false,
-                                              });
                                         },
                                       ),
                                     ],
@@ -690,6 +705,15 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                   ), */
                 ],
               ),
+              ElevatedButton(
+                  onPressed: () {
+                    Get.to(const CRMEditByBarcodeShipment(), arguments: {
+                      "businessPartnerID": Get.arguments["bPartnerID"],
+                      "businessPartnerIName": controller.bpFieldController.text,
+                      "orderID": Get.arguments["id"],
+                    });
+                  },
+                  child: Text('Add Shipment Lines By Barcode'.tr)),
               const SizedBox(height: kSpacing),
               Obx(
                 () => controller.dataAvailable
@@ -725,33 +749,36 @@ class CRMShipmentlineScreen extends GetView<CRMShipmentlineController> {
                                         ),
                                         tooltip: 'Edit Shipment'.tr,
                                         onPressed: () {
+                                          if (Get.arguments["docStatus"] !=
+                                              'CO') {
+                                            Get.to(const EditShipmentline(),
+                                                arguments: {
+                                                  "id": controller
+                                                      .trx.records![index].id,
+                                                  "qtyEntered": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .qtyEntered ??
+                                                      0,
+                                                  "description": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .description ??
+                                                      "",
+                                                  "productName": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .mProductID
+                                                          ?.identifier ??
+                                                      "",
+                                                  "isSelected": controller
+                                                          .trx
+                                                          .records![index]
+                                                          .isSelected ??
+                                                      false,
+                                                });
+                                          }
                                           //log("info button pressed");
-                                          Get.to(const EditShipmentline(),
-                                              arguments: {
-                                                "id": controller
-                                                    .trx.records![index].id,
-                                                "qtyEntered": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .qtyEntered ??
-                                                    0,
-                                                "description": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .description ??
-                                                    "",
-                                                "productName": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .mProductID
-                                                        ?.identifier ??
-                                                    "",
-                                                "isSelected": controller
-                                                        .trx
-                                                        .records![index]
-                                                        .isSelected ??
-                                                    false,
-                                              });
                                         },
                                       ),
                                     ],

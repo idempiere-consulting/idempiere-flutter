@@ -1,4 +1,4 @@
-class HoursReviewJSON {
+class UserFavouriteJSON {
   final int? pagecount;
   final int? recordssize;
   final int? skiprecords;
@@ -6,7 +6,7 @@ class HoursReviewJSON {
   final int? arraycount;
   final List<Records>? records;
 
-  HoursReviewJSON({
+  UserFavouriteJSON({
     this.pagecount,
     this.recordssize,
     this.skiprecords,
@@ -15,7 +15,7 @@ class HoursReviewJSON {
     this.records,
   });
 
-  HoursReviewJSON.fromJson(Map<String, dynamic> json)
+  UserFavouriteJSON.fromJson(Map<String, dynamic> json)
       : pagecount = json['page-count'] as int?,
         recordssize = json['records-size'] as int?,
         skiprecords = json['skip-records'] as int?,
@@ -37,54 +37,42 @@ class HoursReviewJSON {
 
 class Records {
   final int? id;
+  final String? uid;
   final ADClientID? aDClientID;
   final ADOrgID? aDOrgID;
-  final bool? isActive;
   final String? created;
   final CreatedBy? createdBy;
   final String? updated;
   final UpdatedBy? updatedBy;
-  final String? name;
-  final String? description;
-  final num? qty;
-  final CProjectID? cProjectID;
-  final CBPartnerID? cBPartnerID;
-  final bool? isDoNotInvoice;
-  final String? assignDateFrom;
-  final String? dateticket;
-  final String? documentNo;
+  final bool? isActive;
+  final ADUserID? aDUserID;
+  final ADTableID? aDTableID;
   final String? modelname;
 
   Records({
     this.id,
+    this.uid,
     this.aDClientID,
     this.aDOrgID,
-    this.isActive,
     this.created,
     this.createdBy,
     this.updated,
     this.updatedBy,
-    this.name,
-    this.description,
-    this.qty,
-    this.cProjectID,
-    this.cBPartnerID,
-    this.isDoNotInvoice,
-    this.assignDateFrom,
-    this.dateticket,
-    this.documentNo,
+    this.isActive,
+    this.aDUserID,
+    this.aDTableID,
     this.modelname,
   });
 
   Records.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
+        uid = json['uid'] as String?,
         aDClientID = (json['AD_Client_ID'] as Map<String, dynamic>?) != null
             ? ADClientID.fromJson(json['AD_Client_ID'] as Map<String, dynamic>)
             : null,
         aDOrgID = (json['AD_Org_ID'] as Map<String, dynamic>?) != null
             ? ADOrgID.fromJson(json['AD_Org_ID'] as Map<String, dynamic>)
             : null,
-        isActive = json['IsActive'] as bool?,
         created = json['Created'] as String?,
         createdBy = (json['CreatedBy'] as Map<String, dynamic>?) != null
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
@@ -93,38 +81,27 @@ class Records {
         updatedBy = (json['UpdatedBy'] as Map<String, dynamic>?) != null
             ? UpdatedBy.fromJson(json['UpdatedBy'] as Map<String, dynamic>)
             : null,
-        name = json['Name'] as String?,
-        description = json['Description'] as String?,
-        qty = json['Qty'] as num?,
-        cProjectID = (json['C_Project_ID'] as Map<String, dynamic>?) != null
-            ? CProjectID.fromJson(json['C_Project_ID'] as Map<String, dynamic>)
+        isActive = json['IsActive'] as bool?,
+        aDUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
             : null,
-        cBPartnerID = (json['C_BPartner_ID'] as Map<String, dynamic>?) != null
-            ? CBPartnerID.fromJson(
-                json['C_BPartner_ID'] as Map<String, dynamic>)
+        aDTableID = (json['AD_Table_ID'] as Map<String, dynamic>?) != null
+            ? ADTableID.fromJson(json['AD_Table_ID'] as Map<String, dynamic>)
             : null,
-        isDoNotInvoice = json['isDoNotInvoice'] as bool?,
-        assignDateFrom = json['AssignDateFrom'] as String?,
-        dateticket = json['dateticket'] as String?,
-        documentNo = json['DocumentNo'] as String?,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
         'id': id,
+        'uid': uid,
         'AD_Client_ID': aDClientID?.toJson(),
         'AD_Org_ID': aDOrgID?.toJson(),
-        'IsActive': isActive,
         'Created': created,
         'CreatedBy': createdBy?.toJson(),
         'Updated': updated,
         'UpdatedBy': updatedBy?.toJson(),
-        'Name': name,
-        'Description': description,
-        'Qty': qty,
-        'C_Project_ID': cProjectID?.toJson(),
-        'C_BPartner_ID': cBPartnerID?.toJson(),
-        'isDoNotInvoice': isDoNotInvoice,
-        'AssignDateFrom': assignDateFrom,
+        'IsActive': isActive,
+        'AD_User_ID': aDUserID?.toJson(),
+        'AD_Table_ID': aDTableID?.toJson(),
         'model-name': modelname
       };
 }
@@ -237,20 +214,20 @@ class UpdatedBy {
       };
 }
 
-class CProjectID {
+class ADUserID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  CProjectID({
+  ADUserID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  CProjectID.fromJson(Map<String, dynamic> json)
+  ADUserID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
@@ -264,20 +241,20 @@ class CProjectID {
       };
 }
 
-class CBPartnerID {
+class ADTableID {
   final String? propertyLabel;
   final int? id;
   final String? identifier;
   final String? modelname;
 
-  CBPartnerID({
+  ADTableID({
     this.propertyLabel,
     this.id,
     this.identifier,
     this.modelname,
   });
 
-  CBPartnerID.fromJson(Map<String, dynamic> json)
+  ADTableID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

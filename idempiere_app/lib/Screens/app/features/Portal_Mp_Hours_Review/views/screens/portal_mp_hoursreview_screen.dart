@@ -288,12 +288,35 @@ class PortalMpHoursReviewScreen extends GetView<PortalMpHoursReviewController> {
                                       },
                                     ),
                                   ),
-                                  title: Text(
-                                    controller.trx.records![index].name ??
-                                        "???",
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                                  title: Column(
+                                    children: [
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              "${controller.trx.records![index].documentNo} ${controller.trx.records![index].dateticket ?? ""}",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              controller.trx.records![index]
+                                                      .name ??
+                                                  "???",
+                                              style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                   // subtitle: Text("Intermediate", style: TextStyle(color: Colors.white)),
 
@@ -489,7 +512,7 @@ class PortalMpHoursReviewScreen extends GetView<PortalMpHoursReviewController> {
                                               columns: <DataColumn>[
                                                 DataColumn(
                                                   label: Text(
-                                                    ''.tr,
+                                                    'Document N°'.tr,
                                                     style: const TextStyle(
                                                         fontStyle:
                                                             FontStyle.italic),

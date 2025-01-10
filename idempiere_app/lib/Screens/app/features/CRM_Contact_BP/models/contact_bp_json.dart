@@ -70,6 +70,8 @@ class Records {
   final bool? lITIsPartner;
   final bool? isPublic;
   final bool? isFavourite;
+  final ADUser2ID? adUser2ID;
+  final ADUserID? adUserID;
   final String? modelname;
   final String? phone;
 
@@ -112,6 +114,8 @@ class Records {
     this.lITIsPartner,
     this.isPublic,
     this.isFavourite,
+    this.adUser2ID,
+    this.adUserID,
     this.modelname,
     this.phone,
   });
@@ -180,6 +184,12 @@ class Records {
         lITIsPartner = json['LIT_IsPartner'] as bool?,
         isPublic = json['IsPublic'] as bool?,
         isFavourite = json['IsFavourite'] as bool?,
+        adUser2ID = (json['AD_User2_ID'] as Map<String, dynamic>?) != null
+            ? ADUser2ID.fromJson(json['AD_User2_ID'] as Map<String, dynamic>)
+            : null,
+        adUserID = (json['AD_User_ID'] as Map<String, dynamic>?) != null
+            ? ADUserID.fromJson(json['AD_User_ID'] as Map<String, dynamic>)
+            : null,
         modelname = json['model-name'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -320,6 +330,60 @@ class UpdatedBy {
   });
 
   UpdatedBy.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUser2ID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUser2ID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUser2ID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class ADUserID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  ADUserID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  ADUserID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

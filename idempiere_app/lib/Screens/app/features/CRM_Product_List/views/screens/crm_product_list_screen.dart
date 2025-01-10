@@ -537,6 +537,18 @@ class CRMProductListScreen extends GetView<CRMProductListController> {
                       children: <Widget>[
                         Expanded(
                           child: Text(
+                            controller.trx.records![index].value ?? "??",
+                            style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Text(
                             controller.trx.records![index].name ?? "??",
                             style: const TextStyle(color: Colors.white),
                           ),

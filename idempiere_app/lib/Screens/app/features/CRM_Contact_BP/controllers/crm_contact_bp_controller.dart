@@ -71,6 +71,26 @@ class CRMContactBPController extends GetxController {
     getContacts();
   }
 
+  String quickFilterDropdownValue = "0";
+  String quickFilterString = "";
+
+  setQuickFilterValue(String value) {
+    quickFilterDropdownValue = value;
+    print(quickFilterDropdownValue);
+
+    switch (quickFilterDropdownValue) {
+      case "0":
+        quickFilterString = "";
+        break;
+      case "1":
+        quickFilterString =
+            " and C_SalesStage_ID neq 1000010 and C_SalesStage_ID neq 1000009";
+        break;
+      default:
+    }
+    getContacts();
+  }
+
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
@@ -155,7 +175,7 @@ class CRMContactBPController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/ad_user?\$filter=C_BPartner_ID neq null and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$businessPartnerFilter$nameFilter$phoneFilter$mailFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/ad_user?\$filter= C_BPartner_ID neq null and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$businessPartnerFilter$nameFilter$phoneFilter$mailFilter&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{
@@ -171,7 +191,16 @@ class CRMContactBPController extends GetxController {
       //print(response.body);
       // ignore: unnecessary_null_comparison
       _dataAvailable.value = _trx != null;
+    } else {
+      print(response.body);
     }
+  }
+
+  Future<void> setContactAsFavourite(int index) async {
+    const filename = "userfavourites";
+    final file = File(
+        '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
+    //file.readAsString(jsonEncode(json.toJson()));
   }
 
   /* void openDrawer() {

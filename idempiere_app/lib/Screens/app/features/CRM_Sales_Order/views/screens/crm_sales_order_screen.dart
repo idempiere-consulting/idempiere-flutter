@@ -379,6 +379,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           .cActivityID
                                                           ?.id ??
                                                       0,
+                                                  "docStatus": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .docStatus
+                                                      ?.id,
                                                 });
                                           },
                                         ),
@@ -1097,6 +1102,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           .cActivityID
                                                           ?.id ??
                                                       0,
+                                                  "docStatus": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .docStatus
+                                                      ?.id,
                                                 });
                                           },
                                         ),
@@ -1815,6 +1825,11 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
                                                           .cActivityID
                                                           ?.id ??
                                                       0,
+                                                  "docStatus": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .docStatus
+                                                      ?.id,
                                                 });
                                           },
                                         ),
@@ -2421,26 +2436,6 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
     );
   }
 
-  Widget _buildHeader({Function()? onPressedMenu}) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: kSpacing),
-      child: Row(
-        children: [
-          if (onPressedMenu != null)
-            Padding(
-              padding: const EdgeInsets.only(right: kSpacing),
-              child: IconButton(
-                onPressed: onPressedMenu,
-                icon: const Icon(EvaIcons.menu),
-                tooltip: "menu",
-              ),
-            ),
-          const Expanded(child: _Header()),
-        ],
-      ),
-    );
-  }
-
   Widget _buildHeader2({Function()? onPressedMenu}) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: kSpacing),
@@ -2466,8 +2461,20 @@ class CRMSalesOrderScreen extends GetView<CRMSalesOrderController> {
             ],
           ),
           Row(
-            children: const [
-              Expanded(child: _Header()),
+            children: [
+              Expanded(
+                child: _Header(
+                  buttonList: TypeJson.fromJson({
+                    "types": [
+                      {"id": "0", "name": "No Filter".tr},
+                      {"id": "1", "name": "Draft Only".tr},
+                      {"id": "2", "name": "Complete Only".tr},
+                    ]
+                  }).types,
+                  dropDownValue: controller.quickFilterDropdownValue,
+                  onChanged: controller.setQuickFilterValue,
+                ),
+              ),
             ],
           ),
         ],

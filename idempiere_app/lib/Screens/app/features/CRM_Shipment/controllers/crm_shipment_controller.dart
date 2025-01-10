@@ -81,6 +81,28 @@ class CRMShipmentController extends GetxController {
     getShipments();
   }
 
+  String quickFilterDropdownValue = "0";
+  String quickFilterString = "";
+
+  setQuickFilterValue(String value) {
+    quickFilterDropdownValue = value;
+    print(quickFilterDropdownValue);
+
+    switch (quickFilterDropdownValue) {
+      case "0":
+        quickFilterString = "";
+        break;
+      case "1":
+        quickFilterString = " and DocStatus eq 'DR'";
+        break;
+      case "2":
+        quickFilterString = " and DocStatus eq 'CO'";
+        break;
+      default:
+    }
+    getShipments();
+  }
+
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
@@ -141,7 +163,7 @@ class CRMShipmentController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$businessPartnerFilter$dateStartFilter$dateEndFilter$docNoFilter$userFilter&\$orderby= Created desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
+        '$protocol://$ip/api/v1/models/lit_mobile_shipment_v?\$filter= IsSoTrx eq Y and AD_Client_ID eq ${GetStorage().read("clientid")}$quickFilterString${quickFilterString != "" ? "" : businessPartnerFilter}${quickFilterString != "" ? "" : dateStartFilter}${quickFilterString != "" ? "" : dateEndFilter}${quickFilterString != "" ? "" : docNoFilter}$userFilter&\$orderby= Created desc&\$skip=${(pagesCount.value - 1) * 100}'); //\$filter= AD_User2_ID eq ${GetStorage().read('userId')} or SalesRep_ID eq ${GetStorage().read('userId')}&
 
     var response = await http.get(
       url,

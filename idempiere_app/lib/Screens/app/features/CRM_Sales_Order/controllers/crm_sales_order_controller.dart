@@ -103,6 +103,28 @@ class CRMSalesOrderController extends GetxController {
     getSalesOrders();
   }
 
+  String quickFilterDropdownValue = "0";
+  String quickFilterString = "";
+
+  setQuickFilterValue(String value) {
+    quickFilterDropdownValue = value;
+    print(quickFilterDropdownValue);
+
+    switch (quickFilterDropdownValue) {
+      case "0":
+        quickFilterString = "";
+        break;
+      case "1":
+        quickFilterString = " and DocStatus eq 'DR'";
+        break;
+      case "2":
+        quickFilterString = " and DocStatus eq 'CO'";
+        break;
+      default:
+    }
+    getSalesOrders();
+  }
+
   Future<void> getADUserID() async {
     var name = GetStorage().read("user");
     final ip = GetStorage().read('ip');
@@ -247,7 +269,7 @@ class CRMSalesOrderController extends GetxController {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/lit_mobile_salesorder_v?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$userFilter$businessPartnerFilter$docNoFilter$dateStartFilter$dateEndFilter&\$skip=${(pagesCount.value - 1) * 100}');
+        '$protocol://$ip/api/v1/models/lit_mobile_salesorder_v?\$filter= IsSoTrx eq Y and DocStatus neq \'VO\'  and AD_Client_ID eq ${GetStorage().read("clientid")}${apiUrlFilter[filterCount]}$notificationFilter$quickFilterString$userFilter${quickFilterString != "" ? "" : businessPartnerFilter}${quickFilterString != "" ? "" : docNoFilter}${quickFilterString != "" ? "" : dateStartFilter}${quickFilterString != "" ? "" : dateEndFilter}&\$skip=${(pagesCount.value - 1) * 100}');
     var response = await http.get(
       url,
       headers: <String, String>{

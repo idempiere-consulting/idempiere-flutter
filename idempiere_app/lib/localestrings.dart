@@ -1435,6 +1435,9 @@ class LocaleString extends Translations {
           "Quick Filters": "Filtri Rapidi",
           "Select a Filter": "Seleziona un Filtro",
           "No Filter": "Nessuno",
+          "Draft Only": "Solo Bozze",
+          "Complete Only": "Solo Completati",
+          "Open Tickets": "Ticket Aperti"
         },
       };
 }

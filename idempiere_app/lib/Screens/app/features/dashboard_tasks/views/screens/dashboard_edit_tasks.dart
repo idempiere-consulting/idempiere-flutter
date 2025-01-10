@@ -109,7 +109,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/ad_user/${args["id"]}');
+    var url = Uri.parse('$protocol://$ip/api/v1/models/jp_todo/${args["id"]}');
     //print(msg);
     var response = await http.delete(
       url,
@@ -994,9 +994,162 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: nameFieldController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<PJRecords>(
+                                direction: AxisDirection.down,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        projectId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: projectFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Project'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  projectId = suggestion.id!;
+                                  nameFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  projectFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  setState(() {});
+                                  getProjectBP();
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllBusinessPartners(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<BPRecords>(
+                                direction: AxisDirection.down,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        businessPartnerId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: businessPartnerFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Business Partner'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  businessPartnerId = suggestion.id!;
+                                  businessPartnerFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  setState(() {});
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10),
+                  child: TextField(
                     readOnly: true,
                     controller: userFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Assigned To'.tr,
@@ -1005,11 +1158,14 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     readOnly: true,
                     controller: nameFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon: const Icon(Icons.task_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'Task'.tr,
@@ -1023,6 +1179,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     readOnly: true,
                     controller: statusFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon:
                           const Icon(Icons.settings_applications_outlined),
                       border: const OutlineInputBorder(),
@@ -1033,30 +1190,74 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 ),
                 /* Container(
                   margin: const EdgeInsets.all(10),
-                  child: TextField(
+                  child: DateTimePicker(
                     readOnly: true,
-                    maxLines: 4,
-                    controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      //prefixIcon: Icon(Icons.list),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'Date'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.event),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
                     ),
+                    type: DateTimePickerType.date,
+                    initialValue: DateTime.now().toString(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    //dateLabelText: 'Ship Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {},
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
                   ),
                 ), */
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                  margin: const EdgeInsets.only(left: 10, right: 5, bottom: 10),
+                  child: TextField(
+                    readOnly: true,
+                    // maxLength: 10,
+                    keyboardType: TextInputType.datetime,
+                    controller: dateFieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(EvaIcons.calendarOutline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      hintText: 'DD/MM/YYYY',
+                      counterText: '',
                     ),
-                    borderRadius: BorderRadius.circular(5),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                      LengthLimitingTextInputFormatter(10),
+                      DateFormatterCustom(),
+                    ],
                   ),
+                ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
                   child: DateTimePicker(
-                    //locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'Start Time'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
@@ -1079,16 +1280,20 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   child: DateTimePicker(
                     //locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'End Time'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: endTime.substring(0, 5),
@@ -1108,6 +1313,58 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
+                ), */
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 10, right: 5, bottom: 10),
+                        child: TextField(
+                          readOnly: args["statusId"] == "CO",
+                          // maxLength: 10,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
+                          controller: starttimeFieldController,
+
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.access_time),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Start Time'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: '00:00:00',
+                            counterText: '',
+                          ),
+                          inputFormatters: [TimeTextInputFormatter()],
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 10, bottom: 10),
+                        child: TextField(
+                          readOnly: args["statusId"] == "CO",
+                          // maxLength: 10,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
+                          controller: endtimeFieldController,
+
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.access_time),
+                            border: const OutlineInputBorder(),
+                            labelText: 'End Time'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: '00:00:00',
+                            counterText: '',
+                          ),
+                          inputFormatters: [TimeTextInputFormatter()],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.center,
@@ -1169,9 +1426,162 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 Container(
                   margin: const EdgeInsets.all(10),
                   child: TextField(
+                    controller: nameFieldController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Name'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(bottom: 10, left: 10, right: 10),
+                  child: TextField(
+                    controller: descriptionFieldController,
+                    minLines: 1,
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Description'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllProjects(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<PJRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<PJRecords>(
+                                direction: AxisDirection.down,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        projectId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: projectFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Project'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  projectId = suggestion.id!;
+                                  nameFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  projectFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  setState(() {});
+                                  getProjectBP();
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: FutureBuilder(
+                    future: getAllBusinessPartners(),
+                    builder: (BuildContext ctx,
+                            AsyncSnapshot<List<BPRecords>> snapshot) =>
+                        snapshot.hasData
+                            ? TypeAheadField<BPRecords>(
+                                direction: AxisDirection.down,
+                                //getImmediateSuggestions: true,
+                                textFieldConfiguration: TextFieldConfiguration(
+                                  onChanged: (value) {
+                                    if (value == "") {
+                                      setState(() {
+                                        businessPartnerId = 0;
+                                      });
+                                    }
+                                  },
+                                  controller: businessPartnerFieldController,
+                                  //autofocus: true,
+
+                                  decoration: InputDecoration(
+                                    labelText: 'Business Partner'.tr,
+                                    //filled: true,
+                                    border: const OutlineInputBorder(
+                                        /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                        ),
+                                    prefixIcon: const Icon(EvaIcons.search),
+                                    //hintText: "search..",
+                                    isDense: true,
+                                    //fillColor: Theme.of(context).cardColor,
+                                  ),
+                                ),
+                                suggestionsCallback: (pattern) async {
+                                  return snapshot.data!.where((element) =>
+                                      (element.name ?? "")
+                                          .toLowerCase()
+                                          .contains(pattern.toLowerCase()));
+                                },
+                                itemBuilder: (context, suggestion) {
+                                  return ListTile(
+                                    //leading: Icon(Icons.shopping_cart),
+                                    title: Text(suggestion.name ?? ""),
+                                  );
+                                },
+                                onSuggestionSelected: (suggestion) {
+                                  businessPartnerId = suggestion.id!;
+                                  businessPartnerFieldController.text =
+                                      "${suggestion.value}_${suggestion.name}";
+                                  setState(() {});
+                                },
+                              )
+                            : const Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                  ),
+                ),
+                Container(
+                  margin: const EdgeInsets.only(right: 10, left: 10),
+                  child: TextField(
                     readOnly: true,
                     controller: userFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon: const Icon(Icons.person_outlined),
                       border: const OutlineInputBorder(),
                       labelText: 'Assigned To'.tr,
@@ -1180,11 +1590,14 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                   ),
                 ),
                 Container(
-                  margin: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.only(top: 10, left: 10, right: 10),
                   child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
                     readOnly: true,
                     controller: nameFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon: const Icon(Icons.task_alt),
                       border: const OutlineInputBorder(),
                       labelText: 'Task'.tr,
@@ -1198,6 +1611,7 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     readOnly: true,
                     controller: statusFieldController,
                     decoration: InputDecoration(
+                      isDense: true,
                       prefixIcon:
                           const Icon(Icons.settings_applications_outlined),
                       border: const OutlineInputBorder(),
@@ -1208,30 +1622,74 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 ),
                 /* Container(
                   margin: const EdgeInsets.all(10),
-                  child: TextField(
+                  child: DateTimePicker(
                     readOnly: true,
-                    maxLines: 4,
-                    controller: descriptionFieldController,
-                    decoration: const InputDecoration(
-                      //prefixIcon: Icon(Icons.list),
-                      border: OutlineInputBorder(),
-                      labelText: 'Description',
-                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'Date'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.event),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
                     ),
+                    type: DateTimePickerType.date,
+                    initialValue: DateTime.now().toString(),
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2100),
+                    //dateLabelText: 'Ship Date'.tr,
+                    //icon: const Icon(Icons.event),
+                    onChanged: (val) {},
+                    validator: (val) {
+                      //print(val);
+                      return null;
+                    },
+                    // ignore: avoid_print
+                    onSaved: (val) => print(val),
                   ),
                 ), */
                 Container(
-                  margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
+                  margin: const EdgeInsets.only(left: 10, right: 5, bottom: 10),
+                  child: TextField(
+                    readOnly: true,
+                    // maxLength: 10,
+                    keyboardType: TextInputType.datetime,
+                    controller: dateFieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(EvaIcons.calendarOutline),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Date'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                      hintText: 'DD/MM/YYYY',
+                      counterText: '',
                     ),
-                    borderRadius: BorderRadius.circular(5),
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                      LengthLimitingTextInputFormatter(10),
+                      DateFormatterCustom(),
+                    ],
                   ),
+                ),
+                /* Container(
+                  margin: const EdgeInsets.all(10),
                   child: DateTimePicker(
-                    //locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'Start Time'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: startTime.substring(0, 5),
@@ -1254,16 +1712,20 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                 ),
                 Container(
                   margin: const EdgeInsets.all(10),
-                  padding: const EdgeInsets.all(10),
-                  width: size.width,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(5),
-                  ),
                   child: DateTimePicker(
                     //locale: Locale('languageCalendar'.tr),
+                    decoration: InputDecoration(
+                      labelText: 'End Time'.tr,
+                      //filled: true,
+                      border: const OutlineInputBorder(
+                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                          ),
+                      prefixIcon: const Icon(Icons.access_time),
+                      //hintText: "search..",
+                      isDense: true,
+                      //fillColor: Theme.of(context).cardColor,
+                    ),
                     readOnly: true,
                     type: DateTimePickerType.time,
                     initialValue: endTime.substring(0, 5),
@@ -1283,6 +1745,58 @@ class _DashboardTasksEditState extends State<DashboardTasksEdit> {
                     // ignore: avoid_print
                     onSaved: (val) => print(val),
                   ),
+                ), */
+                Row(
+                  children: [
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 10, right: 5, bottom: 10),
+                        child: TextField(
+                          readOnly: args["statusId"] == "CO",
+                          // maxLength: 10,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
+                          controller: starttimeFieldController,
+
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.access_time),
+                            border: const OutlineInputBorder(),
+                            labelText: 'Start Time'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: '00:00:00',
+                            counterText: '',
+                          ),
+                          inputFormatters: [TimeTextInputFormatter()],
+                        ),
+                      ),
+                    ),
+                    Flexible(
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                            left: 5, right: 10, bottom: 10),
+                        child: TextField(
+                          readOnly: args["statusId"] == "CO",
+                          // maxLength: 10,
+                          keyboardType: const TextInputType.numberWithOptions(
+                              decimal: false),
+                          controller: endtimeFieldController,
+
+                          decoration: InputDecoration(
+                            isDense: true,
+                            prefixIcon: const Icon(Icons.access_time),
+                            border: const OutlineInputBorder(),
+                            labelText: 'End Time'.tr,
+                            floatingLabelBehavior: FloatingLabelBehavior.always,
+                            hintText: '00:00:00',
+                            counterText: '',
+                          ),
+                          inputFormatters: [TimeTextInputFormatter()],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
                 ButtonBar(
                   alignment: MainAxisAlignment.center,

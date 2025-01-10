@@ -363,6 +363,33 @@ class CRMContactBPScreen extends GetView<CRMContactBPController> {
                                                 ""),
                                           ],
                                         ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            IconButton(
+                                                onPressed: () {
+                                                  if (controller
+                                                          ._trx
+                                                          .records![index]
+                                                          .adUser2ID ==
+                                                      null) {
+                                                    controller
+                                                        .setContactAsFavourite(
+                                                            index);
+                                                  } else {}
+                                                },
+                                                icon: controller
+                                                            ._trx
+                                                            .records![index]
+                                                            .adUser2ID !=
+                                                        null
+                                                    ? Icon(Symbols.star,
+                                                        color: Colors.yellow)
+                                                    : Icon(Symbols.star_border,
+                                                        color: Colors.white)),
+                                          ],
+                                        ),
                                       ],
                                     ),
                                   ],
