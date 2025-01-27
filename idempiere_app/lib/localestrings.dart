@@ -1437,7 +1437,8 @@ class LocaleString extends Translations {
           "No Filter": "Nessuno",
           "Draft Only": "Solo Bozze",
           "Complete Only": "Solo Completati",
-          "Open Tickets": "Ticket Aperti"
+          "Open Tickets": "Ticket Aperti",
+          "(30 Days)": "(30 Giorni)",
         },
       };
 }

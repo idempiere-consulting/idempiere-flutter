@@ -360,8 +360,8 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
     projectFieldController = TextEditingController(text: args["projectName"]);
     businessPartnerFieldController =
         TextEditingController(text: args["businessPartnerName"]);
-    projectId = args["projectID"];
-    businessPartnerId = args["businessPartnerID"];
+    projectId = args["projectID"] ?? 0;
+    businessPartnerId = args["businessPartnerID"] ?? 0;
     print(args['startTime']);
     fillFields();
   }
@@ -767,14 +767,16 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
             tabletBuilder: (context, constraints) {
               return Column(
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
                   Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      left: 10,
+                      right: 10,
+                    ),
                     child: TextField(
                       controller: nameFieldController,
                       decoration: InputDecoration(
+                        isDense: true,
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Name'.tr,
@@ -783,10 +785,15 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      left: 10,
+                      right: 10,
+                    ),
                     child: TextField(
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
+                        isDense: true,
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Description'.tr,
@@ -795,127 +802,296 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DateTimePicker(
-                      //locale: Locale('languageCalendar'.tr),
-                      type: DateTimePickerType.date,
-                      initialValue: date,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      dateLabelText: 'Date'.tr,
-                      icon: const Icon(Icons.event),
-                      onChanged: (val) {
-                        //print(DateTime.parse(val));
-                        //print(val);
-                        setState(() {
-                          date = val.substring(0, 10);
-                        });
-                        //print(date);
-                      },
-                      validator: (val) {
-                        //print(val);
-                        return null;
-                      },
-                      //onSaved: (val) => print(val),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DateTimePicker(
-                      //locale: Locale('languageCalendar'.tr),
-                      type: DateTimePickerType.time,
-                      initialValue: timeStart,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time'.tr,
-                      icon: const Icon(Icons.access_time),
-                      onChanged: (val) {
-                        setState(() {
-                          timeStart = val;
-                        });
-                      },
-                      validator: (val) {
-                        //print(val);
-                        return null;
-                      },
-                      // ignore: avoid_print
-                      onSaved: (val) => print(val),
+                    margin: const EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 10),
+                    child: FutureBuilder(
+                      future: getAllUsers(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<CRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<CRecords>(
+                                  direction: AxisDirection.up,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          userId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: userFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'User'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    setState(() {
+                                      userFieldController.text =
+                                          suggestion.name!;
+                                      userId = suggestion.id!;
+                                    });
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DateTimePicker(
-                      //locale: Locale('languageCalendar'.tr),
-                      type: DateTimePickerType.time,
-                      initialValue: timeEnd,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      timeLabelText: 'End Time'.tr,
-                      icon: const Icon(Icons.access_time),
-                      onChanged: (val) {
-                        setState(() {
-                          timeEnd = val;
-                        });
-                      },
-                      validator: (val) {
-                        //print(val);
-                        return null;
-                      },
-                      // ignore: avoid_print
-                      onSaved: (val) => print(val),
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: FutureBuilder(
+                      future: getAllProjects(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<PJRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<PJRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          projectId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: projectFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'Project'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    projectId = suggestion.id!;
+                                    nameFieldController.text =
+                                        "${suggestion.value}_${suggestion.name}";
+                                    projectFieldController.text =
+                                        "${suggestion.value}_${suggestion.name}";
+                                    setState(() {});
+                                    getProjectBP();
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: FutureBuilder(
+                      future: getAllBusinessPartners(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<BPRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          businessPartnerId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: businessPartnerFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'Business Partner'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    businessPartnerId = suggestion.id!;
+                                    businessPartnerFieldController.text =
+                                        "${suggestion.value}_${suggestion.name}";
+                                    setState(() {});
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
-                    child: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          value: list.id,
-                          child: Text(
-                            list.name.toString(),
+                  ),
+                  Container(
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: TextField(
+                      // maxLength: 10,
+                      keyboardType: TextInputType.datetime,
+                      controller: dateFieldController,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        prefixIcon: const Icon(EvaIcons.calendarOutline),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: 'DD/MM/YYYY',
+                        counterText: '',
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                        LengthLimitingTextInputFormatter(10),
+                        DateFormatterCustom(),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 5, bottom: 10),
+                          child: TextField(
+                            // maxLength: 10,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: false),
+                            controller: starttimeFieldController,
+
+                            decoration: InputDecoration(
+                              isDense: true,
+                              prefixIcon: const Icon(Icons.access_time),
+                              border: const OutlineInputBorder(),
+                              labelText: 'Start Time'.tr,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                              hintText: '00:00:00',
+                              counterText: '',
+                            ),
+                            inputFormatters: [TimeTextInputFormatter()],
                           ),
-                        );
-                      }).toList(),
+                        ),
+                      ),
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              left: 5, right: 10, bottom: 10),
+                          child: TextField(
+                            // maxLength: 10,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: false),
+                            controller: endtimeFieldController,
+
+                            decoration: InputDecoration(
+                              isDense: true,
+                              prefixIcon: const Icon(Icons.access_time),
+                              border: const OutlineInputBorder(),
+                              labelText: 'End Time'.tr,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                              hintText: '00:00:00',
+                              counterText: '',
+                            ),
+                            inputFormatters: [TimeTextInputFormatter()],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Task Status'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(EvaIcons.list),
+                        //hintText: "search..",
+                        isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
+                      child: DropdownButton(
+                        isDense: true,
+                        underline: SizedBox(),
+                        value: dropdownValue,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                          //print(dropdownValue);
+                        },
+                        items: dropDownList.map((list) {
+                          return DropdownMenuItem<String>(
+                            value: list.id,
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],
@@ -924,14 +1100,16 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
             desktopBuilder: (context, constraints) {
               return Column(
                 children: [
-                  const SizedBox(
-                    height: 10,
-                  ),
                   Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      left: 10,
+                      right: 10,
+                    ),
                     child: TextField(
                       controller: nameFieldController,
                       decoration: InputDecoration(
+                        isDense: true,
                         prefixIcon: const Icon(Icons.person_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Name'.tr,
@@ -940,10 +1118,15 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
+                    margin: const EdgeInsets.only(
+                      top: 10,
+                      left: 10,
+                      right: 10,
+                    ),
                     child: TextField(
                       controller: descriptionFieldController,
                       decoration: InputDecoration(
+                        isDense: true,
                         prefixIcon: const Icon(Icons.person_pin_outlined),
                         border: const OutlineInputBorder(),
                         labelText: 'Description'.tr,
@@ -952,127 +1135,296 @@ class _EditCalendarEventState extends State<EditCalendarEvent> {
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DateTimePicker(
-                      //locale: Locale('languageCalendar'.tr),
-                      type: DateTimePickerType.date,
-                      initialValue: date,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      dateLabelText: 'Date'.tr,
-                      icon: const Icon(Icons.event),
-                      onChanged: (val) {
-                        //print(DateTime.parse(val));
-                        //print(val);
-                        setState(() {
-                          date = val.substring(0, 10);
-                        });
-                        //print(date);
-                      },
-                      validator: (val) {
-                        //print(val);
-                        return null;
-                      },
-                      //onSaved: (val) => print(val),
-                    ),
-                  ),
-                  Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DateTimePicker(
-                      //locale: Locale('languageCalendar'.tr),
-                      type: DateTimePickerType.time,
-                      initialValue: timeStart,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      timeLabelText: 'Start Time'.tr,
-                      icon: const Icon(Icons.access_time),
-                      onChanged: (val) {
-                        setState(() {
-                          timeStart = val;
-                        });
-                      },
-                      validator: (val) {
-                        //print(val);
-                        return null;
-                      },
-                      // ignore: avoid_print
-                      onSaved: (val) => print(val),
+                    margin: const EdgeInsets.only(
+                        top: 10, left: 10, right: 10, bottom: 10),
+                    child: FutureBuilder(
+                      future: getAllUsers(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<CRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<CRecords>(
+                                  direction: AxisDirection.up,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          userId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: userFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      isDense: true,
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      border: const OutlineInputBorder(),
+                                      labelText: 'User'.tr,
+                                      floatingLabelBehavior:
+                                          FloatingLabelBehavior.always,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    setState(() {
+                                      userFieldController.text =
+                                          suggestion.name!;
+                                      userId = suggestion.id!;
+                                    });
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DateTimePicker(
-                      //locale: Locale('languageCalendar'.tr),
-                      type: DateTimePickerType.time,
-                      initialValue: timeEnd,
-                      firstDate: DateTime(2000),
-                      lastDate: DateTime(2100),
-                      timeLabelText: 'End Time'.tr,
-                      icon: const Icon(Icons.access_time),
-                      onChanged: (val) {
-                        setState(() {
-                          timeEnd = val;
-                        });
-                      },
-                      validator: (val) {
-                        //print(val);
-                        return null;
-                      },
-                      // ignore: avoid_print
-                      onSaved: (val) => print(val),
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: FutureBuilder(
+                      future: getAllProjects(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<PJRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<PJRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          projectId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: projectFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'Project'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    projectId = suggestion.id!;
+                                    nameFieldController.text =
+                                        "${suggestion.value}_${suggestion.name}";
+                                    projectFieldController.text =
+                                        "${suggestion.value}_${suggestion.name}";
+                                    setState(() {});
+                                    getProjectBP();
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
                   ),
                   Container(
-                    margin: const EdgeInsets.all(10),
-                    padding: const EdgeInsets.all(10),
-                    width: size.width,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                      ),
-                      borderRadius: BorderRadius.circular(5),
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: FutureBuilder(
+                      future: getAllBusinessPartners(),
+                      builder: (BuildContext ctx,
+                              AsyncSnapshot<List<BPRecords>> snapshot) =>
+                          snapshot.hasData
+                              ? TypeAheadField<BPRecords>(
+                                  direction: AxisDirection.down,
+                                  //getImmediateSuggestions: true,
+                                  textFieldConfiguration:
+                                      TextFieldConfiguration(
+                                    onChanged: (value) {
+                                      if (value == "") {
+                                        setState(() {
+                                          businessPartnerId = 0;
+                                        });
+                                      }
+                                    },
+                                    controller: businessPartnerFieldController,
+                                    //autofocus: true,
+
+                                    decoration: InputDecoration(
+                                      labelText: 'Business Partner'.tr,
+                                      //filled: true,
+                                      border: const OutlineInputBorder(
+                                          /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                                          ),
+                                      prefixIcon: const Icon(EvaIcons.search),
+                                      //hintText: "search..",
+                                      isDense: true,
+                                      //fillColor: Theme.of(context).cardColor,
+                                    ),
+                                  ),
+                                  suggestionsCallback: (pattern) async {
+                                    return snapshot.data!.where((element) =>
+                                        (element.name ?? "")
+                                            .toLowerCase()
+                                            .contains(pattern.toLowerCase()));
+                                  },
+                                  itemBuilder: (context, suggestion) {
+                                    return ListTile(
+                                      //leading: Icon(Icons.shopping_cart),
+                                      title: Text(suggestion.name ?? ""),
+                                    );
+                                  },
+                                  onSuggestionSelected: (suggestion) {
+                                    businessPartnerId = suggestion.id!;
+                                    businessPartnerFieldController.text =
+                                        "${suggestion.value}_${suggestion.name}";
+                                    setState(() {});
+                                  },
+                                )
+                              : const Center(
+                                  child: CircularProgressIndicator(),
+                                ),
                     ),
-                    child: DropdownButton(
-                      value: dropdownValue,
-                      elevation: 16,
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          dropdownValue = newValue!;
-                        });
-                        //print(dropdownValue);
-                      },
-                      items: dropDownList.map((list) {
-                        return DropdownMenuItem<String>(
-                          value: list.id,
-                          child: Text(
-                            list.name.toString(),
+                  ),
+                  Container(
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: TextField(
+                      // maxLength: 10,
+                      keyboardType: TextInputType.datetime,
+                      controller: dateFieldController,
+                      decoration: InputDecoration(
+                        isDense: true,
+                        prefixIcon: const Icon(EvaIcons.calendarOutline),
+                        border: const OutlineInputBorder(),
+                        labelText: 'Date'.tr,
+                        floatingLabelBehavior: FloatingLabelBehavior.always,
+                        hintText: 'DD/MM/YYYY',
+                        counterText: '',
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.allow(RegExp("[0-9/]")),
+                        LengthLimitingTextInputFormatter(10),
+                        DateFormatterCustom(),
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              left: 10, right: 5, bottom: 10),
+                          child: TextField(
+                            // maxLength: 10,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: false),
+                            controller: starttimeFieldController,
+
+                            decoration: InputDecoration(
+                              isDense: true,
+                              prefixIcon: const Icon(Icons.access_time),
+                              border: const OutlineInputBorder(),
+                              labelText: 'Start Time'.tr,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                              hintText: '00:00:00',
+                              counterText: '',
+                            ),
+                            inputFormatters: [TimeTextInputFormatter()],
                           ),
-                        );
-                      }).toList(),
+                        ),
+                      ),
+                      Flexible(
+                        child: Container(
+                          margin: const EdgeInsets.only(
+                              left: 5, right: 10, bottom: 10),
+                          child: TextField(
+                            // maxLength: 10,
+                            keyboardType: const TextInputType.numberWithOptions(
+                                decimal: false),
+                            controller: endtimeFieldController,
+
+                            decoration: InputDecoration(
+                              isDense: true,
+                              prefixIcon: const Icon(Icons.access_time),
+                              border: const OutlineInputBorder(),
+                              labelText: 'End Time'.tr,
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.always,
+                              hintText: '00:00:00',
+                              counterText: '',
+                            ),
+                            inputFormatters: [TimeTextInputFormatter()],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Container(
+                    margin:
+                        const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                    child: InputDecorator(
+                      decoration: InputDecoration(
+                        labelText: 'Task Status'.tr,
+                        //filled: true,
+                        border: const OutlineInputBorder(
+                            /* borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide.none, */
+                            ),
+                        prefixIcon: const Icon(EvaIcons.list),
+                        //hintText: "search..",
+                        isDense: true,
+                        //fillColor: Theme.of(context).cardColor,
+                      ),
+                      child: DropdownButton(
+                        isDense: true,
+                        underline: SizedBox(),
+                        value: dropdownValue,
+                        elevation: 16,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            dropdownValue = newValue!;
+                          });
+                          //print(dropdownValue);
+                        },
+                        items: dropDownList.map((list) {
+                          return DropdownMenuItem<String>(
+                            value: list.id,
+                            child: Text(
+                              list.name.toString(),
+                            ),
+                          );
+                        }).toList(),
+                      ),
                     ),
                   ),
                 ],

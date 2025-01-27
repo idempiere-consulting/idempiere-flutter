@@ -165,6 +165,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                     Padding(
                       padding: const EdgeInsets.only(
                         left: kSpacing,
+                        right: kSpacing,
                         top: kSpacing,
                         bottom: 5,
                       ),
@@ -179,6 +180,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                               ),
                             ],
                           ),
+                          Divider(),
                           Padding(
                             padding: const EdgeInsets.only(
                               left: 10,
@@ -200,7 +202,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                                   () => Row(
                                     children: [
                                       Text(
-                                          "${controller.totalHours} ${"Total Hours".tr}"),
+                                          "${controller.totalHours} ${"Total Hours".tr} ${"(30 Days)".tr}"),
                                     ],
                                   ),
                                 )
@@ -1378,6 +1380,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                             Padding(
                               padding: const EdgeInsets.only(
                                 left: kSpacing,
+                                right: kSpacing,
                                 top: kSpacing,
                                 bottom: 5,
                               ),
@@ -1392,6 +1395,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                                       ),
                                     ],
                                   ),
+                                  Divider(),
                                   Padding(
                                     padding: const EdgeInsets.only(
                                       left: 10,
@@ -1413,7 +1417,7 @@ class PortalMpScreen extends GetView<PortalMpController> {
                                           () => Row(
                                             children: [
                                               Text(
-                                                  "${controller.totalHours} ${"Total Hours".tr}"),
+                                                  "${controller.totalHours} ${"Total Hours".tr}\n${"(30 Days)".tr}"),
                                             ],
                                           ),
                                         )

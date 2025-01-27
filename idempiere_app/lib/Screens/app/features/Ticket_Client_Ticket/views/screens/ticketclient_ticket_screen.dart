@@ -1288,6 +1288,32 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                         )),
                                   ),
                                 ),
+                                Obx(
+                                  () => Visibility(
+                                    visible: controller.showLines.value,
+                                    child: IconButton(
+                                      onPressed: () {
+                                        Get.to(const TicketClientChat(),
+                                            arguments: {
+                                              "ticketid": controller.requestId,
+                                            });
+                                      },
+                                      icon: Icon(Icons.message,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                Obx(
+                                  () => Visibility(
+                                    visible: controller.showLines.value,
+                                    child: ElevatedButton(
+                                        onPressed: () {
+                                          controller.checkcloseTicket(
+                                              controller.requestId);
+                                        },
+                                        child: Text("Close Ticket".tr)),
+                                  ),
+                                ),
                               ],
                             ),
                           ),
@@ -1450,7 +1476,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                           () => controller
                                                   ._desktopDataAvailable.value
                                               ? DataTable(
-                                                  columns: const <DataColumn>[
+                                                  columns: <DataColumn>[
                                                     DataColumn(
                                                       label: Expanded(
                                                         child: Text(
@@ -1476,18 +1502,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                     DataColumn(
                                                       label: Expanded(
                                                         child: Text(
-                                                          'Name',
-                                                          style: TextStyle(
-                                                              fontStyle:
-                                                                  FontStyle
-                                                                      .italic),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                    DataColumn(
-                                                      label: Expanded(
-                                                        child: Text(
-                                                          'Date',
+                                                          'Summary'.tr,
                                                           style: TextStyle(
                                                               fontStyle:
                                                                   FontStyle
@@ -1557,6 +1572,27 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                 border:
                                                     const OutlineInputBorder(),
                                                 labelText: 'Document Status'.tr,
+                                                floatingLabelBehavior:
+                                                    FloatingLabelBehavior
+                                                        .always,
+                                              ),
+                                              minLines: 1,
+                                              maxLines: 1,
+                                            ),
+                                          ),
+                                          Container(
+                                            margin: const EdgeInsets.all(10),
+                                            child: TextField(
+                                              controller: controller
+                                                  .desktopAssignedToFieldController,
+                                              decoration: InputDecoration(
+                                                isDense: true,
+                                                //hintStyle: TextStyle(fontStyle: FontStyle.italic),
+                                                prefixIcon: const Icon(
+                                                    Icons.text_fields),
+                                                border:
+                                                    const OutlineInputBorder(),
+                                                labelText: 'Assigned To'.tr,
                                                 floatingLabelBehavior:
                                                     FloatingLabelBehavior
                                                         .always,
@@ -1726,7 +1762,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                   DataColumn(
                                                     label: Expanded(
                                                       child: Text(
-                                                        'Hours'.tr,
+                                                        'Date'.tr,
                                                         style: const TextStyle(
                                                             fontStyle: FontStyle
                                                                 .italic),

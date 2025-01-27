@@ -42,6 +42,8 @@ class TicketClientTicketController extends GetxController {
 
   TextEditingController desktopDocNoFieldController = TextEditingController();
   TextEditingController desktopDocTypeFieldController = TextEditingController();
+  TextEditingController desktopAssignedToFieldController =
+      TextEditingController();
   TextEditingController desktopBusinessPartnerFieldController =
       TextEditingController();
   TextEditingController desktopNameFieldController = TextEditingController();
@@ -468,18 +470,136 @@ class TicketClientTicketController extends GetxController {
 
       for (var i = 0; i < _trxDesktop.records!.length; i++) {
         headerRows.add(DataRow(selected: false, cells: <DataCell>[
-          DataCell(IconButton(
-            onPressed: () {
-              Get.to(const TicketClientChat(),
-                  arguments: {"ticketid": _trxDesktop.records![i].id});
-            },
-            icon: _trxDesktop.records![i].rStatusID?.id! == 1000024
-                ? const Icon(
-                    Icons.check,
-                    color: kNotifColor,
-                  )
-                : const Icon(Icons.pending, color: Colors.yellow),
-          )),
+          DataCell(
+            Row(
+              children: [
+                Visibility(
+                  visible: _trxDesktop.records![i].rStatusID!.identifier!
+                      .contains('CONF'),
+                  child: IconButton(
+                    tooltip: 'Pending Confirm'.tr,
+                    icon: const Icon(
+                      Icons.pending_actions,
+                      color: Colors.yellow,
+                    ),
+                    onPressed: () {
+                      confirmCheckBoxValue.value = false;
+                      Get.defaultDialog(
+                        title: 'Pending Confirm'.tr,
+                        textConfirm: 'Proceed'.tr,
+                        onCancel: () {},
+                        onConfirm: () {
+                          if (confirmCheckBoxValue.value == true) {
+                            confirmTicket(i);
+                            Get.back();
+                          }
+                        },
+                        content: Column(
+                          children: [
+                            Visibility(
+                              visible: _trxDesktop.records![i].cOrderID != null,
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  minLines: 1,
+                                  maxLines: 3,
+                                  readOnly: true,
+                                  controller: TextEditingController(
+                                      text: _trx
+                                          .records![i].cOrderID?.identifier),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    prefixIcon: const Icon(Icons.text_fields),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Sales Order'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible:
+                                  _trxDesktop.records![i].mProductID != null &&
+                                      _trxDesktop.records![i].cOrderID == null,
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  minLines: 1,
+                                  maxLines: 3,
+                                  readOnly: true,
+                                  controller: TextEditingController(
+                                      text: _trxDesktop
+                                          .records![i].mProductID?.identifier),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    prefixIcon: const Icon(Icons.text_fields),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Product'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Visibility(
+                              visible:
+                                  _trxDesktop.records![i].mProductID != null &&
+                                      _trxDesktop.records![i].cOrderID == null,
+                              child: Container(
+                                margin: const EdgeInsets.all(10),
+                                child: TextField(
+                                  minLines: 1,
+                                  maxLines: 3,
+                                  readOnly: true,
+                                  controller: TextEditingController(
+                                      text: _trxDesktop.records![i].requestAmt
+                                          .toString()),
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    prefixIcon: const Icon(Icons.text_fields),
+                                    border: const OutlineInputBorder(),
+                                    labelText: 'Amount'.tr,
+                                    floatingLabelBehavior:
+                                        FloatingLabelBehavior.always,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Divider(),
+                            Obx(
+                              () => CheckboxListTile(
+                                title: Text('Confirm Pending Action'.tr),
+                                value: confirmCheckBoxValue.value,
+                                activeColor: kPrimaryColor,
+                                onChanged: (bool? value) {
+                                  confirmCheckBoxValue.value = value!;
+                                },
+                                controlAffinity:
+                                    ListTileControlAffinity.leading,
+                              ),
+                            ),
+                            Divider(),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                Expanded(
+                  child: Text(
+                    _trxDesktop.records![i].rStatusID?.identifier ?? '??',
+                    style: TextStyle(
+                        color: _trxDesktop.records![i].rStatusID?.id! == 1000024
+                            ? kNotifColor
+                            : _trxDesktop.records![i].rStatusID?.id! == 1000030
+                                ? Colors.grey
+                                : Colors.yellow),
+                  ),
+                ),
+              ],
+            ),
+          ),
           DataCell(Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
@@ -497,6 +617,8 @@ class TicketClientTicketController extends GetxController {
 
                     desktopDocTypeFieldController.text =
                         _trxDesktop.records![i].rStatusID?.identifier ?? "";
+                    desktopAssignedToFieldController.text =
+                        _trxDesktop.records![i].salesRepID?.identifier ?? "N/A";
 
                     desktopDateFromFieldController.text =
                         DateFormat('dd/MM/yyyy').format(
@@ -510,15 +632,14 @@ class TicketClientTicketController extends GetxController {
                     getTicketLineDesktop();
                   },
                   icon: const Icon(EvaIcons.search)),
-              Text(_trxDesktop.records![i].documentNo ?? '??')
+              Expanded(
+                child: Text(
+                    "${_trxDesktop.records![i].documentNo} ${DateFormat('dd/MM/yyyy').format(DateTime.parse(_trxDesktop.records![i].created!))}"),
+              )
             ],
           )),
           DataCell(
-            Text(_trxDesktop.records![i].name ?? '??'),
-          ),
-          DataCell(
-            Text(DateFormat('dd/MM/yyyy')
-                .format(DateTime.parse(_trxDesktop.records![i].created!))),
+            Text(_trxDesktop.records![i].summary ?? '??'),
           ),
         ]));
       }
@@ -564,13 +685,62 @@ class TicketClientTicketController extends GetxController {
           ),
           DataCell(Text(_trxDesktopLines.records![i].description ?? '??')),
           DataCell(
-            Text((_trxDesktopLines.records![i].qty ?? '??').toString()),
+            Text(DateFormat('dd/MM/yyyy').format(DateTime.parse(
+                _trxDesktopLines.records![i].jPToDoScheduledStartDate!))),
           ),
         ]));
       }
     }
 
     linesDataAvailable.value = true;
+  }
+
+  checkcloseTicket(int id) {
+    Get.defaultDialog(
+        title: "Close Ticket".tr,
+        middleText: "Are you sure you want to close the Ticket?".tr,
+        //contentPadding: const EdgeInsets.all(2.0),
+        barrierDismissible: true,
+        textCancel: "Cancel",
+        textConfirm: "Confirm",
+        onConfirm: () {
+          Get.back();
+          closeTicket(id);
+        });
+  }
+
+  Future<void> closeTicket(int id) async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final msg = jsonEncode({
+      "R_Status_ID": 1000030,
+    });
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' + ip + '/api/v1/models/r_request/$id');
+
+    var response = await http.put(
+      url,
+      body: msg,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      getTickets();
+      //print("done!");
+      //completeOrder(index);
+    } else {
+      //print(response.body);
+      Get.snackbar(
+        "Errore!",
+        "Il Ticket non è stato chiuso",
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
   }
 
   /* void openDrawer() {

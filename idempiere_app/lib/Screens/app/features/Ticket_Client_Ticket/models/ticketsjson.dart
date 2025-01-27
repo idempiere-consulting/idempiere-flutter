@@ -71,7 +71,7 @@ class Records {
   final String? closeDate;
   final TaskStatus? taskStatus;
   final String? dateCompletePlan;
-  final int? qtyPlan;
+  final num? qtyPlan;
   final String? dateStartPlan;
   final String? name;
   final String? description;
@@ -214,7 +214,7 @@ class Records {
             ? TaskStatus.fromJson(json['TaskStatus'] as Map<String, dynamic>)
             : null,
         dateCompletePlan = json['DateCompletePlan'] as String?,
-        qtyPlan = json['QtyPlan'] as int?,
+        qtyPlan = json['QtyPlan'] as num?,
         dateStartPlan = json['DateStartPlan'] as String?,
         name = json['Name'] as String?,
         description = json['Description'] as String?,

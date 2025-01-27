@@ -19,7 +19,7 @@ class Body extends StatelessWidget {
     final protocol = GetStorage().read('protocol');
     Size size = MediaQuery.of(context).size;
     if (GetStorage().read('protocol') == null) {
-      GetStorage().write('protocol', 'http');
+      GetStorage().write('protocol', 'https');
     }
     // This size provide us total height and width of our screen
     return Background(
