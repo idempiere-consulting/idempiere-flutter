@@ -106,6 +106,8 @@ class MaintenanceMptaskStandardController extends GetxController {
           final dir = await getApplicationDocumentsDirectory();
           final file = File('${dir.path}/${attachments.attachments![0].name!}');
           await file.writeAsBytes(bytes, flush: true);
+          final result = await OpenFilex.open(
+              '${dir.path}/${attachments.attachments![0].name!}');
         } else {
           final dir = await getApplicationDocumentsDirectory();
           final file = File('${dir.path}/${attachments.attachments![0].name!}');
@@ -131,6 +133,11 @@ class MaintenanceMptaskStandardController extends GetxController {
         print(response.body);
       }
     }
+  }
+
+  searchAddressMap(String url) async {
+    await launchUrl(Uri.parse("https://www.google.com/maps?q=$url"),
+        mode: LaunchMode.externalNonBrowserApplication);
   }
 
   completeToDo(int index) async {

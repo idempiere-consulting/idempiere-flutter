@@ -28,6 +28,7 @@
     <action android:name="android.intent.action.SEND" />
     <data android:mimeType="*/*" />
   </intent>
+  
 </queries>
    <application
         android:label="idempiere_app"

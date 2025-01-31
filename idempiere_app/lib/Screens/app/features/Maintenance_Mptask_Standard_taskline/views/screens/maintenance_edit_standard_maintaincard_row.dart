@@ -89,6 +89,50 @@ class _EditMaintainCardRowState extends State<EditMaintainCardRow> {
     }
   }
 
+  disableMaintainCardRow() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+
+    var json = {
+      "IsActive": false,
+    };
+
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/LIT_ProductCardLine/${args['cardLineId']}');
+    //print(msg);
+    var response = await http.put(
+      url,
+      body: jsonEncode(json),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print("done!");
+      widget.getMaintainCardLines();
+      Get.snackbar(
+        "Done!".tr,
+        "The record has been modified".tr,
+        icon: const Icon(
+          Icons.done,
+          color: Colors.green,
+        ),
+      );
+    } else {
+      print(response.body);
+      Get.snackbar(
+        "Error!".tr,
+        "Record not modified".tr,
+        icon: const Icon(
+          Icons.error,
+          color: Colors.red,
+        ),
+      );
+    }
+  }
+
   Future<List<PRecords>> getAllProducts() async {
     //print(response.body);
     const filename = "products";
@@ -161,6 +205,16 @@ class _EditMaintainCardRowState extends State<EditMaintainCardRow> {
               icon: const Icon(
                 Icons.save,
               ),
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              //createMaintainCardRow();
+              disableMaintainCardRow();
+            },
+            icon: const Icon(
+              Icons.delete,
+              color: Colors.yellow,
             ),
           ),
         ],

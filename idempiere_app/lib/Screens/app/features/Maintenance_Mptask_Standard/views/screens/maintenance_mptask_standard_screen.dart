@@ -39,6 +39,7 @@ import 'package:flutter/foundation.dart' show kDebugMode, kIsWeb;
 import 'package:idempiere_app/constants.dart';
 import 'package:intl/intl.dart';
 import 'package:material_symbols_icons/symbols.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:printing/printing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -519,7 +520,10 @@ class MaintenanceMptaskStandardScreen
                                             ), */
 
                                           IconButton(
-                                            onPressed: () {},
+                                            onPressed: () {
+                                              controller.searchAddressMap(
+                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}");
+                                            },
                                             icon: Icon(Icons.location_pin,
                                                 color: Colors.red.shade700),
                                           ),

@@ -368,7 +368,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/LIT_ProductCardLine?\$filter= LIT_ProductCard_ID eq $cardId');
+        '$protocol://$ip/api/v1/models/LIT_ProductCardLine?\$filter= LIT_ProductCard_ID eq $cardId and IsActive eq true');
 
     var response = await http.get(
       url,
@@ -378,9 +378,6 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       },
     );
     if (response.statusCode == 200) {
-      if (kDebugMode) {
-        print(response.body);
-      }
       trxLines = MaintainCardLineJSON.fromJson(
           jsonDecode(utf8.decode(response.bodyBytes)));
 
