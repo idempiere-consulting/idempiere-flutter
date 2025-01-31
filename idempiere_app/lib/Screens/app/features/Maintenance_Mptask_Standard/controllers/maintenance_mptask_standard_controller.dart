@@ -95,14 +95,17 @@ class MaintenanceMptaskStandardController extends GetxController {
     );
 
     if (response.statusCode == 200) {
-      print(response.body);
+      //print(response.body);
 
       if (attachments.attachments![0].contentType! == "application/pdf") {
         final bytes = response.bodyBytes;
 
         if (Platform.isAndroid) {
-          await Printing.layoutPdf(
-              onLayout: (PdfPageFormat format) async => bytes);
+          /* await Printing.layoutPdf(
+              onLayout: (PdfPageFormat format) async => bytes); */
+          final dir = await getApplicationDocumentsDirectory();
+          final file = File('${dir.path}/${attachments.attachments![0].name!}');
+          await file.writeAsBytes(bytes, flush: true);
         } else {
           final dir = await getApplicationDocumentsDirectory();
           final file = File('${dir.path}/${attachments.attachments![0].name!}');

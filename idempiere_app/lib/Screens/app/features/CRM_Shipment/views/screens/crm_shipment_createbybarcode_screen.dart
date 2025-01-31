@@ -893,14 +893,16 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                                         (orderLinePR.records![i].qtyDelivered ??
                                             0)) >
                                 0) {
-                          orderLinePR.records![i].qtyReserved;
+                          //orderLinePR.records![i].qtyReserved;
 
                           if (qtyToAdd <=
-                              orderLinePR.records![i].qtyReserved!) {
+                              orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!) {
                             shipmentLines.records!.add(SLRecords(
                               cOrderLineID: SLCOrderLineID(
                                   id: orderLinePR.records![i].id),
-                              plannedQty: orderLinePR.records![i].qtyReserved,
+                              plannedQty: orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!,
                               cBPartnerID: SLCBPartnerID(
                                   id: orderLinePR.records![i].cBPartnerID!.id!,
                                   identifier: orderLinePR
@@ -923,7 +925,8 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
                             shipmentLines.records!.add(SLRecords(
                               cOrderLineID: SLCOrderLineID(
                                   id: orderLinePR.records![i].id),
-                              plannedQty: orderLinePR.records![i].qtyReserved!,
+                              plannedQty: orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!,
                               cBPartnerID: SLCBPartnerID(
                                   id: orderLinePR.records![i].cBPartnerID!.id!,
                                   identifier: orderLinePR

@@ -517,8 +517,12 @@ class MaintenanceMptaskStandardScreen
                                               style: TextStyle(
                                                   fontWeight: FontWeight.bold),
                                             ), */
-                                          Icon(Icons.location_pin,
-                                              color: Colors.red.shade700),
+
+                                          IconButton(
+                                            onPressed: () {},
+                                            icon: Icon(Icons.location_pin,
+                                                color: Colors.red.shade700),
+                                          ),
                                           Expanded(
                                             child: Text(
                                               "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
