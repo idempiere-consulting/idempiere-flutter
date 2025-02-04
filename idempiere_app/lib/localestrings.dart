@@ -1439,6 +1439,9 @@ class LocaleString extends Translations {
           "Complete Only": "Solo Completati",
           "Open Tickets": "Ticket Aperti",
           "(30 Days)": "(30 Giorni)",
+          "Install Date": "Data Installazione",
+          "Date Contract From": "Data Contratto Dal",
+          "Battery": "Batteria",
         },
       };
 }

@@ -35,6 +35,7 @@ class ADRRecords {
   final int? id;
   final String? uid;
   final String? name;
+  final String? description;
   final ADReferenceID? aDReferenceID;
   final String? value;
   final ADClientID? aDClientID;
@@ -52,6 +53,7 @@ class ADRRecords {
     this.id,
     this.uid,
     this.name,
+    this.description,
     this.aDReferenceID,
     this.value,
     this.aDClientID,
@@ -70,6 +72,7 @@ class ADRRecords {
       : id = json['id'] as int?,
         uid = json['uid'] as String?,
         name = json['Name'] as String?,
+        description = json['Description'] as String?,
         aDReferenceID =
             (json['AD_Reference_ID'] as Map<String, dynamic>?) != null
                 ? ADReferenceID.fromJson(

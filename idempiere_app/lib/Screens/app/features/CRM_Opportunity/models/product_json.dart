@@ -53,6 +53,7 @@ class PRecords {
   final String? value;
   final MProductCategoryID? mProductCategoryID;
   final CTaxCategoryID? cTaxCategoryID;
+  final MProductToID? mProductToID;
   final String? sKU;
   final int? shelfWidth;
   final int? shelfHeight;
@@ -110,6 +111,7 @@ class PRecords {
     this.weight,
     this.value,
     this.mProductCategoryID,
+    this.mProductToID,
     this.cTaxCategoryID,
     this.sKU,
     this.shelfWidth,
@@ -182,6 +184,11 @@ class PRecords {
             (json['M_Product_Category_ID'] as Map<String, dynamic>?) != null
                 ? MProductCategoryID.fromJson(
                     json['M_Product_Category_ID'] as Map<String, dynamic>)
+                : null,
+        mProductToID =
+            (json['M_Product_To_ID'] as Map<String, dynamic>?) != null
+                ? MProductToID.fromJson(
+                    json['M_Product_To_ID'] as Map<String, dynamic>)
                 : null,
         cTaxCategoryID =
             (json['C_TaxCategory_ID'] as Map<String, dynamic>?) != null
@@ -257,6 +264,7 @@ class PRecords {
         'Weight': weight,
         'Value': value,
         'M_Product_Category_ID': mProductCategoryID?.toJson(),
+        'M_Product_To_ID': mProductToID?.toJson(),
         'C_TaxCategory_ID': cTaxCategoryID?.toJson(),
         'SKU': sKU,
         'ShelfWidth': shelfWidth,
@@ -444,6 +452,33 @@ class MProductCategoryID {
   });
 
   MProductCategoryID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class MProductToID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  MProductToID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  MProductToID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

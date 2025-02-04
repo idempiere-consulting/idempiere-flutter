@@ -11,6 +11,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/event_json.dart';
 import 'package:idempiere_app/Screens/app/features/Calendar/models/type_json.dart';
+import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/chatlogjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/ticketsjson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/models/tickettypejson.dart';
 import 'package:idempiere_app/Screens/app/features/Ticket_Client_Ticket/views/screens/ticketclient_create_ticket.dart';
@@ -498,7 +499,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                   .records![index]
                                                   .rStatusID!
                                                   .identifier!
-                                                  .contains('CONF'),
+                                                  .contains('Da Confermare'),
                                               child: IconButton(
                                                 tooltip: 'Pending Confirm'.tr,
                                                 icon: const Icon(
@@ -1019,7 +1020,7 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                   .records![index]
                                                   .rStatusID!
                                                   .identifier!
-                                                  .contains('CONF'),
+                                                  .contains('Da Confermare'),
                                               child: IconButton(
                                                 tooltip: 'Pending Confirm'.tr,
                                                 icon: const Icon(

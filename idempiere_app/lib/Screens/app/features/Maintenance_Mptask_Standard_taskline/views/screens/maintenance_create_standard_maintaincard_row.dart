@@ -244,6 +244,12 @@ class _CreateMaintainCardRowState extends State<CreateMaintainCardRow> {
                                 onSuggestionSelected: (suggestion) {
                                   productName.text = suggestion.name!;
                                   productId = suggestion.id!;
+                                  if (suggestion.mProductToID != null) {
+                                    productToName.text =
+                                        suggestion.mProductToID!.identifier!;
+
+                                    productToId = suggestion.mProductToID!.id!;
+                                  }
                                 },
                               )
                             : const Center(

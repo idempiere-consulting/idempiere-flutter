@@ -25,6 +25,7 @@ class MaintenanceMptaskStandardController extends GetxController {
   var filterCount = 0;
   // ignore: prefer_final_fields
   var _dataAvailable = false.obs;
+  var fieldViewPermissionList = "";
 
   @override
   void onInit() {
@@ -426,6 +427,36 @@ class MaintenanceMptaskStandardController extends GetxController {
       notificationFilter = 0;
     }
 
+    // ignore: unnecessary_null_comparison
+    getFieldWiewPermissions();
+  }
+
+  Future<void> getFieldWiewPermissions() async {
+    String ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_SysConfig?\$filter= Value eq \'LIT_WO_STANDARD_FIELD_VIEW\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      var json = WorkOrderLocalJson.fromJson(
+          jsonDecode(utf8.decode(response.bodyBytes)));
+
+      fieldViewPermissionList = json.records![0].description!;
+    } else {
+      fieldViewPermissionList =
+          "YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY";
+    }
+
+    //print(_trx.records![0.]);
     // ignore: unnecessary_null_comparison
     _dataAvailable.value = _trx != null;
   }

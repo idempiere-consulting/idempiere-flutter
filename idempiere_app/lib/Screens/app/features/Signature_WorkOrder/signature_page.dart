@@ -199,9 +199,27 @@ class SignatureWorkOrderState extends State<SignatureWorkOrderScreen> {
                 ),
               ), */
           //SIGNATURE CANVAS
+          Container(
+            margin:
+                const EdgeInsets.only(left: 10, right: 10, bottom: 10, top: 10),
+            child: TextField(
+              readOnly: true,
+              minLines: 1,
+              maxLines: 5,
+              controller: TextEditingController(
+                  text: Get.arguments["manualNote"] ?? ""),
+              decoration: InputDecoration(
+                isDense: true,
+                prefixIcon: const Icon(Icons.text_fields),
+                border: const OutlineInputBorder(),
+                labelText: 'Work Done'.tr,
+                floatingLabelBehavior: FloatingLabelBehavior.always,
+              ),
+            ),
+          ),
           Signature(
             controller: _controller,
-            height: size.height * 0.92,
+            height: size.height * 0.80,
             width: double.infinity,
             backgroundColor: Colors.white,
           ),

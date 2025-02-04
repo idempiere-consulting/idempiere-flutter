@@ -43,6 +43,10 @@ class Records {
   final String? created;
   final CreatedBy? createdBy;
   final String? description;
+  final String? lITStampField1;
+  final String? lITStampField2;
+  final String? lITStampField3;
+  final String? lITStampField4;
   final String? documentNo;
   final bool? isActive;
   final String? name;
@@ -72,6 +76,10 @@ class Records {
     this.created,
     this.createdBy,
     this.description,
+    this.lITStampField1,
+    this.lITStampField2,
+    this.lITStampField3,
+    this.lITStampField4,
     this.documentNo,
     this.isActive,
     this.name,
@@ -108,6 +116,10 @@ class Records {
             ? CreatedBy.fromJson(json['CreatedBy'] as Map<String, dynamic>)
             : null,
         description = json['Description'] as String?,
+        lITStampField1 = json['LIT_StampField_1'] as String?,
+        lITStampField2 = json['LIT_StampField_2'] as String?,
+        lITStampField3 = json['LIT_StampField_3'] as String?,
+        lITStampField4 = json['LIT_StampField_4'] as String?,
         documentNo = json['DocumentNo'] as String?,
         isActive = json['IsActive'] as bool?,
         name = json['Name'] as String?,

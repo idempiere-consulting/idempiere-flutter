@@ -16,6 +16,7 @@ import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/scre
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/models/attachment_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard/views/screens/maintenance_mptask_image_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_Standard_taskline/views/screens/maintenance_mptask_standard_maintcard.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Signature_WorkOrder/signature_page.dart';
@@ -197,7 +198,45 @@ class MaintenanceMptaskStandardScreen
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
 
-                                      Get.toNamed(
+                                      Get.to(
+                                          () =>
+                                              const MaintenanceStandardMptaskMaintenanceCard(),
+                                          arguments: {
+                                            "MpOTID": controller
+                                                .trx.records![index].mPOTID!.id,
+                                            "maintainId": controller
+                                                .trx
+                                                .records![index]
+                                                .mPMaintainID
+                                                ?.id,
+                                            "paidAmt": (controller
+                                                                .trx
+                                                                .records![index]
+                                                                .paidAmt !=
+                                                            0 &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .paidAmt !=
+                                                            null
+                                                    ? controller.trx
+                                                        .records![index].paidAmt
+                                                    : 0)
+                                                .toString(),
+                                            "request": controller.trx
+                                                .records![index].description,
+                                            "note": controller
+                                                .trx.records![index].note,
+                                            "manualNote": controller
+                                                .trx.records![index].manualNote,
+                                            "paymentRuleId": controller
+                                                .trx
+                                                .records![index]
+                                                .paymentRule
+                                                ?.id,
+                                          });
+
+                                      /* Get.toNamed(
                                           '/MaintenanceStandardMptaskLine',
                                           arguments: {
                                             "isSpecialOrder": true,
@@ -257,7 +296,7 @@ class MaintenanceMptaskStandardScreen
                                                 ? controller
                                                     .trx.records![index].paidAmt
                                                 : 0,
-                                          });
+                                          }); */
                                     },
                                     icon: Icon(
                                       controller.trx.records![index].docStatus
@@ -412,38 +451,53 @@ class MaintenanceMptaskStandardScreen
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              controller.trx.records![index]
-                                                      .cDocTypeID?.identifier ??
-                                                  "N/A",
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                          Visibility(
+                                            visible: controller
+                                                        .fieldViewPermissionList[
+                                                    0] ==
+                                                "Y",
+                                            child: Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier ??
+                                                    "N/A",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          const Icon(
-                                            Icons.event,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            DateFormat('dd-MM-yyyy').format(
-                                                DateTime.parse(controller
-                                                    .trx
-                                                    .records![index]
-                                                    .jpToDoStartDate!)),
-                                            style: const TextStyle(
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[1] ==
+                                            "Y",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              Icons.event,
                                               color: Colors.white,
                                             ),
-                                          ),
-                                        ],
+                                            Text(
+                                              DateFormat('dd-MM-yyyy').format(
+                                                  DateTime.parse(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .jpToDoStartDate!)),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -451,100 +505,118 @@ class MaintenanceMptaskStandardScreen
 
                                   subtitle: Column(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.handshake,
-                                            color: controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Special Order'.tr ||
-                                                    controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Special Order with Material'
-                                                            .tr ||
-                                                    controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Shipment Order'.tr
-                                                ? Colors.orange
-                                                : Colors.yellow,
-                                          ),
-                                          Expanded(
-                                            child: TextButton(
-                                                onPressed: () {
-                                                  Get.offNamed('/CustomerBP',
-                                                      arguments: {
-                                                        'notificationId':
-                                                            controller
-                                                                ._trx
-                                                                .records![index]
-                                                                .cBPartnerID
-                                                                ?.id,
-                                                      });
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        controller
-                                                                .trx
-                                                                .records![index]
-                                                                .cBPartnerID
-                                                                ?.identifier ??
-                                                            "",
-                                                        style: const TextStyle(
-                                                            color: kNotifColor),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[2] ==
+                                            "Y",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.handshake,
+                                              color: controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Special Order'.tr ||
+                                                      controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Special Order with Material'
+                                                              .tr ||
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Shipment Order'.tr
+                                                  ? Colors.orange
+                                                  : Colors.yellow,
+                                            ),
+                                            Expanded(
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed('/CustomerBP',
+                                                        arguments: {
+                                                          'notificationId':
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cBPartnerID
+                                                                  ?.id,
+                                                        });
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cBPartnerID
+                                                                  ?.identifier ??
+                                                              "",
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  kNotifColor),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
-                                        ],
+                                                    ],
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Row(
-                                        children: [
-                                          /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[3] ==
+                                            "Y",
+                                        child: Row(
+                                          children: [
+                                            /* const Text(
+                                                "BPartner: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ), */
 
-                                          IconButton(
-                                            onPressed: () {
-                                              controller.searchAddressMap(
-                                                  "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}");
-                                            },
-                                            icon: Icon(Icons.location_pin,
-                                                color: Colors.red.shade700),
-                                          ),
+                                            IconButton(
+                                              onPressed: () {
+                                                controller.searchAddressMap(
+                                                    "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}");
+                                              },
+                                              icon: Icon(Icons.location_pin,
+                                                  color: Colors.red.shade700),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[4] ==
+                                            "Y",
+                                        child: Row(children: [
                                           Expanded(
                                             child: Text(
-                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
+                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
-                                          ),
-                                        ],
+                                          )
+                                        ]),
                                       ),
-                                      Row(children: [
-                                        Expanded(
-                                          child: Text(
-                                            "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        )
-                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -557,63 +629,95 @@ class MaintenanceMptaskStandardScreen
                                   children: [
                                     Column(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'N° Work Order: '.tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Document Type: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .cDocTypeID?.identifier ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Time'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Contract Type'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[5] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'N° Work Order: '.tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
                                                       .trx
                                                       .records![index]
-                                                      .contracttypename ??
-                                                  ""),
-                                            )
-                                          ],
+                                                      .documentNo ??
+                                                  "")
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
                                           visible: controller
-                                                  ._trx
-                                                  .records![index]
-                                                  .mPMaintainID !=
-                                              null,
+                                                  .fieldViewPermissionList[6] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Document Type: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cDocTypeID
+                                                      ?.identifier ??
+                                                  "")
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[7] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Time'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[8] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Contract Type'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .contracttypename ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .mPMaintainID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      9] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -661,37 +765,51 @@ class MaintenanceMptaskStandardScreen
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Plant'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .litMpMaintainHelp ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  10] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Note Plant'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .litMpMaintainHelp ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Work Order'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .description ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  11] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Note Work Order'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         /* Row(
                                           children: [
@@ -707,9 +825,12 @@ class MaintenanceMptaskStandardScreen
                                         ), */
 
                                         Visibility(
-                                          visible: controller
-                                                  .trx.records![index].name !=
-                                              null,
+                                          visible: controller.trx
+                                                      .records![index].name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      12] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -727,9 +848,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      13] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -750,7 +876,10 @@ class MaintenanceMptaskStandardScreen
                                                   null &&
                                               controller.trx.records![index]
                                                       .mail !=
-                                                  "",
+                                                  "" &&
+                                              controller.fieldViewPermissionList[
+                                                      14] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -781,9 +910,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      15] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -815,10 +949,13 @@ class MaintenanceMptaskStandardScreen
                                         ),
                                         Visibility(
                                           visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBpartnerLocationPhone !=
-                                              null,
+                                                      .trx
+                                                      .records![index]
+                                                      .cBpartnerLocationPhone !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      16] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -851,9 +988,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .ref2name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      17] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -869,9 +1011,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .ref2name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      18] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -901,64 +1048,77 @@ class MaintenanceMptaskStandardScreen
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Team".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller.trx
-                                                      .records![index].team ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  19] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Team".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller.trx
+                                                        .records![index].team ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Payment Rule".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .paymentRule
-                                                      ?.identifier ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  20] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Payment Rule".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.identifier ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Paid Amt".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                  .trx.records![index].paidAmt
-                                                  .toString()),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                controller.trx.records![index]
-                                                                .isPaid !=
-                                                            true ||
-                                                        controller
-                                                                .trx
-                                                                .records![index]
-                                                                .isPaid ==
-                                                            null
-                                                    ? 'Not Paid'.tr
-                                                    : 'Paid'.tr,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: controller
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  21] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Paid Amt".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                    .trx.records![index].paidAmt
+                                                    .toString()),
+                                              ),
+                                              Visibility(
+                                                visible: controller
+                                                            .fieldViewPermissionList[
+                                                        22] ==
+                                                    "Y",
+                                                child: Expanded(
+                                                  child: Text(
+                                                    controller
                                                                     .trx
                                                                     .records![
                                                                         index]
@@ -970,16 +1130,40 @@ class MaintenanceMptaskStandardScreen
                                                                         index]
                                                                     .isPaid ==
                                                                 null
-                                                        ? Colors.yellow
-                                                        : kNotifColor),
-                                              ),
-                                            )
-                                          ],
+                                                        ? 'Not Paid'.tr
+                                                        : 'Paid'.tr,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .isPaid !=
+                                                                    true ||
+                                                                controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .isPaid ==
+                                                                    null
+                                                            ? Colors.yellow
+                                                            : kNotifColor),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
-                                          visible: controller._trx
-                                                  .records![index].cOrderID !=
-                                              null,
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cOrderID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      23] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -1010,9 +1194,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller._trx
-                                                  .records![index].cInvoiceID !=
-                                              null,
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cInvoiceID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      23] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -1090,6 +1279,12 @@ class MaintenanceMptaskStandardScreen
                                                               .records![index]
                                                               .mPOTID
                                                               ?.id,
+                                                          "manualNote":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manualNote,
                                                         });
                                                   } else {
                                                     Get.defaultDialog(
@@ -1480,7 +1675,45 @@ class MaintenanceMptaskStandardScreen
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
 
-                                      Get.toNamed(
+                                      Get.to(
+                                          () =>
+                                              const MaintenanceStandardMptaskMaintenanceCard(),
+                                          arguments: {
+                                            "MpOTID": controller
+                                                .trx.records![index].mPOTID!.id,
+                                            "maintainId": controller
+                                                .trx
+                                                .records![index]
+                                                .mPMaintainID
+                                                ?.id,
+                                            "paidAmt": (controller
+                                                                .trx
+                                                                .records![index]
+                                                                .paidAmt !=
+                                                            0 &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .paidAmt !=
+                                                            null
+                                                    ? controller.trx
+                                                        .records![index].paidAmt
+                                                    : 0)
+                                                .toString(),
+                                            "request": controller.trx
+                                                .records![index].description,
+                                            "note": controller
+                                                .trx.records![index].note,
+                                            "manualNote": controller
+                                                .trx.records![index].manualNote,
+                                            "paymentRuleId": controller
+                                                .trx
+                                                .records![index]
+                                                .paymentRule
+                                                ?.id,
+                                          });
+
+                                      /* Get.toNamed(
                                           '/MaintenanceStandardMptaskLine',
                                           arguments: {
                                             "isSpecialOrder": true,
@@ -1540,7 +1773,7 @@ class MaintenanceMptaskStandardScreen
                                                 ? controller
                                                     .trx.records![index].paidAmt
                                                 : 0,
-                                          });
+                                          }); */
                                     },
                                     icon: Icon(
                                       controller.trx.records![index].docStatus
@@ -1695,38 +1928,53 @@ class MaintenanceMptaskStandardScreen
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              controller.trx.records![index]
-                                                      .cDocTypeID?.identifier ??
-                                                  "N/A",
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                          Visibility(
+                                            visible: controller
+                                                        .fieldViewPermissionList[
+                                                    0] ==
+                                                "Y",
+                                            child: Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier ??
+                                                    "N/A",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          const Icon(
-                                            Icons.event,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            DateFormat('dd-MM-yyyy').format(
-                                                DateTime.parse(controller
-                                                    .trx
-                                                    .records![index]
-                                                    .jpToDoStartDate!)),
-                                            style: const TextStyle(
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[1] ==
+                                            "Y",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              Icons.event,
                                               color: Colors.white,
                                             ),
-                                          ),
-                                        ],
+                                            Text(
+                                              DateFormat('dd-MM-yyyy').format(
+                                                  DateTime.parse(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .jpToDoStartDate!)),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -1734,93 +1982,118 @@ class MaintenanceMptaskStandardScreen
 
                                   subtitle: Column(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.handshake,
-                                            color: controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Special Order'.tr ||
-                                                    controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Special Order with Material'
-                                                            .tr ||
-                                                    controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Shipment Order'.tr
-                                                ? Colors.orange
-                                                : Colors.yellow,
-                                          ),
-                                          Expanded(
-                                            child: TextButton(
-                                                onPressed: () {
-                                                  Get.offNamed('/CustomerBP',
-                                                      arguments: {
-                                                        'notificationId':
-                                                            controller
-                                                                ._trx
-                                                                .records![index]
-                                                                .cBPartnerID
-                                                                ?.id,
-                                                      });
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        controller
-                                                                .trx
-                                                                .records![index]
-                                                                .cBPartnerID
-                                                                ?.identifier ??
-                                                            "",
-                                                        style: const TextStyle(
-                                                            color: kNotifColor),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[2] ==
+                                            "Y",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.handshake,
+                                              color: controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Special Order'.tr ||
+                                                      controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Special Order with Material'
+                                                              .tr ||
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Shipment Order'.tr
+                                                  ? Colors.orange
+                                                  : Colors.yellow,
+                                            ),
+                                            Expanded(
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed('/CustomerBP',
+                                                        arguments: {
+                                                          'notificationId':
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cBPartnerID
+                                                                  ?.id,
+                                                        });
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cBPartnerID
+                                                                  ?.identifier ??
+                                                              "",
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  kNotifColor),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
-                                        ],
+                                                    ],
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Row(
-                                        children: [
-                                          /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                          Icon(Icons.location_pin,
-                                              color: Colors.red.shade700),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[3] ==
+                                            "Y",
+                                        child: Row(
+                                          children: [
+                                            /* const Text(
+                                                "BPartner: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ), */
+
+                                            IconButton(
+                                              onPressed: () {
+                                                controller.searchAddressMap(
+                                                    "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}");
+                                              },
+                                              icon: Icon(Icons.location_pin,
+                                                  color: Colors.red.shade700),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[4] ==
+                                            "Y",
+                                        child: Row(children: [
                                           Expanded(
                                             child: Text(
-                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
+                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
-                                          ),
-                                        ],
+                                          )
+                                        ]),
                                       ),
-                                      Row(children: [
-                                        Expanded(
-                                          child: Text(
-                                            "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        )
-                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -1833,63 +2106,95 @@ class MaintenanceMptaskStandardScreen
                                   children: [
                                     Column(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'N° Work Order: '.tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Document Type: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .cDocTypeID?.identifier ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Time'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Contract Type'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[5] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'N° Work Order: '.tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
                                                       .trx
                                                       .records![index]
-                                                      .contracttypename ??
-                                                  ""),
-                                            )
-                                          ],
+                                                      .documentNo ??
+                                                  "")
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
                                           visible: controller
-                                                  ._trx
-                                                  .records![index]
-                                                  .mPMaintainID !=
-                                              null,
+                                                  .fieldViewPermissionList[6] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Document Type: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cDocTypeID
+                                                      ?.identifier ??
+                                                  "")
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[7] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Time'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[8] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Contract Type'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .contracttypename ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .mPMaintainID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      9] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -1937,37 +2242,51 @@ class MaintenanceMptaskStandardScreen
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Plant'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .litMpMaintainHelp ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  10] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Note Plant'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .litMpMaintainHelp ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Work Order'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .description ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  11] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Note Work Order'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         /* Row(
                                           children: [
@@ -1983,9 +2302,12 @@ class MaintenanceMptaskStandardScreen
                                         ), */
 
                                         Visibility(
-                                          visible: controller
-                                                  .trx.records![index].name !=
-                                              null,
+                                          visible: controller.trx
+                                                      .records![index].name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      12] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -2003,9 +2325,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      13] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -2026,7 +2353,10 @@ class MaintenanceMptaskStandardScreen
                                                   null &&
                                               controller.trx.records![index]
                                                       .mail !=
-                                                  "",
+                                                  "" &&
+                                              controller.fieldViewPermissionList[
+                                                      14] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -2057,9 +2387,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      15] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -2091,10 +2426,13 @@ class MaintenanceMptaskStandardScreen
                                         ),
                                         Visibility(
                                           visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBpartnerLocationPhone !=
-                                              null,
+                                                      .trx
+                                                      .records![index]
+                                                      .cBpartnerLocationPhone !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      16] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -2127,9 +2465,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .ref2name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      17] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -2145,9 +2488,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .ref2name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      18] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -2177,64 +2525,77 @@ class MaintenanceMptaskStandardScreen
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Team".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller.trx
-                                                      .records![index].team ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  19] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Team".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller.trx
+                                                        .records![index].team ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Payment Rule".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .paymentRule
-                                                      ?.identifier ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  20] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Payment Rule".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.identifier ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Paid Amt".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                  .trx.records![index].paidAmt
-                                                  .toString()),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                controller.trx.records![index]
-                                                                .isPaid !=
-                                                            true ||
-                                                        controller
-                                                                .trx
-                                                                .records![index]
-                                                                .isPaid ==
-                                                            null
-                                                    ? 'Not Paid'.tr
-                                                    : 'Paid'.tr,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: controller
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  21] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Paid Amt".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                    .trx.records![index].paidAmt
+                                                    .toString()),
+                                              ),
+                                              Visibility(
+                                                visible: controller
+                                                            .fieldViewPermissionList[
+                                                        22] ==
+                                                    "Y",
+                                                child: Expanded(
+                                                  child: Text(
+                                                    controller
                                                                     .trx
                                                                     .records![
                                                                         index]
@@ -2246,16 +2607,40 @@ class MaintenanceMptaskStandardScreen
                                                                         index]
                                                                     .isPaid ==
                                                                 null
-                                                        ? Colors.yellow
-                                                        : kNotifColor),
-                                              ),
-                                            )
-                                          ],
+                                                        ? 'Not Paid'.tr
+                                                        : 'Paid'.tr,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .isPaid !=
+                                                                    true ||
+                                                                controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .isPaid ==
+                                                                    null
+                                                            ? Colors.yellow
+                                                            : kNotifColor),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
-                                          visible: controller._trx
-                                                  .records![index].cOrderID !=
-                                              null,
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cOrderID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      23] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -2286,9 +2671,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller._trx
-                                                  .records![index].cInvoiceID !=
-                                              null,
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cInvoiceID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      23] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -2366,6 +2756,12 @@ class MaintenanceMptaskStandardScreen
                                                               .records![index]
                                                               .mPOTID
                                                               ?.id,
+                                                          "manualNote":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manualNote,
                                                         });
                                                   } else {
                                                     Get.defaultDialog(
@@ -2756,7 +3152,45 @@ class MaintenanceMptaskStandardScreen
                                           controller.trx.records![index]
                                               .mPMaintainTaskID!.id); */
 
-                                      Get.toNamed(
+                                      Get.to(
+                                          () =>
+                                              const MaintenanceStandardMptaskMaintenanceCard(),
+                                          arguments: {
+                                            "MpOTID": controller
+                                                .trx.records![index].mPOTID!.id,
+                                            "maintainId": controller
+                                                .trx
+                                                .records![index]
+                                                .mPMaintainID
+                                                ?.id,
+                                            "paidAmt": (controller
+                                                                .trx
+                                                                .records![index]
+                                                                .paidAmt !=
+                                                            0 &&
+                                                        controller
+                                                                .trx
+                                                                .records![index]
+                                                                .paidAmt !=
+                                                            null
+                                                    ? controller.trx
+                                                        .records![index].paidAmt
+                                                    : 0)
+                                                .toString(),
+                                            "request": controller.trx
+                                                .records![index].description,
+                                            "note": controller
+                                                .trx.records![index].note,
+                                            "manualNote": controller
+                                                .trx.records![index].manualNote,
+                                            "paymentRuleId": controller
+                                                .trx
+                                                .records![index]
+                                                .paymentRule
+                                                ?.id,
+                                          });
+
+                                      /* Get.toNamed(
                                           '/MaintenanceStandardMptaskLine',
                                           arguments: {
                                             "isSpecialOrder": true,
@@ -2816,7 +3250,7 @@ class MaintenanceMptaskStandardScreen
                                                 ? controller
                                                     .trx.records![index].paidAmt
                                                 : 0,
-                                          });
+                                          }); */
                                     },
                                     icon: Icon(
                                       controller.trx.records![index].docStatus
@@ -2971,38 +3405,53 @@ class MaintenanceMptaskStandardScreen
                                         mainAxisAlignment:
                                             MainAxisAlignment.start,
                                         children: [
-                                          Expanded(
-                                            child: Text(
-                                              controller.trx.records![index]
-                                                      .cDocTypeID?.identifier ??
-                                                  "N/A",
-                                              style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.bold),
+                                          Visibility(
+                                            visible: controller
+                                                        .fieldViewPermissionList[
+                                                    0] ==
+                                                "Y",
+                                            child: Expanded(
+                                              child: Text(
+                                                controller
+                                                        .trx
+                                                        .records![index]
+                                                        .cDocTypeID
+                                                        ?.identifier ??
+                                                    "N/A",
+                                                style: const TextStyle(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
                                             ),
                                           ),
                                         ],
                                       ),
                                       const Divider(),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: [
-                                          const Icon(
-                                            Icons.event,
-                                            color: Colors.white,
-                                          ),
-                                          Text(
-                                            DateFormat('dd-MM-yyyy').format(
-                                                DateTime.parse(controller
-                                                    .trx
-                                                    .records![index]
-                                                    .jpToDoStartDate!)),
-                                            style: const TextStyle(
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[1] ==
+                                            "Y",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              Icons.event,
                                               color: Colors.white,
                                             ),
-                                          ),
-                                        ],
+                                            Text(
+                                              DateFormat('dd-MM-yyyy').format(
+                                                  DateTime.parse(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .jpToDoStartDate!)),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -3010,93 +3459,118 @@ class MaintenanceMptaskStandardScreen
 
                                   subtitle: Column(
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.start,
-                                        children: <Widget>[
-                                          Icon(
-                                            Icons.handshake,
-                                            color: controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Special Order'.tr ||
-                                                    controller
-                                                            ._trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Special Order with Material'
-                                                            .tr ||
-                                                    controller
-                                                            .trx
-                                                            .records![index]
-                                                            .cDocTypeID
-                                                            ?.identifier ==
-                                                        'Shipment Order'.tr
-                                                ? Colors.orange
-                                                : Colors.yellow,
-                                          ),
-                                          Expanded(
-                                            child: TextButton(
-                                                onPressed: () {
-                                                  Get.offNamed('/CustomerBP',
-                                                      arguments: {
-                                                        'notificationId':
-                                                            controller
-                                                                ._trx
-                                                                .records![index]
-                                                                .cBPartnerID
-                                                                ?.id,
-                                                      });
-                                                },
-                                                child: Row(
-                                                  children: [
-                                                    Expanded(
-                                                      child: Text(
-                                                        controller
-                                                                .trx
-                                                                .records![index]
-                                                                .cBPartnerID
-                                                                ?.identifier ??
-                                                            "",
-                                                        style: const TextStyle(
-                                                            color: kNotifColor),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[2] ==
+                                            "Y",
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: <Widget>[
+                                            Icon(
+                                              Icons.handshake,
+                                              color: controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Special Order'.tr ||
+                                                      controller
+                                                              ._trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Special Order with Material'
+                                                              .tr ||
+                                                      controller
+                                                              .trx
+                                                              .records![index]
+                                                              .cDocTypeID
+                                                              ?.identifier ==
+                                                          'Shipment Order'.tr
+                                                  ? Colors.orange
+                                                  : Colors.yellow,
+                                            ),
+                                            Expanded(
+                                              child: TextButton(
+                                                  onPressed: () {
+                                                    Get.offNamed('/CustomerBP',
+                                                        arguments: {
+                                                          'notificationId':
+                                                              controller
+                                                                  ._trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cBPartnerID
+                                                                  ?.id,
+                                                        });
+                                                  },
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: Text(
+                                                          controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .cBPartnerID
+                                                                  ?.identifier ??
+                                                              "",
+                                                          style: const TextStyle(
+                                                              color:
+                                                                  kNotifColor),
+                                                        ),
                                                       ),
-                                                    ),
-                                                  ],
-                                                )),
-                                          ),
-                                        ],
+                                                    ],
+                                                  )),
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                      Row(
-                                        children: [
-                                          /* const Text(
-                                              "BPartner: ",
-                                              style: TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ), */
-                                          Icon(Icons.location_pin,
-                                              color: Colors.red.shade700),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[3] ==
+                                            "Y",
+                                        child: Row(
+                                          children: [
+                                            /* const Text(
+                                                "BPartner: ",
+                                                style: TextStyle(
+                                                    fontWeight: FontWeight.bold),
+                                              ), */
+
+                                            IconButton(
+                                              onPressed: () {
+                                                controller.searchAddressMap(
+                                                    "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}");
+                                              },
+                                              icon: Icon(Icons.location_pin,
+                                                  color: Colors.red.shade700),
+                                            ),
+                                            Expanded(
+                                              child: Text(
+                                                "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
+                                                style: const TextStyle(
+                                                    color: Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Visibility(
+                                        visible: controller
+                                                .fieldViewPermissionList[4] ==
+                                            "Y",
+                                        child: Row(children: [
                                           Expanded(
                                             child: Text(
-                                              "${controller.trx.records![index].cLocationAddress1}, ${controller.trx.records![index].cLocationPostal} ${controller.trx.records![index].cLocationCity} ${controller.trx.records![index].regionName}",
+                                              "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
                                               style: const TextStyle(
                                                   color: Colors.white),
                                             ),
-                                          ),
-                                        ],
+                                          )
+                                        ]),
                                       ),
-                                      Row(children: [
-                                        Expanded(
-                                          child: Text(
-                                            "P.IVA: ${controller.trx.records![index].lITTaxID ?? "-"}, Codice SDI: ${controller.trx.records![index].lITFEPAIPA ?? "-"}, Codice Fiscale: ${controller.trx.records![index].lITNationalIdNumberID ?? ""}",
-                                            style: const TextStyle(
-                                                color: Colors.white),
-                                          ),
-                                        )
-                                      ]),
                                     ],
                                   ),
                                   /* trailing: const Icon(
@@ -3109,63 +3583,95 @@ class MaintenanceMptaskStandardScreen
                                   children: [
                                     Column(
                                       children: [
-                                        Row(
-                                          children: [
-                                            Text(
-                                              'N° Work Order: '.tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .documentNo ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "Document Type: ".tr,
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(controller.trx.records![index]
-                                                    .cDocTypeID?.identifier ??
-                                                "")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Time'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Text(
-                                                "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
-                                          ],
-                                        ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Contract Type'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[5] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                'N° Work Order: '.tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
                                                       .trx
                                                       .records![index]
-                                                      .contracttypename ??
-                                                  ""),
-                                            )
-                                          ],
+                                                      .documentNo ??
+                                                  "")
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
                                           visible: controller
-                                                  ._trx
-                                                  .records![index]
-                                                  .mPMaintainID !=
-                                              null,
+                                                  .fieldViewPermissionList[6] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "Document Type: ".tr,
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cDocTypeID
+                                                      ?.identifier ??
+                                                  "")
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[7] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Time'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Text(
+                                                  "${controller.trx.records![index].jpToDoStartTime != null ? controller.trx.records![index].jpToDoStartTime!.substring(0, 5) : "N/A"} - ${controller.trx.records![index].jpToDoEndTime != null ? controller.trx.records![index].jpToDoEndTime!.substring(0, 5) : "N/A"}")
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                  .fieldViewPermissionList[8] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Contract Type'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .contracttypename ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                        Visibility(
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .mPMaintainID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      9] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -3213,37 +3719,51 @@ class MaintenanceMptaskStandardScreen
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Plant'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .litMpMaintainHelp ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  10] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Note Plant'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .litMpMaintainHelp ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${'Note Work Order'.tr}: ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .description ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  11] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${'Note Work Order'.tr}: ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .description ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         /* Row(
                                           children: [
@@ -3259,9 +3779,12 @@ class MaintenanceMptaskStandardScreen
                                         ), */
 
                                         Visibility(
-                                          visible: controller
-                                                  .trx.records![index].name !=
-                                              null,
+                                          visible: controller.trx
+                                                      .records![index].name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      12] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -3279,9 +3802,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      13] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -3302,7 +3830,10 @@ class MaintenanceMptaskStandardScreen
                                                   null &&
                                               controller.trx.records![index]
                                                       .mail !=
-                                                  "",
+                                                  "" &&
+                                              controller.fieldViewPermissionList[
+                                                      14] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -3333,9 +3864,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].refname !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .refname !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      15] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -3367,10 +3903,13 @@ class MaintenanceMptaskStandardScreen
                                         ),
                                         Visibility(
                                           visible: controller
-                                                  .trx
-                                                  .records![index]
-                                                  .cBpartnerLocationPhone !=
-                                              null,
+                                                      .trx
+                                                      .records![index]
+                                                      .cBpartnerLocationPhone !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      16] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -3403,9 +3942,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .ref2name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      17] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -3421,9 +3965,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller.trx
-                                                  .records![index].ref2name !=
-                                              null,
+                                          visible: controller
+                                                      .trx
+                                                      .records![index]
+                                                      .ref2name !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      18] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               IconButton(
@@ -3453,64 +4002,77 @@ class MaintenanceMptaskStandardScreen
                                             ],
                                           ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Team".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller.trx
-                                                      .records![index].team ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  19] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Team".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller.trx
+                                                        .records![index].team ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Payment Rule".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                      .trx
-                                                      .records![index]
-                                                      .paymentRule
-                                                      ?.identifier ??
-                                                  ""),
-                                            )
-                                          ],
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  20] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Payment Rule".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                        .trx
+                                                        .records![index]
+                                                        .paymentRule
+                                                        ?.identifier ??
+                                                    ""),
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        Row(
-                                          children: [
-                                            Text(
-                                              "${"Paid Amt".tr}:  ",
-                                              style: const TextStyle(
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            Expanded(
-                                              child: Text(controller
-                                                  .trx.records![index].paidAmt
-                                                  .toString()),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                controller.trx.records![index]
-                                                                .isPaid !=
-                                                            true ||
-                                                        controller
-                                                                .trx
-                                                                .records![index]
-                                                                .isPaid ==
-                                                            null
-                                                    ? 'Not Paid'.tr
-                                                    : 'Paid'.tr,
-                                                style: TextStyle(
-                                                    fontWeight: FontWeight.bold,
-                                                    color: controller
+                                        Visibility(
+                                          visible: controller
+                                                      .fieldViewPermissionList[
+                                                  21] ==
+                                              "Y",
+                                          child: Row(
+                                            children: [
+                                              Text(
+                                                "${"Paid Amt".tr}:  ",
+                                                style: const TextStyle(
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                              Expanded(
+                                                child: Text(controller
+                                                    .trx.records![index].paidAmt
+                                                    .toString()),
+                                              ),
+                                              Visibility(
+                                                visible: controller
+                                                            .fieldViewPermissionList[
+                                                        22] ==
+                                                    "Y",
+                                                child: Expanded(
+                                                  child: Text(
+                                                    controller
                                                                     .trx
                                                                     .records![
                                                                         index]
@@ -3522,16 +4084,40 @@ class MaintenanceMptaskStandardScreen
                                                                         index]
                                                                     .isPaid ==
                                                                 null
-                                                        ? Colors.yellow
-                                                        : kNotifColor),
-                                              ),
-                                            )
-                                          ],
+                                                        ? 'Not Paid'.tr
+                                                        : 'Paid'.tr,
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .isPaid !=
+                                                                    true ||
+                                                                controller
+                                                                        .trx
+                                                                        .records![
+                                                                            index]
+                                                                        .isPaid ==
+                                                                    null
+                                                            ? Colors.yellow
+                                                            : kNotifColor),
+                                                  ),
+                                                ),
+                                              )
+                                            ],
+                                          ),
                                         ),
                                         Visibility(
-                                          visible: controller._trx
-                                                  .records![index].cOrderID !=
-                                              null,
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cOrderID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      23] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -3562,9 +4148,14 @@ class MaintenanceMptaskStandardScreen
                                           ),
                                         ),
                                         Visibility(
-                                          visible: controller._trx
-                                                  .records![index].cInvoiceID !=
-                                              null,
+                                          visible: controller
+                                                      ._trx
+                                                      .records![index]
+                                                      .cInvoiceID !=
+                                                  null &&
+                                              controller.fieldViewPermissionList[
+                                                      23] ==
+                                                  "Y",
                                           child: Row(
                                             children: [
                                               Text(
@@ -3642,6 +4233,12 @@ class MaintenanceMptaskStandardScreen
                                                               .records![index]
                                                               .mPOTID
                                                               ?.id,
+                                                          "manualNote":
+                                                              controller
+                                                                  .trx
+                                                                  .records![
+                                                                      index]
+                                                                  .manualNote,
                                                         });
                                                   } else {
                                                     Get.defaultDialog(

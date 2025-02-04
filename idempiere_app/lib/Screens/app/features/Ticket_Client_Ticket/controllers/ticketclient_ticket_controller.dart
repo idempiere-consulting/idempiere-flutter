@@ -430,6 +430,40 @@ class TicketClientTicketController extends GetxController {
     }
   }
 
+  Future<bool> getChatStatus(int id) async {
+    //var name = GetStorage().read("user");
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+    var url = Uri.parse('$protocol://' +
+        ip +
+        '/api/v1/models/R_RequestUpdate?\$filter=R_Request_ID eq $id and AD_Client_ID eq ${GetStorage().read('clientid')}&\$orderby= Created desc');
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+    if (response.statusCode == 200) {
+      //print(response.body);
+      //var json = jsonDecode(response.body);
+      var json =
+          ChatLogJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      if (json.records!.isNotEmpty) {
+        if (json.records![0].updatedBy!.identifier !=
+            GetStorage().read('user')) {
+          return true;
+        }
+      }
+    } else {
+      return false;
+      //print(response.body);
+    }
+    return false;
+  }
+
   Future<void> getTicketsDesktop() async {
     _desktopDataAvailable.value = false;
     DateTime today = DateTime.now();
@@ -469,18 +503,19 @@ class TicketClientTicketController extends GetxController {
       headerRows = [];
 
       for (var i = 0; i < _trxDesktop.records!.length; i++) {
+        bool isChatNotified = await getChatStatus(_trxDesktop.records![i].id!);
         headerRows.add(DataRow(selected: false, cells: <DataCell>[
           DataCell(
             Row(
               children: [
                 Visibility(
                   visible: _trxDesktop.records![i].rStatusID!.identifier!
-                      .contains('CONF'),
+                      .contains('Da Confermare'),
                   child: IconButton(
                     tooltip: 'Pending Confirm'.tr,
                     icon: const Icon(
                       Icons.pending_actions,
-                      color: Colors.yellow,
+                      color: Colors.orange,
                     ),
                     onPressed: () {
                       confirmCheckBoxValue.value = false;
@@ -603,35 +638,58 @@ class TicketClientTicketController extends GetxController {
           DataCell(Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              IconButton(
-                  onPressed: () {
-                    requestId = _trxDesktop.records![i].id!;
-                    selectedHeaderId = _trxDesktop.records![i].id!;
-                    selectedHeaderIndex = i;
+              Stack(
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        requestId = _trxDesktop.records![i].id!;
+                        selectedHeaderId = _trxDesktop.records![i].id!;
+                        selectedHeaderIndex = i;
 
-                    desktopDocNoFieldController.text =
-                        _trxDesktop.records![i].documentNo ?? '??';
+                        desktopDocNoFieldController.text =
+                            _trxDesktop.records![i].documentNo ?? '??';
 
-                    desktopNameFieldController.text =
-                        _trxDesktop.records![i].name ?? '??';
+                        desktopNameFieldController.text =
+                            _trxDesktop.records![i].name ?? '??';
 
-                    desktopDocTypeFieldController.text =
-                        _trxDesktop.records![i].rStatusID?.identifier ?? "";
-                    desktopAssignedToFieldController.text =
-                        _trxDesktop.records![i].salesRepID?.identifier ?? "N/A";
+                        desktopDocTypeFieldController.text =
+                            _trxDesktop.records![i].rStatusID?.identifier ?? "";
+                        desktopAssignedToFieldController.text =
+                            _trxDesktop.records![i].salesRepID?.identifier ??
+                                "N/A";
 
-                    desktopDateFromFieldController.text =
-                        DateFormat('dd/MM/yyyy').format(
-                            DateTime.parse(_trxDesktop.records![i].created!));
+                        desktopDateFromFieldController.text =
+                            DateFormat('dd/MM/yyyy').format(DateTime.parse(
+                                _trxDesktop.records![i].created!));
 
-                    desktopDescriptionFieldController.text =
-                        _trxDesktop.records![i].summary ?? "";
+                        desktopDescriptionFieldController.text =
+                            _trxDesktop.records![i].summary ?? "";
 
-                    showHeader.value = false;
-                    showLines.value = true;
-                    getTicketLineDesktop();
-                  },
-                  icon: const Icon(EvaIcons.search)),
+                        showHeader.value = false;
+                        showLines.value = true;
+                        getTicketLineDesktop();
+                      },
+                      icon: const Icon(EvaIcons.search)),
+                  Visibility(
+                    visible: isChatNotified,
+                    child: Positioned(
+                      right: 11,
+                      top: 11,
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.circular(6),
+                        ),
+                        constraints: const BoxConstraints(
+                          minWidth: 8,
+                          minHeight: 8,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               Expanded(
                 child: Text(
                     "${_trxDesktop.records![i].documentNo} ${DateFormat('dd/MM/yyyy').format(DateTime.parse(_trxDesktop.records![i].created!))}"),

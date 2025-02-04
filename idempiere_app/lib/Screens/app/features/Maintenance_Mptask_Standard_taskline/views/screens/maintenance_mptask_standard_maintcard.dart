@@ -51,6 +51,10 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       "DocumentNo": docNoFieldController.text,
       "Name": nameFieldController.text,
       "Description": descriptionFieldController.text,
+      "LIT_StampField_1": lITStampField1FieldController.text,
+      "LIT_StampField_2": lITStampField2FieldController.text,
+      "LIT_StampField_3": lITStampField3FieldController.text,
+      "LIT_StampField_4": lITStampField4FieldController.text,
       "C_ContractType_ID": {"id": int.parse(contractTypeId)},
       "Revision": revisionFieldController.text,
       "SerNo": serNoFieldController.text,
@@ -257,10 +261,58 @@ class _MaintenanceStandardMptaskMaintenanceCardState
       var json =
           ADRefListJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
-      return json.records!;
+      List<ADRRecords> pRuleList = json.records!;
+
+      List<String> pRuleFilterList = await getPaymentRuleFilter();
+
+      for (var i = 0; i < json.records!.length; i++) {
+        if (pRuleFilterList.contains(json.records![i].value)) {
+          pRuleList.removeWhere(
+              (element) => element.value == json.records![i].value);
+        }
+      }
+
+      /* for (var record in json.records!) {
+        if (pRuleFilterList.contains(record.value)) {
+          pRuleList.removeWhere((element) => element.value == record.value);
+        }
+      } */
+
+      print(pRuleFilterList);
+
+      return pRuleList;
     } else {
       //print(response.body);
       throw Exception("Failed to load sales reps");
+    }
+  }
+
+  Future<List<String>> getPaymentRuleFilter() async {
+    final ip = GetStorage().read('ip');
+    String authorization = 'Bearer ${GetStorage().read('token')}';
+    final protocol = GetStorage().read('protocol');
+
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/AD_SysConfig?\$filter= Value eq \'LIT_WO_SHEET_STANDARD_PAYMENTRULE_VIEW\'');
+
+    var response = await http.get(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+        'Authorization': authorization,
+      },
+    );
+
+    if (response.statusCode == 200) {
+      //print(response.body);
+      var json =
+          ADRefListJSON.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
+
+      return json.records![0].description!.split('-');
+    } else {
+      //print(response.body);
+      //throw Exception("Failed to load sales reps");
+      return [];
     }
   }
 
@@ -342,6 +394,14 @@ class _MaintenanceStandardMptaskMaintenanceCardState
           docNoFieldController.text = trx.records![0].documentNo ?? "";
           nameFieldController.text = trx.records![0].name ?? "";
           descriptionFieldController.text = trx.records![0].description ?? "";
+          lITStampField1FieldController.text =
+              trx.records![0].lITStampField1 ?? "";
+          lITStampField2FieldController.text =
+              trx.records![0].lITStampField2 ?? "";
+          lITStampField3FieldController.text =
+              trx.records![0].lITStampField3 ?? "";
+          lITStampField4FieldController.text =
+              trx.records![0].lITStampField4 ?? "";
           dateFrom = trx.records![0].validFrom ?? "";
           dateTo = trx.records![0].validTo ?? "";
           dueDate = trx.records![0].dueDate ?? "";
@@ -400,6 +460,10 @@ class _MaintenanceStandardMptaskMaintenanceCardState
   int businessPartnerId = 0;
   late TextEditingController nameFieldController;
   late TextEditingController descriptionFieldController;
+  late TextEditingController lITStampField1FieldController;
+  late TextEditingController lITStampField2FieldController;
+  late TextEditingController lITStampField3FieldController;
+  late TextEditingController lITStampField4FieldController;
   late TextEditingController paidAmtFieldController;
   late TextEditingController requestFieldController;
   late TextEditingController noteFieldController;
@@ -425,6 +489,10 @@ class _MaintenanceStandardMptaskMaintenanceCardState
     businessPartnerId = 0;
     nameFieldController = TextEditingController();
     descriptionFieldController = TextEditingController();
+    lITStampField1FieldController = TextEditingController();
+    lITStampField2FieldController = TextEditingController();
+    lITStampField3FieldController = TextEditingController();
+    lITStampField4FieldController = TextEditingController();
     contractTypeId = "";
     paymentRuleId = Get.arguments["paymentRuleId"] ?? "";
     dateFrom = "";
@@ -543,6 +611,70 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Extra Costs'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField1FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Diritto Chiamata €'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField2FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Uscita Tecnico €'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField3FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Int. Ridotto €'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField4FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manodopera'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -712,7 +844,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 child: DateTimePicker(
                                   locale: Locale('language'.tr, 'LANGUAGE'.tr),
                                   decoration: InputDecoration(
-                                    labelText: 'Date Start'.tr,
+                                    labelText: 'Date Contract From'.tr,
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -728,7 +860,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   initialValue: dateFrom,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  timeLabelText: 'Date Start'.tr,
+                                  timeLabelText: 'Date Contract From'.tr,
                                   icon: const Icon(Icons.event),
                                   onChanged: (val) {
                                     setState(() {
@@ -1048,7 +1180,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          "${"Component".tr}: ",
+                                          "${"Battery".tr}: ",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -1082,7 +1214,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          "${"Validity".tr}: ",
+                                          "${"Install Date".tr}: ",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -1185,6 +1317,70 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                       prefixIcon: const Icon(Icons.text_fields),
                       border: const OutlineInputBorder(),
                       labelText: 'Extra Costs'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField1FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Diritto Chiamata €'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField2FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Uscita Tecnico €'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField3FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Int. Ridotto €'.tr,
+                      floatingLabelBehavior: FloatingLabelBehavior.always,
+                    ),
+                  ),
+                ),
+                Container(
+                  margin:
+                      const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                  child: TextField(
+                    minLines: 1,
+                    maxLines: 5,
+                    controller: lITStampField4FieldController,
+                    decoration: InputDecoration(
+                      isDense: true,
+                      prefixIcon: const Icon(Icons.text_fields),
+                      border: const OutlineInputBorder(),
+                      labelText: 'Manodopera'.tr,
                       floatingLabelBehavior: FloatingLabelBehavior.always,
                     ),
                   ),
@@ -1320,6 +1516,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                       : paymentRuleId,
                                   elevation: 16,
                                   onChanged: (newValue) {
+                                    print(newValue);
                                     setState(() {
                                       paymentRuleId = newValue as String;
                                     });
@@ -1353,7 +1550,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                 child: DateTimePicker(
                                   locale: Locale('language'.tr, 'LANGUAGE'.tr),
                                   decoration: InputDecoration(
-                                    labelText: 'Date Start'.tr,
+                                    labelText: 'Date Contract From'.tr,
                                     //filled: true,
                                     border: const OutlineInputBorder(
                                         /* borderRadius: BorderRadius.circular(10),
@@ -1369,7 +1566,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   initialValue: dateFrom,
                                   firstDate: DateTime(2000),
                                   lastDate: DateTime(2100),
-                                  timeLabelText: 'Date Start'.tr,
+                                  timeLabelText: 'Date Contract From'.tr,
                                   icon: const Icon(Icons.event),
                                   onChanged: (val) {
                                     setState(() {
@@ -1689,7 +1886,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          "${"Component".tr}: ",
+                                          "${"Battery".tr}: ",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -1723,7 +1920,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Row(
                                       children: <Widget>[
                                         Text(
-                                          "${"Validity".tr}: ",
+                                          "${"Install Date".tr}: ",
                                           style: const TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold),
@@ -1800,8 +1997,8 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     ),
                                     Flexible(
                                       child: Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 10, bottom: 10, left: 10),
+                                          margin:
+                                              const EdgeInsets.only(left: 10),
                                           child: TextField(
                                             readOnly: true,
                                             minLines: 1,
@@ -1824,8 +2021,26 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     ),
                                     Flexible(
                                       child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
+                                        margin: const EdgeInsets.only(left: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 5,
+                                          controller: nameFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Name'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left: 10),
                                         child: FutureBuilder(
                                           future: getAllContracttypes(),
                                           builder: (BuildContext ctx,
@@ -1890,34 +2105,36 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                                     ),
                                         ),
                                       ),
-                                    )
+                                    ),
                                   ],
                                 ),
                                 Row(
                                   children: [
-                                    Flexible(
-                                      child: TextField(
-                                        minLines: 1,
-                                        maxLines: 5,
-                                        controller: nameFieldController,
-                                        decoration: InputDecoration(
-                                          isDense: true,
-                                          prefixIcon:
-                                              const Icon(Icons.text_fields),
-                                          border: const OutlineInputBorder(),
-                                          labelText: 'Name'.tr,
-                                          floatingLabelBehavior:
-                                              FloatingLabelBehavior.always,
-                                        ),
-                                      ),
-                                    ),
-                                    Flexible(
+                                    /* Flexible(
                                       child: Container(
-                                        margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
+                                        margin: const EdgeInsets.only(top: 10),
                                         child: TextField(
                                           minLines: 1,
                                           maxLines: 5,
+                                          controller: nameFieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Name'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ), */
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(top: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 3,
                                           controller:
                                               descriptionFieldController,
                                           decoration: InputDecoration(
@@ -1935,7 +2152,90 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Flexible(
                                       child: Container(
                                         margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
+                                            left: 10, top: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 3,
+                                          controller:
+                                              lITStampField1FieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Diritto Chiamata €'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(left:10,top: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 3,
+                                          controller:
+                                              lITStampField2FieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Uscita Tecnico €'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 3,
+                                          controller:
+                                              lITStampField3FieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Int. Ridotto €'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 10),
+                                        child: TextField(
+                                          minLines: 1,
+                                          maxLines: 3,
+                                          controller:
+                                              lITStampField4FieldController,
+                                          decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon:
+                                                const Icon(Icons.text_fields),
+                                            border: const OutlineInputBorder(),
+                                            labelText: 'Manodopera'.tr,
+                                            floatingLabelBehavior:
+                                                FloatingLabelBehavior.always,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Flexible(
+                                      child: Container(
+                                        margin: const EdgeInsets.only(
+                                            top: 10, left: 10),
                                         child: TextField(
                                           minLines: 1,
                                           maxLines: 5,
@@ -1958,47 +2258,53 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   children: [
                                     Flexible(
                                       child: dateAvailable
-                                          ? DateTimePicker(
-                                              locale: Locale(
-                                                  'language'.tr, 'LANGUAGE'.tr),
-                                              decoration: InputDecoration(
-                                                labelText: 'Date Start'.tr,
-                                                //filled: true,
-                                                border: const OutlineInputBorder(
-                                                    /* borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide.none, */
-                                                    ),
-                                                prefixIcon:
-                                                    const Icon(Icons.event),
-                                                //hintText: "search..",
-                                                isDense: true,
-                                                //fillColor: Theme.of(context).cardColor,
-                                              ),
+                                          ? Container(
+                                              margin: const EdgeInsets.only(
+                                                  top: 10),
+                                              child: DateTimePicker(
+                                                locale: Locale('language'.tr,
+                                                    'LANGUAGE'.tr),
+                                                decoration: InputDecoration(
+                                                  labelText:
+                                                      'Date Contract From'.tr,
+                                                  //filled: true,
+                                                  border: const OutlineInputBorder(
+                                                      /* borderRadius: BorderRadius.circular(10),
+                                            borderSide: BorderSide.none, */
+                                                      ),
+                                                  prefixIcon:
+                                                      const Icon(Icons.event),
+                                                  //hintText: "search..",
+                                                  isDense: true,
+                                                  //fillColor: Theme.of(context).cardColor,
+                                                ),
 
-                                              type: DateTimePickerType.date,
-                                              initialValue: dateFrom,
-                                              firstDate: DateTime(2000),
-                                              lastDate: DateTime(2100),
-                                              timeLabelText: 'Date Start'.tr,
-                                              icon: const Icon(Icons.event),
-                                              onChanged: (val) {
-                                                setState(() {
-                                                  dateFrom = val;
-                                                });
-                                              },
-                                              validator: (val) {
-                                                //print(val);
-                                                return null;
-                                              },
-                                              // ignore: avoid_print
-                                              onSaved: (val) => print(val),
+                                                type: DateTimePickerType.date,
+                                                initialValue: dateFrom,
+                                                firstDate: DateTime(2000),
+                                                lastDate: DateTime(2100),
+                                                timeLabelText:
+                                                    'Date Contract From'.tr,
+                                                icon: const Icon(Icons.event),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    dateFrom = val;
+                                                  });
+                                                },
+                                                validator: (val) {
+                                                  //print(val);
+                                                  return null;
+                                                },
+                                                // ignore: avoid_print
+                                                onSaved: (val) => print(val),
+                                              ),
                                             )
                                           : const CircularProgressIndicator(),
                                     ),
                                     Flexible(
                                       child: Container(
                                         margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
+                                            top: 10, left: 10),
                                         child: dateAvailable
                                             ? DateTimePicker(
                                                 locale: Locale('language'.tr,
@@ -2041,7 +2347,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     Flexible(
                                       child: Container(
                                         margin: const EdgeInsets.only(
-                                            top: 10, bottom: 10, left: 10),
+                                            top: 10, left: 10),
                                         child: dateAvailable
                                             ? DateTimePicker(
                                                 locale: Locale('language'.tr,
@@ -2051,7 +2357,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                                   //filled: true,
                                                   border: const OutlineInputBorder(
                                                       /* borderRadius: BorderRadius.circular(10),
-                                          borderSide: BorderSide.none, */
+                                                      borderSide: BorderSide.none, */
                                                       ),
                                                   prefixIcon:
                                                       const Icon(Icons.event),
@@ -2089,7 +2395,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                       child: Container(
                                         margin: const EdgeInsets.only(top: 10),
                                         child: TextField(
-                                          minLines: 3,
+                                          minLines: 1,
                                           maxLines: 3,
                                           controller: note2FieldController,
                                           decoration: InputDecoration(
@@ -2110,7 +2416,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                             top: 10, left: 10),
                                         child: TextField(
                                           readOnly: true,
-                                          minLines: 3,
+                                          minLines: 1,
                                           maxLines: 3,
                                           controller: requestFieldController,
                                           decoration: InputDecoration(
@@ -2130,7 +2436,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                         margin: const EdgeInsets.only(
                                             top: 10, left: 10),
                                         child: TextField(
-                                          minLines: 3,
+                                          minLines: 1,
                                           maxLines: 3,
                                           controller: manualNoteFieldController,
                                           decoration: InputDecoration(
@@ -2319,7 +2625,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                   DataColumn(
                                     label: Expanded(
                                       child: Text(
-                                        'Component'.tr,
+                                        'Battery'.tr,
                                         style: const TextStyle(
                                             fontStyle: FontStyle.italic),
                                       ),
