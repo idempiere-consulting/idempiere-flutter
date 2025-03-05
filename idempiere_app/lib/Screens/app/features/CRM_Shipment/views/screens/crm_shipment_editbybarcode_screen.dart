@@ -205,17 +205,21 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
     );
 
     if (response.statusCode == 200) {
+      //print(id);
       SalesOrderJson orderJSON =
           SalesOrderJson.fromJson(jsonDecode(utf8.decode(response.bodyBytes)));
 
       if (orderJSON.records!.isNotEmpty) {
+        //print(orderJSON.records!);
+        //print(orderJSON.records![0].docStatus?.id);
+        //print('-----------');
         return true;
       } else {
         return false;
       }
     }
 
-    return false;
+    return true;
   }
 
   Future<SalesOrderLineJson> getAllOrderLines(int id) async {
@@ -267,6 +271,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
       //getProdQtyReserved(orderLine.records![0].mProductID!.id!);
 
       if (orderLine.records!.isNotEmpty && !(barcodeList[0].contains('pr'))) {
+        var olscanned = false;
         if (shipmentLines.records!.isEmpty) {
           orderLine.records![0].qtyReserved =
               await getProdQtyReserved(orderLine.records![0].mProductID!.id!);
@@ -331,6 +336,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                         .tr),
               );
             } else {
+              olscanned = true;
               shipmentLines.records!.add(
                 SLRecords(
                   cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
@@ -352,10 +358,10 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                 ),
               );
 
-              //businessPartnerFieldController.text =
-              //   orderLine.records![0].cBPartnerID!.identifier!;
-              //businessPartnerID = orderLine.records![0].cBPartnerID!.id!;
-              //getShipmentAddress(orderLine.records![0].cOrderID!.id!);
+              businessPartnerFieldController.text =
+                  orderLine.records![0].cBPartnerID!.identifier!;
+              businessPartnerID = orderLine.records![0].cBPartnerID!.id!;
+              getShipmentAddress(orderLine.records![0].cOrderID!.id!);
             }
           }
         } else if (orderLine.records![0].cBPartnerID!.id! ==
@@ -442,6 +448,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                             .tr),
                   );
                 } else {
+                  olscanned = true;
                   shipmentLines.records![i].movementQty =
                       shipmentLines.records![i].movementQty! +
                           num.parse(barcodeList[2]);
@@ -472,6 +479,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                             .tr),
                     textCancel: 'back'.tr,
                     onConfirm: () async {
+                      olscanned = true;
                       Navigator.of(Get.overlayContext!, rootNavigator: true)
                           .pop();
 
@@ -481,7 +489,8 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                       shipmentLines.records!.add(SLRecords(
                         cOrderLineID:
                             SLCOrderLineID(id: orderLine.records![0].id),
-                        plannedQty: orderLine.records![0].qtyReserved!,
+                        plannedQty: orderLine.records![0].qtyOrdered! -
+                            orderLine.records![0].qtyDelivered!,
                         cBPartnerID: SLCBPartnerID(
                             id: orderLine.records![0].cBPartnerID!.id!,
                             identifier:
@@ -499,11 +508,13 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                     },
                   );
                 } else {
+                  olscanned = true;
                   orderLine.records![0].qtyReserved = await getProdQtyReserved(
                       orderLine.records![0].mProductID!.id!);
                   shipmentLines.records!.add(SLRecords(
                     cOrderLineID: SLCOrderLineID(id: orderLine.records![0].id),
-                    plannedQty: orderLine.records![0].qtyReserved!,
+                    plannedQty: orderLine.records![0].qtyOrdered! -
+                        orderLine.records![0].qtyDelivered!,
                     cBPartnerID: SLCBPartnerID(
                         id: orderLine.records![0].cBPartnerID!.id!,
                         identifier:
@@ -565,7 +576,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
           default:
         } */
 
-        if (barcodeList[0].contains('ol')) {
+        if (barcodeList[0].contains('ol') && olscanned) {
           noPackagesFieldController.text =
               (int.parse(noPackagesFieldController.text) + 1).toString();
           SalesOrderLineJson allLines =
@@ -583,7 +594,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
 
         if (businessPartnerID > 0) {
           var url = Uri.parse(
-              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID&\$orderby= Created asc');
+              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID and C_BPartner_Location_ID eq $bpLocationId and QtyReserved gt 0&\$orderby= Created asc');
 
           var response3 = await http.get(
             url,
@@ -595,12 +606,19 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
           if (response3.statusCode == 200) {
             SalesOrderLineJson orderLinePR = SalesOrderLineJson.fromJson(
                 jsonDecode(utf8.decode(response3.bodyBytes)));
+
+            SalesOrderLineJson orderLinePRCOPY = orderLinePR;
             for (var i = 0; i < orderLinePR.records!.length; i++) {
               if (!(await isOrderCompleted(
                   orderLinePR.records![i].cOrderID?.id ?? 0))) {
-                orderLinePR.records!.removeAt(i);
+                orderLinePRCOPY.records!.removeWhere((element) =>
+                    element.cOrderID?.id ==
+                    orderLinePR.records![i].cOrderID?.id);
               }
             }
+
+            orderLinePR = orderLinePRCOPY;
+
             if (orderLinePR.records!.isNotEmpty) {
               noOrderlineFound = false;
               TextEditingController qtyController =
@@ -614,10 +632,8 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                     int qtyToAdd = int.parse(qtyController.text);
                     int totResidueQty = 0;
                     for (var element in orderLinePR.records!) {
-                      totResidueQty = (totResidueQty +
-                              ((element.qtyOrdered ?? 0) -
-                                  (element.qtyDelivered ?? 0)))
-                          .toInt();
+                      totResidueQty =
+                          (totResidueQty + element.qtyReserved!).toInt();
                     }
 
                     if (totResidueQty < qtyToAdd) {
@@ -635,11 +651,11 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                                         (orderLinePR.records![i].qtyDelivered ??
                                             0)) >
                                 0) {
+                          //orderLinePR.records![i].qtyReserved;
+
                           if (qtyToAdd <=
-                              (orderLinePR.records![i].qtyOrdered ??
-                                  0 -
-                                      (orderLinePR.records![i].qtyDelivered ??
-                                          0))) {
+                              orderLinePR.records![i].qtyOrdered! -
+                                  orderLinePR.records![i].qtyDelivered!) {
                             shipmentLines.records!.add(SLRecords(
                               cOrderLineID: SLCOrderLineID(
                                   id: orderLinePR.records![i].id),
@@ -663,11 +679,7 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                             qtyToAdd = 0;
                           }
 
-                          if (qtyToAdd >
-                              (orderLinePR.records![i].qtyOrdered ??
-                                  0 -
-                                      (orderLinePR.records![i].qtyDelivered ??
-                                          0))) {
+                          if (qtyToAdd > orderLinePR.records![i].qtyReserved!) {
                             shipmentLines.records!.add(SLRecords(
                               cOrderLineID: SLCOrderLineID(
                                   id: orderLinePR.records![i].id),
@@ -684,15 +696,12 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                               name: orderLinePR.records![i].name,
                               description: orderLinePR.records![i].description,
                               help: orderLinePR.records![i].help,
-                              movementQty:
-                                  orderLinePR.records![i].qtyOrdered!.toInt(),
+                              movementQty: orderLinePR.records![i].qtyReserved!,
                               mobileBarcodeType: barcodeList[0],
                             ));
 
                             qtyToAdd = qtyToAdd -
-                                (orderLinePR.records![i].qtyOrdered!.toInt() -
-                                    (orderLinePR.records![i].qtyDelivered ?? 0)
-                                        .toInt());
+                                orderLinePR.records![i].qtyReserved!.toInt();
                           }
                         }
                       }
@@ -758,7 +767,9 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
             ProductJson prod = ProductJson.fromJson(
                 jsonDecode(utf8.decode(response2.bodyBytes)));
 
-            if (prod.records!.isNotEmpty && barcodeList[0].contains('pr')) {
+            if (prod.records!.isNotEmpty &&
+                barcodeList[0].contains('pr') &&
+                prod.records![0].litAutomationRule?.id == "XODV") {
               var resQty = await getProdQtyReserved(prod.records![0].id!);
               TextEditingController qtyController =
                   TextEditingController(text: '');
@@ -767,31 +778,22 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                   onConfirm: () {
                     Navigator.of(Get.overlayContext!, rootNavigator: true)
                         .pop();
-                    bool notFound = true;
-                    for (var i = 0; i < shipmentLines.records!.length; i++) {
-                      if (shipmentLines.records![i].mProductID?.id ==
-                          prod.records![0].id) {
-                        shipmentLines.records![i].movementQty =
-                            shipmentLines.records![i].movementQty! +
-                                num.parse(qtyController.text);
 
-                        notFound = false;
-                      }
-                    }
-                    if (notFound) {
-                      /* orderLine.records![0].qtyReserved =
+                    /* orderLine.records![0].qtyReserved =
                         await getProdQtyReserved(
                             orderLine.records![0].mProductID!.id!); */
-                      shipmentLines.records!.add(SLRecords(
-                        plannedQty: resQty,
-                        mProductID: SLMProductID(
-                            id: prod.records![0].id!,
-                            identifier:
-                                "${prod.records![0].value}_${prod.records![0].name}"),
-                        movementQty: num.parse(qtyController.text),
-                        mobileBarcodeType: barcodeList[0],
-                      ));
-                    }
+                    shipmentLines.records!.add(SLRecords(
+                      plannedQty: resQty,
+                      mProductID: SLMProductID(
+                          id: prod.records![0].id!,
+                          identifier:
+                              "${prod.records![0].value}_${prod.records![0].name}"),
+                      movementQty: num.parse(qtyController.text),
+                      mobileBarcodeType: barcodeList[0],
+                      name: prod.records![0].name,
+                      description: prod.records![0].description,
+                      isInvoiced: true,
+                    ));
 
                     linesAvailable = true;
                     setState(() {});
@@ -846,6 +848,13 @@ class _CRMFilterShipmentState extends State<CRMEditByBarcodeShipment> {
                       ),
                     ],
                   ));
+            } else {
+              Get.defaultDialog(
+                title: 'Error!'.tr,
+                content: Text(
+                    'No Linked Order was found for this Product and It\'s NOT Extra ODV'
+                        .tr),
+              );
             }
           }
         }

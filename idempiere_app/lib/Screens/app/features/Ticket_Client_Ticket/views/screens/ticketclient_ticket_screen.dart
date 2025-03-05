@@ -639,6 +639,52 @@ class TicketClientTicketScreen extends GetView<TicketClientTicketController> {
                                                                       ._trx
                                                                       .records![
                                                                           index]
+                                                                      .mProductID
+                                                                      ?.identifier),
+                                                              decoration:
+                                                                  InputDecoration(
+                                                                isDense: true,
+                                                                prefixIcon:
+                                                                    const Icon(Icons
+                                                                        .text_fields),
+                                                                border:
+                                                                    const OutlineInputBorder(),
+                                                                labelText:
+                                                                    'Riga Ordine da Scalare'
+                                                                        .tr,
+                                                                floatingLabelBehavior:
+                                                                    FloatingLabelBehavior
+                                                                        .always,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        Visibility(
+                                                          visible: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .mProductID !=
+                                                                  null &&
+                                                              controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
+                                                                      .cOrderID ==
+                                                                  null,
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                    .all(10),
+                                                            child: TextField(
+                                                              minLines: 1,
+                                                              maxLines: 3,
+                                                              readOnly: true,
+                                                              controller: TextEditingController(
+                                                                  text: controller
+                                                                      ._trx
+                                                                      .records![
+                                                                          index]
                                                                       .requestAmt
                                                                       .toString()),
                                                               decoration:

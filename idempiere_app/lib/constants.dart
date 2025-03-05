@@ -237,3 +237,40 @@ const areaStackGradientData2 = [
   {'day': 'Sat', 'value': 340, 'group': 1},
   {'day': 'Sun', 'value': 250, 'group': 1},
 ];
+
+String dynamicEncrypt(String input) {
+  // Create a modifiable copy of the character codes
+  List<int> charCodes = List.from(input.codeUnits);
+
+  for (int i = 0; i < charCodes.length; i++) {
+    // Shift each character by its position (i) in the string
+    charCodes[i] = charCodes[i] + i;
+  }
+
+  return String.fromCharCodes(charCodes);
+}
+
+String dynamicDecrypt(String encrypted) {
+  // Create a modifiable copy of the character codes
+  List<int> charCodes = List.from(encrypted.codeUnits);
+
+  for (int i = 0; i < charCodes.length; i++) {
+    // Reverse the shift by subtracting the position (i)
+    charCodes[i] = charCodes[i] - i;
+  }
+
+  return String.fromCharCodes(charCodes);
+}
+
+/* void main() {
+  String originalText = "Hello, World!";
+
+  // Encrypt the text
+  String encryptedText = dynamicEncrypt(originalText);
+  print("Original: $originalText");
+  print("Encrypted: $encryptedText");
+
+  // Decrypt the text
+  String decryptedText = dynamicDecrypt(encryptedText);
+  print("Decrypted: $decryptedText");
+} */

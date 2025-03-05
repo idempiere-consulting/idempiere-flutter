@@ -417,7 +417,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
       }
     }
 
-    return false;
+    return true;
   }
 
   Future<SalesOrderLineJson> getAllOrderLines(int id) async {
@@ -836,7 +836,7 @@ class _CRMFilterShipmentState extends State<CRMCreateByBarcodeShipment> {
 
         if (businessPartnerID > 0) {
           var url = Uri.parse(
-              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID and C_BPartner_Location_ID eq $bpLocationId and QtyReserved neq 0&\$orderby= Created asc');
+              '$protocol://$ip/api/v1/models/c_orderline?\$filter= M_Product_ID eq ${barcodeList[1]} and C_BPartner_ID eq $businessPartnerID and C_BPartner_Location_ID eq $bpLocationId and QtyReserved gt 0&\$orderby= Created asc');
 
           var response3 = await http.get(
             url,

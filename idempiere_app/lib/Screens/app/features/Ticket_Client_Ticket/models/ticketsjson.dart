@@ -52,6 +52,7 @@ class Records {
   final CBPartnerID? cBPartnerID;
   final MProductID? mProductID;
   final COrderID? cOrderID;
+  final COrderLineID? cOrderLineID;
   final NextAction? nextAction;
   final String? dateNextAction;
   final bool? processed;
@@ -98,6 +99,7 @@ class Records {
     this.salesRepID,
     this.cBPartnerID,
     this.cOrderID,
+    this.cOrderLineID,
     this.mProductID,
     this.nextAction,
     this.dateNextAction,
@@ -164,6 +166,10 @@ class Records {
             : null,
         cOrderID = (json['C_Order_ID'] as Map<String, dynamic>?) != null
             ? COrderID.fromJson(json['C_Order_ID'] as Map<String, dynamic>)
+            : null,
+        cOrderLineID = (json['C_OrderLine_ID'] as Map<String, dynamic>?) != null
+            ? COrderLineID.fromJson(
+                json['C_OrderLine_ID'] as Map<String, dynamic>)
             : null,
         mProductID = (json['M_Product_ID'] as Map<String, dynamic>?) != null
             ? MProductID.fromJson(json['M_Product_ID'] as Map<String, dynamic>)
@@ -414,6 +420,33 @@ class COrderID {
   });
 
   COrderID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class COrderLineID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  COrderLineID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  COrderLineID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,

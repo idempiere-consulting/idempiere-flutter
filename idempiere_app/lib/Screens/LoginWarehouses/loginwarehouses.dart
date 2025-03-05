@@ -76,6 +76,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
       syncWorkOrderRefListResource();
       syncWorkOrderRefListResourceCategory();
       syncWorkOrderListResourceGroup();
+      syncAnomalies();
     }
   }
 
@@ -469,7 +470,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
         //productSync = false;
-        syncAnomalies();
+        //syncAnomalies();
         if (kDebugMode) {
           print('ProductsBOMline Checked');
         }
@@ -511,7 +512,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
-        syncAnomalies();
+
         //productSync = false;
         if (kDebugMode) {
           print('ProductsBOMline Checked');
@@ -525,7 +526,8 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/LIT_NC');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_todayanomaly_v?\$filter= IsClosed eq N and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -565,7 +567,7 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '$protocol://$ip/api/v1/models/lit_mobile_todayanomaly_v?\$filter= IsClosed eq N and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -1073,11 +1075,13 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
-        syncWorkOrderResourceSurveyLines();
+        //syncWorkOrderResourceSurveyLines();
         //productSync = false;
         if (kDebugMode) {
           print('WorkOrderTask Checked');
         }
+        workOrderSync = false;
+        checkSyncData();
         //checkSyncData();
       }
     } else {
@@ -1122,12 +1126,12 @@ class _LoginWarehousesState extends State<LoginWarehouses> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
-        //workOrderSync = false;
+        workOrderSync = false;
         if (kDebugMode) {
           print('WorkOrderTask page Checked');
         }
-        //checkSyncData();
-        syncWorkOrderResourceSurveyLines();
+        checkSyncData();
+        //syncWorkOrderResourceSurveyLines();
         //syncWorkOrderTask();
       }
     } else {

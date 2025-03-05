@@ -208,6 +208,7 @@ class _BodyState extends State<Body> {
       syncWorkOrderRefListResource();
       syncWorkOrderRefListResourceCategory();
       syncWorkOrderListResourceGroup();
+      syncAnomalies();
     }
   }
 
@@ -609,7 +610,7 @@ class _BodyState extends State<Body> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(jsonEncode(json.toJson()));
-        syncAnomalies();
+        //syncAnomalies();
         //productSync = false;
         if (kDebugMode) {
           print('ProductsBOMline Checked');
@@ -623,7 +624,8 @@ class _BodyState extends State<Body> {
     final ip = GetStorage().read('ip');
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
-    var url = Uri.parse('$protocol://$ip/api/v1/models/LIT_NC');
+    var url = Uri.parse(
+        '$protocol://$ip/api/v1/models/lit_mobile_todayanomaly_v?\$filter= IsClosed eq N and AD_Client_ID eq ${GetStorage().read('clientid')}');
 
     var response = await http.get(
       url,
@@ -663,7 +665,7 @@ class _BodyState extends State<Body> {
     String authorization = 'Bearer ${GetStorage().read('token')}';
     final protocol = GetStorage().read('protocol');
     var url = Uri.parse(
-        '$protocol://$ip/api/v1/models/LIT_NC?\$filter= AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
+        '$protocol://$ip/api/v1/models/lit_mobile_todayanomaly_v?\$filter= IsClosed eq N and AD_Client_ID eq ${GetStorage().read('clientid')}&\$skip=${(index * 100)}');
 
     var response = await http.get(
       url,
@@ -1140,11 +1142,13 @@ class _BodyState extends State<Body> {
         final file = File(
             '${(await getApplicationDocumentsDirectory()).path}/$filename.json');
         file.writeAsString(utf8.decode(response.bodyBytes));
-        syncWorkOrderResourceSurveyLines();
+        //syncWorkOrderResourceSurveyLines();
         //productSync = false;
         if (kDebugMode) {
           print('WorkOrderTask Checked');
         }
+        workOrderSync = false;
+        checkSyncData();
         //checkSyncData();
       }
     } else {
@@ -1193,8 +1197,10 @@ class _BodyState extends State<Body> {
         if (kDebugMode) {
           print('WorkOrderTask page Checked');
         }
+        workOrderSync = false;
+        checkSyncData();
         //checkSyncData();
-        syncWorkOrderResourceSurveyLines();
+        //syncWorkOrderResourceSurveyLines();
         //syncWorkOrderTask();
       }
     } else {

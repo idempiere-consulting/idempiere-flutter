@@ -278,7 +278,7 @@ class _MaintenanceStandardMptaskMaintenanceCardState
         }
       } */
 
-      print(pRuleFilterList);
+      //print(pRuleList);
 
       return pRuleList;
     } else {
@@ -2172,7 +2172,8 @@ class _MaintenanceStandardMptaskMaintenanceCardState
                                     ),
                                     Flexible(
                                       child: Container(
-                                        margin: const EdgeInsets.only(left:10,top: 10),
+                                        margin: const EdgeInsets.only(
+                                            left: 10, top: 10),
                                         child: TextField(
                                           minLines: 1,
                                           maxLines: 3,
