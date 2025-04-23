@@ -13,6 +13,7 @@ import 'package:idempiere_app/Screens/app/constans/app_constants.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_edit_mptask_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_info_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_product_unloaded_screen.dart';
+import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask/views/screens/maintenance_mptask_surveillance_order_screen.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_resource/models/workorder_resource_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Maintenance_Mptask_taskline/models/workorder_local_json.dart';
 import 'package:idempiere_app/Screens/app/features/Signature_WorkOrder/signature_page.dart';
@@ -186,6 +187,38 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                   .cBPartnerID?.identifier ??
                                               "");
 
+                                      if (controller.trx.records![index]
+                                              .cDocTypeID?.identifier ==
+                                          'Surveillance Order'.tr) {
+                                        Get.to(
+                                            const MaintenanceMptaskSurveillanceOrder(),
+                                            arguments: {
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                              "orderId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cOrderID
+                                                      ?.id ??
+                                                  0,
+                                              "dateWorkStart": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .dateWorkStart,
+                                              "superiorCategoryID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmProductCategParent2ID
+                                                  ?.id,
+                                              "superiorCategoryList": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITCategParent2List
+                                                      ?.id ??
+                                                  ""
+                                            });
+                                      }
+
                                       /* GetStorage().write(
                                           'selectedTaskId',
                                           controller.trx.records![index]
@@ -238,6 +271,36 @@ class MaintenanceMptaskScreen extends GetView<MaintenanceMptaskController> {
                                                       .records![index]
                                                       .attachment ??
                                                   "false"
+                                            });
+                                      } else if (controller.trx.records![index]
+                                              .cDocTypeID?.identifier ==
+                                          'Surveillance Order'.tr) {
+                                        Get.to(
+                                            const MaintenanceMptaskSurveillanceOrder(),
+                                            arguments: {
+                                              "docN": controller.trx
+                                                  .records![index].documentNo,
+                                              "orderId": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .cOrderID
+                                                      ?.id ??
+                                                  0,
+                                              "dateWorkStart": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .dateWorkStart,
+                                              "superiorCategoryID": controller
+                                                  .trx
+                                                  .records![index]
+                                                  .litmProductCategParent2ID
+                                                  ?.id,
+                                              "superiorCategoryList": controller
+                                                      .trx
+                                                      .records![index]
+                                                      .lITCategParent2List
+                                                      ?.id ??
+                                                  ""
                                             });
                                       } else {
                                         Get.toNamed('/MaintenanceMpResource',

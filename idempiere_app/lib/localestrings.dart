@@ -1442,6 +1442,12 @@ class LocaleString extends Translations {
           "Install Date": "Data Installazione",
           "Date Contract From": "Data Contratto Dal",
           "Battery": "Batteria",
+          "Surveillance Order": "Ordine di Sorveglianza",
+          "Positive": "Positivo",
+          "Negative": "Negativo",
+          "Surveilled": "Sorvegliato",
+          "Remaining": "Rimanente",
+          "Surveillance": "Sorveglianza"
         },
       };
 }

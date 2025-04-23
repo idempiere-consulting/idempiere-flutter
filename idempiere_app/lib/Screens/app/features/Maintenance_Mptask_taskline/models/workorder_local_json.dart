@@ -100,6 +100,8 @@ class WORecords {
   String? lITFEPAIPA;
   String? lITTaxID;
   bool? isPrinted;
+  LITMProductCategParent2ID? litmProductCategParent2ID;
+  LITMProductCategParent2List? lITCategParent2List;
 
   WORecords(
       {this.id,
@@ -169,7 +171,9 @@ class WORecords {
       this.lITNationalIdNumberID,
       this.lITFEPAIPA,
       this.lITTaxID,
-      this.isPrinted});
+      this.isPrinted,
+      this.litmProductCategParent2ID,
+      this.lITCategParent2List});
 
   WORecords.fromJson(Map<String, dynamic> json)
       : id = json['id'] as int?,
@@ -236,6 +240,17 @@ class WORecords {
         mPOTTaskID = (json['MP_OT_Task_ID'] as Map<String, dynamic>?) != null
             ? MPOTTaskID.fromJson(json['MP_OT_Task_ID'] as Map<String, dynamic>)
             : null,
+        litmProductCategParent2ID = (json['LIT_M_Product_Categ_Parent2_ID']
+                    as Map<String, dynamic>?) !=
+                null
+            ? LITMProductCategParent2ID.fromJson(
+                json['LIT_M_Product_Categ_Parent2_ID'] as Map<String, dynamic>)
+            : null,
+        lITCategParent2List =
+            (json['LIT_Categ_Parent2_List'] as Map<String, dynamic>?) != null
+                ? LITMProductCategParent2List.fromJson(
+                    json['LIT_Categ_Parent2_List'] as Map<String, dynamic>)
+                : null,
         cOrderID = (json['C_Order_ID'] as Map<String, dynamic>?) != null
             ? COrderID.fromJson(json['C_Order_ID'] as Map<String, dynamic>)
             : null,
@@ -327,6 +342,8 @@ class WORecords {
         'c_location_regionname': regionName,
         'MP_OT_Task_ID': mPOTTaskID?.toJson(),
         'MP_Maintain_Task_ID': mPMaintainTaskID?.toJson(),
+        'LIT_M_Product_Categ_Parent2_ID': litmProductCategParent2ID?.toJson(),
+        'LIT_Categ_Parent2_List': lITCategParent2List?.toJson(),
         'Phone': phone,
         'Phone2': phone2,
         'mail': mail,
@@ -428,6 +445,60 @@ class MPOTID {
   MPOTID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITMProductCategParent2ID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITMProductCategParent2ID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITMProductCategParent2ID.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITMProductCategParent2List {
+  final String? propertyLabel;
+  final String? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITMProductCategParent2List({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITMProductCategParent2List.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as String?,
         identifier = json['identifier'] as String?,
         modelname = json['model-name'] as String?;
 

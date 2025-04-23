@@ -98,6 +98,11 @@ class RRecords {
   bool? isPrinted;
   LitResourceGroupID? litResourceGroupID;
   bool? isSold;
+  bool? isPositive;
+  bool? isNegative;
+  String? surveilDate;
+  LITMProductCategParent2ID? litmProductCategParent2ID;
+  String? lITCategParent2List;
   String? note;
 
   RRecords(
@@ -166,6 +171,11 @@ class RRecords {
       this.isPrinted,
       this.litResourceGroupID,
       this.isSold,
+      this.isPositive,
+      this.isNegative,
+      this.surveilDate,
+      this.litmProductCategParent2ID,
+      this.lITCategParent2List,
       this.note});
 
   RRecords.fromJson(Map<String, dynamic> json)
@@ -280,6 +290,16 @@ class RRecords {
                 : null,
         isSold = json['IsSold'] as bool?,
         note = json['Note'] as String?,
+        isPositive = json['LIT_IsField17'] as bool?,
+        isNegative = json['LIT_IsField16'] as bool?,
+        surveilDate = json['DecisionDate'] as String?,
+        litmProductCategParent2ID = (json['LIT_M_Product_Categ_Parent2_ID']
+                    as Map<String, dynamic>?) !=
+                null
+            ? LITMProductCategParent2ID.fromJson(
+                json['LIT_M_Product_Categ_Parent2_ID'] as Map<String, dynamic>)
+            : null,
+        lITCategParent2List = json['LIT_Categ_Parent2_List'] as String?,
         team = json['team'] as String?;
 
   Map<String, dynamic> toJson() => {
@@ -348,8 +368,13 @@ class RRecords {
         'IsPrinted': isPrinted,
         'team': team,
         'IsSold': isSold,
+        'LIT_IsField17': isPositive,
+        'LIT_IsField16': isNegative,
         'Note': note,
+        'DecisionDate': surveilDate,
         'lit_ResourceGroup_ID': litResourceGroupID?.toJson(),
+        'LIT_Categ_Parent2_List': lITCategParent2List,
+        'LIT_M_Product_Categ_Parent2_ID': litmProductCategParent2ID?.toJson(),
       };
 }
 
@@ -448,6 +473,33 @@ class CreatedBy {
   });
 
   CreatedBy.fromJson(Map<String, dynamic> json)
+      : propertyLabel = json['propertyLabel'] as String?,
+        id = json['id'] as int?,
+        identifier = json['identifier'] as String?,
+        modelname = json['model-name'] as String?;
+
+  Map<String, dynamic> toJson() => {
+        'propertyLabel': propertyLabel,
+        'id': id,
+        'identifier': identifier,
+        'model-name': modelname
+      };
+}
+
+class LITMProductCategParent2ID {
+  final String? propertyLabel;
+  final int? id;
+  final String? identifier;
+  final String? modelname;
+
+  LITMProductCategParent2ID({
+    this.propertyLabel,
+    this.id,
+    this.identifier,
+    this.modelname,
+  });
+
+  LITMProductCategParent2ID.fromJson(Map<String, dynamic> json)
       : propertyLabel = json['propertyLabel'] as String?,
         id = json['id'] as int?,
         identifier = json['identifier'] as String?,
