@@ -1003,6 +1003,11 @@ class CRMPOSController extends GetxController {
     if (response.statusCode == 200) {
       print(response.body);
     } else {
+      Get.defaultDialog(
+        title: 'http://${GetStorage().read('fiscalPrinterIP')}/xml/printer.htm',
+        content: Text(response.body),
+      );
+
       print(response.body);
     }
   }
